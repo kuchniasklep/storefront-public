@@ -1,0 +1,1 @@
+import{r as t}from"./index-e340c957.js";import{e as s}from"./tracker-a4a7c425.js";import"./index-689756ca.js";let i=class{constructor(s){t(this,s),this.eventId="",this.currency="PLN"}componentWillLoad(){s((t=>null==t?void 0:t.product(this.eventId,this.productId,this.name,this.price,this.currency)))}};export{i as ks_tracker_product}
