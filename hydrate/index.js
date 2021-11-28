@@ -25742,7 +25742,9 @@ class PageProduct {
     const ean = product.get('ean');
     return hAsync(Host, null, hAsync("ks-page-header", null), infoBanner ?
       hAsync("ks-info-banner", { image: infoBanner.image, width: infoBanner.width, height: infoBanner.height, color: infoBanner.color, name: infoBanner.name })
-      : null, hAsync("ks-container", null, hAsync("ks-product-notify", null), hAsync("ks-product-info", null, hAsync("ks-product-title", { "brand-link": true, slot: "top" }), hAsync("ks-product-images", { slot: "left" }), hAsync("ks-product-price", null), hAsync("ks-product-traits", null), hAsync("ks-product-purchase", null), hAsync("ks-product-shipping", null), product.get('warranty') ?
+      : null, hAsync("ks-container", null, hAsync("ks-product-notify", null), hAsync("ks-product-info", null, hAsync("ks-product-title", { "brand-link": true, slot: "top" }), hAsync("ks-product-images", { slot: "left" }), hAsync("ks-product-price", null), product.get('traits') ?
+      hAsync("ks-product-traits", null)
+      : null, hAsync("ks-product-purchase", null), hAsync("ks-product-shipping", null), product.get('warranty') ?
       hAsync("ks-product-attribute", { style: { marginTop: "15px" }, icon: "tool", href: product.get('warrantyLink') }, product.get('warranty'))
       : null, points ?
       hAsync("ks-product-tooltip", { message: points.message }, hAsync("ks-product-attribute", { icon: "gift" }, points.shortMessage))
@@ -26430,6 +26432,8 @@ class ProductCount {
     this.traitChange = createEvent(this, "traitChange", 7);
   }
   traitChangeHandler() {
+    if (!(product === null || product === void 0 ? void 0 : product.get("traits")))
+      return;
     const selects = this.root.querySelectorAll(".trait select");
     const data = product.get("traits").map((trait, index) => {
       const select = selects[index];
