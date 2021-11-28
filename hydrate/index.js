@@ -3,7 +3,7 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 /*!
- Stencil Mock Doc v2.10.0 | MIT Licensed | https://stenciljs.com
+ Stencil Mock Doc v2.11.0 | MIT Licensed | https://stenciljs.com
  */
 const CONTENT_REF_ID = 'r';
 const ORG_LOCATION_ID = 'o';
@@ -26026,6 +26026,8 @@ class ProductBrand {
   }
   render() {
     const brand = product.get("brand");
+    if (!brand)
+      return null;
     return hAsync("a", { href: brand.link }, hAsync("ks-img2", { src: brand.logo, alt: brand.name, width: brand.width, height: brand.height }));
   }
   static get style() { return productBrandCss; }
@@ -27152,13 +27154,10 @@ class ProductTab {
   constructor(hostRef) {
     registerInstance(this, hostRef);
   }
-  componentWillLoad() {
-    this.transformedContent = this.ImageReplacer(this.content);
-  }
   render() {
     return [
       hAsync("button", { class: "accordion", onClick: () => this.onOpen() }, this.name, hAsync("ks-icon", { name: this.open ? "minus" : "plus" })),
-      hAsync("div", { class: "tab-content", innerHTML: this.transformedContent })
+      hAsync("div", { class: "tab-content", innerHTML: this.content })
     ];
   }
   onOpen() {
@@ -27170,34 +27169,6 @@ class ProductTab {
       this.main = true;
       this.root.closest('ks-product-tabs').active = index;
     }
-  }
-  ImageReplacer(data) {
-    let parser = new DOMParser();
-    let description = parser.parseFromString(data, 'text/html');
-    const images = description.querySelectorAll("img");
-    for (let i = 0; i < images.length; i++) {
-      const image = images[i];
-      const ksImage = document.createElement("ks-img2");
-      ksImage.setAttribute("src", image.getAttribute("data-src"));
-      ksImage.setAttribute("alt", image.getAttribute("alt"));
-      ksImage.setAttribute("horizontal", "horizontal");
-      ksImage.setAttribute("limit", "limit");
-      ksImage.className = image.className;
-      let height = image.style.height.replace("px", "");
-      let width = image.style.width.replace("px", "");
-      ksImage.style.maxWidth = width + "px";
-      ksImage.style.height = "auto";
-      if (ksImage.style.width)
-        ksImage.style.maxWidth = image.style.width;
-      if (image.style.maxWidth)
-        ksImage.style.maxWidth = image.style.maxWidth;
-      if (height && !height.includes("%"))
-        ksImage.setAttribute("height", height);
-      if (width && !width.includes("%"))
-        ksImage.setAttribute("width", width);
-      image.parentNode.replaceChild(ksImage, image);
-    }
-    return description.documentElement.innerHTML;
   }
   get root() { return getElement(this); }
   static get style() { return productTabCss; }
@@ -27301,7 +27272,7 @@ class ProductTitle {
     const name = product.get("name");
     const brand = product.get("brand");
     let title = hAsync("h1", null, name);
-    if (this.brandLink) {
+    if (this.brandLink && brand) {
       const brandLength = brand.name.length;
       const brandLink = brand.link;
       const index = this.brandIndex();
