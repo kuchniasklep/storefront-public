@@ -26438,10 +26438,13 @@ class ProductCount {
     this.traitChange.emit(data);
   }
   componentDidRender() {
-    if (product.get("traits").length > 0)
+    var _a;
+    if (((_a = product === null || product === void 0 ? void 0 : product.get("traits")) === null || _a === void 0 ? void 0 : _a.length) > 0)
       this.traitChangeHandler();
   }
   render() {
+    if (!(product === null || product === void 0 ? void 0 : product.get("traits")))
+      return null;
     return product.get("traits").map((trait) => hAsync("div", { class: "trait" }, hAsync("label", null, trait.name, ":"), hAsync("div", { class: "select" }, hAsync("select", { onChange: () => this.traitChangeHandler() }, trait.items.map(item => hAsync("option", { value: item.id }, item.name))), hAsync("ks-icon", { name: "chevron-down" }))));
   }
   get root() { return getElement(this); }
