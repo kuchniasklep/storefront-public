@@ -14456,9 +14456,10 @@ class CookiePopup {
     document.cookie = "akceptCookie=tak; " + expiration + "path=/";
   }
   componentDidLoad() {
-    setTimeout(() => {
-      this.hidden = false;
-    }, this.delay);
+    if (document.cookie.indexOf('akceptCookie=tak') == -1)
+      setTimeout(() => {
+        this.hidden = false;
+      }, this.delay);
   }
   render() {
     return hAsync(Host, { hidden: this.hidden, hide: this.hide });
@@ -26506,7 +26507,7 @@ class ProductImages {
     return [
       hAsync("div", { class: "swiper-container preview" }, hAsync("div", { class: "swiper-wrapper" }, product.get("images").map((image, index) => hAsync("div", { class: "swiper-slide" }, hAsync("ks-img2", { sync: index == 0, src: image.preview.url, webp: image.preview.webp, width: image.preview.width, height: image.preview.height, onClick: () => this.lightbox.show(index) }))))),
       product.get("images").length > 1 ?
-        hAsync("div", { class: "swiper-container thumb" }, this.loaded ? null : hAsync("ks-loader", { dark: true }), hAsync("div", { class: "swiper-wrapper" }, product.get("images").map((image, index) => hAsync("div", { class: "swiper-slide" }, hAsync("ks-img2", { sync: index < 6, src: image.thumb.url, width: image.thumb.width, height: image.thumb.height })))))
+        hAsync("div", { class: "swiper-container thumb" }, this.loaded ? null : hAsync("ks-loader", { dark: true }), hAsync("div", { class: "swiper-wrapper" }, product.get("images").map((image, index) => hAsync("div", { class: "swiper-slide" }, hAsync("ks-img2", { sync: index < 6, src: image.thumb.url, webp: image.thumb.webp, width: image.thumb.width, height: image.thumb.height })))))
         : null,
       hAsync("ks-lightbox", { data: product.get("images") })
     ];
