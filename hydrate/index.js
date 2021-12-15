@@ -14472,12 +14472,12 @@ class CookiePopup {
       "message": [1],
       "button": [1],
       "delay": [2],
-      "hide": [32],
-      "hidden": [32]
+      "hide": [1540],
+      "hidden": [1540]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
+    "$attrsToReflect$": [["hide", "hide"], ["hidden", "hidden"]]
   }; }
 }
 
