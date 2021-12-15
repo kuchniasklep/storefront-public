@@ -14642,7 +14642,7 @@ class FavouritesHeader {
   }; }
 }
 
-const featuredCss = "ks-featured{display:block;position:relative}ks-featured a{display:block;opacity:1;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-featured a:hover{display:block;opacity:0.97}ks-featured a:active{display:block;opacity:0.92}";
+const featuredCss = "ks-featured{display:block;position:relative}ks-featured a{max-width:100%;display:block;opacity:1;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-featured a:hover{display:block;opacity:0.97}ks-featured a:active{display:block;opacity:0.92}";
 
 class Featured {
   constructor(hostRef) {
