@@ -14461,7 +14461,7 @@ class CookiePopup {
     }, this.delay);
   }
   render() {
-    return null;
+    return hAsync(Host, { hidden: this.hidden, hide: this.hide });
   }
   get root() { return getElement(this); }
   static get style() { return cookiePopupCss; }
