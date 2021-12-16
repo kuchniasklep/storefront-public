@@ -5494,6 +5494,11 @@ const cmpModules = new Map, getModule = e => {
  };
  return o.$onInstancePromise$ = new Promise((e => o.$onInstanceResolve$ = e)), o.$onReadyPromise$ = new Promise((e => o.$onReadyResolve$ = e)), 
  e["s-p"] = [], e["s-rc"] = [], addHostEventListeners(e, o, t.$listeners$), hostRefs.set(e, o);
+}, Build = {
+ isDev: !1,
+ isBrowser: !1,
+ isServer: !0,
+ isTesting: !1
 }, styles$1 = new Map;
 
 class Alert$1 {
@@ -14462,7 +14467,9 @@ class CookiePopup {
       }, this.delay);
   }
   render() {
-    return hAsync(Host, { hidden: this.hidden, hide: this.hide });
+    if (!Build.isBrowser || document.cookie.indexOf('akceptCookie=tak') !== -1)
+      return hAsync(Host, { hidden: this.hidden, hide: this.hide });
+    return hAsync(Host, { hidden: this.hidden, hide: this.hide }, hAsync("p", null, this.message), hAsync("ks-button", { round: true, border: true, light: true, name: this.button, onClick: () => this.hidepanel() }));
   }
   get root() { return getElement(this); }
   static get style() { return cookiePopupCss; }
@@ -25609,16 +25616,30 @@ class Overlay {
   }; }
 }
 
+function loadCommon(commonDataId, commonDynamicDataId, Build) {
+  const commonDataElement = document.getElementById(commonDataId);
+  const commonData = JSON.parse(commonDataElement.innerHTML);
+  Object.keys(commonData).map(key => {
+    common.set(key, commonData[key]);
+  });
+  if (Build.isBrowser) {
+    const commonDynamicDataElement = document.getElementById(commonDynamicDataId);
+    const commonDynamicData = JSON.parse(commonDynamicDataElement.innerHTML);
+    Object.keys(commonDynamicData).map(key => {
+      commonDynamic.set(key, commonDynamicData[key]);
+    });
+    setTimeout(() => {
+      commonDynamic.set("loaded", true);
+    }, 100);
+  }
+}
+
 class PageBase {
   constructor(hostRef) {
     registerInstance(this, hostRef);
   }
   componentWillLoad() {
-    const commonDataElement = document.getElementById(this.commonData);
-    const commonData = JSON.parse(commonDataElement.innerHTML);
-    Object.keys(commonData).map(key => {
-      common.set(key, commonData[key]);
-    });
+    loadCommon(this.commonData, this.commonDynamicData, Build);
   }
   render() {
     return hAsync(Host, null, hAsync("ks-page-header", null), hAsync("slot", null), hAsync("ks-page-footer", null));
@@ -25712,13 +25733,9 @@ class PageProduct {
     registerInstance(this, hostRef);
   }
   componentWillLoad() {
-    const commonDataElement = document.getElementById(this.commonData);
+    loadCommon(this.commonData, this.commonDynamicData, Build);
     const productDataElement = document.getElementById(this.productData);
-    const commonData = JSON.parse(commonDataElement.innerHTML);
     const productData = JSON.parse(productDataElement.innerHTML);
-    Object.keys(commonData).map(key => {
-      common.set(key, commonData[key]);
-    });
     Object.keys(productData).map(key => {
       product.set(key, productData[key]);
     });
