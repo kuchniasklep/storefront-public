@@ -20109,7 +20109,7 @@ class Img {
   }; }
 }
 
-const img2Css = "ks-img2{display:inline-block;-webkit-box-sizing:border-box;box-sizing:border-box;max-height:inherit;max-width:inherit;height:100%;font-size:0;position:relative}ks-img2 picture{width:inherit;height:inherit;max-height:inherit;max-width:inherit}ks-img2 img{display:inline-block;width:auto;height:auto;max-width:inherit;max-height:inherit;font-size:0;opacity:1;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-img2 canvas{display:inline-block;width:auto;height:auto;max-width:inherit;max-height:inherit;font-size:0}ks-img2[src*=\".svg\"] img{display:inline-block;font-size:0;height:100%;width:100%;max-width:inherit;max-height:inherit;overflow:visible;opacity:1;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-img2[vertical] img{width:auto}ks-img2[horizontal] img{height:auto}ks-img2 img.loading{opacity:0;height:0}ks-img2[limit] img{max-width:100%;max-height:100%}ks-img2[center] picture{margin:auto}";
+const img2Css = "ks-img2{display:inline-block;-webkit-box-sizing:border-box;box-sizing:border-box;max-height:inherit;max-width:inherit;height:100%;font-size:0;position:relative}ks-img2 picture{width:inherit;height:inherit;max-height:inherit;max-width:inherit}ks-img2 img{display:inline-block;width:auto;height:auto;max-width:inherit;max-height:inherit;font-size:0;opacity:1;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-img2 canvas{display:inline-block;width:auto;height:auto;max-width:inherit;max-height:inherit;font-size:0}ks-img2[src*=\".svg\"] img{display:inline-block;font-size:0;height:100%;width:100%;max-width:inherit;max-height:inherit;overflow:visible;opacity:1;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-img2[vertical] img{width:auto}ks-img2[horizontal] img{height:auto}ks-img2 img.loading{opacity:0;height:0}ks-img2[limit] img{max-width:100%;max-height:100%}ks-img2[center] picture{margin:auto;display:-ms-inline-flexbox;display:inline-flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}ks-img2[fill] picture{position:absolute;left:0;right:0;top:0;bottom:0}";
 
 class Img2 {
   constructor(hostRef) {
@@ -20172,7 +20172,7 @@ class Img2 {
         hAsync("source", { srcSet: this.webp, type: "image/webp" })
         : null, hAsync("img", { class: loading, onLoad: (e) => this.loadHandler(e), "data-src": this.src, alt: this.alt, width: this.width, height: this.height })),
       (!this.loaded ? hAsync("ks-loader", { dark: true }) : null),
-      !this.loaded ? hAsync("canvas", { width: this.width, height: this.height }) : null,
+      !this.loaded || this.fill ? hAsync("canvas", { width: this.width, height: this.height }) : null,
     ];
   }
   get root() { return getElement(this); }
@@ -20195,12 +20195,13 @@ class Img2 {
       "vertical": [516],
       "horizontal": [516],
       "limit": [516],
+      "fill": [516],
       "center": [516],
       "loaded": [32]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["src", "src"], ["vertical", "vertical"], ["horizontal", "horizontal"], ["limit", "limit"], ["center", "center"]]
+    "$attrsToReflect$": [["src", "src"], ["vertical", "vertical"], ["horizontal", "horizontal"], ["limit", "limit"], ["fill", "fill"], ["center", "center"]]
   }; }
 }
 
@@ -25634,7 +25635,7 @@ function loadCommon(commonDataId, commonDynamicDataId, Build) {
   }
 }
 
-const baseCss = "ks-page-base:not(.hydrated)>*:not(ks-page-header):not(ks-page-footer){visibility:hidden}";
+const baseCss = "";
 
 class PageBase {
   constructor(hostRef) {
@@ -25729,7 +25730,7 @@ const product = createStore({
   tags: []
 });
 
-const productCss = "ks-page-product>h3{text-align:center;margin-top:15px}ks-page-product>ks-product-container{margin-bottom:15px}ks-page-product:not(.hydrated)>*:not(ks-page-header):not(ks-page-footer){visibility:hidden}";
+const productCss = "ks-page-product>h3{text-align:center;margin-top:15px}ks-page-product>ks-product-container{margin-bottom:15px}";
 
 class PageProduct {
   constructor(hostRef) {
@@ -26316,7 +26317,7 @@ class ProductCard {
     const previousPrice = this.previousPrice ? this.previousPrice.toFixed(2) + " zł" : "";
     const translations = common.get('translations');
     return [
-      hAsync("a", { href: this.link, "aria-label": this.name, class: "top" }, hAsync("ks-img2", { src: this.img, webp: this.webp, width: 280, height: 280, alt: this.name }), hAsync("span", null, this.name)),
+      hAsync("a", { href: this.link, "aria-label": this.name, class: "top" }, hAsync("ks-img2", { fill: true, limit: true, center: true, src: this.img, webp: this.webp, width: 280, height: 280, alt: this.name }), hAsync("span", null, this.name)),
       hAsync("div", { class: "price" }, this.previousPrice ?
         hAsync("s", { class: "previous" }, previousPrice)
         : null, hAsync("span", { class: "current" }, currentPrice)),
