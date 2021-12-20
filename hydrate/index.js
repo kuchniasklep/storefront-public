@@ -26244,9 +26244,9 @@ async function addToCart(id, count, name, price, traits = "", place = 1) {
       return;
     }
     navbar.IncrementCart(count.toString());
-    OpenSuggestions(this.productId, this.name);
+    OpenSuggestions(id, this.name);
     if (data.event)
-      eachTracker(item => item === null || item === void 0 ? void 0 : item.addToCart(data.event, this.productId, this.name, this.price, 1, "PLN"));
+      eachTracker(item => item === null || item === void 0 ? void 0 : item.addToCart(data.event, this.id, this.name, this.price, 1, "PLN"));
   })
     .catch(error => {
     errorpopup.show(error);
