@@ -25634,6 +25634,8 @@ function loadCommon(commonDataId, commonDynamicDataId, Build) {
   }
 }
 
+const baseCss = "ks-page-base:not(.hydrated)>*:not(ks-page-header):not(ks-page-footer){visibility:none}";
+
 class PageBase {
   constructor(hostRef) {
     registerInstance(this, hostRef);
@@ -25644,6 +25646,7 @@ class PageBase {
   render() {
     return hAsync(Host, null, hAsync("ks-page-header", null), hAsync("slot", null), hAsync("ks-page-footer", null));
   }
+  static get style() { return baseCss; }
   static get cmpMeta() { return {
     "$flags$": 4,
     "$tagName$": "ks-page-base",
@@ -25726,7 +25729,7 @@ const product = createStore({
   tags: []
 });
 
-const productCss = "ks-page-product>h3{text-align:center;margin-top:15px}ks-page-product>ks-product-container{margin-bottom:15px}";
+const productCss = "ks-page-product>h3{text-align:center;margin-top:15px}ks-page-product>ks-product-container{margin-bottom:15px}ks-page-product:not(.hydrated)>*:not(ks-page-header):not(ks-page-footer){visibility:none}";
 
 class PageProduct {
   constructor(hostRef) {
