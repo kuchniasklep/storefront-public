@@ -25634,7 +25634,7 @@ function loadCommon(commonDataId, commonDynamicDataId, Build) {
   }
 }
 
-const baseCss = "ks-page-base:not(.hydrated)>*:not(ks-page-header):not(ks-page-footer){visibility:none}";
+const baseCss = "ks-page-base:not(.hydrated)>*:not(ks-page-header):not(ks-page-footer){visibility:hidden}";
 
 class PageBase {
   constructor(hostRef) {
@@ -25729,7 +25729,7 @@ const product = createStore({
   tags: []
 });
 
-const productCss = "ks-page-product>h3{text-align:center;margin-top:15px}ks-page-product>ks-product-container{margin-bottom:15px}ks-page-product:not(.hydrated)>*:not(ks-page-header):not(ks-page-footer){visibility:none}";
+const productCss = "ks-page-product>h3{text-align:center;margin-top:15px}ks-page-product>ks-product-container{margin-bottom:15px}ks-page-product:not(.hydrated)>*:not(ks-page-header):not(ks-page-footer){visibility:hidden}";
 
 class PageProduct {
   constructor(hostRef) {
