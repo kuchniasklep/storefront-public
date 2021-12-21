@@ -12003,61 +12003,6 @@ class Button {
   }; }
 }
 
-async function cartfetch(url, body) {
-  const headers = new Headers();
-  headers.append('pragma', 'no-cache');
-  headers.append('cache-control', 'no-cache');
-  return fetch(url, {
-    method: 'POST',
-    body: body,
-    headers: headers,
-    credentials: "same-origin"
-  })
-    .then(response => {
-    if (!response.ok)
-      throw { name: response.status, message: response.statusText };
-    return response;
-  });
-}
-function AddToFavourites(id, finished) {
-  const navbar = document.querySelector('ks-navbar');
-  const errorpopup = document.querySelector('ks-error-popup');
-  let cartBody = new FormData();
-  cartBody.append("id", id);
-  cartfetch("inne/do_schowka.php?tok=" + ksFavouritesToken, cartBody)
-    .then(() => {
-    if (finished)
-      finished();
-    navbar.IncrementHeart();
-  })
-    .catch(error => {
-    errorpopup.show(error);
-    if (finished)
-      finished();
-  });
-}
-function RemoveFromFavourites(id, finished) {
-  $.post("inne/do_schowka.php?tok=" + ksFavouritesRemoveToken, {
-    id: id,
-    akcja: 'usun'
-  }, function () {
-    window.location.reload();
-    if (finished)
-      finished();
-  });
-}
-function RemoveAllFavourites(finished) {
-  $.post("inne/schowek_usun.php?tok=" + ksFavouritesRemoveAllToken, {}, function () {
-    window.location.reload();
-    if (finished)
-      finished();
-  });
-}
-function OpenSuggestions$1(id, name) {
-  const suggestions = document.querySelector("ks-product-suggestions");
-  suggestions.show(id, name);
-}
-
 const appendToMap = (map, propName, value) => {
     const items = map.get(propName);
     if (!items) {
@@ -12263,6 +12208,91 @@ function loadtracker() {
   });
 }
 
+const common = createStore({
+  logo: "",
+  categoryUrl: "",
+  cartLink: "",
+  heartLink: "",
+  accountLink: "",
+  loginLink: "",
+  logoutLink: "",
+  registerLink: "",
+  softwareLink: "",
+  promo: "",
+  promoLink: "",
+  email: "",
+  phone: "",
+  workingHours: "",
+  company: "",
+  address: "",
+  nip: "",
+  newsletterApi: "",
+  suggestionApi: "",
+  autocompleteApi: "",
+  cookieMessage: "",
+  cookieButton: "",
+  cookieDelay: 1000,
+  categories: [],
+  social: [],
+  reviewers: [],
+  footerLinks: [],
+  translations: {}
+});
+
+async function Fetch(url, body) {
+  const headers = new Headers();
+  headers.append('pragma', 'no-cache');
+  headers.append('cache-control', 'no-cache');
+  return fetch(url, {
+    method: 'POST',
+    body: body,
+    headers: headers,
+    credentials: "same-origin"
+  })
+    .then(response => {
+    if (!response.ok)
+      throw { name: response.status, message: response.statusText };
+    return response;
+  });
+}
+
+async function addToCart(id, count, name, price, traits = "", place = 1, url = "") {
+  const errorpopup = document.querySelector('ks-error-popup');
+  const messagepopup = document.querySelector('ks-message-popup');
+  const navbar = document.querySelector('ks-navbar');
+  let body = new FormData();
+  body.append("id", id);
+  body.append("ilosc", count.toString());
+  body.append("nazwa", name);
+  body.append("value", price.toString());
+  body.append("cechy", traits);
+  body.append("akcja", 'dodaj');
+  body.append("miejsce", place.toString());
+  const api = common.get('api').addToCart;
+  return Fetch(api, body)
+    .then(async (data) => data.json())
+    .then(async (data) => {
+    if (!data.status) {
+      if (data.productLink)
+        messagepopup.show("Wymagany wybór cechy", data.message, "Przejdź do produktu", url);
+      else
+        messagepopup.show("Błąd dodawania produktu", data.message);
+      return;
+    }
+    navbar.IncrementCart(count.toString());
+    OpenSuggestions(id, name);
+    if (data.event)
+      eachTracker(item => item === null || item === void 0 ? void 0 : item.addToCart(data.event, id, name, price, 1, "PLN"));
+  })
+    .catch(error => {
+    errorpopup.show(error);
+  });
+}
+function OpenSuggestions(id, name) {
+  const suggestions = document.querySelector("ks-product-suggestions");
+  suggestions.show(id, name);
+}
+
 const buttonCartCss = "ks-button-cart{display:block;height:100%}ks-button-cart[expand]{-ms-flex:1;flex:1}ks-button-cart[padding] button{padding:5px;min-height:50px}@media (min-width: 700px){ks-button-cart[padding] button{padding:10px;min-height:60px}}ks-button-cart button{position:relative;display:block;width:100%;height:100%;min-height:42px;min-width:44px;padding:1px 10px;font-size:.875rem;line-height:40px;text-align:center;text-decoration:none;text-transform:none;font-family:var(--font-regular);outline:none;border:none;border-radius:0px;color:white;background-color:var(--product-card-primary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-button-cart button:hover{background-color:var(--product-card-primary-hover)}ks-button-cart button:active{background-color:var(--product-card-primary-active)}ks-button-cart[disabled] button{background-color:var(--product-card-disabled-color) !important;color:var(--product-card-disabled-text) !important}";
 
 class ButtonCart {
@@ -12299,36 +12329,7 @@ class ButtonCart {
   }
   async cart(count) {
     this.loading = true;
-    const errorpopup = document.querySelector('ks-error-popup');
-    const messagepopup = document.querySelector('ks-message-popup');
-    const navbar = document.querySelector('ks-navbar');
-    let body = new FormData();
-    body.append("id", this.productId);
-    body.append("ilosc", count);
-    body.append("nazwa", this.name);
-    body.append("value", this.price.toString());
-    body.append("cechy", this.traits);
-    body.append("akcja", 'dodaj');
-    body.append("miejsce", '1');
-    // Replace link string with state during prerendering rework
-    await this.fetch("api/cart/product_add.php?tok=" + ksCartToken, body)
-      .then(async (data) => data.json())
-      .then(async (data) => {
-      if (!data.status) {
-        if (data.productLink)
-          messagepopup.show("Wymagany wybór cechy", data.message, "Przejdź do produktu", this.url);
-        else
-          messagepopup.show("Błąd dodawania produktu", data.message);
-        return;
-      }
-      navbar.IncrementCart(count);
-      OpenSuggestions$1(this.productId, this.name);
-      if (data.event)
-        eachTracker(item => item === null || item === void 0 ? void 0 : item.addToCart(data.event, this.productId, this.name, this.price, 1, "PLN"));
-    })
-      .catch(error => {
-      errorpopup.show(error);
-    });
+    await addToCart(this.productId, count, this.name, this.price, this.traits, 1, this.url);
     this.loading = false;
   }
   ;
@@ -12370,6 +12371,57 @@ class ButtonCart {
     "$lazyBundleId$": "-",
     "$attrsToReflect$": [["productId", "product-id"], ["name", "name"], ["url", "url"], ["price", "price"], ["count", "count"], ["traits", "traits"], ["expand", "expand"], ["padding", "padding"], ["disabled", "disabled"]]
   }; }
+}
+
+async function cartfetch(url, body) {
+  const headers = new Headers();
+  headers.append('pragma', 'no-cache');
+  headers.append('cache-control', 'no-cache');
+  return fetch(url, {
+    method: 'POST',
+    body: body,
+    headers: headers,
+    credentials: "same-origin"
+  })
+    .then(response => {
+    if (!response.ok)
+      throw { name: response.status, message: response.statusText };
+    return response;
+  });
+}
+function AddToFavourites(id, finished) {
+  const navbar = document.querySelector('ks-navbar');
+  const errorpopup = document.querySelector('ks-error-popup');
+  let cartBody = new FormData();
+  cartBody.append("id", id);
+  cartfetch("inne/do_schowka.php?tok=" + ksFavouritesToken, cartBody)
+    .then(() => {
+    if (finished)
+      finished();
+    navbar.IncrementHeart();
+  })
+    .catch(error => {
+    errorpopup.show(error);
+    if (finished)
+      finished();
+  });
+}
+function RemoveFromFavourites(id, finished) {
+  $.post("inne/do_schowka.php?tok=" + ksFavouritesRemoveToken, {
+    id: id,
+    akcja: 'usun'
+  }, function () {
+    window.location.reload();
+    if (finished)
+      finished();
+  });
+}
+function RemoveAllFavourites(finished) {
+  $.post("inne/schowek_usun.php?tok=" + ksFavouritesRemoveAllToken, {}, function () {
+    window.location.reload();
+    if (finished)
+      finished();
+  });
 }
 
 const buttonFavCss = "ks-button-fav{display:block;height:100%}ks-button-fav[expand]{-ms-flex:1;flex:1}ks-button-fav[padding] button{padding:5px;min-height:50px}@media (min-width: 700px){ks-button-fav[padding] button{min-height:60px;padding:10px}}ks-button-fav button{position:relative;display:block;width:100%;height:100%;min-height:42px;min-width:44px;padding:1px 10px;font-size:.875rem;line-height:40px;text-align:center;text-decoration:none;text-transform:none;outline:none;border:none;border-radius:0px;color:white;background-color:var(--product-card-secondary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-button-fav button:hover{background-color:var(--product-card-secondary-hover)}ks-button-fav button:active{background-color:var(--product-card-secondary-active)}ks-button-fav .success{display:-ms-flexbox;display:flex;position:absolute;top:0;left:0;width:100%;height:100%;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;background-color:var(--product-card-secondary);-webkit-animation:fade-in 0.2s 1;animation:fade-in 0.2s 1}";
@@ -23588,37 +23640,6 @@ class MiniCart {
   }; }
 }
 
-const common = createStore({
-  logo: "",
-  categoryUrl: "",
-  cartLink: "",
-  heartLink: "",
-  accountLink: "",
-  loginLink: "",
-  logoutLink: "",
-  registerLink: "",
-  softwareLink: "",
-  promo: "",
-  promoLink: "",
-  email: "",
-  phone: "",
-  workingHours: "",
-  company: "",
-  address: "",
-  nip: "",
-  newsletterApi: "",
-  suggestionApi: "",
-  autocompleteApi: "",
-  cookieMessage: "",
-  cookieButton: "",
-  cookieDelay: 1000,
-  categories: [],
-  social: [],
-  reviewers: [],
-  footerLinks: [],
-  translations: {}
-});
-
 const commonDynamic = createStore({
   loaded: false,
   loggedIn: false,
@@ -26203,60 +26224,6 @@ class ProductCalculatorPayU {
   }; }
 }
 
-async function Fetch(url, body) {
-  const headers = new Headers();
-  headers.append('pragma', 'no-cache');
-  headers.append('cache-control', 'no-cache');
-  return fetch(url, {
-    method: 'POST',
-    body: body,
-    headers: headers,
-    credentials: "same-origin"
-  })
-    .then(response => {
-    if (!response.ok)
-      throw { name: response.status, message: response.statusText };
-    return response;
-  });
-}
-
-async function addToCart(id, count, name, price, traits = "", place = 1) {
-  const errorpopup = document.querySelector('ks-error-popup');
-  const messagepopup = document.querySelector('ks-message-popup');
-  const navbar = document.querySelector('ks-navbar');
-  let body = new FormData();
-  body.append("id", id);
-  body.append("ilosc", count.toString());
-  body.append("nazwa", name);
-  body.append("value", price.toString());
-  body.append("cechy", traits);
-  body.append("akcja", 'dodaj');
-  body.append("miejsce", place.toString());
-  const api = common.get('api').addToCart;
-  return Fetch(api, body)
-    .then(async (data) => data.json())
-    .then(async (data) => {
-    if (!data.status) {
-      if (data.productLink)
-        messagepopup.show("Wymagany wybór cechy", data.message, "Przejdź do produktu", this.url);
-      else
-        messagepopup.show("Błąd dodawania produktu", data.message);
-      return;
-    }
-    navbar.IncrementCart(count.toString());
-    OpenSuggestions(id, this.name);
-    if (data.event)
-      eachTracker(item => item === null || item === void 0 ? void 0 : item.addToCart(data.event, this.id, this.name, this.price, 1, "PLN"));
-  })
-    .catch(error => {
-    errorpopup.show(error);
-  });
-}
-function OpenSuggestions(id, name) {
-  const suggestions = document.querySelector("ks-product-suggestions");
-  suggestions.show(id, name);
-}
-
 async function addToFavourites(id) {
   const errorpopup = document.querySelector('ks-error-popup');
   const navbar = document.querySelector('ks-navbar');
@@ -26292,7 +26259,7 @@ class ProductCard {
   }
   cart() {
     this.cartLoading = true;
-    addToCart(this.productId, 1, this.name, this.currentPrice)
+    addToCart(this.productId, 1, this.name, this.currentPrice, "", 1, this.link)
       .then(() => this.cartLoading = false);
   }
   favourites() {
@@ -26609,30 +26576,11 @@ class ProductInfo$1 {
   async AddToCart() {
     product.set("cartLoading", true);
     const id = product.get("id");
-    const count = product.get("count").toString();
+    const count = product.get("count");
     const traitIDs = product.get("traitIDs");
     const name = product.get("name");
-    const value = product.get("currentPrice");
-    let body = new FormData();
-    body.append("id", id);
-    body.append("ilosc", count);
-    body.append("nazwa", name);
-    body.append("value", value);
-    body.append("cechy", traitIDs);
-    body.append("akcja", 'dodaj');
-    body.append("miejsce", '0');
-    await this.fetch(product.get("api").cart, body)
-      .then(response => response.json())
-      .then(async (data) => {
-      if (!data.status) {
-        this.messagePopup.show("Błąd dodawania produktu", data.message);
-        return;
-      }
-      OpenSuggestions$1(id, name);
-      if (data.event)
-        eachTracker(item => item === null || item === void 0 ? void 0 : item.addToCart(data.event, id, name, parseFloat(product.get("currentPrice")), product.get("count"), "PLN"));
-    })
-      .catch(error => this.errorPopup.show(error));
+    const value = parseFloat(product.get("currentPrice"));
+    await addToCart(id, count, name, value, traitIDs, 0);
     product.set("cartLoading", false);
   }
   async AddToFavourites() {
