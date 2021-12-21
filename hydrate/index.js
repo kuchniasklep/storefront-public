@@ -25764,6 +25764,15 @@ class PageProduct {
     Object.keys(productData).map(key => {
       product.set(key, productData[key]);
     });
+    this.setDefaultTrait();
+  }
+  setDefaultTrait() {
+    if (!(product === null || product === void 0 ? void 0 : product.get("traits")))
+      return;
+    const traits = product.get("traits").reduce((accumulator, trait) => {
+      return accumulator + "x" + trait.id + "-" + trait.items[0].id;
+    }, "");
+    product.set("traitIDs", traits);
   }
   render() {
     if (!(product === null || product === void 0 ? void 0 : product.get('name')))
