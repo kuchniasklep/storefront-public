@@ -23645,6 +23645,7 @@ const commonDynamic = createStore({
   loggedIn: false,
   cartCount: 0,
   heartCount: 0,
+  api: {}
 });
 
 const navbarCss = "ks-navbar{display:block;min-height:104px;background-color:var(--navbar-color);-webkit-transition:background-color 0.2s ease;transition:background-color 0.2s ease}ks-navbar>nav{display:-ms-flexbox;display:flex;position:relative;color:var(--navbar-text-color)}ks-navbar>nav>.logo{display:-ms-flexbox;display:flex;-ms-flex:1;flex:1;-ms-flex-align:center;align-items:center}ks-navbar>nav>.search{display:-ms-flexbox;display:flex;-ms-flex:unset;flex:unset;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}ks-navbar>nav>.buttons{display:-ms-flexbox;display:flex;-ms-flex:unset;flex:unset;-ms-flex-pack:end;justify-content:flex-end;-ms-flex-align:center;align-items:center;opacity:0;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-navbar>nav>.buttons.loaded{opacity:1}ks-navbar>nav>.logo>div{margin-right:auto;margin-left:15px;max-width:217px;width:100%;-ms-flex-pack:start;justify-content:flex-start}ks-navbar>nav>.logo>div ks-img{max-width:217px;margin-right:15px}ks-navbar>nav>.logo>div .promo{display:block;font-size:11px;font-weight:700;text-decoration:none;color:var(--navbar-text-color);white-space:nowrap}@media only screen and (min-width: 640px){ks-navbar>nav>.logo{-ms-flex:1;flex:1}ks-navbar>nav>.buttons{-ms-flex:1;flex:1}}@media only screen and (min-width: 1400px){ks-navbar>nav>.search{-ms-flex:1;flex:1}ks-navbar>nav>.logo>div ks-img{width:217px}ks-navbar>nav>.logo>div{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;max-width:unset;width:unset}ks-navbar>nav>.logo>div .promo{margin-left:15px;display:block;padding:8px 20px 5px 20px;border-radius:50px;background-color:var(--navbar-text-color);color:var(--navbar-color);font-size:13px;font-weight:700}ks-navbar>nav>.logo>div a.promo{-webkit-box-shadow:0 0 0px rgba(255, 255, 255, 0.529);box-shadow:0 0 0px rgba(255, 255, 255, 0.529);-webkit-transition:-webkit-box-shadow 0.2s ease;transition:-webkit-box-shadow 0.2s ease;transition:box-shadow 0.2s ease;transition:box-shadow 0.2s ease, -webkit-box-shadow 0.2s ease}ks-navbar>nav>.logo>div a.promo:hover{-webkit-box-shadow:0 0 15px rgba(255, 255, 255, 0.529);box-shadow:0 0 15px rgba(255, 255, 255, 0.529)}ks-navbar>nav>.logo>div a.promo:active{-webkit-box-shadow:0 0 8px rgba(255, 255, 255, 0.529);box-shadow:0 0 8px rgba(255, 255, 255, 0.529)}}#ks-navbar-menu-buttons{-webkit-box-sizing:border-box;box-sizing:border-box;min-height:70px;padding:0 15px;text-decoration:none}@media only screen and (max-width: 639px){ks-navbar .tablet-desktop{display:none}}@media only screen and (max-width: 959px){ks-navbar .desktop{display:none}}@media only screen and (min-width: 960px){ks-navbar .mobile-tablet{display:none}}";
@@ -25741,7 +25742,6 @@ const product = createStore({
   reviews: {},
   infoBanner: {},
   notifyStrings: {},
-  api: {},
   warranty: "",
   warrantyLink: "",
   points: {},
@@ -26542,7 +26542,7 @@ class ProductInfo$1 {
     body.append("id", product.get("id"));
     body.append("count", event.detail.toString());
     product.set("cartLoading", true);
-    await this.fetch(product.get("api").shipping, body)
+    await this.fetch(commonDynamic.get("api").shippingTime, body)
       .then(response => response.json())
       .then(json => {
       product.set("shippingTime", json.shippingTime);
@@ -26559,7 +26559,7 @@ class ProductInfo$1 {
     let body = new FormData();
     body.append("id", product.get("id"));
     body.append("traits", traits);
-    await this.fetch(product.get("api").trait, body)
+    await this.fetch(commonDynamic.get("api").productTraits, body)
       .then(response => response.json())
       .then(json => {
       if (json.currentPrice != undefined)
@@ -26596,7 +26596,7 @@ class ProductInfo$1 {
     product.set("favouritesLoading", true);
     let body = new FormData();
     body.append("id", product.get("id"));
-    await this.fetch(product.get("api").favourites, body)
+    await this.fetch(commonDynamic.get("api").addToFavourites, body)
       .then(() => this.navbar.IncrementHeart())
       .catch(error => this.errorPopup.show(error));
     product.set("favouritesCompleted", true);
@@ -26698,7 +26698,7 @@ class ProductNegotiate {
     data.append("productPrice", product.get('currentPrice'));
     data.append("productOldPrice", product.get('previousPrice'));
     data.append("productName", product.get('name'));
-    await fetch(product.get('api').negotiate, { body: data, method: "post" })
+    await fetch(commonDynamic.get('api').negotiatePrice, { body: data, method: "post" })
       .then(async (response) => {
       const result = await response.text();
       if (result == "success")
@@ -26757,7 +26757,7 @@ class ProductNotify {
   async requestHandler(event) {
     const notifyStrings = product.get("notifyStrings");
     const productId = product.get("id");
-    const api = product.get("api").notify;
+    const api = commonDynamic.get("api").notifyAvailability;
     event.preventDefault();
     if (!await ValidateInput(this.root.querySelector('form')))
       return;
