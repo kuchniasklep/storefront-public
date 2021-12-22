@@ -12208,35 +12208,12 @@ function loadtracker() {
   });
 }
 
-const common = createStore({
-  logo: "",
-  categoryUrl: "",
-  cartLink: "",
-  heartLink: "",
-  accountLink: "",
-  loginLink: "",
-  logoutLink: "",
-  registerLink: "",
-  softwareLink: "",
-  promo: "",
-  promoLink: "",
-  email: "",
-  phone: "",
-  workingHours: "",
-  company: "",
-  address: "",
-  nip: "",
-  newsletterApi: "",
-  suggestionApi: "",
-  autocompleteApi: "",
-  cookieMessage: "",
-  cookieButton: "",
-  cookieDelay: 1000,
-  categories: [],
-  social: [],
-  reviewers: [],
-  footerLinks: [],
-  translations: {}
+const commonDynamic = createStore({
+  loaded: false,
+  loggedIn: false,
+  cartCount: 0,
+  heartCount: 0,
+  api: {}
 });
 
 async function Fetch(url, body) {
@@ -12268,7 +12245,7 @@ async function addToCart(id, count, name, price, traits = "", place = 1, url = "
   body.append("cechy", traits);
   body.append("akcja", 'dodaj');
   body.append("miejsce", place.toString());
-  const api = common.get('api').addToCart;
+  const api = commonDynamic.get('api').addToCart;
   return Fetch(api, body)
     .then(async (data) => data.json())
     .then(async (data) => {
@@ -23640,12 +23617,35 @@ class MiniCart {
   }; }
 }
 
-const commonDynamic = createStore({
-  loaded: false,
-  loggedIn: false,
-  cartCount: 0,
-  heartCount: 0,
-  api: {}
+const common = createStore({
+  logo: "",
+  categoryUrl: "",
+  cartLink: "",
+  heartLink: "",
+  accountLink: "",
+  loginLink: "",
+  logoutLink: "",
+  registerLink: "",
+  softwareLink: "",
+  promo: "",
+  promoLink: "",
+  email: "",
+  phone: "",
+  workingHours: "",
+  company: "",
+  address: "",
+  nip: "",
+  newsletterApi: "",
+  suggestionApi: "",
+  autocompleteApi: "",
+  cookieMessage: "",
+  cookieButton: "",
+  cookieDelay: 1000,
+  categories: [],
+  social: [],
+  reviewers: [],
+  footerLinks: [],
+  translations: {}
 });
 
 const navbarCss = "ks-navbar{display:block;min-height:104px;background-color:var(--navbar-color);-webkit-transition:background-color 0.2s ease;transition:background-color 0.2s ease}ks-navbar>nav{display:-ms-flexbox;display:flex;position:relative;color:var(--navbar-text-color)}ks-navbar>nav>.logo{display:-ms-flexbox;display:flex;-ms-flex:1;flex:1;-ms-flex-align:center;align-items:center}ks-navbar>nav>.search{display:-ms-flexbox;display:flex;-ms-flex:unset;flex:unset;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}ks-navbar>nav>.buttons{display:-ms-flexbox;display:flex;-ms-flex:unset;flex:unset;-ms-flex-pack:end;justify-content:flex-end;-ms-flex-align:center;align-items:center;opacity:0;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-navbar>nav>.buttons.loaded{opacity:1}ks-navbar>nav>.logo>div{margin-right:auto;margin-left:15px;max-width:217px;width:100%;-ms-flex-pack:start;justify-content:flex-start}ks-navbar>nav>.logo>div ks-img{max-width:217px;margin-right:15px}ks-navbar>nav>.logo>div .promo{display:block;font-size:11px;font-weight:700;text-decoration:none;color:var(--navbar-text-color);white-space:nowrap}@media only screen and (min-width: 640px){ks-navbar>nav>.logo{-ms-flex:1;flex:1}ks-navbar>nav>.buttons{-ms-flex:1;flex:1}}@media only screen and (min-width: 1400px){ks-navbar>nav>.search{-ms-flex:1;flex:1}ks-navbar>nav>.logo>div ks-img{width:217px}ks-navbar>nav>.logo>div{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;max-width:unset;width:unset}ks-navbar>nav>.logo>div .promo{margin-left:15px;display:block;padding:8px 20px 5px 20px;border-radius:50px;background-color:var(--navbar-text-color);color:var(--navbar-color);font-size:13px;font-weight:700}ks-navbar>nav>.logo>div a.promo{-webkit-box-shadow:0 0 0px rgba(255, 255, 255, 0.529);box-shadow:0 0 0px rgba(255, 255, 255, 0.529);-webkit-transition:-webkit-box-shadow 0.2s ease;transition:-webkit-box-shadow 0.2s ease;transition:box-shadow 0.2s ease;transition:box-shadow 0.2s ease, -webkit-box-shadow 0.2s ease}ks-navbar>nav>.logo>div a.promo:hover{-webkit-box-shadow:0 0 15px rgba(255, 255, 255, 0.529);box-shadow:0 0 15px rgba(255, 255, 255, 0.529)}ks-navbar>nav>.logo>div a.promo:active{-webkit-box-shadow:0 0 8px rgba(255, 255, 255, 0.529);box-shadow:0 0 8px rgba(255, 255, 255, 0.529)}}#ks-navbar-menu-buttons{-webkit-box-sizing:border-box;box-sizing:border-box;min-height:70px;padding:0 15px;text-decoration:none}@media only screen and (max-width: 639px){ks-navbar .tablet-desktop{display:none}}@media only screen and (max-width: 959px){ks-navbar .desktop{display:none}}@media only screen and (min-width: 960px){ks-navbar .mobile-tablet{display:none}}";
