@@ -20148,7 +20148,8 @@ class Img2 {
     this.loaded = false;
   }
   loadHandler(e) {
-    if (e.target instanceof HTMLElement && !e.target.getAttribute("src").includes('data:image')) {
+    var _a;
+    if (e.target instanceof HTMLElement && !((_a = e.target.getAttribute("src")) === null || _a === void 0 ? void 0 : _a.includes('data:image'))) {
       this.loaded = true;
       this.lazyLoaded.emit();
     }
@@ -20183,7 +20184,7 @@ class Img2 {
         }
       }
     };
-    if (this.image) {
+    if (this.image && target) {
       this.observer = new IntersectionObserver(onIntersection, {
         rootMargin: this.observerMargin
       });
@@ -23806,7 +23807,7 @@ class NavbarCategories {
           hAsync("ks-icon", { name: "link", size: 0.65 })))), hAsync("div", { class: "content" }, category.children.map((child, index) => 'children' in child ?
           hAsync("div", { hidden: index != this.childActive }, child.children.map(sub => hAsync("a", { href: sub.url }, sub.name)))
           : null)), hAsync("div", { class: "graphic" }, category.children.map((category, index) => "image" in category ?
-          hAsync("ks-img2", { vertical: true, src: category.image.url, width: category.image.width, height: category.image.height, target: "ks-category-view > .children > .graphic", style: { display: (this.childActive == index) ? "block" : "none" } })
+          hAsync("ks-img2", { vertical: true, src: category.image.url, width: category.image.width, height: category.image.height, target: "ks-navbar-categories .expandedchildren > .graphic", style: { display: (this.childActive == index) ? "block" : "none" } })
           : null)))
       ] :
         hAsync("div", { class: "simplechildren", style: childrenstyle, hidden: this.hidden || this.active != categoryIndex }, category.children.map(child => hAsync("a", { href: child.url }, child.name))));
@@ -25735,14 +25736,14 @@ class PageProduct {
         : null)
       : null), hAsync("ks-product-brand", { slot: "brand" }))), (tags === null || tags === void 0 ? void 0 : tags.length) > 0 || (variants === null || variants === void 0 ? void 0 : variants.length) > 0 ?
       hAsync("ks-container", { padding: true }, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 && !((variants === null || variants === void 0 ? void 0 : variants.length) > 0) ?
-        hAsync("ks-product-tags", null, tags.map(tag => hAsync("a", { href: tag.link }, tag.name)))
+        hAsync("ks-product-tags", null)
         : null, (variants === null || variants === void 0 ? void 0 : variants.length) > 0 ?
         hAsync("ks-product-variants", null)
         : null)
       : null, (tabs === null || tabs === void 0 ? void 0 : tabs.length) > 0 ?
       hAsync("ks-container", null, hAsync("ks-product-tabs", { names: tabs.map(tab => tab.name).join(", ") }, tabs.map((tab, index) => hAsync("ks-product-tab", { name: tab.name, open: index == 0, main: index == 0, content: tab.content }))))
       : null, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 && (variants === null || variants === void 0 ? void 0 : variants.length) > 0 ?
-      hAsync("ks-container", { padding: true }, hAsync("ks-product-tags", null, tags.map(tag => hAsync("a", { href: tag.link }, tag.name))))
+      hAsync("ks-container", { padding: true }, hAsync("ks-product-tags", null))
       : null, youtube || comments ?
       hAsync("ks-container", null, youtube.map(id => hAsync("ks-product-youtube", { "video-id": id })), comments ? hAsync("ks-product-comments", null) : null)
       : null, (similar === null || similar === void 0 ? void 0 : similar.length) > 0 ? [
@@ -27138,8 +27139,8 @@ class ProductTags {
     registerInstance(this, hostRef);
     this.expanded = false;
   }
-  componentDidLoad() {
-    const count = this.root.querySelectorAll('a').length;
+  componentWillLoad() {
+    const count = product.get('tags').length;
     if (count > 6)
       this.expandable = 3;
     else if (count > 4)
@@ -27149,14 +27150,14 @@ class ProductTags {
   }
   render() {
     return [
-      hAsync("div", null, hAsync("slot", null)),
+      hAsync("div", null, product.get('tags').map(tag => hAsync("a", { href: tag.link }, tag.name))),
       hAsync("ks-button", { transparent: true, narrower: true, round: true, icon: this.expanded ? "minus" : "plus", onClick: () => this.expanded = !this.expanded })
     ];
   }
   get root() { return getElement(this); }
   static get style() { return productTagsCss; }
   static get cmpMeta() { return {
-    "$flags$": 4,
+    "$flags$": 0,
     "$tagName$": "ks-product-tags",
     "$members$": {
       "expanded": [1540],
