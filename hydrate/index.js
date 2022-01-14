@@ -23753,7 +23753,7 @@ class NavbarButton {
   }; }
 }
 
-const navbarCategoriesCss = "ks-navbar-categories{display:block;background-color:var(--navbar-category-color);-webkit-transition:background-color 0.2s ease;transition:background-color 0.2s ease;height:32px;border-top:1px solid transparent;border-bottom:1px solid transparent;position:relative}@media only screen and (max-width: 959px){ks-navbar-categories{display:none}}ks-navbar-categories .category{display:inline-block;height:32px;outline:1px solid transparent;color:white}ks-navbar-categories .category.shallow{position:relative}ks-navbar-categories .category>a{margin:0 0 0 10px;line-height:36px;text-decoration:none;-webkit-transition:color 0.3s ease;transition:color 0.3s ease;color:var(--navbar-category-text-color);font-size:.875rem}ks-navbar-categories .category:first-child>a{margin:0 0 0 15px}ks-navbar-categories .category>ks-icon{margin:0 10px 0 0}ks-navbar-categories .category>a:hover{text-decoration:none;color:rgba(255, 255, 255, 0.733)}ks-navbar-categories .category>div{background-color:white;color:#252525;position:absolute;z-index:10000;top:33px;left:0px;min-width:200px;opacity:0.0;-webkit-transition:opacity 0.2s ease;transition:opacity 0.2s ease;-webkit-box-shadow:0 10px 15px -10px rgba(0, 0, 0, 0.26);box-shadow:0 10px 15px -10px rgba(0, 0, 0, 0.26)}ks-navbar-categories .simplechildren a{display:block;padding:9px 15px;text-decoration:none;font-size:14px;text-align:left;-webkit-box-sizing:border-box;box-sizing:border-box;border-bottom:1px solid #f2f2f2;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease;color:#252525}ks-navbar-categories .simplechildren a:hover{text-decoration:none;color:#252525;background-color:#f9f9f9}ks-navbar-categories .simplechildren a:active{text-decoration:none;background-color:#e6e6e6}ks-navbar-categories .expandedchildren .buttons{background-color:var(--navbar-category-backdrop);-webkit-transition:background-color 0.2s ease;transition:background-color 0.2s ease;width:230px}ks-navbar-categories .expandedchildren .buttons a{display:block;padding:10px 15px;width:100%;height:40px;background-color:var(--navbar-category-color);-webkit-transition:background-color 0.2s ease;transition:background-color 0.2s ease;color:white;border:none;outline:none;cursor:pointer;text-decoration:none;-webkit-box-sizing:border-box;box-sizing:border-box;border-bottom:1px solid transparent;-webkit-transition:background-color 0.3s ease, border-right-color 0.3 ease;transition:background-color 0.3s ease, border-right-color 0.3 ease;border-right:1px solid transparent;font-family:inherit;font-size:14px;text-align:left}ks-navbar-categories .expandedchildren .buttons a ks-icon{float:right;margin-top:2px}ks-navbar-categories .expandedchildren .buttons a:hover{background-color:var(--navbar-category-hover);color:var(--navbar-category-text-color);text-decoration:none}ks-navbar-categories .expandedchildren .buttons a:active{background-color:var(--navbar-category-active);color:var(--navbar-category-text-color);text-decoration:none}ks-navbar-categories .expandedchildren .buttons a.active{background-color:white;color:#252525;border-right-color:#f2f2f2}ks-navbar-categories .expandedchildren .content{-ms-flex:1 1 auto;flex:1 1 auto;min-width:1px}ks-navbar-categories .expandedchildren .content>div{display:-ms-flexbox;display:flex;height:100%;-ms-flex-flow:wrap column;flex-flow:wrap column;-ms-flex-line-pack:start;align-content:flex-start;-ms-flex-align:start;align-items:flex-start}ks-navbar-categories .expandedchildren .content>div[hidden]{display:none}ks-navbar-categories .expandedchildren .content a{display:block;width:230px;height:40px;padding:9px 15px;text-decoration:none;font-size:14px;text-align:left;-webkit-box-sizing:border-box;box-sizing:border-box;border-bottom:1px solid #f6f6f6;border-right:1px solid #f2f2f2;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease;color:#252525}ks-navbar-categories .expandedchildren .content a:hover{text-decoration:none;color:#252525;background-color:#f9f9f9}ks-navbar-categories .expandedchildren .graphic{display:none;-ms-flex:1 1 auto;flex:1 1 auto;min-width:1px;height:100%}@media only screen and (min-width: 1360px){ks-navbar-categories .expandedchildren .graphic{display:-ms-flexbox !important;display:flex !important;-ms-flex-pack:end;justify-content:flex-end}}ks-navbar-categories .expandedchildren[hidden] .graphic{display:none !important}ks-navbar-categories .expandedchildren{width:100%;min-height:240px;display:-ms-flexbox;display:flex;visibility:visible}ks-navbar-categories .expandedchildren[hidden]{visibility:hidden}";
+const navbarCategoriesCss = "ks-navbar-categories{display:-ms-flexbox;display:flex;background-color:var(--navbar-category-color);-webkit-transition:background-color 0.2s ease;transition:background-color 0.2s ease;height:32px;border-top:1px solid transparent;border-bottom:1px solid transparent;position:relative}@media only screen and (max-width: 959px){ks-navbar-categories{display:none}}ks-navbar-categories .category{display:-ms-inline-flexbox;display:inline-flex;-ms-flex-align:baseline;align-items:baseline;height:32px;outline:1px solid transparent;color:white}ks-navbar-categories .category.shallow{position:relative}ks-navbar-categories .category>a{margin:0 0 0 10px;line-height:36px;text-decoration:none;-webkit-transition:color 0.3s ease;transition:color 0.3s ease;color:var(--navbar-category-text-color);font-size:.875rem}ks-navbar-categories .category:first-child>a{margin:0 0 0 15px}ks-navbar-categories .category>ks-icon{margin:0 10px 0 0}ks-navbar-categories .category>a:hover{text-decoration:none;color:rgba(255, 255, 255, 0.733)}ks-navbar-categories .category>div{background-color:white;color:#252525;position:absolute;z-index:10000;top:33px;left:0px;min-width:200px;opacity:0.0;-webkit-transition:opacity 0.2s ease;transition:opacity 0.2s ease;-webkit-box-shadow:0 10px 15px -10px rgba(0, 0, 0, 0.26);box-shadow:0 10px 15px -10px rgba(0, 0, 0, 0.26)}ks-navbar-categories .simplechildren a{display:block;padding:9px 15px;text-decoration:none;font-size:14px;text-align:left;-webkit-box-sizing:border-box;box-sizing:border-box;border-bottom:1px solid #f2f2f2;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease;color:#252525}ks-navbar-categories .simplechildren a:hover{text-decoration:none;color:#252525;background-color:#f9f9f9}ks-navbar-categories .simplechildren a:active{text-decoration:none;background-color:#e6e6e6}ks-navbar-categories .expandedchildren .buttons{background-color:var(--navbar-category-backdrop);-webkit-transition:background-color 0.2s ease;transition:background-color 0.2s ease;width:230px}ks-navbar-categories .expandedchildren .buttons a{display:block;padding:10px 15px;width:100%;height:40px;background-color:var(--navbar-category-color);-webkit-transition:background-color 0.2s ease;transition:background-color 0.2s ease;color:white;border:none;outline:none;cursor:pointer;text-decoration:none;-webkit-box-sizing:border-box;box-sizing:border-box;border-bottom:1px solid transparent;-webkit-transition:background-color 0.3s ease, border-right-color 0.3 ease;transition:background-color 0.3s ease, border-right-color 0.3 ease;border-right:1px solid transparent;font-family:inherit;font-size:14px;text-align:left}ks-navbar-categories .expandedchildren .buttons a ks-icon{float:right;margin-top:2px}ks-navbar-categories .expandedchildren .buttons a:hover{background-color:var(--navbar-category-hover);color:var(--navbar-category-text-color);text-decoration:none}ks-navbar-categories .expandedchildren .buttons a:active{background-color:var(--navbar-category-active);color:var(--navbar-category-text-color);text-decoration:none}ks-navbar-categories .expandedchildren .buttons a.active{background-color:white;color:#252525;border-right-color:#f2f2f2}ks-navbar-categories .expandedchildren .content{-ms-flex:1 1 auto;flex:1 1 auto;min-width:1px}ks-navbar-categories .expandedchildren .content>div{display:-ms-flexbox;display:flex;height:100%;-ms-flex-flow:wrap column;flex-flow:wrap column;-ms-flex-line-pack:start;align-content:flex-start;-ms-flex-align:start;align-items:flex-start}ks-navbar-categories .expandedchildren .content>div[hidden]{display:none}ks-navbar-categories .expandedchildren .content a{display:block;width:230px;height:40px;padding:9px 15px;text-decoration:none;font-size:14px;text-align:left;-webkit-box-sizing:border-box;box-sizing:border-box;border-bottom:1px solid #f6f6f6;border-right:1px solid #f2f2f2;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease;color:#252525}ks-navbar-categories .expandedchildren .content a:hover{text-decoration:none;color:#252525;background-color:#f9f9f9}ks-navbar-categories .expandedchildren .graphic{display:none;-ms-flex:1 1 auto;flex:1 1 auto;min-width:1px;height:100%}@media only screen and (min-width: 1360px){ks-navbar-categories .expandedchildren .graphic{display:-ms-flexbox !important;display:flex !important;-ms-flex-pack:end;justify-content:flex-end}}ks-navbar-categories .expandedchildren[hidden] .graphic{display:none !important}ks-navbar-categories .expandedchildren{width:100%;min-height:240px;display:-ms-flexbox;display:flex;visibility:visible}ks-navbar-categories .expandedchildren[hidden]{visibility:hidden}";
 
 class NavbarCategories {
   constructor(hostRef) {
@@ -26383,7 +26383,7 @@ class ProductCount {
   }; }
 }
 
-const productImagesCss = "ks-product-images{display:block;margin-right:30px}ks-product-images .swiper-slide{position:relative;text-align:center}ks-product-images .swiper-slide canvas{max-width:100%;max-height:450px}ks-product-images .preview ks-img2{max-width:100%;max-height:450px}ks-product-images .thumb{margin-top:20px;position:relative}ks-product-images .thumb::after{content:\"\";position:absolute;top:0;bottom:0;right:0;left:-30px;background:-webkit-gradient(linear, left top, right top, from(rgba(255,255,255,0)), color-stop(85%, rgba(255,255,255,0)), to(rgba(255,255,255,1)));background:linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 85%, rgba(255,255,255,1) 100%);z-index:2;pointer-events:none}ks-product-images .thumb .swiper-slide{width:70px;height:70px;opacity:0.4;-webkit-transition:var(--transition-opacity);transition:var(--transition-opacity)}ks-product-images .thumb .swiper-slide-thumb-active{opacity:1}@media only screen and (max-width: 959px){ks-product-images{margin-right:0px;margin-top:30px}ks-product-images .thumb{margin-bottom:0px}}@media only screen and (max-width: 460px){ks-product-images .swiper-slide canvas{max-height:300px}ks-product-images .preview ks-img2{max-height:300px}}ks-product-images .preview:not(.swiper-container-initialized) .swiper-slide:nth-child(n+2){display:none}ks-product-images .thumb .swiper-wrapper{opacity:1;-webkit-animation:fade-in 0.3s ease;animation:fade-in 0.3s ease}ks-product-images .thumb:not(.swiper-container-initialized) .swiper-wrapper{opacity:0;-webkit-animation:none;animation:none}";
+const productImagesCss = "ks-product-images{display:block;margin-right:30px}ks-product-images .swiper-slide{position:relative;text-align:center}ks-product-images .swiper-slide canvas{max-width:100%;max-height:450px}ks-product-images .preview ks-img2{max-width:100%;max-height:450px}ks-product-images .thumb{margin-top:20px;min-height:70px;position:relative}ks-product-images[loaded] .thumb>ks-loader{display:none}ks-product-images .thumb::after{content:\"\";position:absolute;top:0;bottom:0;right:0;left:-30px;background:-webkit-gradient(linear, left top, right top, from(rgba(255,255,255,0)), color-stop(85%, rgba(255,255,255,0)), to(rgba(255,255,255,1)));background:linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 85%, rgba(255,255,255,1) 100%);z-index:2;pointer-events:none}ks-product-images .thumb .swiper-slide{width:70px;height:70px;opacity:0.4;-webkit-transition:var(--transition-opacity);transition:var(--transition-opacity)}ks-product-images .thumb .swiper-slide-thumb-active{opacity:1}@media only screen and (max-width: 959px){ks-product-images{margin-right:0px;margin-top:30px}ks-product-images .thumb{margin-bottom:0px}}@media only screen and (max-width: 460px){ks-product-images .swiper-slide canvas{max-height:300px}ks-product-images .preview ks-img2{max-height:300px}}ks-product-images .preview:not(.swiper-container-initialized) .swiper-slide:nth-child(n+2){display:none}ks-product-images .thumb .swiper-wrapper{opacity:1;-webkit-animation:fade-in 0.3s ease;animation:fade-in 0.3s ease}ks-product-images .thumb:not(.swiper-container-initialized) .swiper-wrapper{opacity:0;-webkit-animation:none;animation:none}";
 
 Swiper.use([Thumbs$1]);
 class ProductImages {
@@ -26396,44 +26396,46 @@ class ProductImages {
   componentDidRender() {
     if (this.rendered)
       return;
-    window_load.promise.then(() => this.initialize());
+    this.initialize();
     this.rendered = true;
   }
   initialize() {
-    setTimeout(() => {
-      this.lightbox = this.root.querySelector("ks-lightbox");
-      const thumbs_enabled = product.get("images").length > 1;
-      if (thumbs_enabled) {
-        this.thumbs = new Swiper('.thumb', {
-          observer: true,
-          observeParents: true,
-          grabCursor: true,
-          slidesPerView: "auto",
-          preventInteractionOnTransition: true,
-          centerInsufficientSlides: true,
-          watchSlidesVisibility: true,
-          watchSlidesProgress: true,
-          spaceBetween: 3,
-        });
-      }
-      this.carousel = new Swiper('.preview', {
+    this.lightbox = this.root.querySelector("ks-lightbox");
+    const thumbs_enabled = product.get("images").length > 1;
+    if (thumbs_enabled) {
+      this.thumbs = new Swiper('.thumb', {
         observer: true,
         observeParents: true,
-        spaceBetween: 30,
         grabCursor: true,
-        autoHeight: true,
-        thumbs: thumbs_enabled ? {
-          swiper: this.thumbs
-        } : undefined
+        slidesPerView: "auto",
+        preventInteractionOnTransition: true,
+        centerInsufficientSlides: true,
+        watchSlidesVisibility: true,
+        watchSlidesProgress: true,
+        spaceBetween: 3,
+        on: {
+          init: () => {
+            this.loaded = true;
+          },
+        },
       });
-      this.loaded = true;
-    }, this.delay);
+    }
+    this.carousel = new Swiper('.preview', {
+      observer: true,
+      observeParents: true,
+      spaceBetween: 30,
+      grabCursor: true,
+      autoHeight: true,
+      thumbs: thumbs_enabled ? {
+        swiper: this.thumbs
+      } : undefined
+    });
   }
   render() {
     return [
       hAsync("div", { class: "swiper-container preview" }, hAsync("div", { class: "swiper-wrapper" }, product.get("images").map((image, index) => hAsync("div", { class: "swiper-slide" }, hAsync("ks-img2", { sync: index == 0, src: image.preview.url, webp: image.preview.webp, width: image.preview.width, height: image.preview.height, onClick: () => this.lightbox.show(index) }))))),
       product.get("images").length > 1 ?
-        hAsync("div", { class: "swiper-container thumb" }, this.loaded ? null : hAsync("ks-loader", { dark: true }), hAsync("div", { class: "swiper-wrapper" }, product.get("images").map((image, index) => hAsync("div", { class: "swiper-slide" }, hAsync("ks-img2", { sync: index < 6, src: image.thumb.url, webp: image.thumb.webp, width: image.thumb.width, height: image.thumb.height })))))
+        hAsync("div", { class: "swiper-container thumb" }, hAsync("ks-loader", { dark: true }), hAsync("div", { class: "swiper-wrapper" }, product.get("images").map((image, index) => hAsync("div", { class: "swiper-slide" }, hAsync("ks-img2", { sync: index < 6, src: image.thumb.url, webp: image.thumb.webp, width: image.thumb.width, height: image.thumb.height })))))
         : null,
       hAsync("ks-lightbox", { data: product.get("images") })
     ];
@@ -26445,11 +26447,11 @@ class ProductImages {
     "$tagName$": "ks-product-images",
     "$members$": {
       "delay": [2],
-      "loaded": [32]
+      "loaded": [1540]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
+    "$attrsToReflect$": [["loaded", "loaded"]]
   }; }
 }
 
