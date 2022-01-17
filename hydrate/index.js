@@ -14465,20 +14465,20 @@ class Container {
   }; }
 }
 
-const cookiePopupCss = "ks-cookie-popup{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;position:fixed;overflow:hidden;padding:15px;bottom:0px;left:0px;right:0px;z-index:1000;background-color:var(--overlay-dark-background);-webkit-backdrop-filter:var(--overlay-dark-filter);backdrop-filter:var(--overlay-dark-filter);border-top:solid 1px #000000;color:white;text-align:center;font-size:15px;line-height:17px}ks-cookie-popup:not([hide]){-webkit-animation:cookie-popup-swipe-in 0.4s ease-out;animation:cookie-popup-swipe-in 0.4s ease-out}ks-cookie-popup[hide]{-webkit-animation:cookie-popup-swipe-out 0.4s ease-out;animation:cookie-popup-swipe-out 0.4s ease-out}ks-cookie-popup[hidden]{display:none}ks-cookie-popup p{margin:0;max-width:100%}ks-cookie-popup ks-button{margin:0 0 0 20px}@media (max-width: 1400px){ks-cookie-popup{-ms-flex-direction:column;flex-direction:column}ks-cookie-popup p{margin:0 0 8px 0}ks-cookie-popup ks-button{margin:0}}@-webkit-keyframes cookie-popup-swipe-in{0%{-webkit-transform:translateY(180px);transform:translateY(180px)}100%{-webkit-transform:translateY(0px);transform:translateY(0px)}}@keyframes cookie-popup-swipe-in{0%{-webkit-transform:translateY(180px);transform:translateY(180px)}100%{-webkit-transform:translateY(0px);transform:translateY(0px)}}@-webkit-keyframes cookie-popup-swipe-out{0%{-webkit-transform:translateY(0px);transform:translateY(0px)}100%{-webkit-transform:translateY(180px);transform:translateY(180px)}}@keyframes cookie-popup-swipe-out{0%{-webkit-transform:translateY(0px);transform:translateY(0px)}100%{-webkit-transform:translateY(180px);transform:translateY(180px)}}";
+const cookiePopupCss = "ks-cookie-popup{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;position:fixed;overflow:hidden;padding:15px;bottom:0px;left:0px;right:0px;z-index:1000;background-color:var(--overlay-dark-background);-webkit-backdrop-filter:var(--overlay-dark-filter);backdrop-filter:var(--overlay-dark-filter);border-top:solid 1px #000000;color:white;text-align:center;font-size:15px;line-height:17px}ks-cookie-popup:not([hide]){-webkit-animation:cookie-popup-swipe-in 0.4s ease-out;animation:cookie-popup-swipe-in 0.4s ease-out}ks-cookie-popup[hide]{-webkit-animation:cookie-popup-swipe-out 0.4s ease-out;animation:cookie-popup-swipe-out 0.4s ease-out}ks-cookie-popup:not([show]){display:none}ks-cookie-popup p{margin:0;max-width:100%}ks-cookie-popup ks-button{margin:0 0 0 20px}@media (max-width: 1400px){ks-cookie-popup{-ms-flex-direction:column;flex-direction:column}ks-cookie-popup p{margin:0 0 8px 0}ks-cookie-popup ks-button{margin:0}}@-webkit-keyframes cookie-popup-swipe-in{0%{-webkit-transform:translateY(180px);transform:translateY(180px)}100%{-webkit-transform:translateY(0px);transform:translateY(0px)}}@keyframes cookie-popup-swipe-in{0%{-webkit-transform:translateY(180px);transform:translateY(180px)}100%{-webkit-transform:translateY(0px);transform:translateY(0px)}}@-webkit-keyframes cookie-popup-swipe-out{0%{-webkit-transform:translateY(0px);transform:translateY(0px)}100%{-webkit-transform:translateY(180px);transform:translateY(180px)}}@keyframes cookie-popup-swipe-out{0%{-webkit-transform:translateY(0px);transform:translateY(0px)}100%{-webkit-transform:translateY(180px);transform:translateY(180px)}}";
 
 class CookiePopup {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.delay = 2000;
     this.hide = false;
-    this.hidden = true;
+    this.show = false;
   }
   hidepanel() {
     this.hide = true;
     this.cookie();
     setTimeout(() => {
-      this.hidden = true;
+      this.show = false;
       this.hide = false;
     }, 400);
   }
@@ -14492,13 +14492,13 @@ class CookiePopup {
   componentDidLoad() {
     if (document.cookie.indexOf('akceptCookie=tak') == -1)
       setTimeout(() => {
-        this.hidden = false;
+        this.show = true;
       }, this.delay);
   }
   render() {
     if (!Build.isBrowser || document.cookie.indexOf('akceptCookie=tak') !== -1)
-      return hAsync(Host, { hidden: this.hidden, hide: this.hide });
-    return hAsync(Host, { hidden: this.hidden, hide: this.hide }, hAsync("p", null, this.message), hAsync("ks-button", { round: true, border: true, light: true, name: this.button, onClick: () => this.hidepanel() }));
+      return hAsync(Host, null);
+    return hAsync(Host, null, hAsync("p", null, this.message), hAsync("ks-button", { round: true, border: true, light: true, name: this.button, onClick: () => this.hidepanel() }));
   }
   get root() { return getElement(this); }
   static get style() { return cookiePopupCss; }
@@ -14510,11 +14510,11 @@ class CookiePopup {
       "button": [1],
       "delay": [2],
       "hide": [1540],
-      "hidden": [1540]
+      "show": [1540]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["hide", "hide"], ["hidden", "hidden"]]
+    "$attrsToReflect$": [["hide", "hide"], ["show", "show"]]
   }; }
 }
 
@@ -20194,9 +20194,12 @@ class Img2 {
   render() {
     const loading = this.loaded ? "" : "loading";
     if (this.sync)
-      return hAsync("picture", null, this.webp ?
-        hAsync("source", { srcSet: this.webp, type: "image/webp" })
-        : null, hAsync("img", { src: this.src, alt: this.alt, width: this.width, height: this.height }));
+      return [
+        hAsync("picture", null, this.webp ?
+          hAsync("source", { srcSet: this.webp, type: "image/webp" })
+          : null, hAsync("img", { src: this.src, alt: this.alt, width: this.width, height: this.height })),
+        this.fill ? hAsync("canvas", { width: this.width, height: this.height }) : null
+      ];
     return [
       hAsync("picture", null, this.webp ?
         hAsync("source", { srcSet: this.webp, type: "image/webp" })
@@ -20255,7 +20258,7 @@ class InfoBanner {
       --navbar-category-active: ${this.theme.categoryColorActive} !important;
       --navbar-category-backdrop: ${this.theme.categoryColorBackdrop} !important;
     }` : null;
-    return hAsync(Host, { style: { backgroundColor: this.color } }, hAsync("a", { href: this.link, "aria-label": this.name }, hAsync("ks-img2", { sync: true, center: true, width: this.width, height: this.height, src: this.image, webp: this.webp, alt: this.name })), theme ? hAsync("style", { innerHTML: theme }) : null);
+    return hAsync(Host, { style: { backgroundColor: this.color } }, hAsync("a", { href: this.link, "aria-label": this.name }, hAsync("ks-img2", { sync: true, fill: true, center: true, width: this.width, height: this.height, src: this.image, webp: this.webp, alt: this.name })), theme ? hAsync("style", { innerHTML: theme }) : null);
   }
   ;
   static get style() { return infoBannerCss; }
@@ -26383,7 +26386,7 @@ class ProductCount {
   }; }
 }
 
-const productImagesCss = "ks-product-images{display:block;margin-right:30px}ks-product-images .swiper-slide{position:relative;text-align:center}ks-product-images .swiper-slide canvas{max-width:100%;max-height:450px}ks-product-images .preview ks-img2{max-width:100%;max-height:450px}ks-product-images .thumb{margin-top:20px;min-height:70px;position:relative}ks-product-images[loaded] .thumb>ks-loader{display:none}ks-product-images .thumb::after{content:\"\";position:absolute;top:0;bottom:0;right:0;left:-30px;background:-webkit-gradient(linear, left top, right top, from(rgba(255,255,255,0)), color-stop(85%, rgba(255,255,255,0)), to(rgba(255,255,255,1)));background:linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 85%, rgba(255,255,255,1) 100%);z-index:2;pointer-events:none}ks-product-images .thumb .swiper-slide{width:70px;height:70px;opacity:0.4;-webkit-transition:var(--transition-opacity);transition:var(--transition-opacity)}ks-product-images .thumb .swiper-slide-thumb-active{opacity:1}@media only screen and (max-width: 959px){ks-product-images{margin-right:0px;margin-top:30px}ks-product-images .thumb{margin-bottom:0px}}@media only screen and (max-width: 460px){ks-product-images .swiper-slide canvas{max-height:300px}ks-product-images .preview ks-img2{max-height:300px}}ks-product-images .preview:not(.swiper-container-initialized) .swiper-slide:nth-child(n+2){display:none}ks-product-images .thumb .swiper-wrapper{opacity:1;-webkit-animation:fade-in 0.3s ease;animation:fade-in 0.3s ease}ks-product-images .thumb:not(.swiper-container-initialized) .swiper-wrapper{opacity:0;-webkit-animation:none;animation:none}";
+const productImagesCss = "ks-product-images{display:block;margin-right:30px}ks-product-images .swiper-slide{position:relative;text-align:center}ks-product-images .swiper-slide canvas{max-width:100%;max-height:450px}ks-product-images .preview ks-img2{max-width:100%;max-height:450px}ks-product-images .preview .swiper-slide:not(.swiper-slide-active){height:0px}ks-product-images .thumb{margin-top:20px;min-height:70px;position:relative}ks-product-images[loaded] .thumb>ks-loader{display:none}ks-product-images .thumb::after{content:\"\";position:absolute;top:0;bottom:0;right:0;left:-30px;background:-webkit-gradient(linear, left top, right top, from(rgba(255,255,255,0)), color-stop(85%, rgba(255,255,255,0)), to(rgba(255,255,255,1)));background:linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 85%, rgba(255,255,255,1) 100%);z-index:2;pointer-events:none}ks-product-images .thumb .swiper-slide{width:70px;height:70px;opacity:0.4;-webkit-transition:var(--transition-opacity);transition:var(--transition-opacity)}ks-product-images .thumb .swiper-slide-thumb-active{opacity:1}@media only screen and (max-width: 959px){ks-product-images{margin-right:0px;margin-top:30px}ks-product-images .thumb{margin-bottom:0px}}@media only screen and (max-width: 460px){ks-product-images .swiper-slide canvas{max-height:300px}ks-product-images .preview ks-img2{max-height:300px}}ks-product-images .preview:not(.swiper-container-initialized) .swiper-slide:nth-child(n+2){display:none}ks-product-images .thumb .swiper-wrapper{opacity:1;-webkit-animation:fade-in 0.3s ease;animation:fade-in 0.3s ease}ks-product-images .thumb:not(.swiper-container-initialized) .swiper-wrapper{opacity:0;-webkit-animation:none;animation:none}";
 
 Swiper.use([Thumbs$1]);
 class ProductImages {
@@ -26393,14 +26396,13 @@ class ProductImages {
     this.loaded = false;
     this.rendered = false;
   }
-  componentDidRender() {
+  componentDidLoad() {
     if (this.rendered)
       return;
     this.initialize();
     this.rendered = true;
   }
   initialize() {
-    this.lightbox = this.root.querySelector("ks-lightbox");
     const thumbs_enabled = product.get("images").length > 1;
     if (thumbs_enabled) {
       this.thumbs = new Swiper('.thumb', {
@@ -26431,11 +26433,22 @@ class ProductImages {
       } : undefined
     });
   }
+  showLightbox(index) {
+    this.root.querySelector("ks-lightbox").show(index);
+  }
   render() {
     return [
-      hAsync("div", { class: "swiper-container preview" }, hAsync("div", { class: "swiper-wrapper" }, product.get("images").map((image, index) => hAsync("div", { class: "swiper-slide" }, hAsync("ks-img2", { sync: index == 0, src: image.preview.url, webp: image.preview.webp, width: image.preview.width, height: image.preview.height, onClick: () => this.lightbox.show(index) }))))),
+      hAsync("div", { class: "swiper-container preview swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events swiper-container-autoheight" }, hAsync("div", { class: "swiper-wrapper" }, product.get("images").map((image, index) => hAsync("div", { class: [
+          "swiper-slide",
+          index == 0 ? "swiper-slide-active" : null,
+          index == 1 ? "swiper-slide-next" : null
+        ].join(" ") }, hAsync("ks-img2", { fill: true, sync: index == 0, src: image.preview.url, webp: image.preview.webp, width: image.preview.width, height: image.preview.height, onClick: () => this.showLightbox(index) }))))),
       product.get("images").length > 1 ?
-        hAsync("div", { class: "swiper-container thumb" }, hAsync("ks-loader", { dark: true }), hAsync("div", { class: "swiper-wrapper" }, product.get("images").map((image, index) => hAsync("div", { class: "swiper-slide" }, hAsync("ks-img2", { sync: index < 6, src: image.thumb.url, webp: image.thumb.webp, width: image.thumb.width, height: image.thumb.height })))))
+        hAsync("div", { class: "swiper-container thumb swiper-container-horizontal swiper-container-pointer-events swiper-container-thumbs" }, hAsync("ks-loader", { dark: true }), hAsync("div", { class: "swiper-wrapper" }, product.get("images").map((image, index) => hAsync("div", { class: [
+            "swiper-slide swiper-slide-visible",
+            index == 0 ? "swiper-slide-active swiper-slide-thumb-active" : null,
+            index == 1 ? "swiper-slide-next" : null
+          ].join(" ") }, hAsync("ks-img2", { sync: index < 6, src: image.thumb.url, webp: image.thumb.webp, width: image.thumb.width, height: image.thumb.height })))))
         : null,
       hAsync("ks-lightbox", { data: product.get("images") })
     ];
@@ -27033,8 +27046,8 @@ class ProductTab$1 {
     const comments = product.get('comments');
     return [
       hAsync("div", { class: "message" }, hAsync("ks-icon", { name: "mail", size: 2.5 }), hAsync("p", null, comments.addMessage)),
-      comments.entries.slice(0, comments.hideAfter).map(comment => hAsync("ks-comment", { author: comment.author, when: comment.when, innerHTML: comment.content })),
-      hAsync("div", { class: "more", hidden: !this.expand }, comments.entries.slice(comments.hideAfter).map(comment => hAsync("ks-comment", { author: comment.author, when: comment.when, innerHTML: comment.content }))),
+      comments.entries.slice(0, comments.hideAfter).map(comment => hAsync("ks-comment", { author: comment.author, when: comment.when }, comment.content)),
+      hAsync("div", { class: "more", hidden: !this.expand }, comments.entries.slice(comments.hideAfter).map(comment => hAsync("ks-comment", { author: comment.author, when: comment.when }, comment.content))),
       this.hasMore ?
         hAsync("button", { onClick: () => this.expand = !this.expand, class: "expand" }, hAsync("ks-icon", { name: this.expand ? "chevron-up" : "chevron-down", size: 1.5 }))
         : null,
@@ -27194,7 +27207,7 @@ class ProductTitle {
       }
     }
     return [
-      hAsync("div", { class: "breadcrumbs" }, product.get("breadcrumbs").map(item => hAsync("a", { href: item.link }, item.name))),
+      hAsync("div", { class: "breadcrumbs" }, product.get("breadcrumbs").map(item => hAsync("a", { href: item.link }, item.name, " "))),
       title
     ];
   }
