@@ -25723,7 +25723,7 @@ class PageProduct {
     const ean = product.get('ean');
     return hAsync(Host, null, hAsync("ks-page-header", null), infoBanner ?
       hAsync("ks-info-banner", { image: infoBanner.image, width: infoBanner.width, height: infoBanner.height, color: infoBanner.color, name: infoBanner.name })
-      : null, hAsync("ks-container", null, hAsync("ks-product-notify", null), hAsync("ks-product-info", null, hAsync("ks-product-title", { "brand-link": true, slot: "top" }), hAsync("ks-product-images", { slot: "left" }), hAsync("ks-product-price", null), product.get('traits') ?
+      : null, hAsync("ks-container", null, hAsync("ks-product-notify", null), hAsync("ks-product-info", null, product.get('traits') ?
       hAsync("ks-product-traits", null)
       : null, hAsync("ks-product-purchase", null), hAsync("ks-product-shipping", null), product.get('warranty') ?
       hAsync("ks-product-attribute", { style: { marginTop: "15px" }, icon: "tool", href: product.get('warrantyLink') }, product.get('warranty'))
@@ -26399,8 +26399,9 @@ class ProductImages {
   componentDidLoad() {
     if (this.rendered)
       return;
-    this.initialize();
     this.rendered = true;
+    if (Build.isBrowser)
+      this.initialize();
   }
   initialize() {
     const thumbs_enabled = product.get("images").length > 1;
@@ -26567,9 +26568,9 @@ class ProductInfo$1 {
   }
   render() {
     return [
-      hAsync("div", { class: "top" }, hAsync("slot", { name: "top" })),
-      hAsync("div", { class: "left" }, hAsync("slot", { name: "left" })),
-      hAsync("div", { class: "bottom" }, hAsync("slot", null), hAsync("slot", { name: "brand" }))
+      hAsync("div", { class: "top" }, hAsync("ks-product-title", { "brand-link": true })),
+      hAsync("div", { class: "left" }, hAsync("ks-product-images", null)),
+      hAsync("div", { class: "bottom" }, hAsync("ks-product-price", null), hAsync("slot", null), hAsync("slot", { name: "brand" }))
     ];
   }
   get root() { return getElement(this); }
