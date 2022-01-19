@@ -25578,13 +25578,14 @@ class PageBase {
     });
   }
   render() {
-    return hAsync(Host, null, hAsync("ks-page-header", null), hAsync("slot", null), hAsync("ks-page-footer", null));
+    return hAsync(Host, null, !this.skipbase && hAsync("ks-page-header", null), hAsync("slot", null), !this.skipbase && hAsync("ks-page-footer", null));
   }
   static get style() { return baseCss; }
   static get cmpMeta() { return {
     "$flags$": 4,
     "$tagName$": "ks-page-base",
     "$members$": {
+      "skipbase": [4],
       "commonData": [1, "common-data"],
       "commonDynamicData": [1, "common-dynamic-data"]
     },
@@ -25662,7 +25663,7 @@ const product = createStore({
   tags: []
 });
 
-const productCss = "ks-page-product>h3{text-align:center;margin-top:15px}ks-page-product>ks-product-container{margin-bottom:15px}";
+const productCss = "ks-page-product>ks-page-base>h3{text-align:center;margin-top:15px}ks-page-product>ks-page-base>ks-product-container{margin-bottom:15px}";
 
 class PageProduct {
   constructor(hostRef) {
@@ -25699,7 +25700,7 @@ class PageProduct {
     const accessories = product.get('accessories');
     const model = product.get('model') || product.get('catalog');
     const ean = product.get('ean');
-    return hAsync(Host, null, infoBanner ?
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, infoBanner ?
       hAsync("ks-info-banner", { image: infoBanner.image, width: infoBanner.width, height: infoBanner.height, color: infoBanner.color, name: infoBanner.name })
       : null, hAsync("ks-container", null, hAsync("ks-product-notify", null), hAsync("ks-product-info", null, product.get('traits') ?
       hAsync("ks-product-traits", null)
@@ -25742,6 +25743,9 @@ class PageProduct {
     "$flags$": 0,
     "$tagName$": "ks-page-product",
     "$members$": {
+      "skipbase": [4],
+      "commonData": [1, "common-data"],
+      "commonDynamicData": [1, "common-dynamic-data"],
       "productData": [1, "product-data"]
     },
     "$listeners$": undefined,
