@@ -1,1 +1,0 @@
-import{c as o}from"./common-0acd2e14.js";import{c}from"./commonDynamic-8337cd16.js";function m(m,t,e){const n=document.getElementById(m),s=JSON.parse(n.innerHTML);if(Object.keys(s).map((c=>{o.set(c,s[c])})),e.isBrowser){const o=document.getElementById(t),m=JSON.parse(o.innerHTML);Object.keys(m).map((o=>{c.set(o,m[o])})),setTimeout((()=>{c.set("loaded",!0)}),100)}}export{m as l}

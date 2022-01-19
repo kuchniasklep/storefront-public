@@ -5494,11 +5494,6 @@ const cmpModules = new Map, getModule = e => {
  };
  return o.$onInstancePromise$ = new Promise((e => o.$onInstanceResolve$ = e)), o.$onReadyPromise$ = new Promise((e => o.$onReadyResolve$ = e)), 
  e["s-p"] = [], e["s-rc"] = [], addHostEventListeners(e, o, t.$listeners$), hostRefs.set(e, o);
-}, Build = {
- isDev: !1,
- isBrowser: !1,
- isServer: !0,
- isTesting: !1
 }, styles$1 = new Map;
 
 class Alert$1 {
@@ -14496,9 +14491,7 @@ class CookiePopup {
       }, this.delay);
   }
   render() {
-    if (!Build.isBrowser || document.cookie.indexOf('akceptCookie=tak') !== -1)
-      return hAsync(Host, null);
-    return hAsync(Host, null, hAsync("p", null, this.message), hAsync("ks-button", { round: true, border: true, light: true, name: this.button, onClick: () => this.hidepanel() }));
+    return hAsync(Host, null);
   }
   get root() { return getElement(this); }
   static get style() { return cookiePopupCss; }
@@ -25571,24 +25564,6 @@ class Overlay {
   }; }
 }
 
-function loadCommon(commonDataId, commonDynamicDataId, Build) {
-  const commonDataElement = document.getElementById(commonDataId);
-  const commonData = JSON.parse(commonDataElement.innerHTML);
-  Object.keys(commonData).map(key => {
-    common.set(key, commonData[key]);
-  });
-  if (Build.isBrowser) {
-    const commonDynamicDataElement = document.getElementById(commonDynamicDataId);
-    const commonDynamicData = JSON.parse(commonDynamicDataElement.innerHTML);
-    Object.keys(commonDynamicData).map(key => {
-      commonDynamic.set(key, commonDynamicData[key]);
-    });
-    setTimeout(() => {
-      commonDynamic.set("loaded", true);
-    }, 100);
-  }
-}
-
 const baseCss = "";
 
 class PageBase {
@@ -25596,16 +25571,21 @@ class PageBase {
     registerInstance(this, hostRef);
   }
   componentWillLoad() {
-    loadCommon(this.commonData, this.commonDynamicData, Build);
+    const commonDataElement = document.getElementById(this.commonData);
+    const commonData = JSON.parse(commonDataElement.innerHTML);
+    Object.keys(commonData).map(key => {
+      common.set(key, commonData[key]);
+    });
   }
   render() {
-    return hAsync(Host, null, hAsync("ks-page-header", null), hAsync("slot", null), hAsync("ks-page-footer", null));
+    return hAsync(Host, null, !this.skipbase && hAsync("ks-page-header", null), hAsync("slot", null), !this.skipbase && hAsync("ks-page-footer", null));
   }
   static get style() { return baseCss; }
   static get cmpMeta() { return {
     "$flags$": 4,
     "$tagName$": "ks-page-base",
     "$members$": {
+      "skipbase": [4],
       "commonData": [1, "common-data"],
       "commonDynamicData": [1, "common-dynamic-data"]
     },
@@ -25683,14 +25663,13 @@ const product = createStore({
   tags: []
 });
 
-const productCss = "ks-page-product>h3{text-align:center;margin-top:15px}ks-page-product>ks-product-container{margin-bottom:15px}";
+const productCss = "ks-page-product>ks-page-base>h3{text-align:center;margin-top:15px}ks-page-product>ks-page-base>ks-product-container{margin-bottom:15px}";
 
 class PageProduct {
   constructor(hostRef) {
     registerInstance(this, hostRef);
   }
   componentWillLoad() {
-    loadCommon(this.commonData, this.commonDynamicData, Build);
     const productDataElement = document.getElementById(this.productData);
     const productData = JSON.parse(productDataElement.innerHTML);
     Object.keys(productData).map(key => {
@@ -25721,7 +25700,7 @@ class PageProduct {
     const accessories = product.get('accessories');
     const model = product.get('model') || product.get('catalog');
     const ean = product.get('ean');
-    return hAsync(Host, null, hAsync("ks-page-header", null), infoBanner ?
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, infoBanner ?
       hAsync("ks-info-banner", { image: infoBanner.image, width: infoBanner.width, height: infoBanner.height, color: infoBanner.color, name: infoBanner.name })
       : null, hAsync("ks-container", null, hAsync("ks-product-notify", null), hAsync("ks-product-info", null, product.get('traits') ?
       hAsync("ks-product-traits", null)
@@ -25757,13 +25736,14 @@ class PageProduct {
       hAsync("h3", null, product.get('accessoriesHeading')),
       hAsync("ks-product-container", null, accessories.map(card => hAsync("ks-product-card", { "product-id": 0, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice })))
     ]
-      : null, hAsync("ks-page-footer", null));
+      : null);
   }
   static get style() { return productCss; }
   static get cmpMeta() { return {
     "$flags$": 0,
     "$tagName$": "ks-page-product",
     "$members$": {
+      "skipbase": [4],
       "commonData": [1, "common-data"],
       "commonDynamicData": [1, "common-dynamic-data"],
       "productData": [1, "product-data"]
@@ -26400,8 +26380,6 @@ class ProductImages {
     if (this.rendered)
       return;
     this.rendered = true;
-    if (Build.isBrowser)
-      this.initialize();
   }
   initialize() {
     const thumbs_enabled = product.get("images").length > 1;
