@@ -1,1 +1,0 @@
-import{r as s}from"./index-e340c957.js";import{e as r}from"./tracker-a4a7c425.js";import"./index-689756ca.js";let t=class{constructor(r){s(this,r),this.eventId=""}componentWillLoad(){r((s=>null==s?void 0:s.search(this.eventId,this.query)))}};export{t as ks_tracker_search}
