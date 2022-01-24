@@ -12208,7 +12208,8 @@ const commonDynamic = createStore({
   loggedIn: false,
   cartCount: 0,
   heartCount: 0,
-  api: {}
+  api: {},
+  tracking: {}
 });
 
 async function Fetch(url, body) {
@@ -25564,6 +25565,204 @@ class Overlay {
   }; }
 }
 
+class TikTokTracker {
+  constructor() {
+    this.ttq = new Promise(resolve => {
+      var checkExist = setInterval(() => {
+        if (ttq !== undefined) {
+          resolve(ttq);
+          clearInterval(checkExist);
+        }
+      }, 100);
+    });
+  }
+  pageview() {
+    this.ttq.then(ttq => {
+      ttq.track("Browse");
+    });
+  }
+  product(_eventID, productId, name, price, currency) {
+    this.ttq.then(ttq => {
+      ttq.track('ViewContent', {
+        content_type: 'product',
+        content_id: productId,
+        content_name: name,
+        currency: currency,
+        price: price,
+        quantity: 1,
+        value: price
+      });
+    });
+  }
+  addToCart(_eventID, productId, name, price, quantity, currency) {
+    this.ttq.then(ttq => {
+      ttq.track('AddToCart', {
+        content_type: 'product',
+        content_id: productId,
+        content_name: name,
+        currency: currency,
+        price: price,
+        quantity: quantity,
+        value: price * quantity
+      });
+    });
+  }
+  order_checkout(_eventID, products, value, currency) {
+    this.ttq.then(ttq => {
+      ttq.track('StartCheckout', {
+        contents: this.transformProducts(products),
+        currency: currency,
+        value: value
+      });
+    });
+  }
+  order_form(_eventID, products, value, currency) {
+    this.ttq.then(ttq => {
+      ttq.track('AddBilling', {
+        contents: this.transformProducts(products),
+        value: value,
+        currency: currency
+      });
+    });
+  }
+  order_placed(_eventID, products, value, currency) {
+    this.ttq.then(ttq => {
+      ttq.track('Checkout', {
+        contents: this.transformProducts(products),
+        value: value,
+        currency: currency
+      });
+    });
+  }
+  // @ts-ignore
+  search(query) {
+    /*
+    this.ttq.then(ttq => {
+        ttq.track('Search', {
+            query: query
+        });
+    });*/
+  }
+  transformProducts(products) {
+    return products.map(product => {
+      return {
+        content_id: product.id,
+        content_type: 'product',
+        content_name: product.name,
+        quantity: product.quantity,
+        price: product.price
+      };
+    });
+  }
+}
+
+class FacebookTracker {
+  constructor(ids) {
+    const id_array = ids.split(", ");
+    this.pixel = new Promise(resolve => {
+      // @ts-ignore
+      !function (f, b, e, v, n, t, s) {
+        if (f.fbq)
+          return;
+        n = f.fbq = function () {
+          n.callMethod ?
+            n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+        };
+        if (!f._fbq)
+          f._fbq = n;
+        n.push = n;
+        n.loaded = !0;
+        n.version = '2.0';
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = !0;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s);
+      }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+      id_array.forEach(id => {
+        fbq('init', id);
+      });
+      resolve(fbq);
+    });
+  }
+  pageview(eventID) {
+    this.pixel.then(fbq => {
+      fbq('track', 'PageView', {}, { eventID: eventID });
+    });
+  }
+  product(eventID, productId, name, price, currency) {
+    this.pixel.then(fbq => {
+      fbq('track', "ViewContent", {
+        content_type: 'product',
+        content_name: name,
+        value: price,
+        currency: currency,
+        content_ids: [productId]
+      }, {
+        eventID: eventID
+      });
+    });
+  }
+  addToCart(eventID, productId, name, price, quantity, currency) {
+    this.pixel.then(fbq => {
+      fbq('track', 'AddToCart', {
+        content_type: 'product',
+        content_name: name,
+        value: price,
+        currency: currency,
+        contents: [
+          { id: productId, quantity: quantity }
+        ]
+      }, {
+        eventID: eventID
+      });
+    });
+  }
+  order_checkout(eventID, products, value, currency) {
+    this.pixel.then(fbq => {
+      fbq('track', "InitiateCheckout", {
+        contents: this.transformProducts(products),
+        content_type: 'product',
+        value: value,
+        currency: currency
+      }, {
+        eventID: eventID
+      });
+    });
+  }
+  // @ts-ignore
+  order_form(eventID, products, value, currency) {
+  }
+  order_placed(eventID, products, value, currency) {
+    this.pixel.then(fbq => {
+      fbq('track', 'Purchase', {
+        contents: this.transformProducts(products),
+        content_type: 'product',
+        value: value,
+        currency: currency
+      }, {
+        eventID: eventID
+      });
+    });
+  }
+  search(query) {
+    this.pixel.then(fbq => {
+      fbq('track', "Search", {
+        search_string: query
+      });
+    });
+  }
+  transformProducts(products) {
+    return products.map(product => {
+      return {
+        id: product.id,
+        quantity: product.quantity
+      };
+    });
+  }
+}
+
 const baseCss = "";
 
 class PageBase {
@@ -25575,6 +25774,18 @@ class PageBase {
     const commonData = JSON.parse(commonDataElement.innerHTML);
     Object.keys(commonData).map(key => {
       common.set(key, commonData[key]);
+    });
+  }
+  track() {
+    tracker.get("loaded").then(() => {
+      const tracking = commonDynamic.get("tracking");
+      const append = (obj) => tracker.set("trackers", [...tracker.get('trackers'), obj]);
+      if (tracking.tiktok)
+        append(new TikTokTracker());
+      if (tracking.facebook)
+        append(new FacebookTracker(tracking.facebook));
+      eachTracker(item => item === null || item === void 0 ? void 0 : item.pageview(tracking.pageview));
+      resolve();
     });
   }
   render() {
@@ -25635,6 +25846,7 @@ const product = createStore({
   breadcrumbs: [],
   description: "",
   attributes: [],
+  currency: "",
   previousPrice: "",
   currentPrice: "",
   shippingPrice: "",
@@ -25663,6 +25875,11 @@ const product = createStore({
   tags: []
 });
 
+const productDynamic = createStore({
+  loaded: false,
+  adminBar: {}
+});
+
 const productCss = "ks-page-product>ks-page-base>h3{text-align:center;margin-top:15px}ks-page-product>ks-page-base>ks-product-container{margin-bottom:15px}";
 
 class PageProduct {
@@ -25685,6 +25902,9 @@ class PageProduct {
     }, "");
     product.set("traitIDs", traits);
   }
+  track() {
+    eachTracker(item => item === null || item === void 0 ? void 0 : item.product(productDynamic.get("eventId"), product.get("id"), product.get("name"), parseFloat(product.get("currentPrice")), product.get("currency")));
+  }
   render() {
     if (!(product === null || product === void 0 ? void 0 : product.get('name')))
       return false;
@@ -25702,7 +25922,7 @@ class PageProduct {
     const ean = product.get('ean');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, infoBanner ?
       hAsync("ks-info-banner", { image: infoBanner.image, width: infoBanner.width, height: infoBanner.height, color: infoBanner.color, name: infoBanner.name })
-      : null, hAsync("ks-container", null, hAsync("ks-product-notify", null), hAsync("ks-product-info", null, product.get('traits') ?
+      : null, hAsync("ks-container", null, hAsync("ks-product-notify", null), hAsync("ks-product-admin", null), hAsync("ks-product-info", null, product.get('traits') ?
       hAsync("ks-product-traits", null)
       : null, hAsync("ks-product-purchase", null), hAsync("ks-product-shipping", null), product.get('warranty') ?
       hAsync("ks-product-attribute", { style: { marginTop: "15px" }, icon: "tool", href: product.get('warrantyLink') }, product.get('warranty'))
@@ -25746,7 +25966,8 @@ class PageProduct {
       "skipbase": [4],
       "commonData": [1, "common-data"],
       "commonDynamicData": [1, "common-dynamic-data"],
-      "productData": [1, "product-data"]
+      "productData": [1, "product-data"],
+      "productDynamicData": [1, "product-dynamic-data"]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
@@ -25851,90 +26072,40 @@ class Pagination {
   }; }
 }
 
-const productAdminCss = "ks-product-admin{display:block;margin-bottom:10px}ks-product-admin .bar{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-align:center;align-items:center;background-color:#181818;color:white}ks-product-admin .bar>div:not(.links){padding:17px}ks-product-admin .bar>.links{display:-ms-flexbox;display:flex;-ms-flex-pack:end;justify-content:flex-end;-ms-flex:1;flex:1}ks-product-admin .bar>.links .button{display:block;padding:17px;color:white;background-color:#252525;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease;border-style:none;outline-style:none;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none}ks-product-admin .bar>.links .button:hover{color:white;background-color:#353535}ks-product-admin .bar>.links .button:active{color:white;background-color:#454545}ks-product-admin .bar>.links .button:nth-child(2n){background-color:#303030}ks-product-admin .bar>.links .button:nth-child(2n):hover{background-color:#404040}ks-product-admin .bar>.links .button:nth-child(2n):active{background-color:#505050}ks-product-admin .distributors{display:table;background-color:#000000;color:#ffffff;width:100%;-webkit-box-sizing:border-box;box-sizing:border-box;overflow:hidden}ks-product-admin .distributors[hidden]{display:none !important;visibility:hidden !important}ks-product-admin .distributors th{font-weight:700;font-size:15.5px !important;font-family:var(--font-emphasis);border-bottom:2px solid #181818;border-right:2px solid #181818}ks-product-admin .distributors td{font-weight:500;font-size:14px;border-right:2px solid #181818}ks-product-admin .distributors th,ks-product-admin .distributors td{text-align:center;padding:8px 20px}ks-product-admin .distributors th:first-child,ks-product-admin .distributors td:first-child{text-align:left}ks-product-admin .distributors *:last-child td{padding:8px 20px 14px 20px}@media only screen and (max-width: 640px) and (min-width: 340px){ks-product-admin .bar{font-size:14px}ks-product-admin .bar>div:not(.links){padding:17px 10px}}@media only screen and (max-width: 420px){ks-product-admin .bar{font-size:12px}ks-product-admin .bar>div:not(.links){padding:17px 8px}ks-product-admin .bar .hide-mobile{display:none !important}}@media only screen and (max-width: 960px){ks-product-admin .bar>.links button{display:none !important}ks-product-admin .distributors{display:none !important;visibility:hidden !important}}";
+const productAdminCss = "ks-product-admin{display:block}ks-product-admin .bar{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-align:center;align-items:center;background-color:#181818;color:white}ks-product-admin .bar>div:not(.links){padding:17px}ks-product-admin .bar>.links{display:-ms-flexbox;display:flex;-ms-flex-pack:end;justify-content:flex-end;-ms-flex:1;flex:1}ks-product-admin .bar>.links .button{display:block;padding:17px;color:white;background-color:#252525;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease;border-style:none;outline-style:none;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none}ks-product-admin .bar>.links .button:hover{color:white;background-color:#353535}ks-product-admin .bar>.links .button:active{color:white;background-color:#454545}ks-product-admin .bar>.links .button:nth-child(2n){background-color:#303030}ks-product-admin .bar>.links .button:nth-child(2n):hover{background-color:#404040}ks-product-admin .bar>.links .button:nth-child(2n):active{background-color:#505050}ks-product-admin .distributors{display:table;background-color:#000000;color:#ffffff;width:100%;-webkit-box-sizing:border-box;box-sizing:border-box;overflow:hidden}ks-product-admin .distributors[hidden]{display:none !important;visibility:hidden !important}ks-product-admin .distributors th{font-weight:700;font-size:15.5px !important;font-family:var(--font-emphasis);border-bottom:2px solid #181818;border-right:2px solid #181818}ks-product-admin .distributors td{font-weight:500;font-size:14px;border-right:2px solid #181818}ks-product-admin .distributors th,ks-product-admin .distributors td{text-align:center;padding:8px 20px}ks-product-admin .distributors th:first-child,ks-product-admin .distributors td:first-child{text-align:left}ks-product-admin .distributors *:last-child td{padding:8px 20px 14px 20px}ks-product-admin td.overwrite{color:var(--color-secondary)}@media only screen and (max-width: 640px) and (min-width: 340px){ks-product-admin .bar{font-size:14px}ks-product-admin .bar>div:not(.links){padding:17px 10px}}@media only screen and (max-width: 420px){ks-product-admin .bar{font-size:12px}ks-product-admin .bar>div:not(.links){padding:17px 8px}ks-product-admin .bar .hide-mobile{display:none !important}}@media only screen and (max-width: 960px){ks-product-admin .bar>.links button{display:none !important}ks-product-admin .distributors{display:none !important;visibility:hidden !important}}";
 
 class ProductAdmin {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.editLink = "";
-    this.homeQuantity = "";
-    this.externalQuantity = "";
-    this.availability = "";
-    this.overwrite = false;
-    this.distributors = false;
     this.expanded = false;
   }
-  expand() {
-    this.expanded = !this.expanded;
-    console.log("EXPAND");
-  }
   render() {
+    var _a;
+    const admin = productDynamic.get("adminBar");
+    if (!productDynamic.get("loaded") || !Object.keys(admin).length)
+      return null;
+    const hasDistributors = ((_a = admin.distributors) === null || _a === void 0 ? void 0 : _a.length) > 0;
     return [
-      hAsync("div", { class: "bar" }, hAsync("div", null, hAsync("ks-icon", { name: "home" }), " ", this.homeQuantity), this.externalQuantity != "" ?
-        hAsync("div", null, hAsync("ks-icon", { name: "truck" }), " ", this.externalQuantity)
-        : null, this.availability != "" ?
-        hAsync("div", null, hAsync("ks-icon", { class: "hide-mobile", name: "x-octagon" }), " ", this.availability)
-        : null, this.overwrite ?
+      hAsync("div", { class: "bar" }, hAsync("div", null, hAsync("ks-icon", { name: "home" }), " ", admin.homeQuantity), admin.externalQuantity != "" ?
+        hAsync("div", null, hAsync("ks-icon", { name: "truck" }), " ", admin.externalQuantity)
+        : null, admin.availability != "" ?
+        hAsync("div", null, hAsync("ks-icon", { class: "hide-mobile", name: "x-octagon" }), " ", admin.availability)
+        : null, admin.overwrite ?
         hAsync("div", null, hAsync("ks-icon", { class: "hide-mobile", name: "alert-octagon" }), " Nadpisany")
-        : null, hAsync("div", { class: "links" }, hAsync("a", { class: "button", href: this.editLink }, hAsync("ks-icon", { name: "edit" })), this.distributors ?
-        hAsync("button", { class: "button", onClick: () => this.expand() }, hAsync("ks-icon", { name: this.expanded ? "chevron-up" : "chevron-down" }))
+        : null, hAsync("div", { class: "links" }, hAsync("a", { class: "button", href: admin.link }, hAsync("ks-icon", { name: "edit" })), hasDistributors ?
+        hAsync("button", { class: "button", onClick: () => this.expanded = !this.expanded }, hAsync("ks-icon", { name: this.expanded ? "chevron-up" : "chevron-down" }))
         : null)),
-      this.distributors ?
-        hAsync("div", { class: "distributors", hidden: !this.expanded }, hAsync("tr", null, hAsync("th", null, "Dystrybutor"), hAsync("th", null, "Czas wysy\u0142ki"), hAsync("th", null, "Stan zewn\u0119trzny"), hAsync("th", null, "Tryb niedost\u0119pno\u015Bci"), hAsync("th", null, "Komunikaty")), hAsync("slot", null))
+      hasDistributors ?
+        hAsync("div", { class: "distributors", hidden: !this.expanded }, hAsync("tr", null, hAsync("th", null, "Dystrybutor"), hAsync("th", null, "Czas wysy\u0142ki"), hAsync("th", null, "Stan zewn\u0119trzny"), hAsync("th", null, "Tryb niedost\u0119pno\u015Bci"), hAsync("th", null, "Komunikaty")), admin.distributors.map(distributor => hAsync("tr", { class: distributor.overwrite && "overwrite" }, hAsync("td", null, distributor.name), hAsync("td", null, distributor.time), hAsync("td", null, distributor.quantity), hAsync("td", null, distributor.unavailableMode), hAsync("td", null, distributor.warning))))
         : null
     ];
   }
   static get style() { return productAdminCss; }
   static get cmpMeta() { return {
-    "$flags$": 4,
+    "$flags$": 0,
     "$tagName$": "ks-product-admin",
     "$members$": {
-      "editLink": [1, "edit-link"],
-      "homeQuantity": [1, "home-quantity"],
-      "externalQuantity": [1, "external-quantity"],
-      "availability": [1],
-      "overwrite": [4],
-      "distributors": [4],
       "expanded": [32]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
-
-const productAdminDistributorCss = "ks-product-admin-distributor{color:#ffffff;display:table-row}ks-product-admin-distributor[overwrite]{color:var(--color-secondary)}";
-
-class ProductAdminDistributor {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.name = "";
-    this.time = "";
-    this.quantity = "";
-    this.unavailableMode = "";
-    this.warning = "";
-    this.overwrite = false;
-  }
-  render() {
-    return [
-      hAsync("td", null, this.name),
-      hAsync("td", null, this.time),
-      hAsync("td", null, this.quantity),
-      hAsync("td", null, this.unavailableMode),
-      hAsync("td", null, this.warning)
-    ];
-  }
-  static get style() { return productAdminDistributorCss; }
-  static get cmpMeta() { return {
-    "$flags$": 0,
-    "$tagName$": "ks-product-admin-distributor",
-    "$members$": {
-      "name": [1],
-      "time": [1],
-      "quantity": [1],
-      "unavailableMode": [1, "unavailable-mode"],
-      "warning": [1],
-      "overwrite": [4]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
@@ -27968,233 +28139,6 @@ class TopBanner {
   }; }
 }
 
-class TikTokTracker {
-  constructor() {
-    this.ttq = new Promise(resolve => {
-      var checkExist = setInterval(() => {
-        if (ttq !== undefined) {
-          resolve(ttq);
-          clearInterval(checkExist);
-        }
-      }, 100);
-    });
-  }
-  pageview() {
-    this.ttq.then(ttq => {
-      ttq.track("Browse");
-    });
-  }
-  product(_eventID, productId, name, price, currency) {
-    this.ttq.then(ttq => {
-      ttq.track('ViewContent', {
-        content_type: 'product',
-        content_id: productId,
-        content_name: name,
-        currency: currency,
-        price: price,
-        quantity: 1,
-        value: price
-      });
-    });
-  }
-  addToCart(_eventID, productId, name, price, quantity, currency) {
-    this.ttq.then(ttq => {
-      ttq.track('AddToCart', {
-        content_type: 'product',
-        content_id: productId,
-        content_name: name,
-        currency: currency,
-        price: price,
-        quantity: quantity,
-        value: price * quantity
-      });
-    });
-  }
-  order_checkout(_eventID, products, value, currency) {
-    this.ttq.then(ttq => {
-      ttq.track('StartCheckout', {
-        contents: this.transformProducts(products),
-        currency: currency,
-        value: value
-      });
-    });
-  }
-  order_form(_eventID, products, value, currency) {
-    this.ttq.then(ttq => {
-      ttq.track('AddBilling', {
-        contents: this.transformProducts(products),
-        value: value,
-        currency: currency
-      });
-    });
-  }
-  order_placed(_eventID, products, value, currency) {
-    this.ttq.then(ttq => {
-      ttq.track('Checkout', {
-        contents: this.transformProducts(products),
-        value: value,
-        currency: currency
-      });
-    });
-  }
-  // @ts-ignore
-  search(query) {
-    /*
-    this.ttq.then(ttq => {
-        ttq.track('Search', {
-            query: query
-        });
-    });*/
-  }
-  transformProducts(products) {
-    return products.map(product => {
-      return {
-        content_id: product.id,
-        content_type: 'product',
-        content_name: product.name,
-        quantity: product.quantity,
-        price: product.price
-      };
-    });
-  }
-}
-
-class FacebookTracker {
-  constructor(ids) {
-    const id_array = ids.split(", ");
-    this.pixel = new Promise(resolve => {
-      // @ts-ignore
-      !function (f, b, e, v, n, t, s) {
-        if (f.fbq)
-          return;
-        n = f.fbq = function () {
-          n.callMethod ?
-            n.callMethod.apply(n, arguments) : n.queue.push(arguments);
-        };
-        if (!f._fbq)
-          f._fbq = n;
-        n.push = n;
-        n.loaded = !0;
-        n.version = '2.0';
-        n.queue = [];
-        t = b.createElement(e);
-        t.async = !0;
-        t.src = v;
-        s = b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t, s);
-      }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
-      id_array.forEach(id => {
-        fbq('init', id);
-      });
-      resolve(fbq);
-    });
-  }
-  pageview(eventID) {
-    this.pixel.then(fbq => {
-      fbq('track', 'PageView', {}, { eventID: eventID });
-    });
-  }
-  product(eventID, productId, name, price, currency) {
-    this.pixel.then(fbq => {
-      fbq('track', "ViewContent", {
-        content_type: 'product',
-        content_name: name,
-        value: price,
-        currency: currency,
-        content_ids: [productId]
-      }, {
-        eventID: eventID
-      });
-    });
-  }
-  addToCart(eventID, productId, name, price, quantity, currency) {
-    this.pixel.then(fbq => {
-      fbq('track', 'AddToCart', {
-        content_type: 'product',
-        content_name: name,
-        value: price,
-        currency: currency,
-        contents: [
-          { id: productId, quantity: quantity }
-        ]
-      }, {
-        eventID: eventID
-      });
-    });
-  }
-  order_checkout(eventID, products, value, currency) {
-    this.pixel.then(fbq => {
-      fbq('track', "InitiateCheckout", {
-        contents: this.transformProducts(products),
-        content_type: 'product',
-        value: value,
-        currency: currency
-      }, {
-        eventID: eventID
-      });
-    });
-  }
-  // @ts-ignore
-  order_form(eventID, products, value, currency) {
-  }
-  order_placed(eventID, products, value, currency) {
-    this.pixel.then(fbq => {
-      fbq('track', 'Purchase', {
-        contents: this.transformProducts(products),
-        content_type: 'product',
-        value: value,
-        currency: currency
-      }, {
-        eventID: eventID
-      });
-    });
-  }
-  search(query) {
-    this.pixel.then(fbq => {
-      fbq('track', "Search", {
-        search_string: query
-      });
-    });
-  }
-  transformProducts(products) {
-    return products.map(product => {
-      return {
-        id: product.id,
-        quantity: product.quantity
-      };
-    });
-  }
-}
-
-class Tracker {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-  }
-  componentWillLoad() {
-    tracker.get("loaded").then(() => {
-      if (this.tiktok)
-        this.appendTracker(new TikTokTracker());
-      if (this.facebook)
-        this.appendTracker(new FacebookTracker(this.facebook));
-      resolve();
-    });
-  }
-  appendTracker(obj) {
-    tracker.set("trackers", [...tracker.get('trackers'), obj]);
-  }
-  static get cmpMeta() { return {
-    "$flags$": 0,
-    "$tagName$": "ks-tracker",
-    "$members$": {
-      "tiktok": [4],
-      "facebook": [1]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
-
 class TrackerOrder {
   constructor(hostRef) {
     registerInstance(this, hostRef);
@@ -28226,51 +28170,6 @@ class TrackerOrder {
       "eventId": [1, "event-id"],
       "products": [1],
       "value": [2],
-      "currency": [1]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
-
-class TrackerPageView {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.eventId = "";
-  }
-  componentWillLoad() {
-    eachTracker(item => item === null || item === void 0 ? void 0 : item.pageview(this.eventId));
-  }
-  static get cmpMeta() { return {
-    "$flags$": 0,
-    "$tagName$": "ks-tracker-pageview",
-    "$members$": {
-      "eventId": [1, "event-id"]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
-
-class TrackerProduct$1 {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.eventId = "";
-    this.currency = "PLN";
-  }
-  componentWillLoad() {
-    eachTracker(item => item === null || item === void 0 ? void 0 : item.product(this.eventId, this.productId, this.name, this.price, this.currency));
-  }
-  static get cmpMeta() { return {
-    "$flags$": 0,
-    "$tagName$": "ks-tracker-product",
-    "$members$": {
-      "eventId": [1, "event-id"],
-      "productId": [1, "product-id"],
-      "name": [1],
-      "price": [2],
       "currency": [1]
     },
     "$listeners$": undefined,
@@ -28519,7 +28418,6 @@ registerComponents([
   PageProduct,
   Pagination,
   ProductAdmin,
-  ProductAdminDistributor,
   ProductAttribute,
   ProductBrand,
   ProductButton$1,
@@ -28565,10 +28463,7 @@ registerComponents([
   SidePanel,
   Sorting,
   TopBanner,
-  Tracker,
   TrackerOrder,
-  TrackerPageView,
-  TrackerProduct$1,
   TrackerProduct,
   dialog,
 ]);
