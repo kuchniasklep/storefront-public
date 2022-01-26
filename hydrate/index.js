@@ -25903,7 +25903,21 @@ class PageProduct {
     product.set("traitIDs", traits);
   }
   track() {
+    var _a, _b;
     eachTracker(item => item === null || item === void 0 ? void 0 : item.product(productDynamic.get("eventId"), product.get("id"), product.get("name"), parseFloat(product.get("currentPrice")), product.get("currency")));
+    const categories = product.get('breadcrumbs');
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
+      'ecomm_prodid': product.get("id"),
+      'ecomm_pagetype': 'product',
+      'ecomm_totalvalue': product.get('currentPrice')
+    });
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push({
+      'type': 'product',
+      'name': product.get('currentPrice'),
+      'brand': product.get('brand').name,
+      'category': categories[categories.length - 1].name,
+      'availability': product.get('shippingTime')
+    });
   }
   render() {
     if (!(product === null || product === void 0 ? void 0 : product.get('name')))
