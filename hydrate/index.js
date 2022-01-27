@@ -20238,10 +20238,6 @@ class InfoBanner {
   constructor(hostRef) {
     registerInstance(this, hostRef);
   }
-  componentWillLoad() {
-    if (this.navbarTheme)
-      this.theme = JSON.parse(this.navbarTheme);
-  }
   render() {
     const theme = this.theme ? `:root {
       --navbar-color: ${this.theme.navbarColor} !important;
@@ -20267,7 +20263,7 @@ class InfoBanner {
       "link": [1],
       "width": [514],
       "height": [514],
-      "navbarTheme": [1, "navbar-theme"]
+      "theme": [16]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
@@ -25828,7 +25824,7 @@ class PageHeader {
     registerInstance(this, hostRef);
   }
   render() {
-    return hAsync(Host, null, hAsync("ks-navbar", null), hAsync("ks-newsletter-popup", { api: common.get('newsletterApi'), "login-link": common.get('loginLink'), "register-link": common.get('registerLink') }), hAsync("ks-product-suggestions", { api: common.get('suggestionApi') }), hAsync("ks-error-popup", null), hAsync("ks-message-popup", null), hAsync("ks-cookie-popup", { message: common.get('cookieMessage'), button: common.get('cookieButton'), delay: common.get('cookieDelay') }));
+    return hAsync(Host, null, hAsync("ks-top-banner", null), hAsync("ks-navbar", null), hAsync("ks-newsletter-popup", { api: common.get('newsletterApi'), "login-link": common.get('loginLink'), "register-link": common.get('registerLink') }), hAsync("ks-product-suggestions", { api: common.get('suggestionApi') }), hAsync("ks-error-popup", null), hAsync("ks-message-popup", null), hAsync("ks-cookie-popup", { message: common.get('cookieMessage'), button: common.get('cookieButton'), delay: common.get('cookieDelay') }));
   }
   static get cmpMeta() { return {
     "$flags$": 0,
@@ -25935,7 +25931,7 @@ class PageProduct {
     const model = product.get('model') || product.get('catalog');
     const ean = product.get('ean');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, infoBanner ?
-      hAsync("ks-info-banner", { image: infoBanner.image, width: infoBanner.width, height: infoBanner.height, color: infoBanner.color, name: infoBanner.name })
+      hAsync("ks-info-banner", { image: infoBanner.image, color: infoBanner.color, width: infoBanner.width, height: infoBanner.height, name: infoBanner.name, link: infoBanner.link, theme: infoBanner.theme })
       : null, hAsync("ks-container", null, hAsync("ks-product-notify", null), hAsync("ks-product-admin", null), hAsync("ks-product-info", null, product.get('traits') ?
       hAsync("ks-product-traits", null)
       : null, hAsync("ks-product-purchase", null), hAsync("ks-product-shipping", null), product.get('warranty') ?
@@ -28114,39 +28110,25 @@ class Sorting {
   }; }
 }
 
-const topBannerCss = "ks-top-banner{display:block;position:relative;height:40px;padding-right:90px;font-family:var(--font-emphasis);font-size:16px;line-height:16px;font-weight:700;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;cursor:pointer;background-color:var(--color-yellow);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-top-banner:hover{background-color:var(--color-yellow-hover)}ks-top-banner:active{background-color:var(--color-yellow-active)}ks-top-banner a{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;height:100%;color:inherit !important;text-decoration:none !important}ks-top-banner a>ks-img{width:auto}ks-top-banner .close{position:absolute;top:5px;right:5px;border-style:none;outline-style:none;border-radius:100%;padding:3px;background-color:transparent;opacity:1.0;-webkit-transition:var(--transition-opacity);transition:var(--transition-opacity)}ks-top-banner .close:hover{opacity:0.6}ks-top-banner .close:active{opacity:0.4}@media only screen and (max-width: 959px){ks-top-banner{font-size:14px;line-height:14px;padding-right:20px}}@media only screen and (max-width: 480px){ks-top-banner a>span{max-width:150px;margin:0}ks-top-banner{font-size:13px;line-height:13px}}";
+const topBannerCss = "ks-top-banner{display:block;position:relative;height:40px;padding-right:90px;font-family:var(--font-emphasis);font-size:16px;line-height:16px;font-weight:700;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;cursor:pointer;-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-top-banner[hidden]{display:none}ks-top-banner a{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;height:100%;color:inherit !important;text-decoration:none !important}ks-top-banner a>ks-img{width:auto}@media only screen and (max-width: 959px){ks-top-banner{font-size:14px;line-height:14px;padding-right:20px}}@media only screen and (max-width: 480px){ks-top-banner a>span{max-width:150px;margin:0}ks-top-banner{font-size:13px;line-height:13px}}";
 
 class TopBanner {
   constructor(hostRef) {
     registerInstance(this, hostRef);
   }
-  id() {
-    return "ks-top-banner-" + this.name.replace(" ", "");
-  }
-  disable() {
-    sessionStorage.setItem(this.id(), "true");
-    this.root.hidden = true;
-  }
-  componentWillLoad() {
-    if (sessionStorage.getItem(this.id()) != null)
-      this.root.hidden = true;
-  }
   render() {
-    return [
-      hAsync("a", { href: this.shipping }, hAsync("slot", null)),
-      hAsync("button", { class: "close", onClick: () => this.disable() }, hAsync("ks-icon", { name: "x" }))
-    ];
+    const notice = common.get("topNotice");
+    if (!notice || Object.keys(notice).length <= 0)
+      return hAsync(Host, { hidden: true });
+    return hAsync(Host, { style: { backgroundColor: notice.color } }, hAsync("a", { href: notice.link }, notice.image ?
+      hAsync("ks-img", { vertical: true, sync: true, src: notice.image })
+      : null, hAsync("span", null, notice.message)));
   }
-  get root() { return getElement(this); }
   static get style() { return topBannerCss; }
   static get cmpMeta() { return {
-    "$flags$": 4,
+    "$flags$": 0,
     "$tagName$": "ks-top-banner",
-    "$members$": {
-      "name": [1],
-      "newsletter": [16],
-      "shipping": [1]
-    },
+    "$members$": undefined,
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": []
