@@ -23692,7 +23692,7 @@ class Navbar {
         hAsync("ks-navbar-button", { name: "Zaloguj", link: common.get('loginLink'), icon: "user", class: "desktop" })
         : null, commonDynamic.get('loggedIn') ?
         hAsync("ks-navbar-button", { name: "Wyloguj", link: common.get('logoutLink'), icon: "log-out", class: "desktop" })
-        : null, hAsync("ks-navbar-button", { name: "Menu", icon: "menu", class: "mobile-tablet", onClick: () => this.root.querySelector("ks-navbar-sidebar").show() })), hAsync("ks-navbar-contact-panel", { phone: common.get('phone'), email: common.get('email'), contact: common.get('company') })),
+        : null, hAsync("ks-navbar-button", { name: "Menu", icon: "menu", class: "mobile-tablet", onClick: () => this.root.querySelector("ks-navbar-sidebar").show() })), hAsync("ks-navbar-contact-panel", null)),
       hAsync("ks-navbar-categories", null),
       hAsync("ks-navbar-sidebar", null),
       hAsync("ks-navbar-search", { mobile: true })
@@ -23954,7 +23954,7 @@ class NavbarContactPanel {
   render() {
     return hAsync(Host, { class: this.visible }, hAsync("div", { class: "navbar", style: { width: `${this.menuWidth}px` } }, hAsync("ks-navbar-button", { icon: "x", onClick: () => this.Toggle() })), hAsync("div", { class: "content" }, this.initialized ?
       hAsync("div", { class: "map" }, hAsync("iframe", { frameborder: "0", height: this.height, width: this.width, src: "https://maps.google.pl/maps?ie=UTF8&q=Pozna%C5%84ska+23%2C+58-500+Jelenia+G%C3%B3ra&gl=PL&hl=pl&t=m&iwloc=A&output=embed" }))
-      : null, hAsync("div", { class: "info ks-text-decorated" }, hAsync("div", { class: "address", innerHTML: this.contact }), hAsync("div", { class: "buttons" }, hAsync("div", { class: "margin" }, hAsync("a", { href: "tel:" + this.phone }, this.phone), hAsync("br", null), hAsync("a", { href: "mailto:" + this.email }, this.email))))));
+      : null, hAsync("div", { class: "info ks-text-decorated" }, hAsync("div", { class: "address" }, common.get('company'), " ", hAsync("br", null), common.get('address'), " ", hAsync("br", null), common.get('nip'), " ", hAsync("br", null), hAsync("br", null), common.get('workingHours'), " ", hAsync("br", null)), hAsync("div", { class: "buttons" }, hAsync("div", { class: "margin" }, hAsync("a", { href: "tel:" + common.get('phone') }, common.get('phone')), hAsync("br", null), hAsync("a", { href: "mailto:" + common.get('email') }, common.get('email')))))));
   }
   get root() { return getElement(this); }
   static get style() { return navbarContactPanelCss; }
@@ -23962,9 +23962,6 @@ class NavbarContactPanel {
     "$flags$": 0,
     "$tagName$": "ks-navbar-contact-panel",
     "$members$": {
-      "phone": [1],
-      "email": [1],
-      "contact": [1],
       "toggled": [1540],
       "mobile": [32],
       "height": [32],
