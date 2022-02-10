@@ -17349,7 +17349,7 @@ class Footer {
   }
   render() {
     return [
-      hAsync("div", { class: "about" }, hAsync("div", { class: "links" }, hAsync("slot", null), hAsync("div", { class: "contact" }, hAsync("span", null, "Kontakt"), hAsync("a", { href: `mailto:${this.email}` }, " ", hAsync("ks-icon", { name: "mail" }), " ", this.email, " "), hAsync("a", { href: `tel:${this.phone}` }, " ", hAsync("ks-icon", { name: "phone" }), " ", this.phone, " "), hAsync("span", null, hAsync("ks-icon", { name: "clock", size: 0.9 }), " ", this.time), hAsync("span", null, hAsync("ks-icon", { name: "home", size: 0.9 }), " ", this.company), hAsync("span", null, hAsync("ks-icon", { name: "map-pin", size: 0.9 }), " ", this.address))), hAsync("div", { class: "newsletter" }, hAsync("div", null, "Zapisz si\u0119 do naszego newslettera i zyskaj"), hAsync("div", null, "KUPON 10Z\u0141"), hAsync("ks-button", { light: true, border: true, name: "ZAPISZ SI\u0118", onClick: () => document.querySelector('ks-newsletter-popup').Show() }))),
+      hAsync("div", { class: "about" }, hAsync("div", { class: "links" }, hAsync("slot", null), hAsync("div", { class: "contact" }, hAsync("span", null, "Kontakt"), hAsync("a", { href: `mailto:${this.email}` }, hAsync("ks-icon", { name: "mail" }), this.email), hAsync("a", { href: `tel:${this.phone}` }, hAsync("ks-icon", { name: "phone" }), this.phone), hAsync("span", null, hAsync("ks-icon", { name: "clock", size: 0.9 }), " ", this.time), hAsync("span", null, hAsync("ks-icon", { name: "home", size: 0.9 }), " ", this.company), hAsync("span", null, hAsync("ks-icon", { name: "map-pin", size: 0.9 }), " ", this.address))), hAsync("div", { class: "newsletter" }, hAsync("div", null, "Zapisz si\u0119 do naszego newslettera i zyskaj"), hAsync("div", null, "KUPON 10Z\u0141"), hAsync("ks-button", { light: true, border: true, name: "ZAPISZ SI\u0118", onClick: () => document.querySelector('ks-newsletter-popup').Show() }))),
       hAsync("div", { class: "portals" }, hAsync("div", null, hAsync("slot", { name: "social" })), hAsync("div", null, hAsync("slot", { name: "reviews" }))),
       hAsync("div", { class: "software" }, hAsync("a", { href: this.softwareLink, rel: "nofollow" }, "Oprogramowanie sklepu ShopGold"))
     ];
@@ -25863,6 +25863,7 @@ const product = createStore({
   warrantyLink: "",
   points: {},
   negotiate: {},
+  negotiateEnabled: false,
   installments: {},
   brand: {},
   tags: []
@@ -25937,7 +25938,8 @@ class PageProduct {
       hAsync("ks-product-tooltip", { message: points.message }, hAsync("ks-product-attribute", { icon: "gift" }, points.shortMessage))
       : null, model || ean ?
       hAsync("ks-product-attribute", { style: { marginTop: "15px" }, icon: "file", faded: true }, hAsync("span", { style: { marginRight: "15px" } }, model ? hAsync("span", { style: { marginRight: "7px" } }, "Model: ", model, " ") : null, ean ? hAsync("span", null, "EAN: ", ean) : null))
-      : null, hAsync("div", { class: "buttons" }, hAsync("ks-product-negotiate", null, hAsync("ks-product-button", null, product.get('negotiate').heading)), (installments.payuId && installments.payuKey) || installments.caParameters ?
+      : null, hAsync("div", { class: "buttons" }, product.get('negotiateEnabled') &&
+      hAsync("ks-product-negotiate", null, hAsync("ks-product-button", null, product.get('negotiate').heading)), (installments.payuId && installments.payuKey) || installments.caParameters ?
       hAsync("ks-product-installments", { name: installments.button }, installments.payuId && installments.payuKey ?
         hAsync("ks-product-calculator-payu", { price: product.get("currentPrice"), "pos-id": installments.payuId, "api-key": installments.payuKey }, hAsync("ks-product-button", { icon: installments.payuIcon }))
         : null, installments.caParameters ?
