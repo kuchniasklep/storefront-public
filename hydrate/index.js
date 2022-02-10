@@ -17341,37 +17341,6 @@ class Flex {
   }; }
 }
 
-const footerCss = "ks-footer{display:block;background-color:var(--footer-color);color:var(--footer-text-color);font-size:16px}ks-footer .about{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;padding:50px 70px 40px 70px;margin:auto}ks-footer .contact>span:first-of-type{display:block;color:var(--footer-heading-color);font-family:var(--font-emphasis);font-weight:700;font-size:18px;margin:0 0 15px 0}ks-footer .contact a,ks-footer .contact>span{display:block;text-decoration:none !important;font-size:16px;margin-bottom:5px;color:var(--footer-text-color);-webkit-transition:var(--transition-color);transition:var(--transition-color)}ks-footer .contact a:hover{color:var(--footer-text-color-hover)}ks-footer .contact a:active{color:var(--footer-text-color-active)}ks-footer .contact ks-icon{margin-right:5px}ks-footer .links{display:-ms-flexbox;display:flex;-ms-flex-pack:start;justify-content:flex-start;min-height:100px}ks-footer .newsletter{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-flow:column nowrap;flex-flow:column nowrap;text-align:center;padding:0 0 0 30px;-ms-flex-negative:0;flex-shrink:0}ks-footer .newsletter>div{font-family:var(--font-emphasis)}ks-footer .newsletter>div:last-of-type{font-size:48px;line-height:40px;font-weight:700;margin:5px 0 20px 0}ks-footer .newsletter ks-button{width:100%}ks-footer .portals{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;padding:20px;border-top:solid 1px #2b2b2b}ks-footer .portals>div{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;padding:10px}ks-footer .separator{width:1px;height:35px;margin:0 20px;background-color:#2b2b2b}ks-footer .software{background-color:var(--footer-color-darker);color:var(--footer-text-color-darker);font-size:13px;text-align:center;padding:10px}ks-footer .software>a{color:var(--footer-text-color-darker)}@media only screen and (max-width: 1060px){ks-footer .about{-ms-flex-direction:column;flex-direction:column;padding:50px 30px 40px 30px}ks-footer .contact{max-width:220px}ks-footer .links{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center}ks-footer .newsletter{margin-top:40px;padding:40px 0 0 0;border-top:solid 1px #2b2b2b}ks-footer .newsletter ks-button{max-width:290px}}@media only screen and (max-width: 640px){ks-footer .about{-ms-flex-direction:column;flex-direction:column;padding:30px}ks-footer .links{margin-top:0px;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;text-align:center}ks-footer .links>*{margin-top:40px;margin-right:0px;padding:0}ks-footer .newsletter>div{font-size:14px}ks-footer .newsletter>div:last-of-type{font-size:40px;margin-bottom:10px}ks-footer .portals>div:first-of-type{padding:20px}}";
-
-class Footer {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-  }
-  render() {
-    return [
-      hAsync("div", { class: "about" }, hAsync("div", { class: "links" }, hAsync("slot", null), hAsync("div", { class: "contact" }, hAsync("span", null, "Kontakt"), hAsync("a", { href: `mailto:${this.email}` }, hAsync("ks-icon", { name: "mail" }), hAsync("span", null, `${this.email}`)), hAsync("a", { href: `tel:${this.phone}` }, hAsync("ks-icon", { name: "phone" }), this.phone), hAsync("span", null, hAsync("ks-icon", { name: "clock", size: 0.9 }), " ", this.time), hAsync("span", null, hAsync("ks-icon", { name: "home", size: 0.9 }), " ", this.company), hAsync("span", null, hAsync("ks-icon", { name: "map-pin", size: 0.9 }), " ", this.address))), hAsync("div", { class: "newsletter" }, hAsync("div", null, "Zapisz si\u0119 do naszego newslettera i zyskaj"), hAsync("div", null, "KUPON 10Z\u0141"), hAsync("ks-button", { light: true, border: true, name: "ZAPISZ SI\u0118", onClick: () => document.querySelector('ks-newsletter-popup').Show() }))),
-      hAsync("div", { class: "portals" }, hAsync("div", null, hAsync("slot", { name: "social" })), hAsync("div", null, hAsync("slot", { name: "reviews" }))),
-      hAsync("div", { class: "software" }, hAsync("a", { href: this.softwareLink, rel: "nofollow" }, "Oprogramowanie sklepu ShopGold"))
-    ];
-  }
-  static get style() { return footerCss; }
-  static get cmpMeta() { return {
-    "$flags$": 4,
-    "$tagName$": "ks-footer",
-    "$members$": {
-      "softwareLink": [1, "software-link"],
-      "phone": [1],
-      "email": [1],
-      "time": [1],
-      "company": [1],
-      "address": [1]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
-
 const footerButtonCss = "ks-footer-button{display:block;opacity:1.0;-webkit-transition:opacity 0.2s ease;transition:opacity 0.2s ease;margin:0 3px}ks-footer-button>a{display:block;max-width:90px;max-height:40px;height:40px}ks-footer-button:hover{opacity:0.7}";
 
 class FooterButton {
@@ -25799,13 +25768,26 @@ class PageBase {
   }; }
 }
 
+const footerCss = "ks-page-footer{display:block;margin-top:20px;background-color:var(--footer-color);color:var(--footer-text-color);font-size:16px}ks-page-footer .about{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;padding:50px 70px 40px 70px;margin:auto}ks-page-footer .contact>span:first-of-type{display:block;color:var(--footer-heading-color);font-family:var(--font-emphasis);font-weight:700;font-size:18px;margin:0 0 15px 0}ks-page-footer .contact a,ks-page-footer .contact>span{display:block;text-decoration:none !important;font-size:16px;margin-bottom:5px;color:var(--footer-text-color);-webkit-transition:var(--transition-color);transition:var(--transition-color)}ks-page-footer .contact a:hover{color:var(--footer-text-color-hover)}ks-page-footer .contact a:active{color:var(--footer-text-color-active)}ks-page-footer .contact ks-icon{margin-right:5px}ks-page-footer .links{display:-ms-flexbox;display:flex;-ms-flex-pack:start;justify-content:flex-start;min-height:100px}ks-page-footer .newsletter{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-flow:column nowrap;flex-flow:column nowrap;text-align:center;padding:0 0 0 30px;-ms-flex-negative:0;flex-shrink:0}ks-page-footer .newsletter>div{font-family:var(--font-emphasis)}ks-page-footer .newsletter>div:last-of-type{font-size:48px;line-height:40px;font-weight:700;margin:5px 0 20px 0}ks-page-footer .newsletter ks-button{width:100%}ks-page-footer .portals{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;padding:20px;border-top:solid 1px #2b2b2b}ks-page-footer .portals>div{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;padding:10px}ks-page-footer .separator{width:1px;height:35px;margin:0 20px;background-color:#2b2b2b}ks-page-footer .software{background-color:var(--footer-color-darker);color:var(--footer-text-color-darker);font-size:13px;text-align:center;padding:10px}ks-page-footer .software>a{color:var(--footer-text-color-darker)}@media only screen and (max-width: 1060px){ks-page-footer .about{-ms-flex-direction:column;flex-direction:column;padding:50px 30px 40px 30px}ks-page-footer .contact{max-width:220px}ks-page-footer .links{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center}ks-page-footer .newsletter{margin-top:40px;padding:40px 0 0 0;border-top:solid 1px #2b2b2b}ks-page-footer .newsletter ks-button{max-width:290px}}@media only screen and (max-width: 640px){ks-page-footer .about{-ms-flex-direction:column;flex-direction:column;padding:30px}ks-page-footer .links{margin-top:0px;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;text-align:center}ks-page-footer .links>*{margin-top:40px;margin-right:0px;padding:0}ks-page-footer .newsletter>div{font-size:14px}ks-page-footer .newsletter>div:last-of-type{font-size:40px;margin-bottom:10px}ks-page-footer .portals>div:first-of-type{padding:20px}}";
+
 class PageFooter {
   constructor(hostRef) {
     registerInstance(this, hostRef);
   }
   render() {
-    return hAsync("ks-footer", { "software-link": common.get('softwareLink'), phone: common.get('phone'), email: common.get('email'), time: common.get('workingHours'), company: common.get('company'), address: common.get('address') }, common.get('social').map(social => hAsync("ks-footer-button", { slot: "social", width: 64, height: 64, href: social.link, image: social.image })), common.get('reviewers').map(reviewer => hAsync("ks-footer-button", { slot: "social", width: 64, height: 64, href: reviewer.link, image: reviewer.image })), common.get('footerLinks').map(section => hAsync("ks-footer-links", null, hAsync("span", { slot: "heading" }, section.name), section.items.map(item => hAsync("li", null, hAsync("a", { href: item.link }, item.name))))));
+    const phone = common.get('phone');
+    const email = common.get('email');
+    const time = common.get('workingHours');
+    const company = common.get('company');
+    const address = common.get('address');
+    const softwareLink = common.get('softwareLink');
+    return [
+      hAsync("div", { class: "about" }, hAsync("div", { class: "links" }, common.get('footerLinks').map(section => hAsync("ks-footer-links", null, hAsync("span", { slot: "heading" }, section.name), section.items.map(item => hAsync("li", null, hAsync("a", { href: item.link }, item.name))))), hAsync("div", { class: "contact" }, hAsync("span", null, "Kontakt"), hAsync("a", { href: `mailto:${email}` }, hAsync("ks-icon", { name: "mail" }), " ", email), hAsync("a", { href: `tel:${phone}` }, hAsync("ks-icon", { name: "phone" }), " ", phone), hAsync("span", null, hAsync("ks-icon", { name: "clock", size: 0.9 }), " ", time), hAsync("span", null, hAsync("ks-icon", { name: "home", size: 0.9 }), " ", company), hAsync("span", null, hAsync("ks-icon", { name: "map-pin", size: 0.9 }), " ", address))), hAsync("div", { class: "newsletter" }, hAsync("div", null, "Zapisz si\u0119 do naszego newslettera i zyskaj"), hAsync("div", null, "KUPON 10Z\u0141"), hAsync("ks-button", { light: true, border: true, name: "ZAPISZ SI\u0118", onClick: () => document.querySelector('ks-newsletter-popup').Show() }))),
+      hAsync("div", { class: "portals" }, hAsync("div", null, common.get('social').map(social => hAsync("ks-footer-button", { slot: "social", width: 64, height: 64, href: social.link, image: social.image }))), hAsync("div", null, common.get('reviewers').map(reviewer => hAsync("ks-footer-button", { slot: "social", width: 64, height: 64, href: reviewer.link, image: reviewer.image })))),
+      hAsync("div", { class: "software" }, hAsync("a", { href: softwareLink, rel: "nofollow" }, "Oprogramowanie sklepu ShopGold"))
+    ];
   }
+  static get style() { return footerCss; }
   static get cmpMeta() { return {
     "$flags$": 0,
     "$tagName$": "ks-page-footer",
@@ -28345,7 +28327,6 @@ registerComponents([
   FilterSlider,
   Filtering,
   Flex,
-  Footer,
   FooterButton,
   FooterLinks,
   Form,
