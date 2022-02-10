@@ -26140,7 +26140,7 @@ class ProductAttribute {
       hAsync("slot", null)
     ];
     if (this.href != "")
-      return hAsync("a", { href: this.href }, content);
+      return hAsync("a", { href: this.href, target: "_blank" }, content);
     return content;
   }
   static get style() { return productAttributeCss; }
