@@ -12513,7 +12513,7 @@ async function internalfetch(url, body) {
   });
 }
 
-const store$1 = createStore({
+const store = createStore({
   api: {},
   totalValue: 0,
   productValue: 0,
@@ -12539,7 +12539,7 @@ const store$1 = createStore({
   insured: {},
 });
 async function easyprotectChange(insured) {
-  const api = store$1.get("api").easyprotectChange;
+  const api = store.get("api").easyprotectChange;
   loading();
   await jsonfetch(api, insured)
     .then(response => response.json())
@@ -12547,7 +12547,7 @@ async function easyprotectChange(insured) {
   loaded();
 }
 async function easyprotectRemove(id) {
-  const api = store$1.get("api").easyprotectRemove;
+  const api = store.get("api").easyprotectRemove;
   loading();
   await formfetch(api, { "id": id })
     .then(response => response.json())
@@ -12556,14 +12556,14 @@ async function easyprotectRemove(id) {
 }
 function update(data) {
   Object.keys(data).map(key => {
-    store$1.set(key, data[key]);
+    store.set(key, data[key]);
   });
 }
 function loading() {
-  store$1.set("loading", store$1.get("loading") + 1);
+  store.set("loading", store.get("loading") + 1);
 }
 function loaded() {
-  store$1.set("loading", store$1.get("loading") - 1);
+  store.set("loading", store.get("loading") - 1);
 }
 
 const cartCss = "ks-cart{display:block;-webkit-box-sizing:border-box;box-sizing:border-box;overflow:hidden;width:100%;background:var(--card-background);color:var(--card-text-color);-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow)}";
@@ -12596,7 +12596,7 @@ class Cart {
         this.ShowMessageFromData("Błąd ilości produktu", data, async (cleanedData) => {
           if ('error' in cleanedData) {
             this.messagePopup.show("Błąd ilości produktu", cleanedData.error.message);
-            store$1.set("products", this.GetCorrectedProductAmounts(id, cleanedData.error.amount, cleanedData.error.maxAmount));
+            store.set("products", this.GetCorrectedProductAmounts(id, cleanedData.error.amount, cleanedData.error.maxAmount));
           }
           else
             await this.update(cleanedData);
@@ -12605,7 +12605,7 @@ class Cart {
         });
       }
       else {
-        store$1.set("products", this.GetCorrectedProductAmounts(id, last));
+        store.set("products", this.GetCorrectedProductAmounts(id, last));
         this.SetAmount(last, `ks-cart-product[ikey="${id}"] ks-cart-spinner`);
       }
     };
@@ -12621,7 +12621,7 @@ class Cart {
     else
       data = await this.fetch(this.api);
     this.update(data);
-    store$1.set("api", {
+    store.set("api", {
       productRemove: this.productRemove,
       productCount: this.productCount,
       addDeal: this.addDeal,
@@ -12672,7 +12672,7 @@ class Cart {
     }
   }
   GetCorrectedProductAmounts(id, amount, maxAmount) {
-    const products = store$1.get("products");
+    const products = store.get("products");
     products[id].amount = amount;
     if (maxAmount)
       products[id].maxAmount = maxAmount;
@@ -12757,7 +12757,7 @@ class Cart {
       window.scrollBy(0, -scrollAmount);
   }
   RemoveDiscount() {
-    store$1.set("discount", {});
+    store.set("discount", {});
   }
   ShowMessageFromData(name, data, callback) {
     if ('message' in data) {
@@ -12772,28 +12772,28 @@ class Cart {
       callback(data);
   }
   async ProductLoadingWrapper(func) {
-    store$1.set("loadingProducts", store$1.get("loadingProducts") + 1);
+    store.set("loadingProducts", store.get("loadingProducts") + 1);
     const output = await func();
-    store$1.set("loadingProducts", store$1.get("loadingProducts") - 1);
+    store.set("loadingProducts", store.get("loadingProducts") - 1);
     return output;
   }
   async fetch(url, formProperties) {
-    store$1.set("loading", store$1.get("loading") + 1);
+    store.set("loading", store.get("loading") + 1);
     return formfetch(url, formProperties)
       .then(response => response.json())
       .then(json => {
-      store$1.set("loading", store$1.get("loading") - 1);
+      store.set("loading", store.get("loading") - 1);
       return json;
     })
       .catch(error => {
-      store$1.set("loading", store$1.get("loading") - 1);
+      store.set("loading", store.get("loading") - 1);
       this.errorPopup.show(error);
       return {};
     });
   }
   async update(data) {
     Object.keys(data).map(key => {
-      store$1.set(key, data[key]);
+      store.set(key, data[key]);
     });
   }
   render() {
@@ -12844,11 +12844,11 @@ class CartButtons {
     }
   }
   componentDidLoad() {
-    this.LoadingWatcher(store$1.get("loading"));
-    store$1.onChange("loading", (loading) => this.LoadingWatcher(loading));
+    this.LoadingWatcher(store.get("loading"));
+    store.onChange("loading", (loading) => this.LoadingWatcher(loading));
   }
   async clickHandler() {
-    if (!store$1.get("loading")) {
+    if (!store.get("loading")) {
       const shippingSelect = document.querySelector("ks-cart-select-shipping");
       const paymentSelect = document.querySelector("ks-cart-select-payment");
       const shippingValid = await shippingSelect.Validate();
@@ -12865,7 +12865,7 @@ class CartButtons {
     }
   }
   render() {
-    return (hAsync("button", { class: "confirm uk-button uk-button-danger ks-text-decorated", onClick: () => this.clickHandler() }, this.loadingDelayed && store$1.get("loading") ?
+    return (hAsync("button", { class: "confirm uk-button uk-button-danger ks-text-decorated", onClick: () => this.clickHandler() }, this.loadingDelayed && store.get("loading") ?
       hAsync("div", { class: "uk-animation-fade", "uk-spinner": true }) :
       hAsync("span", null, "DO KASY")));
   }
@@ -12956,8 +12956,8 @@ class CartDealContainer {
   }
   render() {
     return [
-      store$1.get("dealGroups").map((group) => hAsync("ks-cart-deal-group", { key: group.name, name: group.name, deals: group.deals })),
-      store$1.get("deals").map((product) => hAsync("ks-cart-deal", { key: product.id, ikey: product.id, name: product.name, link: product.link, img: product.img, price: product.price }))
+      store.get("dealGroups").map((group) => hAsync("ks-cart-deal-group", { key: group.name, name: group.name, deals: group.deals })),
+      store.get("deals").map((product) => hAsync("ks-cart-deal", { key: product.id, ikey: product.id, name: product.name, link: product.link, img: product.img, price: product.price }))
     ];
   }
   get root() { return getElement(this); }
@@ -13088,10 +13088,10 @@ class CartDiscountContainer {
     this.disablePoints = false;
   }
   render() {
-    const discount = store$1.get("discount");
-    const points = store$1.get("points");
-    const pointsForOrder = store$1.get("pointsForOrder");
-    const productValue = store$1.get("productValue");
+    const discount = store.get("discount");
+    const points = store.get("points");
+    const pointsForOrder = store.get("pointsForOrder");
+    const productValue = store.get("productValue");
     if (Object.keys(discount).length !== 0) {
       return (hAsync("nav", { class: "uk-animation-fade" }, hAsync("ks-cart-heading", null, discount.heading), hAsync("ks-cart-discount-ticket", { name: discount.name, value: discount.value })));
     }
@@ -13333,11 +13333,11 @@ class CartEasyprotect {
   }
   componentWillLoad() {
     const update = () => {
-      this.insured = Object.entries(store$1.get("insured"));
-      this.enabled = Object.keys(store$1.get("easyprotect")).length > 0;
+      this.insured = Object.entries(store.get("insured"));
+      this.enabled = Object.keys(store.get("easyprotect")).length > 0;
     };
-    store$1.onChange("insured", update);
-    store$1.onChange("easyprotect", update);
+    store.onChange("insured", update);
+    store.onChange("easyprotect", update);
     update();
   }
   render() {
@@ -13374,18 +13374,18 @@ class CartEasyprotectDialog {
       this.updateEligible();
     };
     update();
-    store$1.onChange("easyprotect", update);
-    store$1.onChange("insured", update);
+    store.onChange("easyprotect", update);
+    store.onChange("insured", update);
   }
   componentDidLoad() {
     this.overlay = this.root.querySelector("ks-overlay");
   }
   updateEligible() {
-    const insured = Object.keys(store$1.get("insured"));
-    const available = Object.keys(store$1.get("easyprotect"));
+    const insured = Object.keys(store.get("insured"));
+    const available = Object.keys(store.get("easyprotect"));
     this.eligible = available
-      .filter(id => !insured.includes(id) && store$1.get('products')[id] !== undefined)
-      .map(id => store$1.get('products')[id]);
+      .filter(id => !insured.includes(id) && store.get('products')[id] !== undefined)
+      .map(id => store.get('products')[id]);
   }
   updateStep() {
     if (this.eligible.length == 1) {
@@ -13408,7 +13408,7 @@ class CartEasyprotectDialog {
     return hAsync("div", { class: "products" }, hAsync("slot", { name: "products" }), hAsync("div", { class: "items" }, this.eligible.map(item => hAsync("ks-cart-easyprotect-product", { image: item.img, name: item.name, warranty: item.warranty, onClick: () => this.toggle(item.id), active: this.active.includes(item.id) }))), hAsync("ks-button", { tall: true, name: "Przejd\u017A dalej", onClick: () => this.addProducts(), disabled: this.active.length <= 0 }), hAsync("div", { class: "close", onClick: () => this.hide() }, hAsync("ks-icon", { name: "x", size: 1.2 })));
   }
   warranty() {
-    const chosen = Object.keys(store$1.get("easyprotect"))
+    const chosen = Object.keys(store.get("easyprotect"))
       .filter(id => this.active.includes(id));
     return [
       hAsync("div", { class: "warranty" }, hAsync("slot", { name: "warranty" }), hAsync("div", { class: "items" }, chosen.map(id => hAsync("ks-cart-easyprotect-warranty", { "product-id": id }))), hAsync("ks-button", { tall: true, name: "Dodaj gwarancj\u0119", onClick: () => this.addWarranty(), disabled: this.active.length <= 0 }), hAsync("div", { class: "close", onClick: () => this.hide() }, hAsync("ks-icon", { name: "x", size: 1.2 })), this.eligible.length > 1 ?
@@ -13536,9 +13536,9 @@ class CartEasyprotectWarranty {
   componentWillLoad() {
     if (this.productId) {
       if (!this.active)
-        this.active = Object.keys(store$1.get("easyprotect")[this.productId])[0];
+        this.active = Object.keys(store.get("easyprotect")[this.productId])[0];
       this.update();
-      store$1.onChange("easyprotect", () => this.update());
+      store.onChange("easyprotect", () => this.update());
     }
   }
   componentWillUpdate() {
@@ -13548,10 +13548,10 @@ class CartEasyprotectWarranty {
     }
   }
   update() {
-    if (store$1.get("easyprotect")[this.productId] === undefined)
+    if (store.get("easyprotect")[this.productId] === undefined)
       return;
-    this.name = store$1.get("products")[this.productId].name;
-    this.options = store$1.get("easyprotect")[this.productId];
+    this.name = store.get("products")[this.productId].name;
+    this.options = store.get("easyprotect")[this.productId];
     this.entries = Object.entries(this.options);
     this.price = this.options[this.active];
   }
@@ -13769,11 +13769,11 @@ class CartProductContainer {
     registerInstance(this, hostRef);
   }
   render() {
-    const products = Object.entries(store$1.get("products"));
+    const products = Object.entries(store.get("products"));
     return [
       hAsync("ks-cart-product-heading", { removable: true }),
       products.map(([id, product]) => hAsync("ks-cart-product", { removable: true, key: id, "product-id": id, name: product.name, link: product.link, img: product.img, price: product.price, amount: product.amount, "max-amount": product.maxAmount, "shipping-time": product.shippingTime })),
-      hAsync("ks-cart-product-price", { amount: store$1.get("productAmount"), price: store$1.get("productValue"), loading: store$1.get("loadingProducts"), "shipping-time": store$1.get("totalShippingTime") })
+      hAsync("ks-cart-product-price", { amount: store.get("productAmount"), price: store.get("productValue"), loading: store.get("loadingProducts"), "shipping-time": store.get("totalShippingTime") })
     ];
   }
   get root() { return getElement(this); }
@@ -13895,7 +13895,7 @@ class CartProgressBar {
     this.numberPlacement = false;
   }
   componentWillLoad() {
-    this.shippingProgress = store$1.get("shippingProgress");
+    this.shippingProgress = store.get("shippingProgress");
     this.resizeHandler();
     if (!this.shippingProgress) {
       this.root.hidden = true;
@@ -13907,7 +13907,7 @@ class CartProgressBar {
   }
   resizeHandler() {
     if (this.shippingProgress) {
-      const barWidth = Math.min(store$1.get("productValue") / this.shippingProgress.threshold * 100, 100);
+      const barWidth = Math.min(store.get("productValue") / this.shippingProgress.threshold * 100, 100);
       this.numberPlacement = (barWidth / 100 * window.innerWidth) > 200;
     }
   }
@@ -13915,7 +13915,7 @@ class CartProgressBar {
     this.componentWillLoad();
   }
   render() {
-    const productValue = store$1.get("productValue");
+    const productValue = store.get("productValue");
     const data = this.shippingProgress;
     if (!data)
       return null;
@@ -14029,10 +14029,10 @@ class CartSelectPayment {
   }
   render() {
     if (this.valid)
-      this.active = store$1.get("activePayment");
+      this.active = store.get("activePayment");
     if (this.loading)
       return (hAsync("div", { class: "center" }, hAsync("nav", { "uk-spinner": true })));
-    const activeItem = store$1.get("payment").find((value) => {
+    const activeItem = store.get("payment").find((value) => {
       return value.id == this.active;
     });
     return [
@@ -14042,7 +14042,7 @@ class CartSelectPayment {
         } }, hAsync("div", { class: "selectSlot" }, this.active == -1 ?
         hAsync("ks-cart-select-item", { name: "Wybierz metod\u0119 p\u0142atno\u015Bci" }) :
         hAsync("ks-cart-select-item", { logo: activeItem.logo, name: activeItem.name, price: activeItem.price })), hAsync("div", { class: "selectIcon" }, hAsync("span", { "uk-icon": "icon: triangle-down; ratio: 1.3" }))),
-      hAsync("div", { class: "items", hidden: !this.toggled }, store$1.get("payment").map((item) => hAsync("ks-cart-select-item", { key: item.id, logo: item.logo, name: item.name, price: item.price, color: item.color, onClick: () => this.ActivateItem(item.id) })))
+      hAsync("div", { class: "items", hidden: !this.toggled }, store.get("payment").map((item) => hAsync("ks-cart-select-item", { key: item.id, logo: item.logo, name: item.name, price: item.price, color: item.color, onClick: () => this.ActivateItem(item.id) })))
     ];
   }
   get root() { return getElement(this); }
@@ -14104,7 +14104,7 @@ class CartSelectShipping {
     this.root.classList.add("ks-cart-select");
   }
   ActivateItem(id) {
-    if (id != store$1.get("activeShipping"))
+    if (id != store.get("activeShipping"))
       this.shippingChange.emit(id);
     this.toggled = false;
     this.active = id;
@@ -14113,10 +14113,10 @@ class CartSelectShipping {
   }
   render() {
     if (this.valid)
-      this.active = store$1.get("activeShipping");
+      this.active = store.get("activeShipping");
     if (this.loading)
       return (hAsync("div", { class: "center" }, hAsync("nav", { "uk-spinner": true })));
-    const activeItem = store$1.get("shipping").find((value) => {
+    const activeItem = store.get("shipping").find((value) => {
       return value.id == this.active;
     });
     return [
@@ -14126,7 +14126,7 @@ class CartSelectShipping {
         } }, hAsync("div", { class: "selectSlot" }, this.active == -1 ?
         hAsync("ks-cart-select-item", { name: "Wybierz metod\u0119 wysy\u0142ki" }) :
         hAsync("ks-cart-select-item", { logo: activeItem.logo, name: activeItem.name, price: activeItem.price })), hAsync("div", { class: "selectIcon" }, hAsync("span", { "uk-icon": "icon: triangle-down; ratio: 1.3" }))),
-      hAsync("div", { class: "items", hidden: !this.toggled }, store$1.get("shipping").map((item) => hAsync("ks-cart-select-item", { key: item.id, logo: item.logo, name: item.name, price: item.price, color: item.color, onClick: () => this.ActivateItem(item.id) })))
+      hAsync("div", { class: "items", hidden: !this.toggled }, store.get("shipping").map((item) => hAsync("ks-cart-select-item", { key: item.id, logo: item.logo, name: item.name, price: item.price, color: item.color, onClick: () => this.ActivateItem(item.id) })))
     ];
   }
   get root() { return getElement(this); }
@@ -14156,7 +14156,7 @@ class CartShippingMessage {
     registerInstance(this, hostRef);
   }
   render() {
-    return hAsync("ks-cart-message", { message: store$1.get("shippingMessage") });
+    return hAsync("ks-cart-message", { message: store.get("shippingMessage") });
   }
   static get cmpMeta() { return {
     "$flags$": 0,
@@ -14286,11 +14286,11 @@ class CartSummaryContainer {
     registerInstance(this, hostRef);
   }
   render() {
-    const productValue = store$1.get("productValue").toFixed(2);
-    const totalValue = store$1.get("totalValue").toFixed(2);
+    const productValue = store.get("productValue").toFixed(2);
+    const totalValue = store.get("totalValue").toFixed(2);
     return [
       hAsync("ks-cart-summary", { text: "Warto\u015B\u0107 produkt\u00F3w:", price: productValue }),
-      store$1.get("otherValues").map(item => hAsync("ks-cart-summary", { text: item.name, price: item.value.toFixed(2), emphasis: item.value < 0 })),
+      store.get("otherValues").map(item => hAsync("ks-cart-summary", { text: item.name, price: item.value.toFixed(2), emphasis: item.value < 0 })),
       hAsync("ks-cart-summary", { large: true, text: "Razem:", price: totalValue })
     ];
   }
@@ -19865,6 +19865,25 @@ module.exports = __webpack_require__(/*! /home/travis/build/feathericons/feather
 
 var feather$1 = /*@__PURE__*/getDefaultExportFromCjs(feather);
 
+const recycle = `<g transform="matrix(0.212409,0.792721,-0.792721,0.212409,17.2415,5.88119)">
+    <path d="M1,20L1,14L7,14"/>
+</g>
+<g transform="matrix(-0.792721,-0.212409,0.212409,-0.792721,15.6623,20.8255)">
+    <path d="M1,20L1,14L7,14"/>
+</g>
+<g transform="matrix(0.580312,-0.580312,0.580312,0.580312,3.42463,11.7652)">
+    <path d="M1,20L1,14L7,14"/>
+</g>
+<g transform="matrix(0.914,0,0,0.914,1.15961,0.0891058)">
+    <path d="M7.568,21.029L2.428,21.029C1.825,21.029 1.268,20.706 0.967,20.183C0.667,19.66 0.67,19.016 0.974,18.495C2.633,15.658 5.091,11.453 5.091,11.453"/>
+</g>
+<g transform="matrix(0.914,0,0,0.914,1.15961,0.0891058)">
+    <path d="M7.934,6.541C7.934,6.541 9.329,4.115 10.488,2.101C10.801,1.557 11.382,1.223 12.009,1.225C12.636,1.227 13.214,1.566 13.523,2.112C15.238,5.141 17.803,9.672 17.803,9.672"/>
+</g>
+<g transform="matrix(0.914,0,0,0.914,1.15961,0.0891058)">
+    <path d="M20.403,14.112C20.403,14.112 21.891,16.724 23.039,18.738C23.309,19.212 23.306,19.794 23.032,20.266C22.758,20.738 22.253,21.029 21.707,21.029C18.319,21.029 12.868,21.029 12.868,21.029"/>
+</g>`;
+
 const iconCss = "ks-icon{display:inline-block;color:inherit}ks-icon svg{stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;fill:none;vertical-align:top}ks-icon svg.thin{stroke-width:1}ks-icon svg.medium{stroke-width:1.3}";
 
 class Icon {
@@ -19877,10 +19896,13 @@ class Icon {
     this.componentWillUpdate();
   }
   componentWillUpdate() {
-    const icon = feather$1.icons[this.name];
+    const name = this.name == "recycle" ? "alert-octagon" : this.name;
+    const icon = feather$1.icons[name];
     this.svg = icon.contents;
     this.attrs = icon.attrs;
     this.root.style.lineHeight = `${this.attrs.width * this.size}px`;
+    if (this.name == "recycle")
+      this.svg = recycle;
   }
   render() {
     if (!this.attrs)
@@ -23946,18 +23968,6 @@ class NavbarContactPanel {
   }; }
 }
 
-const store = createStore({
-  cartLink: "",
-  cartCount: 0,
-  favouritesLink: "",
-  favouritesCount: 0,
-  loginLink: "",
-  logoutLink: "",
-  accountLink: "",
-  autocompleteApi: "",
-  categories: []
-});
-
 const navbarSearchCss = "ks-navbar-search{display:block}ks-navbar-search[mobile]{display:none}@media only screen and (max-width: 959px){ks-navbar-search{display:none}ks-navbar-search[mobile]{display:block}}ks-navbar-search form{display:inline-block;position:relative;-webkit-box-sizing:border-box;box-sizing:border-box;width:350px;max-width:100%;height:40px;margin:0}ks-navbar-search[mobile] form{width:100%}ks-navbar-search[mobile]{padding:15px;background-color:var(--navbar-category-color)}ks-navbar-search form>a{display:-ms-inline-flexbox;display:inline-flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;position:absolute;top:0;bottom:0;left:auto;right:0;padding-right:10px;color:#151515;-webkit-transition:color 0.2s ease;transition:color 0.2s ease}ks-navbar-search form>a:hover{color:#858585}ks-navbar-search form>a:active{color:#b5b5b5}ks-navbar-search input{width:100%;height:100%;-webkit-box-sizing:border-box;box-sizing:border-box;overflow:visible;-webkit-appearance:none;vertical-align:middle;margin:0;padding-right:50px;font-size:16px;text-align:center;background-color:#fff;border-radius:20px;border:none}ks-navbar-search input::-ms-clear{display:none;width:0;height:0}ks-navbar-search input::-ms-reveal{display:none;width:0;height:0}ks-navbar-search input::-webkit-search-decoration,ks-navbar-search input::-webkit-search-cancel-button,ks-navbar-search input::-webkit-search-results-button,ks-navbar-search input::-webkit-search-results-decoration{display:none}ks-navbar-search input:focus{outline:0}ks-navbar-search .list{position:absolute;z-index:50;left:0;right:0;overflow:hidden;margin-top:10px;border-radius:20px;color:black;-webkit-box-shadow:0 0 30px rgba(0, 0, 0, 0.507);box-shadow:0 0 30px rgba(0, 0, 0, 0.507)}ks-navbar-search .list a{display:block;padding:10px 20px;text-decoration:none !important;color:#151515 !important;background-color:white}ks-navbar-search .list a:not(:first-child){border-top:#f2f2f2 1px solid}ks-navbar-search .list a ks-icon{float:right;color:#d2d2d2}ks-navbar-search .list a.active{background-color:#252525;color:white !important}ks-navbar-search .list a.active ks-icon{color:white}ks-navbar-search .list a:hover{background-color:#f2f2f2}ks-navbar-search .list a:active{background-color:#e2e2e2}ks-navbar-search .list a.active:hover{background-color:#2e2e2e}ks-navbar-search .list a.active:active{background-color:#3b3b3b}";
 
 class NavbarSearch {
@@ -23982,7 +23992,7 @@ class NavbarSearch {
     const headers = new Headers();
     headers.append('pragma', 'no-cache');
     headers.append('cache-control', 'no-cache');
-    this.data = await fetch(store.get("autocompleteApi"), {
+    this.data = await fetch(commonDynamic.get("api").searchAutocomplete, {
       method: 'GET',
       headers: headers,
       credentials: "same-origin"
@@ -25843,6 +25853,7 @@ const product = createStore({
   notifyStrings: {},
   warranty: "",
   warrantyLink: "",
+  recycle: null,
   points: {},
   negotiate: {},
   negotiateEnabled: false,
@@ -25900,6 +25911,7 @@ class PageProduct {
       return false;
     const infoBanner = product.get("infoBanner");
     const points = product.get("points");
+    const recycle = product.get("recycle");
     const installments = product.get('installments');
     const tags = product.get('tags');
     const variants = product.get('variants');
@@ -25918,6 +25930,8 @@ class PageProduct {
       hAsync("ks-product-attribute", { style: { marginTop: "15px" }, icon: "tool", href: product.get('warrantyLink') }, product.get('warranty'))
       : null, points ?
       hAsync("ks-product-tooltip", { message: points.message }, hAsync("ks-product-attribute", { icon: "gift" }, points.shortMessage))
+      : null, recycle ?
+      hAsync("ks-product-tooltip", { message: recycle.message }, hAsync("ks-product-attribute", { icon: "recycle" }, recycle.shortMessage))
       : null, model || ean ?
       hAsync("ks-product-attribute", { style: { marginTop: "15px" }, icon: "file", faded: true }, hAsync("span", { style: { marginRight: "15px" } }, model ? hAsync("span", { style: { marginRight: "7px" } }, "Model: ", model, " ") : null, ean ? hAsync("span", null, "EAN: ", ean) : null))
       : null, hAsync("div", { class: "buttons" }, product.get('negotiateEnabled') &&
@@ -26761,7 +26775,7 @@ class ProductInfo {
   }; }
 }
 
-const productNegotiateCss = "ks-product-negotiate{display:block;position:relative;z-index:2}ks-product-negotiate fieldset{border:none;margin:0;padding:0}ks-product-negotiate .info{text-align:center}ks-product-negotiate h3{font-family:var(--font-emphasis);font-size:20px;font-weight:700}";
+const productNegotiateCss = "ks-product-negotiate{display:block;position:relative}ks-product-negotiate fieldset{border:none;margin:0;padding:0}ks-product-negotiate .info{text-align:center}ks-product-negotiate h3{font-family:var(--font-emphasis);font-size:20px;font-weight:700}";
 
 class ProductNegotiate {
   constructor(hostRef) {
