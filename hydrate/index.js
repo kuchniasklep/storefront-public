@@ -12535,6 +12535,7 @@ const store = createStore({
   discount: {},
   loading: 0,
   loadingProducts: 0,
+  recycle: [],
   easyprotect: {},
   insured: {},
 });
@@ -12584,6 +12585,7 @@ class Cart {
     this.discountRemove = "";
     this.easyprotectChange = "";
     this.easyprotectRemove = "";
+    this.recycleChange = "";
     this.lastProductCountCall = {};
     this.ProductCountCall = async (id, current, last) => {
       const data = await this.ProductLoadingWrapper(async () => {
@@ -12633,6 +12635,7 @@ class Cart {
       discountRemove: this.discountRemove,
       easyprotectChange: this.easyprotectChange,
       easyprotectRemove: this.easyprotectRemove,
+      recycleChange: this.recycleChange
     });
   }
   async RemoveProduct(event) {
@@ -12816,7 +12819,8 @@ class Cart {
       "discountPoints": [1, "discount-points"],
       "discountRemove": [1, "discount-remove"],
       "easyprotectChange": [1, "easyprotect-change"],
-      "easyprotectRemove": [1, "easyprotect-remove"]
+      "easyprotectRemove": [1, "easyprotect-remove"],
+      "recycleChange": [1, "recycle-change"]
     },
     "$listeners$": [[0, "removeProduct", "RemoveProduct"], [0, "productCount", "ProductCount"], [0, "addDeal", "AddDeal"], [0, "countryChange", "CountryChange"], [0, "shippingChange", "ShippingChange"], [0, "paymentChange", "PaymentChange"], [0, "discountRemove", "DiscountRemove"], [0, "discountCodeAdd", "DiscountCodeAdd"], [0, "discountPointsAdd", "DiscountPointsAdd"]],
     "$lazyBundleId$": "-",
@@ -13943,6 +13947,50 @@ class CartProgressBar {
       "numberPlacement": [32]
     },
     "$listeners$": [[9, "resize", "resizeHandler"]],
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const cartRecycleCss = "ks-cart-recycle{display:block;padding:30px}ks-cart-recycle h2{font-size:22px;text-transform:uppercase;font-family:var(--font-emphasis);font-weight:700;margin-top:20px}ks-cart-recycle.hidden{display:none}@media (max-width: 960px){ks-cart-recycle{padding:15px}}";
+
+class CartRecycle {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+  }
+  componentWillLoad() {
+    const update = () => {
+      this.enabled = store.get("recycle").length > 0;
+    };
+    store.onChange("recycle", update);
+    update();
+  }
+  send(event) {
+    var recycle_headers = new Headers();
+    recycle_headers.append('pragma', 'no-cache');
+    recycle_headers.append('cache-control', 'no-cache');
+    const recycle_form = this.root.querySelector("form");
+    event.preventDefault();
+    const body = new FormData(recycle_form);
+    fetch(store.get('api').recycleChange, {
+      method: 'POST',
+      headers: recycle_headers,
+      credentials: "same-origin",
+      body: body
+    });
+  }
+  render() {
+    return hAsync(Host, { class: !this.enabled ? "hidden" : "" }, hAsync("slot", null), hAsync("form", { method: "post", name: "recycle", onChange: e => this.send(e) }, store.get("recycle").map(product => hAsync("ks-input-check", { name: `recycle[${product.id}]`, value: product.name, label: product.name, checked: product.checked }))));
+  }
+  get root() { return getElement(this); }
+  static get style() { return cartRecycleCss; }
+  static get cmpMeta() { return {
+    "$flags$": 4,
+    "$tagName$": "ks-cart-recycle",
+    "$members$": {
+      "enabled": [32]
+    },
+    "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": []
   }; }
@@ -28314,6 +28362,7 @@ registerComponents([
   CartProductHeading,
   CartProductPrice,
   CartProgressBar,
+  CartRecycle,
   CartSelectItem,
   CartSelectPayment,
   CartSelectShipping,
