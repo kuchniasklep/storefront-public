@@ -26140,18 +26140,12 @@ class ProductAdmin {
     this.expanded = false;
     this.disabled = true;
   }
-  componentWillLoad() {
-    this.componentWillUpdate();
-  }
-  componentWillUpdate() {
-    const admin = productDynamic.get("adminBar");
-    this.disabled = !productDynamic.get("loaded") || !Object.keys(admin).length;
-  }
   render() {
     var _a;
+    const admin = productDynamic.get("adminBar");
+    this.disabled = !productDynamic.get("loaded") || !Object.keys(admin).length;
     if (this.disabled)
       return null;
-    const admin = productDynamic.get("adminBar");
     const hasDistributors = ((_a = admin.distributors) === null || _a === void 0 ? void 0 : _a.length) > 0;
     return [
       hAsync("div", { class: "bar" }, hAsync("div", null, hAsync("ks-icon", { name: "home" }), " ", admin.homeQuantity), admin.externalQuantity != "" ?
