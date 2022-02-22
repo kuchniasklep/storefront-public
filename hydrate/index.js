@@ -25978,7 +25978,7 @@ class PageProduct {
     const ean = product.get('ean');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, infoBanner ?
       hAsync("ks-info-banner", { image: infoBanner.image, color: infoBanner.color, width: infoBanner.width, height: infoBanner.height, name: infoBanner.name, link: infoBanner.link, theme: infoBanner.theme })
-      : null, hAsync("ks-container", null, hAsync("ks-product-notify", null), hAsync("ks-product-admin", null), hAsync("ks-product-info", null, product.get('traits') ?
+      : null, hAsync("ks-container", null, hAsync("ks-product-notify", null), hAsync("ks-product-admin", { disabled: true }), hAsync("ks-product-info", null, product.get('traits') ?
       hAsync("ks-product-traits", null)
       : null, hAsync("ks-product-purchase", null), hAsync("ks-product-shipping", null), product.get('warranty') ?
       hAsync("ks-product-attribute", { style: { marginTop: "15px" }, icon: "tool", href: product.get('warrantyLink') }, product.get('warranty'))
