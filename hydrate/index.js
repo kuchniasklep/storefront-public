@@ -26138,9 +26138,12 @@ class ProductAdmin {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.expanded = false;
-    this.disabled = false;
+    this.disabled = true;
   }
   componentWillLoad() {
+    this.componentWillUpdate();
+  }
+  componentWillUpdate() {
     const admin = productDynamic.get("adminBar");
     this.disabled = !productDynamic.get("loaded") || !Object.keys(admin).length;
   }
