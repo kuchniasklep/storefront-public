@@ -25978,7 +25978,7 @@ class PageProduct {
     const ean = product.get('ean');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, infoBanner ?
       hAsync("ks-info-banner", { image: infoBanner.image, color: infoBanner.color, width: infoBanner.width, height: infoBanner.height, name: infoBanner.name, link: infoBanner.link, theme: infoBanner.theme })
-      : null, hAsync("ks-container", null, hAsync("ks-product-notify", null), hAsync("ks-product-admin", { disabled: true }), hAsync("ks-product-info", null, product.get('traits') ?
+      : null, hAsync("ks-container", null, hAsync("ks-product-notify", null), hAsync("ks-product-admin", null), hAsync("ks-product-info", null, product.get('traits') ?
       hAsync("ks-product-traits", null)
       : null, hAsync("ks-product-purchase", null), hAsync("ks-product-shipping", null), product.get('warranty') ?
       hAsync("ks-product-attribute", { style: { marginTop: "15px" }, icon: "tool", href: product.get('warrantyLink') }, product.get('warranty'))
@@ -26132,19 +26132,19 @@ class Pagination {
   }; }
 }
 
-const productAdminCss = "ks-product-admin{display:block}ks-product-admin[disabled]{display:none}ks-product-admin .bar{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-align:center;align-items:center;background-color:#181818;color:white}ks-product-admin .bar>div:not(.links){padding:17px}ks-product-admin .bar>.links{display:-ms-flexbox;display:flex;-ms-flex-pack:end;justify-content:flex-end;-ms-flex:1;flex:1}ks-product-admin .bar>.links .button{display:block;padding:17px;color:white;background-color:#252525;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease;border-style:none;outline-style:none;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none}ks-product-admin .bar>.links .button:hover{color:white;background-color:#353535}ks-product-admin .bar>.links .button:active{color:white;background-color:#454545}ks-product-admin .bar>.links .button:nth-child(2n){background-color:#303030}ks-product-admin .bar>.links .button:nth-child(2n):hover{background-color:#404040}ks-product-admin .bar>.links .button:nth-child(2n):active{background-color:#505050}ks-product-admin .distributors{display:table;background-color:#000000;color:#ffffff;width:100%;-webkit-box-sizing:border-box;box-sizing:border-box;overflow:hidden}ks-product-admin .distributors[hidden]{display:none !important;visibility:hidden !important}ks-product-admin .distributors th{font-weight:700;font-size:15.5px !important;font-family:var(--font-emphasis);border-bottom:2px solid #181818;border-right:2px solid #181818}ks-product-admin .distributors td{font-weight:500;font-size:14px;border-right:2px solid #181818}ks-product-admin .distributors th,ks-product-admin .distributors td{text-align:center;padding:8px 20px}ks-product-admin .distributors th:first-child,ks-product-admin .distributors td:first-child{text-align:left}ks-product-admin .distributors *:last-child td{padding:8px 20px 14px 20px}ks-product-admin td.overwrite{color:var(--color-secondary)}@media only screen and (max-width: 640px) and (min-width: 340px){ks-product-admin .bar{font-size:14px}ks-product-admin .bar>div:not(.links){padding:17px 10px}}@media only screen and (max-width: 420px){ks-product-admin .bar{font-size:12px}ks-product-admin .bar>div:not(.links){padding:17px 8px}ks-product-admin .bar .hide-mobile{display:none !important}}@media only screen and (max-width: 960px){ks-product-admin .bar>.links button{display:none !important}ks-product-admin .distributors{display:none !important;visibility:hidden !important}}";
+const productAdminCss = "ks-product-admin{display:none}ks-product-admin[enabled]{display:block}ks-product-admin .bar{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-align:center;align-items:center;background-color:#181818;color:white}ks-product-admin .bar>div:not(.links){padding:17px}ks-product-admin .bar>.links{display:-ms-flexbox;display:flex;-ms-flex-pack:end;justify-content:flex-end;-ms-flex:1;flex:1}ks-product-admin .bar>.links .button{display:block;padding:17px;color:white;background-color:#252525;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease;border-style:none;outline-style:none;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none}ks-product-admin .bar>.links .button:hover{color:white;background-color:#353535}ks-product-admin .bar>.links .button:active{color:white;background-color:#454545}ks-product-admin .bar>.links .button:nth-child(2n){background-color:#303030}ks-product-admin .bar>.links .button:nth-child(2n):hover{background-color:#404040}ks-product-admin .bar>.links .button:nth-child(2n):active{background-color:#505050}ks-product-admin .distributors{display:table;background-color:#000000;color:#ffffff;width:100%;-webkit-box-sizing:border-box;box-sizing:border-box;overflow:hidden}ks-product-admin .distributors[hidden]{display:none !important;visibility:hidden !important}ks-product-admin .distributors th{font-weight:700;font-size:15.5px !important;font-family:var(--font-emphasis);border-bottom:2px solid #181818;border-right:2px solid #181818}ks-product-admin .distributors td{font-weight:500;font-size:14px;border-right:2px solid #181818}ks-product-admin .distributors th,ks-product-admin .distributors td{text-align:center;padding:8px 20px}ks-product-admin .distributors th:first-child,ks-product-admin .distributors td:first-child{text-align:left}ks-product-admin .distributors *:last-child td{padding:8px 20px 14px 20px}ks-product-admin td.overwrite{color:var(--color-secondary)}@media only screen and (max-width: 640px) and (min-width: 340px){ks-product-admin .bar{font-size:14px}ks-product-admin .bar>div:not(.links){padding:17px 10px}}@media only screen and (max-width: 420px){ks-product-admin .bar{font-size:12px}ks-product-admin .bar>div:not(.links){padding:17px 8px}ks-product-admin .bar .hide-mobile{display:none !important}}@media only screen and (max-width: 960px){ks-product-admin .bar>.links button{display:none !important}ks-product-admin .distributors{display:none !important;visibility:hidden !important}}";
 
 class ProductAdmin {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.expanded = false;
-    this.disabled = true;
+    this.enabled = false;
   }
   render() {
     var _a;
     const admin = productDynamic.get("adminBar");
-    this.disabled = !productDynamic.get("loaded") || !Object.keys(admin).length;
-    if (this.disabled)
+    this.enabled = !!productDynamic.get("loaded") && !!Object.keys(admin).length;
+    if (!this.enabled)
       return null;
     const hasDistributors = ((_a = admin.distributors) === null || _a === void 0 ? void 0 : _a.length) > 0;
     return [
@@ -26167,12 +26167,12 @@ class ProductAdmin {
     "$flags$": 0,
     "$tagName$": "ks-product-admin",
     "$members$": {
-      "disabled": [1540],
+      "enabled": [1540],
       "expanded": [32]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["disabled", "disabled"]]
+    "$attrsToReflect$": [["enabled", "enabled"]]
   }; }
 }
 
