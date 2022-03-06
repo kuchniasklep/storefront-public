@@ -23494,7 +23494,7 @@ const listing = createStore({
   products: []
 });
 
-const listingHeaderCss = "ks-listing-header{display:block;position:relative;z-index:1;padding:15px;-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow);background-color:white;text-align:center;font-size:0.875rem}ks-listing-header *[slot=title]{display:block;margin:0 0 5px 0;font-family:var(--font-emphasis);font-weight:700;font-size:1.3rem;line-height:1.3}@media (max-width: 960px){ks-listing-header *[slot=title]{font-size:1.105rem}}ks-listing-header *[slot=description]{max-width:1200px;margin:0 auto 15px auto;padding:0 15px;line-height:1.5}ks-listing-header *[slot=categories]{max-width:1200px;margin:auto}ks-listing-header *[slot=categories]>*{display:inline-block;padding:3px 10px;margin:2px;margin-bottom:3px;line-height:1.5;background:#222222;color:#ffffff !important;vertical-align:middle;white-space:nowrap;border-radius:2px;text-decoration:none !important}ks-listing-header hr{-webkit-box-sizing:content-box;box-sizing:content-box;height:0;overflow:visible;text-align:inherit;margin:15px 0 15px 0;border:0;border-top:1px solid #e5e5e5}";
+const listingHeaderCss = "ks-listing-header{display:block;position:relative;z-index:1;padding:15px;-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow);background-color:white;text-align:center;font-size:0.875rem}ks-listing-header .title{display:block;margin:0 0 5px 0;font-family:var(--font-emphasis);font-weight:700;font-size:1.3rem;line-height:1.3}@media (max-width: 960px){ks-listing-header .title{font-size:1.105rem}}ks-listing-header .description{max-width:1200px;margin:0 auto 15px auto;padding:0 15px;line-height:1.5}ks-listing-header .categories{max-width:1200px;margin:auto}ks-listing-header .categories>*{display:inline-block;padding:3px 10px;margin:2px;margin-bottom:3px;line-height:1.5;background:#222222;color:#ffffff !important;vertical-align:middle;white-space:nowrap;border-radius:2px;text-decoration:none !important}ks-listing-header hr{-webkit-box-sizing:content-box;box-sizing:content-box;height:0;overflow:visible;text-align:inherit;margin:15px 0 15px 0;border:0;border-top:1px solid #e5e5e5}";
 
 class ListingHeader {
   constructor(hostRef) {
@@ -23506,14 +23506,14 @@ class ListingHeader {
     const description = listing.get('description');
     const categories = listing.get('categories');
     return [
-      hAsync("h1", null, title),
+      hAsync("h1", { class: title }, title),
       (breadcrumbs === null || breadcrumbs === void 0 ? void 0 : breadcrumbs.length) > 0 ?
-        hAsync("ks-breadcrumbs", { slot: "breadcrumbs" }, breadcrumbs.map(crumb => hAsync("a", { href: crumb.link }, crumb.name)))
+        hAsync("ks-breadcrumbs", { class: "breadcrumbs" }, breadcrumbs.map(crumb => hAsync("a", { href: crumb.link }, crumb.name)))
         : null,
       description || (categories === null || categories === void 0 ? void 0 : categories.length) > 0 ? hAsync("hr", null) : null,
-      description ? hAsync("div", { innerHTML: description }) : null,
+      description ? hAsync("div", { class: "description", innerHTML: description }) : null,
       (categories === null || categories === void 0 ? void 0 : categories.length) > 0 ?
-        hAsync("div", { slot: "categories" }, categories.map(crumb => hAsync("a", { href: crumb.link }, crumb.name)))
+        hAsync("div", { class: "categories" }, categories.map(crumb => hAsync("a", { href: crumb.link }, crumb.name)))
         : null
     ];
   }
