@@ -23473,7 +23473,7 @@ class ListingFooter {
   }
   render() {
     return [
-      hAsync("slot", null),
+      this.description ? hAsync("div", { innerHTML: this.description }) : null,
       hAsync("slot", { name: "tags" })
     ];
   }
@@ -23481,39 +23481,50 @@ class ListingFooter {
   static get cmpMeta() { return {
     "$flags$": 4,
     "$tagName$": "ks-listing-footer",
-    "$members$": undefined,
+    "$members$": {
+      "description": [1]
+    },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": []
   }; }
 }
 
+const listing = createStore({
+  products: []
+});
+
 const listingHeaderCss = "ks-listing-header{display:block;position:relative;z-index:1;padding:15px;-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow);background-color:white;text-align:center;font-size:0.875rem}ks-listing-header *[slot=title]{display:block;margin:0 0 5px 0;font-family:var(--font-emphasis);font-weight:700;font-size:1.3rem;line-height:1.3}@media (max-width: 960px){ks-listing-header *[slot=title]{font-size:1.105rem}}ks-listing-header *[slot=description]{max-width:1200px;margin:0 auto 15px auto;padding:0 15px;line-height:1.5}ks-listing-header *[slot=categories]{max-width:1200px;margin:auto}ks-listing-header *[slot=categories]>*{display:inline-block;padding:3px 10px;margin:2px;margin-bottom:3px;line-height:1.5;background:#222222;color:#ffffff !important;vertical-align:middle;white-space:nowrap;border-radius:2px;text-decoration:none !important}ks-listing-header hr{-webkit-box-sizing:content-box;box-sizing:content-box;height:0;overflow:visible;text-align:inherit;margin:15px 0 15px 0;border:0;border-top:1px solid #e5e5e5}";
 
 class ListingHeader {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.secondSection = false;
-  }
-  componentWillLoad() {
-    if (this.root.querySelector("*[slot=description], *[slot=categories]"))
-      this.secondSection = true;
   }
   render() {
+    const title = listing.get('title');
+    const breadcrumbs = listing.get('breadcrumbs');
+    const description = listing.get('description');
+    const categories = listing.get('categories');
     return [
-      hAsync("slot", { name: "title" }),
-      hAsync("slot", { name: "breadcrumbs" }),
-      this.secondSection ? hAsync("hr", null) : null,
-      hAsync("slot", { name: "description" }),
-      hAsync("slot", { name: "categories" })
+      hAsync("h1", null, title),
+      (breadcrumbs === null || breadcrumbs === void 0 ? void 0 : breadcrumbs.length) > 0 ?
+        hAsync("ks-breadcrumbs", { slot: "breadcrumbs" }, breadcrumbs.map(crumb => hAsync("a", { href: crumb.link }, crumb.name)))
+        : null,
+      description || (categories === null || categories === void 0 ? void 0 : categories.length) > 0 ? hAsync("hr", null) : null,
+      description ? hAsync("div", { innerHTML: description }) : null,
+      (categories === null || categories === void 0 ? void 0 : categories.length) > 0 ?
+        hAsync("div", { slot: "categories" }, categories.map(crumb => hAsync("a", { href: crumb.link }, crumb.name)))
+        : null
     ];
   }
   get root() { return getElement(this); }
   static get style() { return listingHeaderCss; }
   static get cmpMeta() { return {
-    "$flags$": 4,
+    "$flags$": 0,
     "$tagName$": "ks-listing-header",
-    "$members$": undefined,
+    "$members$": {
+      "heading": [1]
+    },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": []
@@ -25831,7 +25842,7 @@ class PageBase {
   }; }
 }
 
-const footerCss = "ks-page-footer{display:block;margin-top:20px;background-color:var(--footer-color);color:var(--footer-text-color);font-size:16px}ks-page-footer .about{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;padding:50px 70px 40px 70px;margin:auto}ks-page-footer .contact>span:first-of-type{display:block;color:var(--footer-heading-color);font-family:var(--font-emphasis);font-weight:700;font-size:18px;margin:0 0 15px 0}ks-page-footer .contact a,ks-page-footer .contact>span{display:block;text-decoration:none !important;font-size:16px;margin-bottom:5px;color:var(--footer-text-color);-webkit-transition:var(--transition-color);transition:var(--transition-color)}ks-page-footer .contact a:hover{color:var(--footer-text-color-hover)}ks-page-footer .contact a:active{color:var(--footer-text-color-active)}ks-page-footer .contact ks-icon{margin-right:5px}ks-page-footer .links{display:-ms-flexbox;display:flex;-ms-flex-pack:start;justify-content:flex-start;min-height:100px}ks-page-footer .newsletter{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-flow:column nowrap;flex-flow:column nowrap;text-align:center;padding:0 0 0 30px;-ms-flex-negative:0;flex-shrink:0}ks-page-footer .newsletter>div{font-family:var(--font-emphasis)}ks-page-footer .newsletter>div:last-of-type{font-size:48px;line-height:40px;font-weight:700;margin:5px 0 20px 0}ks-page-footer .newsletter ks-button{width:100%}ks-page-footer .portals{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;padding:20px;border-top:solid 1px #2b2b2b}ks-page-footer .portals>div{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;padding:10px}ks-page-footer .separator{width:1px;height:35px;margin:0 20px;background-color:#2b2b2b}ks-page-footer .software{background-color:var(--footer-color-darker);color:var(--footer-text-color-darker);font-size:13px;text-align:center;padding:10px}ks-page-footer .software>a{color:var(--footer-text-color-darker)}@media only screen and (max-width: 1060px){ks-page-footer .about{-ms-flex-direction:column;flex-direction:column;padding:50px 30px 40px 30px}ks-page-footer .contact{max-width:220px}ks-page-footer .links{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center}ks-page-footer .newsletter{margin-top:40px;padding:40px 0 0 0;border-top:solid 1px #2b2b2b}ks-page-footer .newsletter ks-button{max-width:290px}}@media only screen and (max-width: 640px){ks-page-footer .about{-ms-flex-direction:column;flex-direction:column;padding:30px}ks-page-footer .links{margin-top:0px;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;text-align:center}ks-page-footer .links>*{margin-top:40px;margin-right:0px;padding:0}ks-page-footer .newsletter>div{font-size:14px}ks-page-footer .newsletter>div:last-of-type{font-size:40px;margin-bottom:10px}ks-page-footer .portals>div:first-of-type{padding:20px}}";
+const footerCss = "ks-page-footer{display:block;overflow:hidden;background-color:var(--footer-color);color:var(--footer-text-color);font-size:16px}ks-page-footer .about{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;padding:50px 70px 40px 70px;margin:auto}ks-page-footer .contact>span:first-of-type{display:block;color:var(--footer-heading-color);font-family:var(--font-emphasis);font-weight:700;font-size:18px;margin:0 0 15px 0}ks-page-footer .contact a,ks-page-footer .contact>span{display:block;text-decoration:none !important;font-size:16px;margin-bottom:5px;color:var(--footer-text-color);-webkit-transition:var(--transition-color);transition:var(--transition-color)}ks-page-footer .contact a:hover{color:var(--footer-text-color-hover)}ks-page-footer .contact a:active{color:var(--footer-text-color-active)}ks-page-footer .contact ks-icon{margin-right:5px}ks-page-footer .links{display:-ms-flexbox;display:flex;-ms-flex-pack:start;justify-content:flex-start;min-height:100px}ks-page-footer .newsletter{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-flow:column nowrap;flex-flow:column nowrap;text-align:center;padding:0 0 0 30px;-ms-flex-negative:0;flex-shrink:0}ks-page-footer .newsletter>div{font-family:var(--font-emphasis)}ks-page-footer .newsletter>div:last-of-type{font-size:48px;line-height:40px;font-weight:700;margin:5px 0 20px 0}ks-page-footer .newsletter ks-button{width:100%}ks-page-footer .portals{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;padding:20px;border-top:solid 1px #2b2b2b}ks-page-footer .portals>div{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;padding:10px}ks-page-footer .separator{width:1px;height:35px;margin:0 20px;background-color:#2b2b2b}ks-page-footer .software{background-color:var(--footer-color-darker);color:var(--footer-text-color-darker);font-size:13px;text-align:center;padding:10px}ks-page-footer .software>a{color:var(--footer-text-color-darker)}@media only screen and (max-width: 1060px){ks-page-footer .about{-ms-flex-direction:column;flex-direction:column;padding:50px 30px 40px 30px}ks-page-footer .contact{max-width:220px}ks-page-footer .links{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center}ks-page-footer .newsletter{margin-top:40px;padding:40px 0 0 0;border-top:solid 1px #2b2b2b}ks-page-footer .newsletter ks-button{max-width:290px}}@media only screen and (max-width: 640px){ks-page-footer .about{-ms-flex-direction:column;flex-direction:column;padding:30px}ks-page-footer .links{margin-top:0px;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;text-align:center}ks-page-footer .links>*{margin-top:40px;margin-right:0px;padding:0}ks-page-footer .newsletter>div{font-size:14px}ks-page-footer .newsletter>div:last-of-type{font-size:40px;margin-bottom:10px}ks-page-footer .portals>div:first-of-type{padding:20px}}";
 
 class PageFooter {
   constructor(hostRef) {
@@ -25845,7 +25856,7 @@ class PageFooter {
     const address = common.get('address');
     const softwareLink = common.get('softwareLink');
     return [
-      hAsync("div", { class: "about" }, hAsync("div", { class: "links" }, common.get('footerLinks').map(section => hAsync("ks-footer-links", null, hAsync("span", { slot: "heading" }, section.name), section.items.map(item => hAsync("li", null, hAsync("a", { href: item.link }, item.name))))), hAsync("div", { class: "contact" }, hAsync("span", null, "Kontakt"), hAsync("a", { href: `mailto:${email}` }, hAsync("ks-icon", { name: "mail" }), " ", email), hAsync("a", { href: `tel:${phone}` }, hAsync("ks-icon", { name: "phone" }), " ", phone), hAsync("span", null, hAsync("ks-icon", { name: "clock", size: 0.9 }), " ", time), hAsync("span", null, hAsync("ks-icon", { name: "home", size: 0.9 }), " ", company), hAsync("span", null, hAsync("ks-icon", { name: "map-pin", size: 0.9 }), " ", address))), hAsync("div", { class: "newsletter" }, hAsync("div", null, "Zapisz si\u0119 do naszego newslettera i zyskaj"), hAsync("div", null, "KUPON 10Z\u0141"), hAsync("ks-button", { light: true, border: true, name: "ZAPISZ SI\u0118", onClick: () => document.querySelector('ks-newsletter-popup').Show() }))),
+      hAsync("div", { class: "about" }, hAsync("div", { class: "links" }, common.get('footerLinks').map(section => hAsync("ks-footer-links", null, hAsync("span", { slot: "heading" }, section.name), section.items.map(item => hAsync("li", null, hAsync("a", { href: item.link }, item.name))))), hAsync("div", { class: "contact" }, hAsync("span", null, "Kontakt"), hAsync("a", { href: `mailto:${email}` }, hAsync("ks-icon", { name: "mail" }), hAsync("span", null, email)), hAsync("a", { href: `tel:${phone}` }, hAsync("ks-icon", { name: "phone" }), hAsync("span", null, phone)), hAsync("span", null, hAsync("ks-icon", { name: "clock", size: 0.9 }), " ", time), hAsync("span", null, hAsync("ks-icon", { name: "home", size: 0.9 }), " ", company), hAsync("span", null, hAsync("ks-icon", { name: "map-pin", size: 0.9 }), " ", address))), hAsync("div", { class: "newsletter" }, hAsync("div", null, "Zapisz si\u0119 do naszego newslettera i zyskaj"), hAsync("div", null, "KUPON 10Z\u0141"), hAsync("ks-button", { light: true, border: true, name: "ZAPISZ SI\u0118", onClick: () => document.querySelector('ks-newsletter-popup').Show() }))),
       hAsync("div", { class: "portals" }, hAsync("div", null, common.get('social').map(social => hAsync("ks-footer-button", { slot: "social", width: 64, height: 64, href: social.link, image: social.image }))), hAsync("div", null, common.get('reviewers').map(reviewer => hAsync("ks-footer-button", { slot: "social", width: 64, height: 64, href: reviewer.link, image: reviewer.image })))),
       hAsync("div", { class: "software" }, hAsync("a", { href: softwareLink, rel: "nofollow" }, "Oprogramowanie sklepu ShopGold"))
     ];
@@ -25943,10 +25954,6 @@ class PageHome {
   }; }
 }
 
-const listing = createStore({
-  products: []
-});
-
 const listingCss = "";
 
 class PageListing {
@@ -25961,23 +25968,15 @@ class PageListing {
     });
   }
   render() {
-    const title = listing.get('title');
-    const description = listing.get('description');
     const bottomDescription = listing.get('bottomDescription');
     const infoBanner = listing.get("infoBanner");
-    const breadcrumbs = listing.get('breadcrumbs');
-    const categories = listing.get('categories');
     const tags = listing.get('tags');
     const navigation = listing.get('navigation');
     const filters = listing.get('filters');
     const products = listing.get('products');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, infoBanner ?
       hAsync("ks-info-banner", { image: infoBanner.image, color: infoBanner.color, width: infoBanner.width, height: infoBanner.height, name: infoBanner.name, link: infoBanner.link, theme: infoBanner.theme })
-      : null, hAsync("ks-listing-header", null, hAsync("span", { slot: "title" }, title), (breadcrumbs === null || breadcrumbs === void 0 ? void 0 : breadcrumbs.length) > 0 ?
-      hAsync("ks-breadcrumbs", { slot: "breadcrumbs" }, breadcrumbs.map(crumb => hAsync("a", { href: crumb.link }, crumb.name)))
-      : null, description ? hAsync("p", { slot: "description" }, description) : null, (categories === null || categories === void 0 ? void 0 : categories.length) > 0 ?
-      hAsync("div", { slot: "categories" }, categories.map(crumb => hAsync("a", { href: crumb.link }, crumb.name)))
-      : null), navigation ?
+      : null, hAsync("ks-listing-header", null), navigation ?
       hAsync("ks-listing-navigation", { products: navigation.products }, (filters === null || filters === void 0 ? void 0 : filters.length) > 0 ?
         hAsync("ks-filtering", { "base-url": navigation.base }, filters.map(filter => (filter === null || filter === void 0 ? void 0 : filter.items.length) > 0 ?
           hAsync("ks-filter", { name: filter.name, active: filter.active }, filter.items.map(item => {
@@ -26001,9 +26000,11 @@ class PageListing {
       hAsync("ks-product-container", null, products.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice })))
       : null, navigation ?
       hAsync("ks-listing-navigation", { products: navigation.products }, hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.base, pattern: navigation.pattern }))
-      : null, hAsync("ks-listing-footer", null, bottomDescription ? hAsync("p", null, bottomDescription) : null, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 ?
-      hAsync("div", { slot: "tags" }, tags.map(crumb => hAsync("a", { href: crumb.link }, crumb.name)))
-      : null));
+      : null, bottomDescription || (tags === null || tags === void 0 ? void 0 : tags.length) > 0 ?
+      hAsync("ks-listing-footer", { description: bottomDescription }, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 ?
+        hAsync("div", { slot: "tags" }, tags.map(crumb => hAsync("a", { href: crumb.link }, crumb.name)))
+        : null)
+      : null);
   }
   static get style() { return listingCss; }
   static get cmpMeta() { return {

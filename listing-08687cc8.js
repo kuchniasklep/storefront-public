@@ -1,0 +1,1 @@
+import{c as o}from"./index-689756ca.js";const s=o({products:[]});export{s as l}
