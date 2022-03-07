@@ -25988,7 +25988,7 @@ class PageListing {
               item = item;
               return hAsync("ks-filter-color", { name: item.name, value: item.value, color: item.content });
             }
-            if (filter.type == "color") {
+            if (filter.type == "slider") {
               item = item;
               return hAsync("ks-filter-slider", { name: item.name, values: item.values, snap: item.snap, steps: item.steps, from: item.from, to: item.to });
             }
