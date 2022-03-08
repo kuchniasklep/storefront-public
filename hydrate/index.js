@@ -17323,7 +17323,7 @@ class Filtering {
   render() {
     return [
       hAsync("ks-button", { narrow: true, muted: true, border: true, name: "Filtruj", left: true, icon: "filter", onClick: () => this.root.querySelector('ks-sidepanel').show() }),
-      hAsync("ks-sidepanel", { left: true }, hAsync("span", { class: "heading" }, "Filtrowanie"), hAsync("form", { method: "POST", action: this.baseUrl }, hAsync("slot", null), hAsync("ks-button", { class: "clear", border: true, link: this.baseUrl, name: "Wyczy\u015B\u0107 Filtry" }), hAsync("ks-button", { submit: true, secondary: true, name: "Zobacz filtry" })))
+      hAsync("ks-sidepanel", { left: true }, hAsync("span", { class: "heading" }, "Filtrowanie"), hAsync("form", { method: "POST", action: this.baseUrl }, hAsync("input", { type: "hidden", name: "postget", value: "tak" }), hAsync("slot", null), hAsync("ks-button", { class: "clear", border: true, link: this.baseUrl, name: "Wyczy\u015B\u0107 Filtry" }), hAsync("ks-button", { submit: true, secondary: true, name: "Zobacz filtry" })))
     ];
   }
   get root() { return getElement(this); }
@@ -23494,19 +23494,25 @@ const listing = createStore({
   products: []
 });
 
-const listingHeaderCss = "ks-listing-header{display:block;position:relative;z-index:1;padding:15px;-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow);background-color:white;text-align:center;font-size:0.875rem}ks-listing-header .title{display:block;margin:0 0 5px 0;font-family:var(--font-emphasis);font-weight:700;font-size:1.3rem;line-height:1.3}@media (max-width: 960px){ks-listing-header .title{font-size:1.105rem}}ks-listing-header .description{max-width:1200px;margin:0 auto 15px auto;padding:0 15px;line-height:1.5}ks-listing-header .categories{max-width:1200px;margin:auto}ks-listing-header .categories>*{display:inline-block;padding:3px 10px;margin:2px;margin-bottom:3px;line-height:1.5;background:#222222;color:#ffffff !important;vertical-align:middle;white-space:nowrap;border-radius:2px;text-decoration:none !important}ks-listing-header hr{-webkit-box-sizing:content-box;box-sizing:content-box;height:0;overflow:visible;text-align:inherit;margin:15px 0 15px 0;border:0;border-top:1px solid #e5e5e5}";
+const listingHeaderCss = "ks-listing-header{display:block;position:relative;z-index:1;padding:15px;-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow);background-color:white;text-align:center;font-size:0.875rem}ks-listing-header .title{display:block;margin:0 0 5px 0;font-family:var(--font-emphasis);font-weight:700;font-size:1.3rem;line-height:1.3}@media (max-width: 960px){ks-listing-header .title{font-size:1.105rem}}ks-listing-header .autocorrect{font-size:17px !important;font-weight:500 !important}ks-listing-header .autocorrect>span{color:#ff3c3c;font-weight:700}ks-listing-header .description{max-width:1200px;margin:0 auto 15px auto;padding:0 15px;line-height:1.5}ks-listing-header .categories{max-width:1200px;margin:auto}ks-listing-header .categories>*{display:inline-block;padding:3px 10px;margin:2px;margin-bottom:3px;line-height:1.5;background:#222222;color:#ffffff !important;vertical-align:middle;white-space:nowrap;border-radius:2px;text-decoration:none !important}ks-listing-header hr{-webkit-box-sizing:content-box;box-sizing:content-box;height:0;overflow:visible;text-align:inherit;margin:15px 0 15px 0;border:0;border-top:1px solid #e5e5e5}";
 
 class ListingHeader {
   constructor(hostRef) {
     registerInstance(this, hostRef);
   }
   render() {
+    var _a;
     const title = listing.get('title');
     const breadcrumbs = listing.get('breadcrumbs');
     const description = listing.get('description');
     const categories = listing.get('categories');
+    const query = listing.get('query');
+    const autocorrect = (_a = listing.get('autocorrect')) === null || _a === void 0 ? void 0 : _a.split('{}');
     return [
-      hAsync("h1", { class: title }, title),
+      hAsync("h1", { class: "title" }, title),
+      ((autocorrect === null || autocorrect === void 0 ? void 0 : autocorrect.length) == 2 && query) ?
+        hAsync("h2", { class: "autocorrect" }, autocorrect[0], hAsync("span", null, query), autocorrect[1])
+        : null,
       (breadcrumbs === null || breadcrumbs === void 0 ? void 0 : breadcrumbs.length) > 0 ?
         hAsync("ks-breadcrumbs", { class: "breadcrumbs" }, breadcrumbs.map(crumb => hAsync("a", { href: crumb.link }, crumb.name)))
         : null,
@@ -24152,7 +24158,7 @@ class NavbarSearch {
   }
   render() {
     var _a;
-    return (hAsync("form", { method: "post", action: "szukaj.html", onSubmit: e => this.submit(e) }, hAsync("a", { onClick: e => this.submit(e) }, hAsync("ks-icon", { name: "search", size: 1.1 })), hAsync("input", { "aria-label": "Szukaj produkt\u00F3w", name: "szukaj", type: "search", autocomplete: "off", required: true, onFocus: () => this.focus(), onBlur: () => this.blur(), onInput: () => this.input(), onKeyDown: e => this.key(e) }), hAsync("input", { type: "hidden", name: "postget", value: "tak" }), hAsync("input", { type: "hidden", name: "opis", value: "nie" }), hAsync("input", { type: "hidden", name: "nrkat", value: "tak" }), hAsync("input", { type: "hidden", name: "kodprod", value: "tak" }), this.active && this.items && this.items.length > 0 ?
+    return (hAsync("form", { method: "post", action: "szukaj.html", onSubmit: e => this.submit(e) }, hAsync("a", { onClick: e => this.submit(e) }, hAsync("ks-icon", { name: "search", size: 1.1 })), hAsync("input", { "aria-label": "Szukaj produkt\u00F3w", name: "szukaj", type: "search", autocomplete: "off", required: true, onFocus: () => this.focus(), onBlur: () => this.blur(), onInput: () => this.input(), onKeyDown: e => this.key(e) }), hAsync("input", { type: "hidden", name: "postget", value: "tak" }), this.active && this.items && this.items.length > 0 ?
       hAsync("div", { class: "list" }, (_a = this.items) === null || _a === void 0 ? void 0 : _a.map((item, index) => hAsync("a", { href: item.url, class: index == this.select ? "active" : "" }, item.name, hAsync("ks-icon", { name: item.type == "category" ? "layers" : "bookmark", size: 0.9 }))))
       : null));
   }
@@ -24311,6 +24317,36 @@ class NewsletterPopup {
       "successHeading": [1, "success-heading"],
       "faliureHeading": [1, "faliure-heading"],
       "Show": [64]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const nocontentCss = "ks-nocontent{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;padding:50px 30px 70px 30px;text-align:center}ks-nocontent .content{max-width:800px;margin:15px 0}ks-nocontent .content h1{font-size:1.275rem;font-family:var(--font-emphasis);font-weight:700}ks-nocontent .content h1{font-size:1.275rem}ks-nocontent .buttons{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-nocontent .buttons>*{margin:5px}@media (max-width: 640px){ks-nocontent{padding:30px 15px 50px 15px}}";
+
+class NotFound$1 {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.link = "/";
+    this.linkName = "Strona Główna";
+    this.backName = "Wróć na poprzedną stronę";
+  }
+  render() {
+    return [
+      hAsync("div", { class: "content" }, hAsync("slot", null)),
+      hAsync("div", { class: "buttons" }, hAsync("ks-button", { round: true, nofollow: true, onClick: () => history.back(), name: this.backName }), hAsync("ks-button", { round: true, nofollow: true, link: this.link, name: this.linkName }))
+    ];
+  }
+  static get style() { return nocontentCss; }
+  static get cmpMeta() { return {
+    "$flags$": 4,
+    "$tagName$": "ks-nocontent",
+    "$members$": {
+      "link": [1],
+      "linkName": [1, "link-name"],
+      "backName": [1, "back-name"]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
@@ -25954,7 +25990,7 @@ class PageHome {
   }; }
 }
 
-const listingCss = "";
+const listingCss = "ks-page-listing .noresults{width:auto;max-height:300px}";
 
 class PageListing {
   constructor(hostRef) {
@@ -25976,7 +26012,7 @@ class PageListing {
     const products = listing.get('products');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, infoBanner ?
       hAsync("ks-info-banner", { image: infoBanner.image, color: infoBanner.color, width: infoBanner.width, height: infoBanner.height, name: infoBanner.name, link: infoBanner.link, theme: infoBanner.theme })
-      : null, hAsync("ks-listing-header", null), navigation ?
+      : null, hAsync("ks-listing-header", null), navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 ?
       hAsync("ks-listing-navigation", { products: navigation.products }, (filters === null || filters === void 0 ? void 0 : filters.length) > 0 ?
         hAsync("ks-filtering", { "base-url": navigation.base }, filters.map(filter => (filter === null || filter === void 0 ? void 0 : filter.items.length) > 0 ?
           hAsync("ks-filter", { name: filter.name, active: filter.active }, filter.items.map(item => {
@@ -25998,7 +26034,8 @@ class PageListing {
         : null, hAsync("ks-sorting", { post: navigation.paginationBase }), hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.paginationBase, pattern: navigation.pattern }))
       : null, (products === null || products === void 0 ? void 0 : products.length) > 0 ?
       hAsync("ks-product-container", null, products.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice })))
-      : null, navigation ?
+      :
+        hAsync("ks-nocontent", null, hAsync("h1", null, listing.get('noContentHeading')), hAsync("p", null, listing.get('noContentMessage'))), navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 ?
       hAsync("ks-listing-navigation", { products: navigation.products }, hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.base, pattern: navigation.pattern }))
       : null, bottomDescription || (tags === null || tags === void 0 ? void 0 : tags.length) > 0 ?
       hAsync("ks-listing-footer", { description: bottomDescription }, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 ?
@@ -28578,6 +28615,7 @@ registerComponents([
   NavbarSearch,
   NavbarSidebar,
   NewsletterPopup,
+  NotFound$1,
   NotFound,
   OrderAddressField,
   OrderAddressSection,
