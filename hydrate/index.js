@@ -23494,7 +23494,7 @@ const listing = createStore({
   products: []
 });
 
-const listingHeaderCss = "ks-listing-header{display:block;position:relative;z-index:1;padding:15px;-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow);background-color:white;text-align:center;font-size:0.875rem}ks-listing-header .title{display:block;margin:0 0 5px 0;font-family:var(--font-emphasis);font-weight:700;font-size:1.3rem;line-height:1.3}@media (max-width: 960px){ks-listing-header .title{font-size:1.105rem}}ks-listing-header .autocorrect{font-size:17px !important;font-weight:500 !important}ks-listing-header .autocorrect>span{color:#ff3c3c;font-weight:700}ks-listing-header .description{max-width:1200px;margin:0 auto 15px auto;padding:0 15px;line-height:1.5}ks-listing-header .categories{max-width:1200px;margin:auto}ks-listing-header .categories>*{display:inline-block;padding:3px 10px;margin:2px;margin-bottom:3px;line-height:1.5;background:#222222;color:#ffffff !important;vertical-align:middle;white-space:nowrap;border-radius:2px;text-decoration:none !important}ks-listing-header hr{-webkit-box-sizing:content-box;box-sizing:content-box;height:0;overflow:visible;text-align:inherit;margin:15px 0 15px 0;border:0;border-top:1px solid #e5e5e5}";
+const listingHeaderCss = "ks-listing-header{display:block;position:relative;z-index:1;padding:15px;-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow);background-color:white;text-align:center;font-size:0.875rem}ks-listing-header .title{display:block;margin:0 0 5px 0;font-family:var(--font-emphasis);font-weight:700;font-size:1.3rem;line-height:1.3}@media (max-width: 960px){ks-listing-header .title{font-size:1.105rem}}ks-listing-header .autocorrect{font-size:17px !important;font-weight:500 !important;margin-bottom:0px}ks-listing-header .autocorrect>span{color:#ff3c3c;font-weight:700}ks-listing-header .description{max-width:1200px;margin:0 auto 15px auto;padding:0 15px;line-height:1.5}ks-listing-header .categories{max-width:1200px;margin:auto}ks-listing-header .categories>*{display:inline-block;padding:3px 10px;margin:2px;margin-bottom:3px;line-height:1.5;background:#222222;color:#ffffff !important;vertical-align:middle;white-space:nowrap;border-radius:2px;text-decoration:none !important}ks-listing-header hr{-webkit-box-sizing:content-box;box-sizing:content-box;height:0;overflow:visible;text-align:inherit;margin:15px 0 15px 0;border:0;border-top:1px solid #e5e5e5}";
 
 class ListingHeader {
   constructor(hostRef) {
@@ -25835,7 +25835,7 @@ class FacebookTracker {
   }
 }
 
-const baseCss = "";
+const baseCss = "ks-page-base{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;min-height:100vh}";
 
 class PageBase {
   constructor(hostRef) {
@@ -25990,7 +25990,7 @@ class PageHome {
   }; }
 }
 
-const listingCss = "ks-page-listing .noresults{width:auto;max-height:300px}";
+const listingCss = "ks-page-listing{-ms-flex:1 1 0px;flex:1 1 0}ks-page-listing .noresults{width:auto;max-height:300px}";
 
 class PageListing {
   constructor(hostRef) {
