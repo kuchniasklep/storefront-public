@@ -17484,10 +17484,11 @@ const footerLinksCss = "ks-footer-links{display:block;margin:0 50px 0 0;min-widt
 class FooterLinks {
   constructor(hostRef) {
     registerInstance(this, hostRef);
+    this.heading = "";
   }
   render() {
     return [
-      hAsync("slot", { name: "heading" }),
+      hAsync("span", null, this.heading),
       hAsync("ul", null, hAsync("slot", null))
     ];
   }
@@ -17495,7 +17496,9 @@ class FooterLinks {
   static get cmpMeta() { return {
     "$flags$": 4,
     "$tagName$": "ks-footer-links",
-    "$members$": undefined,
+    "$members$": {
+      "heading": [1]
+    },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": []
@@ -25909,8 +25912,8 @@ class PageFooter {
     const address = common.get('address');
     const softwareLink = common.get('softwareLink');
     return [
-      hAsync("div", { class: "about" }, hAsync("div", { class: "links" }, common.get('footerLinks').map(section => hAsync("ks-footer-links", null, hAsync("span", { slot: "heading" }, section.name), section.items.map(item => hAsync("li", null, hAsync("a", { href: item.link }, item.name))))), hAsync("div", { class: "contact" }, hAsync("span", null, "Kontakt"), hAsync("a", { href: `mailto:${email}` }, hAsync("ks-icon", { name: "mail" }), hAsync("span", { innerHTML: email.replace("@", "&#64;") })), hAsync("a", { href: `tel:${phone}` }, hAsync("ks-icon", { name: "phone" }), hAsync("span", null, phone)), hAsync("span", null, hAsync("ks-icon", { name: "clock", size: 0.9 }), " ", time), hAsync("span", null, hAsync("ks-icon", { name: "home", size: 0.9 }), " ", company), hAsync("span", null, hAsync("ks-icon", { name: "map-pin", size: 0.9 }), " ", address))), hAsync("div", { class: "newsletter" }, hAsync("div", null, "Zapisz si\u0119 do naszego newslettera i zyskaj"), hAsync("div", null, "KUPON 10Z\u0141"), hAsync("ks-button", { light: true, border: true, name: "ZAPISZ SI\u0118", onClick: () => document.querySelector('ks-newsletter-popup').Show() }))),
-      hAsync("div", { class: "portals" }, hAsync("div", null, common.get('social').map(social => hAsync("ks-footer-button", { slot: "social", width: 64, height: 64, href: social.link, image: social.image }))), hAsync("div", null, common.get('reviewers').map(reviewer => hAsync("ks-footer-button", { slot: "social", width: 64, height: 64, href: reviewer.link, image: reviewer.image })))),
+      hAsync("div", { class: "about" }, hAsync("div", { class: "links" }, common.get('footerLinks').map(section => hAsync("ks-footer-links", { heading: section.name }, section.items.map(item => hAsync("li", null, hAsync("a", { href: item.link }, item.name))))), hAsync("div", { class: "contact" }, hAsync("span", null, "Kontakt"), hAsync("a", { href: `mailto:${email}` }, hAsync("ks-icon", { name: "mail" }), hAsync("span", null, "sklep@kuchniasklep.pl")), hAsync("a", { href: `tel:${phone}` }, hAsync("ks-icon", { name: "phone" }), hAsync("span", null, phone)), hAsync("span", null, hAsync("ks-icon", { name: "clock", size: 0.9 }), " ", time), hAsync("span", null, hAsync("ks-icon", { name: "home", size: 0.9 }), " ", company), hAsync("span", null, hAsync("ks-icon", { name: "map-pin", size: 0.9 }), " ", address))), hAsync("div", { class: "newsletter" }, hAsync("div", null, "Zapisz si\u0119 do naszego newslettera i zyskaj"), hAsync("div", null, "KUPON 10Z\u0141"), hAsync("ks-button", { light: true, border: true, name: "ZAPISZ SI\u0118", onClick: () => document.querySelector('ks-newsletter-popup').Show() }))),
+      hAsync("div", { class: "portals" }, hAsync("div", null, common.get('social').map(social => hAsync("ks-footer-button", { width: 64, height: 64, href: social.link, image: social.image }))), hAsync("div", null, common.get('reviewers').map(reviewer => hAsync("ks-footer-button", { width: 64, height: 64, href: reviewer.link, image: reviewer.image })))),
       hAsync("div", { class: "software" }, hAsync("a", { href: softwareLink, rel: "nofollow" }, "Oprogramowanie sklepu ShopGold"))
     ];
   }
