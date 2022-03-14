@@ -3,7 +3,7 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 /*!
- Stencil Mock Doc v2.11.0 | MIT Licensed | https://stenciljs.com
+ Stencil Mock Doc v2.14.2 | MIT Licensed | https://stenciljs.com
  */
 const CONTENT_REF_ID = 'r';
 const ORG_LOCATION_ID = 'o';
@@ -223,7 +223,7 @@ class MockCustomElementRegistry {
   whenDefined(tagName) {
     tagName = tagName.toLowerCase();
     if (this.__registry != null && this.__registry.has(tagName) === true) {
-      return Promise.resolve();
+      return Promise.resolve(this.__registry.get(tagName).cstr);
     }
     return new Promise((resolve) => {
       if (this.__whenDefined == null) {
@@ -548,7 +548,7 @@ class MockCSSStyleDeclaration {
         const splt = rule.split(':');
         if (splt.length > 1) {
           const prop = splt[0].trim();
-          const value = splt[1].trim();
+          const value = splt.slice(1).join(':').trim();
           if (prop !== '' && value !== '') {
             this._styles.set(jsCaseToCssCase(prop), value);
           }
@@ -629,6 +629,21 @@ class MockEvent {
   }
   stopImmediatePropagation() {
     this.cancelBubble = true;
+  }
+  composedPath() {
+    const composedPath = [];
+    let currentElement = this.target;
+    while (currentElement) {
+      composedPath.push(currentElement);
+      if (!currentElement.parentElement && currentElement.nodeName === "#document" /* DOCUMENT_NODE */) {
+        // the current element doesn't have a parent, but we've detected it's our root document node. push the window
+        // object associated with the document onto the path
+        composedPath.push(currentElement.defaultView);
+        break;
+      }
+      currentElement = currentElement.parentElement;
+    }
+    return composedPath;
   }
 }
 class MockCustomEvent extends MockEvent {
@@ -1511,6 +1526,9 @@ class MockNode {
     return null;
   }
   contains(otherNode) {
+    if (otherNode === this) {
+      return true;
+    }
     return this.childNodes.includes(otherNode);
   }
   removeChild(childNode) {
@@ -3453,9 +3471,19 @@ class MockPerformance {
   getEntriesByType() {
     return [];
   }
+  // Stencil's implementation of `mark` is non-compliant with the `Performance` interface. Because Stencil will
+  // instantiate an instance of this class and may attempt to assign it to a variable of type `Performance`, the return
+  // type must match the `Performance` interface (rather than typing this function as returning `void` and ignoring the
+  // associated errors returned by the type checker)
+  // @ts-ignore
   mark() {
     //
   }
+  // Stencil's implementation of `measure` is non-compliant with the `Performance` interface. Because Stencil will
+  // instantiate an instance of this class and may attempt to assign it to a variable of type `Performance`, the return
+  // type must match the `Performance` interface (rather than typing this function as returning `void` and ignoring the
+  // associated errors returned by the type checker)
+  // @ts-ignore
   measure() {
     //
   }
@@ -4205,6 +4233,8 @@ function cloneWindow(srcWin, opts = {}) {
   }
   const clonedWin = new MockWindow(false);
   if (!opts.customElementProxy) {
+    // TODO(STENCIL-345) - Evaluate reconciling MockWindow, Window differences
+    // @ts-ignore
     srcWin.customElements = null;
   }
   if (srcWin.document != null) {
@@ -5245,7 +5275,9 @@ const callRender = (e, t, o) => {
  }
 }, parsePropertyValue = (e, t) => null == e || isComplexType(e) ? e : 4 & t ? "false" !== e && ("" === e || !!e) : 2 & t ? parseFloat(e) : 1 & t ? String(e) : e, getValue = (e, t) => getHostRef(e).$instanceValues$.get(t), setValue = (e, t, o, n) => {
  const s = getHostRef(e), l = s.$hostElement$ , a = s.$instanceValues$.get(t), r = s.$flags$, i = s.$lazyInstance$ ;
- if (o = parsePropertyValue(o, n.$members$[t][0]), !(8 & r && void 0 !== a || o === a) && (s.$instanceValues$.set(t, o), 
+ o = parsePropertyValue(o, n.$members$[t][0]);
+ const d = Number.isNaN(a) && Number.isNaN(o), c = o !== a && !d;
+ if ((!(8 & r) || void 0 === a) && c && (s.$instanceValues$.set(t, o), 
  i)) {
   if (n.$watchers$ && 128 & r) {
    const e = n.$watchers$[t];
@@ -25863,7 +25895,7 @@ class PageBase {
   }; }
 }
 
-const footerCss = "ks-page-footer{display:block;margin-top:20px;background-color:var(--footer-color);color:var(--footer-text-color);font-size:16px}ks-page-footer .about{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;padding:50px 70px 40px 70px;margin:auto}ks-page-footer .contact>span:first-of-type{display:block;color:var(--footer-heading-color);font-family:var(--font-emphasis);font-weight:700;font-size:18px;margin:0 0 15px 0}ks-page-footer .contact a,ks-page-footer .contact>span{display:block;text-decoration:none !important;font-size:16px;margin-bottom:5px;color:var(--footer-text-color);-webkit-transition:var(--transition-color);transition:var(--transition-color)}ks-page-footer .contact a:hover{color:var(--footer-text-color-hover)}ks-page-footer .contact a:active{color:var(--footer-text-color-active)}ks-page-footer .contact ks-icon{margin-right:5px}ks-page-footer .links{display:-ms-flexbox;display:flex;-ms-flex-pack:start;justify-content:flex-start;min-height:100px}ks-page-footer .newsletter{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-flow:column nowrap;flex-flow:column nowrap;text-align:center;padding:0 0 0 30px;-ms-flex-negative:0;flex-shrink:0}ks-page-footer .newsletter>div{font-family:var(--font-emphasis)}ks-page-footer .newsletter>div:last-of-type{font-size:48px;line-height:40px;font-weight:700;margin:5px 0 20px 0}ks-page-footer .newsletter ks-button{width:100%}ks-page-footer .portals{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;padding:20px;border-top:solid 1px #2b2b2b}ks-page-footer .portals>div{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;padding:10px}ks-page-footer .separator{width:1px;height:35px;margin:0 20px;background-color:#2b2b2b}ks-page-footer .software{background-color:var(--footer-color-darker);color:var(--footer-text-color-darker);font-size:13px;text-align:center;padding:10px}ks-page-footer .software>a{color:var(--footer-text-color-darker)}@media only screen and (max-width: 1060px){ks-page-footer .about{-ms-flex-direction:column;flex-direction:column;padding:50px 30px 40px 30px}ks-page-footer .contact{max-width:220px}ks-page-footer .links{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center}ks-page-footer .newsletter{margin-top:40px;padding:40px 0 0 0;border-top:solid 1px #2b2b2b}ks-page-footer .newsletter ks-button{max-width:290px}}@media only screen and (max-width: 640px){ks-page-footer .about{-ms-flex-direction:column;flex-direction:column;padding:30px}ks-page-footer .links{margin-top:0px;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;text-align:center}ks-page-footer .links>*{margin-top:40px;margin-right:0px;padding:0}ks-page-footer .newsletter>div{font-size:14px}ks-page-footer .newsletter>div:last-of-type{font-size:40px;margin-bottom:10px}ks-page-footer .portals>div:first-of-type{padding:20px}}";
+const footerCss = "ks-page-footer{display:block;margin-top:20px;overflow:hidden;background-color:var(--footer-color);color:var(--footer-text-color);font-size:16px}ks-page-footer .about{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;padding:50px 70px 40px 70px;margin:auto}ks-page-footer .contact>span:first-of-type{display:block;color:var(--footer-heading-color);font-family:var(--font-emphasis);font-weight:700;font-size:18px;margin:0 0 15px 0}ks-page-footer .contact a,ks-page-footer .contact>span{display:block;text-decoration:none !important;font-size:16px;margin-bottom:5px;color:var(--footer-text-color);-webkit-transition:var(--transition-color);transition:var(--transition-color)}ks-page-footer .contact a:hover{color:var(--footer-text-color-hover)}ks-page-footer .contact a:active{color:var(--footer-text-color-active)}ks-page-footer .contact ks-icon{margin-right:5px}ks-page-footer .links{display:-ms-flexbox;display:flex;-ms-flex-pack:start;justify-content:flex-start;min-height:100px}ks-page-footer .newsletter{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-flow:column nowrap;flex-flow:column nowrap;text-align:center;padding:0 0 0 30px;-ms-flex-negative:0;flex-shrink:0}ks-page-footer .newsletter>div{font-family:var(--font-emphasis)}ks-page-footer .newsletter>div:last-of-type{font-size:48px;line-height:40px;font-weight:700;margin:5px 0 20px 0}ks-page-footer .newsletter ks-button{width:100%}ks-page-footer .portals{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;padding:20px;border-top:solid 1px #2b2b2b}ks-page-footer .portals>div{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;padding:10px}ks-page-footer .separator{width:1px;height:35px;margin:0 20px;background-color:#2b2b2b}ks-page-footer .software{background-color:var(--footer-color-darker);color:var(--footer-text-color-darker);font-size:13px;text-align:center;padding:10px}ks-page-footer .software>a{color:var(--footer-text-color-darker)}@media only screen and (max-width: 1060px){ks-page-footer .about{-ms-flex-direction:column;flex-direction:column;padding:50px 30px 40px 30px}ks-page-footer .contact{max-width:220px}ks-page-footer .links{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center}ks-page-footer .newsletter{margin-top:40px;padding:40px 0 0 0;border-top:solid 1px #2b2b2b}ks-page-footer .newsletter ks-button{max-width:290px}}@media only screen and (max-width: 640px){ks-page-footer .about{-ms-flex-direction:column;flex-direction:column;padding:30px}ks-page-footer .links{margin-top:0px;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;text-align:center}ks-page-footer .links>*{margin-top:40px;margin-right:0px;padding:0}ks-page-footer .newsletter>div{font-size:14px}ks-page-footer .newsletter>div:last-of-type{font-size:40px;margin-bottom:10px}ks-page-footer .portals>div:first-of-type{padding:20px}}";
 
 class PageFooter {
   constructor(hostRef) {
@@ -25877,7 +25909,7 @@ class PageFooter {
     const address = common.get('address');
     const softwareLink = common.get('softwareLink');
     return [
-      hAsync("div", { class: "about" }, hAsync("div", { class: "links" }, common.get('footerLinks').map(section => hAsync("ks-footer-links", null, hAsync("span", { slot: "heading" }, section.name), section.items.map(item => hAsync("li", null, hAsync("a", { href: item.link }, item.name))))), hAsync("div", { class: "contact" }, hAsync("span", null, "Kontakt"), hAsync("a", { href: `mailto:${email}` }, hAsync("ks-icon", { name: "mail" }), " ", email), hAsync("a", { href: `tel:${phone}` }, hAsync("ks-icon", { name: "phone" }), " ", phone), hAsync("span", null, hAsync("ks-icon", { name: "clock", size: 0.9 }), " ", time), hAsync("span", null, hAsync("ks-icon", { name: "home", size: 0.9 }), " ", company), hAsync("span", null, hAsync("ks-icon", { name: "map-pin", size: 0.9 }), " ", address))), hAsync("div", { class: "newsletter" }, hAsync("div", null, "Zapisz si\u0119 do naszego newslettera i zyskaj"), hAsync("div", null, "KUPON 10Z\u0141"), hAsync("ks-button", { light: true, border: true, name: "ZAPISZ SI\u0118", onClick: () => document.querySelector('ks-newsletter-popup').Show() }))),
+      hAsync("div", { class: "about" }, hAsync("div", { class: "links" }, common.get('footerLinks').map(section => hAsync("ks-footer-links", null, hAsync("span", { slot: "heading" }, section.name), section.items.map(item => hAsync("li", null, hAsync("a", { href: item.link }, item.name))))), hAsync("div", { class: "contact" }, hAsync("span", null, "Kontakt"), hAsync("a", { href: `mailto:${email}` }, hAsync("ks-icon", { name: "mail" }), hAsync("span", null, email)), hAsync("a", { href: `tel:${phone}` }, hAsync("ks-icon", { name: "phone" }), hAsync("span", null, phone)), hAsync("span", null, hAsync("ks-icon", { name: "clock", size: 0.9 }), " ", time), hAsync("span", null, hAsync("ks-icon", { name: "home", size: 0.9 }), " ", company), hAsync("span", null, hAsync("ks-icon", { name: "map-pin", size: 0.9 }), " ", address))), hAsync("div", { class: "newsletter" }, hAsync("div", null, "Zapisz si\u0119 do naszego newslettera i zyskaj"), hAsync("div", null, "KUPON 10Z\u0141"), hAsync("ks-button", { light: true, border: true, name: "ZAPISZ SI\u0118", onClick: () => document.querySelector('ks-newsletter-popup').Show() }))),
       hAsync("div", { class: "portals" }, hAsync("div", null, common.get('social').map(social => hAsync("ks-footer-button", { slot: "social", width: 64, height: 64, href: social.link, image: social.image }))), hAsync("div", null, common.get('reviewers').map(reviewer => hAsync("ks-footer-button", { slot: "social", width: 64, height: 64, href: reviewer.link, image: reviewer.image })))),
       hAsync("div", { class: "software" }, hAsync("a", { href: softwareLink, rel: "nofollow" }, "Oprogramowanie sklepu ShopGold"))
     ];
@@ -28865,7 +28897,7 @@ function finalizeHydrate(e, t, r, s, n) {
        absFilePath: null,
        lines: []
       };
-      null != t && (null != t.stack ? s.messageText = t.stack.toString() : null != t.message ? s.messageText = t.message.toString() : s.messageText = t.toString()), 
+      null != t && (null != t.stack ? s.messageText = t.stack.toString() : null != t.message ? s.messageText = t.message.length ? t.message : "UNKNOWN ERROR" : s.messageText = t.toString()), 
       null == e || shouldIgnoreError(s.messageText) || e.push(s);
      })(t, e);
     }
