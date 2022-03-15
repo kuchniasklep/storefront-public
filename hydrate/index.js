@@ -26035,7 +26035,7 @@ class PageListing {
           : null))
         : null, hAsync("ks-sorting", { post: navigation.paginationBase }), hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.paginationBase, pattern: navigation.pattern }))
       : null, (products === null || products === void 0 ? void 0 : products.length) > 0 ?
-      hAsync("ks-product-container", null, products.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice })))
+      hAsync("ks-product-container", null, products.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice, unavailable: card.unavailable })))
       :
         hAsync("ks-nocontent", null, hAsync("h1", null, listing.get('noContentHeading')), hAsync("p", null, listing.get('noContentMessage'))), navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 ?
       hAsync("ks-listing-navigation", { products: navigation.products }, hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.base, pattern: navigation.pattern }))
@@ -26192,11 +26192,11 @@ class PageProduct {
       hAsync("ks-container", null, youtube.map(id => hAsync("ks-product-youtube", { "video-id": id })), comments ? hAsync("ks-product-comments", null) : null)
       : null, (similar === null || similar === void 0 ? void 0 : similar.length) > 0 ? [
       hAsync("h3", null, product.get('similarHeading')),
-      hAsync("ks-product-container", null, similar.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice })))
+      hAsync("ks-product-container", null, similar.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice, unavailable: card.unavailable })))
     ]
       : null, (accessories === null || accessories === void 0 ? void 0 : accessories.length) > 0 ? [
       hAsync("h3", null, product.get('accessoriesHeading')),
-      hAsync("ks-product-container", null, accessories.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice })))
+      hAsync("ks-product-container", null, accessories.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice, unavailable: card.unavailable })))
     ]
       : null);
   }
