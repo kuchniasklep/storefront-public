@@ -26684,7 +26684,7 @@ class ProductCard {
     "$flags$": 0,
     "$tagName$": "ks-product-card",
     "$members$": {
-      "unavailable": [4],
+      "unavailable": [516],
       "linkOnly": [4, "link-only"],
       "name": [1],
       "img": [1],
@@ -26699,7 +26699,7 @@ class ProductCard {
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
+    "$attrsToReflect$": [["unavailable", "unavailable"]]
   }; }
 }
 
