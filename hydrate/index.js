@@ -14749,7 +14749,7 @@ class Featured {
   }; }
 }
 
-const featuredContainerCss = "ks-featured-container{display:-ms-flexbox;display:flex;max-width:1200px;width:100%;margin:auto;min-height:10px}ks-featured-container>.left{-ms-flex:1;flex:1;margin-right:5px}ks-featured-container>.right{-ms-flex:1;flex:1;margin-left:5px}ks-featured-container>div>*:not(:last-child){margin-bottom:10px}@media (max-width: 840px){ks-featured-container{display:block}ks-featured-container>div:first-child>*{margin-bottom:10px}}";
+const featuredContainerCss = "ks-featured-container{display:-ms-flexbox;display:flex;max-width:1200px;width:100%;margin:auto;min-height:10px}ks-featured-container>.left{-ms-flex:1;flex:1;margin-right:5px}ks-featured-container>.right{-ms-flex:1;flex:1;margin-left:5px}ks-featured-container>div>*:not(:last-child){margin-bottom:10px}@media (max-width: 840px){ks-featured-container{display:block}ks-featured-container>.left,ks-featured-container>.right{margin-right:0;margin-left:0}ks-featured-container>div:first-child>*{margin-bottom:10px}}";
 
 class FeaturedContainer {
   constructor(hostRef) {
@@ -23490,36 +23490,30 @@ class ListingFooter {
   }; }
 }
 
-const listing = createStore({
-  products: []
-});
-
-const listingHeaderCss = "ks-listing-header{display:block;position:relative;z-index:1;padding:15px;-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow);background-color:white;text-align:center;font-size:0.875rem}ks-listing-header .title{display:block;margin:0 0 5px 0;font-family:var(--font-emphasis);font-weight:700;font-size:1.3rem;line-height:1.3}@media (max-width: 960px){ks-listing-header .title{font-size:1.105rem}}ks-listing-header .autocorrect{font-size:17px !important;font-weight:500 !important;margin-bottom:0px}ks-listing-header .autocorrect>span{color:#ff3c3c;font-weight:700}ks-listing-header .description{max-width:1200px;margin:0 auto 15px auto;padding:0 15px;line-height:1.5}ks-listing-header .categories{max-width:1200px;margin:auto}ks-listing-header .categories>*{display:inline-block;padding:3px 10px;margin:2px;margin-bottom:3px;line-height:1.5;background:#222222;color:#ffffff !important;vertical-align:middle;white-space:nowrap;border-radius:2px;text-decoration:none !important}ks-listing-header hr{-webkit-box-sizing:content-box;box-sizing:content-box;height:0;overflow:visible;text-align:inherit;margin:15px 0 15px 0;border:0;border-top:1px solid #e5e5e5}";
+const listingHeaderCss = "ks-listing-header{display:block;position:relative;z-index:1;padding:15px;-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow);background-color:white;text-align:center;font-size:0.875rem}ks-listing-header .title{display:block;margin:0 0 5px 0;font-family:var(--font-emphasis);font-weight:700;font-size:1.3rem;line-height:1.3}@media (max-width: 960px){ks-listing-header .title{font-size:1.105rem}}ks-listing-header .autocorrect{font-size:17px !important;font-weight:500 !important;margin-bottom:0px}ks-listing-header .autocorrect>span{color:#ff3c3c;font-weight:700}ks-listing-header .description{max-width:1200px;margin:0 auto 15px auto;padding:0 15px;line-height:1.5}ks-listing-header .categories{max-width:1200px;margin:auto}ks-listing-header .categories>*{display:inline-block;padding:3px 10px;margin:2px;margin-bottom:3px;line-height:1.5;background:#222222;color:#ffffff !important;vertical-align:middle;white-space:nowrap;border-radius:2px;text-decoration:none !important}ks-listing-header .tags{margin-top:5px}ks-listing-header .tags>*{background-color:#555555}ks-listing-header hr{-webkit-box-sizing:content-box;box-sizing:content-box;height:0;overflow:visible;text-align:inherit;margin:15px 0 15px 0;border:0;border-top:1px solid #e5e5e5}";
 
 class ListingHeader {
   constructor(hostRef) {
     registerInstance(this, hostRef);
   }
   render() {
-    var _a;
-    const title = listing.get('title');
-    const breadcrumbs = listing.get('breadcrumbs');
-    const description = listing.get('description');
-    const categories = listing.get('categories');
-    const query = listing.get('query');
-    const autocorrect = (_a = listing.get('autocorrect')) === null || _a === void 0 ? void 0 : _a.split('{}');
+    var _a, _b, _c, _d, _e;
+    const autocorrect = (_a = this.autocorrect) === null || _a === void 0 ? void 0 : _a.split('{}');
     return [
-      hAsync("h1", { class: "title" }, title),
-      ((autocorrect === null || autocorrect === void 0 ? void 0 : autocorrect.length) == 2 && query) ?
-        hAsync("h2", { class: "autocorrect" }, autocorrect[0], hAsync("span", null, query), autocorrect[1])
+      hAsync("h1", { class: "title" }, this.heading),
+      ((autocorrect === null || autocorrect === void 0 ? void 0 : autocorrect.length) == 2 && this.query) ?
+        hAsync("h2", { class: "autocorrect" }, autocorrect[0], hAsync("span", null, this.query), autocorrect[1])
         : null,
-      (breadcrumbs === null || breadcrumbs === void 0 ? void 0 : breadcrumbs.length) > 0 ?
-        hAsync("ks-breadcrumbs", { class: "breadcrumbs" }, breadcrumbs.map(crumb => hAsync("a", { href: crumb.link }, crumb.name)))
+      ((_b = this.breadcrumbs) === null || _b === void 0 ? void 0 : _b.length) > 0 ?
+        hAsync("ks-breadcrumbs", { class: "breadcrumbs" }, this.breadcrumbs.map(crumb => hAsync("a", { href: crumb.link }, crumb.name)))
         : null,
-      description || (categories === null || categories === void 0 ? void 0 : categories.length) > 0 ? hAsync("hr", null) : null,
-      description ? hAsync("div", { class: "description", innerHTML: description }) : null,
-      (categories === null || categories === void 0 ? void 0 : categories.length) > 0 ?
-        hAsync("div", { class: "categories" }, categories.map(crumb => hAsync("a", { href: crumb.link }, crumb.name)))
+      this.description || ((_c = this.categories) === null || _c === void 0 ? void 0 : _c.length) > 0 ? hAsync("hr", null) : null,
+      this.description ? hAsync("div", { class: "description", innerHTML: this.description }) : null,
+      ((_d = this.categories) === null || _d === void 0 ? void 0 : _d.length) > 0 ?
+        hAsync("div", { class: "categories" }, this.categories.map(category => hAsync("a", { href: category.link }, category.name)))
+        : null,
+      ((_e = this.tags) === null || _e === void 0 ? void 0 : _e.length) > 0 ?
+        hAsync("div", { class: "categories tags" }, this.tags.map(category => hAsync("a", { href: category.link }, category.name)))
         : null
     ];
   }
@@ -23529,7 +23523,13 @@ class ListingHeader {
     "$flags$": 0,
     "$tagName$": "ks-listing-header",
     "$members$": {
-      "heading": [1]
+      "heading": [1],
+      "description": [1],
+      "query": [1],
+      "autocorrect": [1],
+      "breadcrumbs": [16],
+      "categories": [16],
+      "tags": [16]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
@@ -25990,6 +25990,8 @@ class PageHome {
   }; }
 }
 
+const listing = createStore({});
+
 const listingCss = "ks-page-listing{-ms-flex:1 1 0px;flex:1 1 0}ks-page-listing .noresults{width:auto;max-height:300px}";
 
 class PageListing {
@@ -26012,7 +26014,7 @@ class PageListing {
     const products = listing.get('products');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, infoBanner ?
       hAsync("ks-info-banner", { image: infoBanner.image, color: infoBanner.color, width: infoBanner.width, height: infoBanner.height, name: infoBanner.name, link: infoBanner.link, theme: infoBanner.theme })
-      : null, hAsync("ks-listing-header", null), navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 ?
+      : null, hAsync("ks-listing-header", { heading: listing.get('title'), breadcrumbs: listing.get('breadcrumbs'), description: listing.get('description'), categories: listing.get('categories'), query: listing.get('query'), autocorrect: listing.get('autocorrect') }), navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 ?
       hAsync("ks-listing-navigation", { products: navigation.products }, (filters === null || filters === void 0 ? void 0 : filters.length) > 0 ?
         hAsync("ks-filtering", { "base-url": navigation.base }, filters.map(filter => (filter === null || filter === void 0 ? void 0 : filter.items.length) > 0 ?
           hAsync("ks-filter", { name: filter.name, active: filter.active }, filter.items.map(item => {
@@ -26208,6 +26210,48 @@ class PageProduct {
       "commonDynamicData": [1, "common-dynamic-data"],
       "productData": [1, "product-data"],
       "productDynamicData": [1, "product-dynamic-data"]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const recipes = createStore({});
+
+const recipesCss = "ks-page-recipes ks-article-container{padding:20px 0px;padding:0px 10px;-webkit-box-sizing:border-box;box-sizing:border-box}ks-page-recipes ks-article-container>div{-ms-flex-pack:center;justify-content:center}";
+
+class PageRecipes {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+  }
+  componentWillLoad() {
+    const recipesDataElement = document.getElementById(this.recipesData);
+    const recipesData = JSON.parse(recipesDataElement.innerHTML);
+    Object.keys(recipesData).map(key => {
+      recipes.set(key, recipesData[key]);
+    });
+  }
+  render() {
+    const navigation = recipes.get('navigation');
+    const cards = recipes.get('recipes');
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("ks-listing-header", { heading: recipes.get('title'), breadcrumbs: recipes.get('breadcrumbs'), description: recipes.get('description'), categories: recipes.get('categories'), tags: recipes.get('tags') }), navigation && (cards === null || cards === void 0 ? void 0 : cards.length) > 0 ?
+      hAsync("ks-listing-navigation", null, hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.paginationBase, pattern: navigation.pattern }))
+      : null, (cards === null || cards === void 0 ? void 0 : cards.length) > 0 ?
+      hAsync("ks-article-container", null, cards.map(card => hAsync("ks-recipe-card", { heading: card.heading, link: card.link, cuisine: card.cuisine, "cuisine-link": card.cuisineLink, category: card.category, "category-link": card.categoryLink, image: card.image, width: card.width, height: card.height })))
+      : null, navigation && (cards === null || cards === void 0 ? void 0 : cards.length) > 0 ?
+      hAsync("ks-listing-navigation", null, hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.paginationBase, pattern: navigation.pattern }))
+      : null);
+  }
+  static get style() { return recipesCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-page-recipes",
+    "$members$": {
+      "skipbase": [4],
+      "commonData": [1, "common-data"],
+      "commonDynamicData": [1, "common-dynamic-data"],
+      "recipesData": [1, "recipes-data"]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
@@ -28649,6 +28693,7 @@ registerComponents([
   PageHome,
   PageListing,
   PageProduct,
+  PageRecipes,
   Pagination,
   ProductAdmin,
   ProductAttribute,

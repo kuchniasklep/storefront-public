@@ -1,1 +1,0 @@
-System.register(["./index-4810e2ad.system.js"],(function(e){"use strict";var t;return{setters:[function(e){t=e.c}],execute:function(){var s=e("l",t({products:[]}))}}}));
