@@ -14855,7 +14855,7 @@ const ColorList = [
   { name: "kolorowy", color: "", material: "multicolor" }
 ];
 
-const filterColorCss = "ks-filter-color{display:block;margin-bottom:8px;line-height:20px}ks-filter-color label{display:block;position:relative;padding-left:27px;cursor:pointer;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none}ks-filter-color input{position:absolute;cursor:pointer;opacity:0;height:0;width:0}ks-filter-color .checkmark{position:absolute;top:2px;left:0;height:20px;width:20px;background-color:#eee}ks-filter-color .checkmark:after{content:\"✓\";position:absolute;display:block;left:4px;color:white;opacity:0}ks-filter-color input:checked~.checkmark{background-color:#252525}ks-filter-color input:checked~.checkmark:after{opacity:1}ks-filter-color svg{margin-right:8px}";
+const filterColorCss = "ks-filter-color{display:block;margin-bottom:8px;line-height:20px}ks-filter-color label{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;position:relative;padding-left:27px;cursor:pointer;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none}ks-filter-color input{position:absolute;cursor:pointer;opacity:0;height:0;width:0}ks-filter-color .checkmark{position:absolute;top:2px;left:0;height:20px;width:20px;background-color:#eee}ks-filter-color .checkmark:after{content:\"✓\";position:absolute;display:block;left:4px;color:white;opacity:0}ks-filter-color input:checked~.checkmark{background-color:#252525}ks-filter-color input:checked~.checkmark:after{opacity:1}ks-filter-color svg{margin-right:8px;margin-top:2px}";
 
 class FilterColor {
   constructor(hostRef) {
