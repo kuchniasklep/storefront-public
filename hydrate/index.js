@@ -26012,11 +26012,14 @@ class PageListing {
     const navigation = listing.get('navigation');
     const filters = listing.get('filters');
     const products = listing.get('products');
+    const query = listing.get('query');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, infoBanner ?
       hAsync("ks-info-banner", { image: infoBanner.image, color: infoBanner.color, width: infoBanner.width, height: infoBanner.height, name: infoBanner.name, link: infoBanner.link, theme: infoBanner.theme })
-      : null, hAsync("ks-listing-header", { heading: listing.get('title'), breadcrumbs: listing.get('breadcrumbs'), description: listing.get('description'), categories: listing.get('categories'), query: listing.get('query'), autocorrect: listing.get('autocorrect') }), navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 ?
+      : null, hAsync("ks-listing-header", { heading: listing.get('title'), breadcrumbs: listing.get('breadcrumbs'), description: listing.get('description'), categories: listing.get('categories'), query: query, autocorrect: listing.get('autocorrect') }), navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 ?
       hAsync("ks-listing-navigation", { products: navigation.products }, (filters === null || filters === void 0 ? void 0 : filters.length) > 0 ?
-        hAsync("ks-filtering", { "base-url": navigation.base }, filters.map(filter => (filter === null || filter === void 0 ? void 0 : filter.items.length) > 0 ?
+        hAsync("ks-filtering", { "base-url": navigation.base }, query ?
+          hAsync("input", { type: "hidden", name: "szukaj", value: query })
+          : null, filters.map(filter => (filter === null || filter === void 0 ? void 0 : filter.items.length) > 0 ?
           hAsync("ks-filter", { name: filter.name, active: filter.active }, filter.items.map(item => {
             if (filter.type == "checkbox") {
               item = item;
