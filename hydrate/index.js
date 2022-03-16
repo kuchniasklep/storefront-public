@@ -26020,11 +26020,11 @@ class PageListing {
           hAsync("ks-filter", { name: filter.name, active: filter.active }, filter.items.map(item => {
             if (filter.type == "checkbox") {
               item = item;
-              return hAsync("ks-filter-checkbox", { name: item.name, value: item.value, text: item.content });
+              return hAsync("ks-filter-checkbox", { active: item.active, name: item.name, value: item.value, text: item.content });
             }
             if (filter.type == "color") {
               item = item;
-              return hAsync("ks-filter-color", { name: item.name, value: item.value, color: item.content });
+              return hAsync("ks-filter-color", { active: item.active, name: item.name, value: item.value, color: item.content });
             }
             if (filter.type == "slider") {
               item = item;
