@@ -26056,7 +26056,22 @@ class PageHome {
   }; }
 }
 
-const listing = createStore({});
+const listing = createStore({
+  title: "",
+  autocorrect: "",
+  query: "",
+  description: "",
+  bottomDescription: "",
+  infoBanner: {},
+  breadcrumbs: [],
+  categories: [],
+  tags: [],
+  products: [],
+  navigation: {},
+  filters: [],
+  noContentHeading: "",
+  noContentMessage: "",
+});
 
 const listingCss = "ks-page-listing{-ms-flex:1 1 0px;flex:1 1 0}ks-page-listing .noresults{width:auto;max-height:300px}";
 
