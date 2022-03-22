@@ -26069,7 +26069,6 @@ class PageListing {
     const listingData = JSON.parse(listingDataElement.innerHTML);
     Object.keys(listingData).map(key => {
       listing.set(key, listingData[key]);
-      console.log(listingData[key]);
     });
   }
   render() {
