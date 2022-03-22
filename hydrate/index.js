@@ -17333,7 +17333,7 @@ class FilterSlider {
   render() {
     const disabled = this.from === undefined || this.to === undefined || (this.from == this.valueArray[0] &&
       this.to == this.valueArray[this.valueArray.length - 1]);
-    const value = !disabled ? this.from + "-" + this.to : "";
+    const value = !disabled ? this.from + "," + this.to : "";
     return [
       hAsync("div", null),
       hAsync("input", { type: "hidden", name: this.name, value: value, disabled: disabled })
