@@ -14965,7 +14965,7 @@ function commonjsRequire () {
 	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
 }
 
-var nouislider = createCommonjsModule(function (module, exports) {
+createCommonjsModule(function (module, exports) {
 /*! nouislider - 12.1.0 - 10/25/2018 */
 (function(factory) {
     {
@@ -17288,34 +17288,7 @@ class FilterSlider {
     this.valueArray = this.values.split(", ").map(value => parseFloat(value));
   }
   componentDidLoad() {
-    const slider = this.root.firstElementChild;
-    const steps = this.steps.split(", ").map(value => parseInt(value));
-    const range = this.range(this.valueArray, steps);
-    const step = steps[0] ? steps[0] : this.step;
-    const asint = this.step || this.steps;
-    nouislider.create(slider, {
-      start: [range["min"], range["max"]],
-      snap: this.snap,
-      step: step,
-      tooltips: true,
-      connect: true,
-      range: range,
-      format: {
-        to: function (value) {
-          return asint ? Math.round(value) : value;
-        },
-        from: function (value) {
-          return asint ? Math.round(value) : value;
-        }
-      }
-    });
-    const sliderInstance = slider;
-    sliderInstance.noUiSlider.on("set", () => {
-      const range = sliderInstance.noUiSlider.get();
-      this.from = parseFloat(range[0]);
-      this.to = parseFloat(range[1]);
-    });
-    sliderInstance.noUiSlider.set([this.from, this.to]);
+    return;
   }
   range(values, steps) {
     return values.reduce((o, value, index) => {
@@ -17332,7 +17305,7 @@ class FilterSlider {
   render() {
     const disabled = this.from === undefined || this.to === undefined || (this.from == this.valueArray[0] &&
       this.to == this.valueArray[this.valueArray.length - 1]);
-    const value = !disabled ? this.from + "-" + this.to : "";
+    const value = !disabled ? this.from + "," + this.to : "";
     return [
       hAsync("div", null),
       hAsync("input", { type: "hidden", name: this.name, value: value, disabled: disabled })
