@@ -26337,6 +26337,8 @@ class Pagination {
     let left = this.current;
     let right = this.current;
     while (space > 0) {
+      let leftFinished = false;
+      let rightFinished = false;
       if (left - 1 > 0) {
         pages.push(left - 1);
         if (space >= mobileSpace)
@@ -26344,6 +26346,8 @@ class Pagination {
         left--;
         space--;
       }
+      else
+        leftFinished = true;
       if (right + 1 <= this.count) {
         pages.push(right + 1);
         if (space >= mobileSpace)
@@ -26351,6 +26355,10 @@ class Pagination {
         right++;
         space--;
       }
+      else
+        rightFinished = true;
+      if (leftFinished && rightFinished)
+        break;
     }
     pages.sort((a, b) => a - b);
     mobilePages.sort((a, b) => a - b);
