@@ -26318,58 +26318,42 @@ class PageRecipes {
   }; }
 }
 
-const paginationCss = "ks-pagination{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}ks-pagination[count='1']{display:none}ks-pagination a{display:inline-block;width:42px;height:42px;line-height:42px;padding:0 10px;-webkit-box-sizing:border-box;box-sizing:border-box;border:1px solid #e5e5e5;background-color:white;color:#252525;vertical-align:middle;font-size:.875rem;text-align:center;text-decoration:none;text-transform:none;-webkit-transition:border 0.3s ease;transition:border 0.3s ease}ks-pagination a:hover{border:1px solid #b9b9b9;text-decoration:none;color:#252525}ks-pagination a.active{border:1px solid #252525;background-color:#252525;color:white;cursor:default}.separator{width:15px}";
+const paginationCss = "ks-pagination{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}ks-pagination[count='1']{display:none}ks-pagination a{display:inline-block;width:42px;height:42px;line-height:42px;padding:0 10px;-webkit-box-sizing:border-box;box-sizing:border-box;border:1px solid #e5e5e5;background-color:white;color:#252525;vertical-align:middle;font-size:.875rem;text-align:center;text-decoration:none;text-transform:none;-webkit-transition:border 0.3s ease;transition:border 0.3s ease}ks-pagination a:hover{border:1px solid #b9b9b9;text-decoration:none;color:#252525}ks-pagination a.active{border:1px solid #252525;background-color:#252525;color:white;cursor:default}.separator{width:15px;display:none}.desktop{display:none}@media (min-width: 960px){.separator,.desktop{display:block}}";
 
 class Pagination {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.base = "";
     this.pattern = "";
-    this.space = 6;
-    this.edges = true;
-  }
-  handleResize() {
-    if (window.innerWidth > 960) {
-      this.space = 6;
-      this.edges = true;
-    }
-    else {
-      this.space = 4;
-      this.edges = false;
-    }
-  }
-  componentWillLoad() {
-    this.handleResize();
   }
   render() {
     if (!this.count || !this.current || this.count < 2)
       return;
     let pages = new Array();
     pages.push(this.current);
-    let space = this.space;
+    let mobilePages = [...pages];
+    let space = 6;
+    let mobileSpace = 3;
     let left = this.current;
     let right = this.current;
     while (space > 0) {
-      let leftFinished = false;
-      let rightFinished = false;
       if (left - 1 > 0) {
         pages.push(left - 1);
+        if (space >= mobileSpace)
+          mobilePages.push(left - 1);
         left--;
         space--;
       }
-      else
-        leftFinished = true;
       if (right + 1 <= this.count) {
         pages.push(right + 1);
+        if (space >= mobileSpace)
+          mobilePages.push(right + 1);
         right++;
         space--;
       }
-      else
-        rightFinished = true;
-      if (leftFinished && rightFinished)
-        break;
     }
     pages.sort((a, b) => a - b);
+    mobilePages.sort((a, b) => a - b);
     return [
       this.current > 1 ?
         hAsync("a", { href: this.link(this.current - 1) }, hAsync("ks-icon", { name: "chevron-left", size: 0.9 }))
@@ -26377,15 +26361,16 @@ class Pagination {
       pages.map(page => {
         if (page == this.current)
           return hAsync("a", { class: "active" }, page.toString());
-        if (page == pages[0] && this.edges) {
-          const ret = hAsync("a", { href: this.link(1) }, "1");
+        const desktop = !mobilePages.includes(page) ? "desktop" : "";
+        if (page == pages[0]) {
+          const ret = hAsync("a", { class: desktop, href: this.link(1) }, "1");
           return page == 1 ? ret : [ret, hAsync("div", { class: "separator" })];
         }
-        if (page == pages[pages.length - 1] && this.edges) {
-          const ret = hAsync("a", { href: this.link(this.count) }, this.count);
+        if (page == pages[pages.length - 1]) {
+          const ret = hAsync("a", { class: desktop, href: this.link(this.count) }, this.count);
           return page == this.count ? ret : [hAsync("div", { class: "separator" }), ret];
         }
-        return hAsync("a", { href: this.link(page) }, page.toString());
+        return hAsync("a", { class: desktop, href: this.link(page) }, page.toString());
       }),
       this.current < this.count ?
         hAsync("a", { href: this.link(this.current + 1) }, hAsync("ks-icon", { name: "chevron-right", size: 0.9 }))
@@ -26405,11 +26390,9 @@ class Pagination {
       "count": [514],
       "current": [2],
       "base": [1],
-      "pattern": [1],
-      "space": [32],
-      "edges": [32]
+      "pattern": [1]
     },
-    "$listeners$": [[9, "resize", "handleResize"]],
+    "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": [["count", "count"]]
   }; }
