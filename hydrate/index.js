@@ -26658,7 +26658,7 @@ async function addToFavourites(id) {
   const navbar = document.querySelector('ks-navbar');
   let cartBody = new FormData();
   cartBody.append("id", id);
-  const api = common.get('api').addToFavourites;
+  const api = commonDynamic.get('api').addToFavourites;
   return Fetch(api, cartBody)
     .then(() => navbar.IncrementHeart())
     .catch(error => errorpopup.show(error));
@@ -26669,7 +26669,7 @@ async function removeFromFavourites(id) {
   let cartBody = new FormData();
   cartBody.append("id", id);
   cartBody.append("akcja", "usun");
-  const api = common.get('api').removeFromFavourites;
+  const api = commonDynamic.get('api').removeFromFavourites;
   return Fetch(api, cartBody)
     .then(() => navbar.DecrementHeart())
     .catch(error => errorpopup.show(error));
