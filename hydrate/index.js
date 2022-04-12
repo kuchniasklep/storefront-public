@@ -5605,7 +5605,7 @@ class Alert {
   }; }
 }
 
-const articleCardCss = "ks-article-card{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:justify;justify-content:space-between;background-color:white;-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow)}ks-article-card .image{position:relative;padding-top:50%}ks-article-card .image>*{position:absolute;top:0}ks-article-card .info{padding:15px;-ms-flex:1 0 auto;flex:1 0 auto;font-size:.875rem;line-height:1.5}ks-article-card .info h3{margin-bottom:5px}ks-article-card .info a{text-decoration:none !important;color:#151515;-webkit-transition:var(--transition-color);transition:var(--transition-color)}ks-article-card .info a:hover{color:var(--color-secondary)}ks-article-card .info a:active{color:var(--color-secondary-hover)}ks-article-card .meta{font-size:.875rem;line-height:1.4;color:#707070}ks-article-card .meta ks-icon:not(:first-of-type){margin-left:15px}ks-article-card .footer{padding:20px;text-align:center;position:relative;border-top:1px solid #e2e2e2}ks-article-card .footer a{text-decoration:none !important;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;color:#151515;font-size:.875rem;line-height:1.4;position:relative;opacity:1;-webkit-transition:opacity 0.2s ease;transition:opacity 0.2s ease}ks-article-card .footer a:active{opacity:0.6}ks-article-card .footer a:before{content:\"\";position:absolute;left:50%;bottom:-2px;-webkit-transform:translateX(-50%);transform:translateX(-50%);height:1px;width:0%;border-bottom:1px solid #151515;opacity:1;-webkit-transition:width 0.3s ease, opacity 0.2s ease;transition:width 0.3s ease, opacity 0.2s ease}ks-article-card .footer a:hover:before{width:100%}ks-article-card .footer a:active:before{opacity:0.6;width:100%}@media screen and (min-width: 960px) and (max-width: 1200px){ks-article-card[hide-on-odd]{display:none !important}}";
+const articleCardCss = "ks-article-card{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:justify;justify-content:space-between;background-color:white;-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow)}ks-article-card .image{position:relative;padding-top:50%;max-width:100%;overflow:hidden}ks-article-card .image>*{position:absolute;top:0}ks-article-card .info{padding:15px;-ms-flex:1 0 auto;flex:1 0 auto;font-size:.875rem;line-height:1.5}ks-article-card .info h3{margin-bottom:5px}ks-article-card .info a{text-decoration:none !important;color:#151515;-webkit-transition:var(--transition-color);transition:var(--transition-color)}ks-article-card .info a:hover{color:var(--color-secondary)}ks-article-card .info a:active{color:var(--color-secondary-hover)}ks-article-card .meta{font-size:.875rem;line-height:1.4;color:#707070}ks-article-card .meta ks-icon:not(:first-of-type){margin-left:15px}ks-article-card .footer{padding:20px;text-align:center;position:relative;border-top:1px solid #e2e2e2}ks-article-card .footer a{text-decoration:none !important;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;color:#151515;font-size:.875rem;line-height:1.4;position:relative;opacity:1;-webkit-transition:opacity 0.2s ease;transition:opacity 0.2s ease}ks-article-card .footer a:active{opacity:0.6}ks-article-card .footer a:before{content:\"\";position:absolute;left:50%;bottom:-2px;-webkit-transform:translateX(-50%);transform:translateX(-50%);height:1px;width:0%;border-bottom:1px solid #151515;opacity:1;-webkit-transition:width 0.3s ease, opacity 0.2s ease;transition:width 0.3s ease, opacity 0.2s ease}ks-article-card .footer a:hover:before{width:100%}ks-article-card .footer a:active:before{opacity:0.6;width:100%}@media screen and (min-width: 960px) and (max-width: 1200px){ks-article-card[hide-on-odd]{display:none !important}}";
 
 class ArticleCard {
   constructor(hostRef) {
@@ -5614,7 +5614,7 @@ class ArticleCard {
   }
   render() {
     return [
-      hAsync("a", { href: this.link, class: "image" }, hAsync("ks-img", { src: this.image, alt: this.heading, width: 600, height: 300 })),
+      hAsync("a", { href: this.link, class: "image" }, hAsync("ks-img2", { horizontal: true, center: true, src: this.image, webp: this.webp, alt: this.heading, width: 600, height: 300 })),
       hAsync("div", { class: "info" }, hAsync("h3", null, hAsync("a", { href: this.link }, this.heading)), hAsync("div", { class: "meta" }, hAsync("ks-icon", { name: "calendar", size: 0.9 }), " ", this.date, hAsync("ks-icon", { name: "search", size: 0.9 }), " ", this.views), hAsync("slot", null)),
       hAsync("div", { class: "footer" }, hAsync("a", { href: this.link }, "Zobacz wi\u0119cej"))
     ];
@@ -5625,10 +5625,13 @@ class ArticleCard {
     "$tagName$": "ks-article-card",
     "$members$": {
       "image": [1],
+      "webp": [1],
       "heading": [1],
       "date": [1],
-      "views": [1],
+      "views": [2],
       "link": [1],
+      "width": [2],
+      "height": [2],
       "hideOnOdd": [516, "hide-on-odd"]
     },
     "$listeners$": undefined,
@@ -5663,10 +5666,6 @@ class Banner {
   constructor(hostRef) {
     registerInstance(this, hostRef);
   }
-  componentWillLoad() {
-    if (this.navbarTheme)
-      this.theme = JSON.parse(this.navbarTheme);
-  }
   render() {
     const theme = (this.active && this.theme) ? `:root {
 			--navbar-color: ${this.theme.navbarColor} !important;
@@ -5693,7 +5692,7 @@ class Banner {
       "width": [2],
       "height": [2],
       "active": [1540],
-      "navbarTheme": [1, "navbar-theme"]
+      "theme": [16]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
@@ -12244,7 +12243,7 @@ const commonDynamic = createStore({
   tracking: {}
 });
 
-async function Fetch(url, body) {
+async function Fetch(url, body = null) {
   const headers = new Headers();
   headers.append('pragma', 'no-cache');
   headers.append('cache-control', 'no-cache');
@@ -14766,7 +14765,7 @@ class Featured {
     this.color = "#0f0f0f";
   }
   render() {
-    return (hAsync("a", { href: this.link, style: { backgroundColor: this.color } }, hAsync("ks-img2", { src: this.image, webp: this.webp, alt: this.alt, width: this.width, height: this.height, target: "ks-featured" })));
+    return (hAsync("a", { href: this.link, style: { backgroundColor: this.color } }, hAsync("ks-img2", { src: this.image, webp: this.webp, alt: this.name, width: this.width, height: this.height, target: "ks-featured" })));
   }
   static get style() { return featuredCss; }
   static get cmpMeta() { return {
@@ -14775,7 +14774,7 @@ class Featured {
     "$members$": {
       "image": [1],
       "webp": [1],
-      "alt": [1],
+      "name": [1],
       "link": [1],
       "width": [2],
       "height": [2],
@@ -14787,7 +14786,7 @@ class Featured {
   }; }
 }
 
-const featuredContainerCss = "ks-featured-container{display:-ms-flexbox;display:flex;max-width:1200px;width:100%;margin:auto;min-height:10px}ks-featured-container>.left{-ms-flex:1;flex:1;margin-right:5px}ks-featured-container>.right{-ms-flex:1;flex:1;margin-left:5px}ks-featured-container>div>*:not(:last-child){margin-bottom:10px}@media (max-width: 840px){ks-featured-container{display:block}ks-featured-container>div:first-child>*{margin-bottom:10px}}";
+const featuredContainerCss = "ks-featured-container{display:-ms-flexbox;display:flex;max-width:1200px;width:100%;margin:auto;min-height:10px}ks-featured-container>.left{-ms-flex:1;flex:1;margin-right:5px}ks-featured-container>.right{-ms-flex:1;flex:1;margin-left:5px}ks-featured-container>div>*:not(:last-child){margin-bottom:10px}@media (max-width: 840px){ks-featured-container{display:block}ks-featured-container>.left,ks-featured-container>.right{margin-right:0;margin-left:0}ks-featured-container>div:first-child>*{margin-bottom:10px}}";
 
 class FeaturedContainer {
   constructor(hostRef) {
@@ -14896,7 +14895,7 @@ const ColorList = [
   { name: "kolorowy", color: "", material: "multicolor" }
 ];
 
-const filterColorCss = "ks-filter-color{display:block;margin-bottom:8px;line-height:20px}ks-filter-color label{display:block;position:relative;padding-left:27px;cursor:pointer;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none}ks-filter-color input{position:absolute;cursor:pointer;opacity:0;height:0;width:0}ks-filter-color .checkmark{position:absolute;top:2px;left:0;height:20px;width:20px;background-color:#eee}ks-filter-color .checkmark:after{content:\"✓\";position:absolute;display:block;left:4px;color:white;opacity:0}ks-filter-color input:checked~.checkmark{background-color:#252525}ks-filter-color input:checked~.checkmark:after{opacity:1}ks-filter-color svg{margin-right:8px}";
+const filterColorCss = "ks-filter-color{display:block;margin-bottom:8px;line-height:20px}ks-filter-color label{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;position:relative;padding-left:27px;cursor:pointer;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none}ks-filter-color input{position:absolute;cursor:pointer;opacity:0;height:0;width:0}ks-filter-color .checkmark{position:absolute;top:2px;left:0;height:20px;width:20px;background-color:#eee}ks-filter-color .checkmark:after{content:\"✓\";position:absolute;display:block;left:4px;color:white;opacity:0}ks-filter-color input:checked~.checkmark{background-color:#252525}ks-filter-color input:checked~.checkmark:after{opacity:1}ks-filter-color svg{margin-right:8px;margin-top:2px}";
 
 class FilterColor {
   constructor(hostRef) {
@@ -14966,7 +14965,7 @@ function commonjsRequire () {
 	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
 }
 
-var nouislider = createCommonjsModule(function (module, exports) {
+createCommonjsModule(function (module, exports) {
 /*! nouislider - 12.1.0 - 10/25/2018 */
 (function(factory) {
     {
@@ -17289,34 +17288,7 @@ class FilterSlider {
     this.valueArray = this.values.split(", ").map(value => parseFloat(value));
   }
   componentDidLoad() {
-    const slider = this.root.firstElementChild;
-    const steps = this.steps.split(", ").map(value => parseInt(value));
-    const range = this.range(this.valueArray, steps);
-    const step = steps[0] ? steps[0] : this.step;
-    const asint = this.step || this.steps;
-    nouislider.create(slider, {
-      start: [range["min"], range["max"]],
-      snap: this.snap,
-      step: step,
-      tooltips: true,
-      connect: true,
-      range: range,
-      format: {
-        to: function (value) {
-          return asint ? Math.round(value) : value;
-        },
-        from: function (value) {
-          return asint ? Math.round(value) : value;
-        }
-      }
-    });
-    const sliderInstance = slider;
-    sliderInstance.noUiSlider.on("set", () => {
-      const range = sliderInstance.noUiSlider.get();
-      this.from = parseFloat(range[0]);
-      this.to = parseFloat(range[1]);
-    });
-    sliderInstance.noUiSlider.set([this.from, this.to]);
+    return;
   }
   range(values, steps) {
     return values.reduce((o, value, index) => {
@@ -17387,7 +17359,7 @@ class Filtering {
   render() {
     return [
       hAsync("ks-button", { narrow: true, muted: true, border: true, name: "Filtruj", left: true, icon: "filter", onClick: () => this.root.querySelector('ks-sidepanel').show() }),
-      hAsync("ks-sidepanel", { left: true }, hAsync("span", { class: "heading" }, "Filtrowanie"), hAsync("form", { onSubmit: e => this.submit(e) }, hAsync("slot", null), hAsync("ks-button", { class: "clear", border: true, link: this.baseUrl, name: "Wyczy\u015B\u0107 Filtry" }), hAsync("ks-button", { submit: true, secondary: true, name: "Zobacz filtry" })))
+      hAsync("ks-sidepanel", { left: true }, hAsync("span", { class: "heading" }, "Filtrowanie"), hAsync("form", { method: "POST", action: this.baseUrl }, hAsync("input", { type: "hidden", name: "postget", value: "tak" }), hAsync("slot", null), hAsync("ks-button", { class: "clear", border: true, link: this.baseUrl, name: "Wyczy\u015B\u0107 Filtry" }), hAsync("ks-button", { submit: true, secondary: true, name: "Zobacz filtry" })))
     ];
   }
   get root() { return getElement(this); }
@@ -20237,7 +20209,7 @@ class Img {
   }; }
 }
 
-const img2Css = "ks-img2{display:inline-block;-webkit-box-sizing:border-box;box-sizing:border-box;max-height:inherit;max-width:inherit;height:100%;font-size:0;position:relative}ks-img2 picture{width:inherit;height:inherit;max-height:inherit;max-width:inherit}ks-img2 img{display:inline-block;width:auto;height:auto;max-width:inherit;max-height:inherit;font-size:0;opacity:1;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-img2 canvas{display:inline-block;width:auto;height:auto;max-width:inherit;max-height:inherit;font-size:0}ks-img2[src*=\".svg\"] img{display:inline-block;font-size:0;height:100%;width:100%;max-width:inherit;max-height:inherit;overflow:visible;opacity:1;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-img2[vertical] img{width:auto}ks-img2[horizontal] img{height:auto}ks-img2 img.loading{opacity:0;height:0}ks-img2[limit] img{max-width:100%;max-height:100%}ks-img2[center] picture{margin:auto;display:-ms-inline-flexbox;display:inline-flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}ks-img2[fill] picture{position:absolute;left:0;right:0;top:0;bottom:0}";
+const img2Css = "ks-img2{display:inline-block;-webkit-box-sizing:border-box;box-sizing:border-box;max-height:inherit;max-width:inherit;height:100%;font-size:0;vertical-align:middle;position:relative}ks-img2 picture{width:inherit;height:inherit;max-height:inherit;max-width:inherit}ks-img2 img{display:inline-block;width:auto;height:auto;max-width:inherit;max-height:inherit;font-size:0;vertical-align:middle;opacity:1;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-img2 canvas{display:inline-block;width:auto;height:auto;max-width:inherit;max-height:inherit;font-size:0;vertical-align:middle}ks-img2[src*=\".svg\"] img{display:inline-block;font-size:0;vertical-align:middle;height:100%;width:100%;max-width:inherit;max-height:inherit;overflow:visible;opacity:1;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-img2[vertical] img{width:auto}ks-img2[horizontal] img{height:auto}ks-img2 img.loading{opacity:0;height:0}ks-img2[limit] img{max-width:100%;max-height:100%}ks-img2[center] picture{margin:auto;display:-ms-inline-flexbox;display:inline-flex;vertical-align:middle;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}ks-img2[fill] picture{position:absolute;left:0;right:0;top:0;bottom:0}";
 
 class Img2 {
   constructor(hostRef) {
@@ -23540,7 +23512,7 @@ class ListingFooter {
   }
   render() {
     return [
-      hAsync("slot", null),
+      this.description ? hAsync("div", { innerHTML: this.description }) : null,
       hAsync("slot", { name: "tags" })
     ];
   }
@@ -23548,39 +23520,56 @@ class ListingFooter {
   static get cmpMeta() { return {
     "$flags$": 4,
     "$tagName$": "ks-listing-footer",
-    "$members$": undefined,
+    "$members$": {
+      "description": [1]
+    },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": []
   }; }
 }
 
-const listingHeaderCss = "ks-listing-header{display:block;position:relative;z-index:1;padding:15px;-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow);background-color:white;text-align:center;font-size:0.875rem}ks-listing-header *[slot=title]{display:block;margin:0 0 5px 0;font-family:var(--font-emphasis);font-weight:700;font-size:1.3rem;line-height:1.3}@media (max-width: 960px){ks-listing-header *[slot=title]{font-size:1.105rem}}ks-listing-header *[slot=description]{max-width:1200px;margin:0 auto 15px auto;padding:0 15px;line-height:1.5}ks-listing-header *[slot=categories]{max-width:1200px;margin:auto}ks-listing-header *[slot=categories]>*{display:inline-block;padding:3px 10px;margin:2px;margin-bottom:3px;line-height:1.5;background:#222222;color:#ffffff !important;vertical-align:middle;white-space:nowrap;border-radius:2px;text-decoration:none !important}ks-listing-header hr{-webkit-box-sizing:content-box;box-sizing:content-box;height:0;overflow:visible;text-align:inherit;margin:15px 0 15px 0;border:0;border-top:1px solid #e5e5e5}";
+const listingHeaderCss = "ks-listing-header{display:block;position:relative;z-index:1;padding:15px;-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow);background-color:white;text-align:center;font-size:0.875rem}ks-listing-header .title{display:block;margin:0 0 5px 0;font-family:var(--font-emphasis);font-weight:700;font-size:1.3rem;line-height:1.3}@media (max-width: 960px){ks-listing-header .title{font-size:1.105rem}}ks-listing-header .autocorrect{font-size:17px !important;font-weight:500 !important;margin-bottom:0px}ks-listing-header .autocorrect>span{color:#ff3c3c;font-weight:700}ks-listing-header .description{max-width:1200px;margin:0 auto 15px auto;padding:0 15px;line-height:1.5}ks-listing-header .categories{max-width:1200px;margin:auto}ks-listing-header .categories>*{display:inline-block;padding:3px 10px;margin:2px;margin-bottom:3px;line-height:1.5;background:#222222;color:#ffffff !important;vertical-align:middle;white-space:nowrap;border-radius:2px;text-decoration:none !important}ks-listing-header .tags{margin-top:5px}ks-listing-header .tags>*{background-color:#555555}ks-listing-header hr{-webkit-box-sizing:content-box;box-sizing:content-box;height:0;overflow:visible;text-align:inherit;margin:15px 0 15px 0;border:0;border-top:1px solid #e5e5e5}";
 
 class ListingHeader {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.secondSection = false;
-  }
-  componentWillLoad() {
-    if (this.root.querySelector("*[slot=description], *[slot=categories]"))
-      this.secondSection = true;
   }
   render() {
+    var _a, _b, _c, _d, _e;
+    const autocorrect = (_a = this.autocorrect) === null || _a === void 0 ? void 0 : _a.split('{}');
     return [
-      hAsync("slot", { name: "title" }),
-      hAsync("slot", { name: "breadcrumbs" }),
-      this.secondSection ? hAsync("hr", null) : null,
-      hAsync("slot", { name: "description" }),
-      hAsync("slot", { name: "categories" })
+      hAsync("h1", { class: "title" }, this.heading),
+      ((autocorrect === null || autocorrect === void 0 ? void 0 : autocorrect.length) == 2 && this.query) ?
+        hAsync("h2", { class: "autocorrect" }, autocorrect[0], hAsync("span", null, this.query), autocorrect[1])
+        : null,
+      ((_b = this.breadcrumbs) === null || _b === void 0 ? void 0 : _b.length) > 0 ?
+        hAsync("ks-breadcrumbs", { class: "breadcrumbs" }, this.breadcrumbs.map(crumb => hAsync("a", { href: crumb.link }, crumb.name)))
+        : null,
+      this.description || ((_c = this.categories) === null || _c === void 0 ? void 0 : _c.length) > 0 ? hAsync("hr", null) : null,
+      this.description ? hAsync("div", { class: "description", innerHTML: this.description }) : null,
+      ((_d = this.categories) === null || _d === void 0 ? void 0 : _d.length) > 0 ?
+        hAsync("div", { class: "categories" }, this.categories.map(category => hAsync("a", { href: category.link }, category.name)))
+        : null,
+      ((_e = this.tags) === null || _e === void 0 ? void 0 : _e.length) > 0 ?
+        hAsync("div", { class: "categories tags" }, this.tags.map(category => hAsync("a", { href: category.link }, category.name)))
+        : null
     ];
   }
   get root() { return getElement(this); }
   static get style() { return listingHeaderCss; }
   static get cmpMeta() { return {
-    "$flags$": 4,
+    "$flags$": 0,
     "$tagName$": "ks-listing-header",
-    "$members$": undefined,
+    "$members$": {
+      "heading": [1],
+      "description": [1],
+      "query": [1],
+      "autocorrect": [1],
+      "breadcrumbs": [16],
+      "categories": [16],
+      "tags": [16]
+    },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": []
@@ -24208,7 +24197,7 @@ class NavbarSearch {
   }
   render() {
     var _a;
-    return (hAsync("form", { method: "post", action: "szukaj.html", onSubmit: e => this.submit(e) }, hAsync("a", { onClick: e => this.submit(e) }, hAsync("ks-icon", { name: "search", size: 1.1 })), hAsync("input", { "aria-label": "Szukaj produkt\u00F3w", name: "szukaj", type: "search", autocomplete: "off", required: true, onFocus: () => this.focus(), onBlur: () => this.blur(), onInput: () => this.input(), onKeyDown: e => this.key(e) }), hAsync("input", { type: "hidden", name: "postget", value: "tak" }), hAsync("input", { type: "hidden", name: "opis", value: "nie" }), hAsync("input", { type: "hidden", name: "nrkat", value: "tak" }), hAsync("input", { type: "hidden", name: "kodprod", value: "tak" }), this.active && this.items && this.items.length > 0 ?
+    return (hAsync("form", { method: "post", action: "szukaj.html", onSubmit: e => this.submit(e) }, hAsync("a", { onClick: e => this.submit(e) }, hAsync("ks-icon", { name: "search", size: 1.1 })), hAsync("input", { "aria-label": "Szukaj produkt\u00F3w", name: "szukaj", type: "search", autocomplete: "off", required: true, onFocus: () => this.focus(), onBlur: () => this.blur(), onInput: () => this.input(), onKeyDown: e => this.key(e) }), hAsync("input", { type: "hidden", name: "postget", value: "tak" }), this.active && this.items && this.items.length > 0 ?
       hAsync("div", { class: "list" }, (_a = this.items) === null || _a === void 0 ? void 0 : _a.map((item, index) => hAsync("a", { href: item.url, class: index == this.select ? "active" : "" }, item.name, hAsync("ks-icon", { name: item.type == "category" ? "layers" : "bookmark", size: 0.9 }))))
       : null));
   }
@@ -24367,6 +24356,36 @@ class NewsletterPopup {
       "successHeading": [1, "success-heading"],
       "faliureHeading": [1, "faliure-heading"],
       "Show": [64]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const nocontentCss = "ks-nocontent{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;padding:50px 30px 70px 30px;text-align:center}ks-nocontent .content{max-width:800px;margin:15px 0}ks-nocontent .content h1{font-size:1.275rem;font-family:var(--font-emphasis);font-weight:700}ks-nocontent .content h1{font-size:1.275rem}ks-nocontent .buttons{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-nocontent .buttons>*{margin:5px}@media (max-width: 640px){ks-nocontent{padding:30px 15px 50px 15px}}";
+
+class NotFound$1 {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.link = "/";
+    this.linkName = "Strona Główna";
+    this.backName = "Wróć na poprzedną stronę";
+  }
+  render() {
+    return [
+      hAsync("div", { class: "content" }, hAsync("slot", null)),
+      hAsync("div", { class: "buttons" }, hAsync("ks-button", { round: true, nofollow: true, onClick: () => history.back(), name: this.backName }), hAsync("ks-button", { round: true, nofollow: true, link: this.link, name: this.linkName }))
+    ];
+  }
+  static get style() { return nocontentCss; }
+  static get cmpMeta() { return {
+    "$flags$": 4,
+    "$tagName$": "ks-nocontent",
+    "$members$": {
+      "link": [1],
+      "linkName": [1, "link-name"],
+      "backName": [1, "back-name"]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
@@ -25855,7 +25874,7 @@ class FacebookTracker {
   }
 }
 
-const baseCss = "";
+const baseCss = "ks-page-base{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;min-height:100vh}";
 
 class PageBase {
   constructor(hostRef) {
@@ -25898,7 +25917,7 @@ class PageBase {
   }; }
 }
 
-const footerCss = "ks-page-footer{display:block;margin-top:20px;overflow:hidden;background-color:var(--footer-color);color:var(--footer-text-color);font-size:16px}ks-page-footer .about{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;padding:50px 70px 40px 70px;margin:auto}ks-page-footer .contact>span:first-of-type{display:block;color:var(--footer-heading-color);font-family:var(--font-emphasis);font-weight:700;font-size:18px;margin:0 0 15px 0}ks-page-footer .contact a,ks-page-footer .contact>span{display:block;text-decoration:none !important;font-size:16px;margin-bottom:5px;color:var(--footer-text-color);-webkit-transition:var(--transition-color);transition:var(--transition-color)}ks-page-footer .contact a:hover{color:var(--footer-text-color-hover)}ks-page-footer .contact a:active{color:var(--footer-text-color-active)}ks-page-footer .contact ks-icon{margin-right:5px}ks-page-footer .links{display:-ms-flexbox;display:flex;-ms-flex-pack:start;justify-content:flex-start;min-height:100px}ks-page-footer .newsletter{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-flow:column nowrap;flex-flow:column nowrap;text-align:center;padding:0 0 0 30px;-ms-flex-negative:0;flex-shrink:0}ks-page-footer .newsletter>div{font-family:var(--font-emphasis)}ks-page-footer .newsletter>div:last-of-type{font-size:48px;line-height:40px;font-weight:700;margin:5px 0 20px 0}ks-page-footer .newsletter ks-button{width:100%}ks-page-footer .portals{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;padding:20px;border-top:solid 1px #2b2b2b}ks-page-footer .portals>div{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;padding:10px}ks-page-footer .separator{width:1px;height:35px;margin:0 20px;background-color:#2b2b2b}ks-page-footer .software{background-color:var(--footer-color-darker);color:var(--footer-text-color-darker);font-size:13px;text-align:center;padding:10px}ks-page-footer .software>a{color:var(--footer-text-color-darker)}@media only screen and (max-width: 1060px){ks-page-footer .about{-ms-flex-direction:column;flex-direction:column;padding:50px 30px 40px 30px}ks-page-footer .contact{max-width:220px}ks-page-footer .links{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center}ks-page-footer .newsletter{margin-top:40px;padding:40px 0 0 0;border-top:solid 1px #2b2b2b}ks-page-footer .newsletter ks-button{max-width:290px}}@media only screen and (max-width: 640px){ks-page-footer .about{-ms-flex-direction:column;flex-direction:column;padding:30px}ks-page-footer .links{margin-top:0px;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;text-align:center}ks-page-footer .links>*{margin-top:40px;margin-right:0px;padding:0}ks-page-footer .newsletter>div{font-size:14px}ks-page-footer .newsletter>div:last-of-type{font-size:40px;margin-bottom:10px}ks-page-footer .portals>div:first-of-type{padding:20px}}";
+const footerCss = "ks-page-footer{display:block;overflow:hidden;background-color:var(--footer-color);color:var(--footer-text-color);font-size:16px}ks-page-footer .about{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;padding:50px 70px 40px 70px;margin:auto}ks-page-footer .contact>span:first-of-type{display:block;color:var(--footer-heading-color);font-family:var(--font-emphasis);font-weight:700;font-size:18px;margin:0 0 15px 0}ks-page-footer .contact a,ks-page-footer .contact>span{display:block;text-decoration:none !important;font-size:16px;margin-bottom:5px;color:var(--footer-text-color);-webkit-transition:var(--transition-color);transition:var(--transition-color)}ks-page-footer .contact a:hover{color:var(--footer-text-color-hover)}ks-page-footer .contact a:active{color:var(--footer-text-color-active)}ks-page-footer .contact ks-icon{margin-right:5px}ks-page-footer .links{display:-ms-flexbox;display:flex;-ms-flex-pack:start;justify-content:flex-start;min-height:100px}ks-page-footer .newsletter{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-flow:column nowrap;flex-flow:column nowrap;text-align:center;padding:0 0 0 30px;-ms-flex-negative:0;flex-shrink:0}ks-page-footer .newsletter>div{font-family:var(--font-emphasis)}ks-page-footer .newsletter>div:last-of-type{font-size:48px;line-height:40px;font-weight:700;margin:5px 0 20px 0}ks-page-footer .newsletter ks-button{width:100%}ks-page-footer .portals{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;padding:20px;border-top:solid 1px #2b2b2b}ks-page-footer .portals>div{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;padding:10px}ks-page-footer .separator{width:1px;height:35px;margin:0 20px;background-color:#2b2b2b}ks-page-footer .software{background-color:var(--footer-color-darker);color:var(--footer-text-color-darker);font-size:13px;text-align:center;padding:10px}ks-page-footer .software>a{color:var(--footer-text-color-darker)}@media only screen and (max-width: 1060px){ks-page-footer .about{-ms-flex-direction:column;flex-direction:column;padding:50px 30px 40px 30px}ks-page-footer .contact{max-width:220px}ks-page-footer .links{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center}ks-page-footer .newsletter{margin-top:40px;padding:40px 0 0 0;border-top:solid 1px #2b2b2b}ks-page-footer .newsletter ks-button{max-width:290px}}@media only screen and (max-width: 640px){ks-page-footer .about{-ms-flex-direction:column;flex-direction:column;padding:30px}ks-page-footer .links{margin-top:0px;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;text-align:center}ks-page-footer .links>*{margin-top:40px;margin-right:0px;padding:0}ks-page-footer .newsletter>div{font-size:14px}ks-page-footer .newsletter>div:last-of-type{font-size:40px;margin-bottom:10px}ks-page-footer .portals>div:first-of-type{padding:20px}}";
 
 class PageFooter {
   constructor(hostRef) {
@@ -25945,6 +25964,162 @@ class PageHeader {
   }; }
 }
 
+const home = createStore({
+  banners: [],
+  info: {},
+  products: [],
+  featured: [],
+  recipes: [],
+  recipesHeading: "",
+  recipesMore: "",
+  articles: [],
+  articlesHeading: "",
+  articlesMore: "",
+  seeMore: "",
+});
+
+const homeCss = "ks-page-home{display:block}ks-page-home>*>h3{font-size:24px;margin:25px 0;text-align:center}";
+
+class PageHome {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+  }
+  componentWillLoad() {
+    const homeDataElement = document.getElementById(this.homeData);
+    const homeData = JSON.parse(homeDataElement.innerHTML);
+    Object.keys(homeData).map(key => {
+      home.set(key, homeData[key]);
+    });
+  }
+  render() {
+    const banners = home.get('banners');
+    const featured = home.get('featured');
+    const info = home.get('info');
+    const products = home.get('products');
+    const recipes = home.get('recipes');
+    const recipesHeading = home.get('recipesHeading');
+    const recipesMore = home.get('recipesMore');
+    const articles = home.get('articles');
+    const articlesHeading = home.get('articlesHeading');
+    const articlesMore = home.get('articlesMore');
+    const seeMore = home.get('seeMore');
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, banners ? hAsync("ks-banner-container", null, banners.map((banner, index) => hAsync("ks-banner", { sync: index == 0, active: index == 0, name: banner.name, color: banner.color, link: banner.link, image: banner.image, webp: banner.webp, width: banner.width, height: banner.height, theme: banner.theme }))) : null, info ? hAsync("ks-homepage-info", null, hAsync("h1", { slot: "mainHeading" }, info.mainHeading), hAsync("p", { slot: "mainContent" }, info.mainParagraph), hAsync("h2", { slot: "firstHeading" }, info.firstHeading), hAsync("p", { slot: "firstContent" }, info.firstParagraph), hAsync("h2", { slot: "secondHeading" }, info.secondHeading), hAsync("p", { slot: "secondContent" }, info.secondParagraph), hAsync("h2", { slot: "thirdHeading" }, info.thirdHeading), hAsync("p", { slot: "thirdContent" }, info.thirdParagraph)) : null, products ? hAsync("ks-homepage-products", null, products.map(products => hAsync("ks-product-container", null, products.products.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice, unavailable: card.unavailable }))))) : null, featured ? hAsync("ks-featured-container", null, featured.map(banner => hAsync("ks-featured", { slot: banner.side, name: banner.name, image: banner.image, webp: banner.webp, link: banner.link, width: banner.width, height: banner.height }))) : null, recipes ? [
+      hAsync("h3", null, recipesHeading),
+      hAsync("ks-article-container", null, recipes.map(recipe => hAsync("ks-recipe-card", { heading: recipe.heading, cuisine: recipe.cuisine, category: recipe.category, link: recipe.link, image: recipe.image, webp: recipe.webp, width: recipe.width, height: recipe.height, "cuisine-link": recipe.cuisineLink, "category-link": recipe.categoryLink }))),
+      hAsync("ks-see-more", { href: recipesMore, text: seeMore })
+    ] : null, articles ? [
+      hAsync("h3", null, articlesHeading),
+      hAsync("ks-article-container", null, articles.map(article => hAsync("ks-article-card", { heading: article.heading, image: article.image, webp: article.webp, date: article.date, views: article.views }, hAsync("p", null, article.description)))),
+      hAsync("ks-see-more", { href: articlesMore, text: seeMore })
+    ] : null);
+  }
+  static get style() { return homeCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-page-home",
+    "$members$": {
+      "skipbase": [4],
+      "commonData": [1, "common-data"],
+      "commonDynamicData": [1, "common-dynamic-data"],
+      "homeData": [1, "home-data"]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const listing = createStore({
+  title: "",
+  autocorrect: "",
+  query: "",
+  description: "",
+  bottomDescription: "",
+  infoBanner: {},
+  breadcrumbs: [],
+  categories: [],
+  tags: [],
+  products: [],
+  navigation: {},
+  filters: [],
+  noContentHeading: "",
+  noContentMessage: "",
+});
+
+const listingCss = "ks-page-listing{-ms-flex:1 1 0px;flex:1 1 0}ks-page-listing .noresults{width:auto;max-height:300px}";
+
+class PageListing {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+  }
+  componentWillLoad() {
+    const listingDataElement = document.getElementById(this.listingData);
+    const listingData = JSON.parse(listingDataElement.innerHTML);
+    Object.keys(listingData).map(key => {
+      listing.set(key, listingData[key]);
+    });
+  }
+  render() {
+    if (!(listing === null || listing === void 0 ? void 0 : listing.get('title')))
+      return false;
+    const bottomDescription = listing.get('bottomDescription');
+    const infoBanner = listing.get("infoBanner");
+    const tags = listing.get('tags');
+    const navigation = listing.get('navigation');
+    const filters = listing.get('filters');
+    const products = listing.get('products');
+    const query = listing.get('query');
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, infoBanner ?
+      hAsync("ks-info-banner", { image: infoBanner.image, color: infoBanner.color, width: infoBanner.width, height: infoBanner.height, name: infoBanner.name, link: infoBanner.link, theme: infoBanner.theme })
+      : null, hAsync("ks-listing-header", { heading: listing.get('title'), breadcrumbs: listing.get('breadcrumbs'), description: listing.get('description'), categories: listing.get('categories'), query: query, autocorrect: listing.get('autocorrect') }), navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 ?
+      hAsync("ks-listing-navigation", { products: navigation.products }, (filters === null || filters === void 0 ? void 0 : filters.length) > 0 ?
+        hAsync("ks-filtering", { "base-url": navigation.base }, query ?
+          hAsync("input", { type: "hidden", name: "szukaj", value: query })
+          : null, filters.map(filter => (filter === null || filter === void 0 ? void 0 : filter.items.length) > 0 ?
+          hAsync("ks-filter", { name: filter.name, active: filter.active }, filter.items.map(item => {
+            if (filter.type == "checkbox") {
+              item = item;
+              return hAsync("ks-filter-checkbox", { active: item.active, name: item.name, value: item.value, text: item.content });
+            }
+            if (filter.type == "color") {
+              item = item;
+              return hAsync("ks-filter-color", { active: item.active, name: item.name, value: item.value, color: item.content });
+            }
+            if (filter.type == "slider") {
+              item = item;
+              return hAsync("ks-filter-slider", { name: item.name, values: item.values, snap: item.snap, steps: item.steps, from: item.from, to: item.to });
+            }
+            return null;
+          }))
+          : null))
+        : null, hAsync("ks-sorting", { post: navigation.paginationBase }), hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.paginationBase, pattern: navigation.pattern }))
+      : null, (products === null || products === void 0 ? void 0 : products.length) > 0 ?
+      hAsync("ks-product-container", null, products.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, currentPrice: card.currentPrice, previousPrice: card.previousPrice, unavailable: card.unavailable })))
+      :
+        hAsync("ks-nocontent", null, hAsync("h1", null, listing.get('noContentHeading')), hAsync("p", null, listing.get('noContentMessage'))), navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 ?
+      hAsync("ks-listing-navigation", { products: navigation.products }, hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.paginationBase, pattern: navigation.pattern }))
+      : null, bottomDescription || (tags === null || tags === void 0 ? void 0 : tags.length) > 0 ?
+      hAsync("ks-listing-footer", { description: bottomDescription }, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 ?
+        hAsync("div", { slot: "tags" }, tags.map(crumb => hAsync("a", { href: crumb.link }, crumb.name)))
+        : null)
+      : null);
+  }
+  static get style() { return listingCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-page-listing",
+    "$members$": {
+      "skipbase": [4],
+      "commonData": [1, "common-data"],
+      "commonDynamicData": [1, "common-dynamic-data"],
+      "listingData": [1, "listing-data"]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
 const product = createStore({
   id: "",
   name: "",
@@ -25971,6 +26146,7 @@ const product = createStore({
   reviews: {},
   infoBanner: {},
   notifyStrings: {},
+  history: "",
   warranty: "",
   warrantyLink: "",
   recycle: null,
@@ -26054,7 +26230,7 @@ class PageProduct {
       hAsync("ks-product-tooltip", { message: recycle.message }, hAsync("ks-product-attribute", { icon: "recycle" }, recycle.shortMessage))
       : null, model || ean ?
       hAsync("ks-product-attribute", { style: { marginTop: "15px" }, icon: "file", faded: true }, hAsync("span", { style: { marginRight: "15px" } }, model ? hAsync("span", { style: { marginRight: "7px" } }, "Model: ", model, " ") : null, ean ? hAsync("span", null, "EAN: ", ean) : null))
-      : null, hAsync("div", { class: "buttons" }, product.get('negotiateEnabled') ?
+      : null, hAsync("ks-product-history", { name: product.get('history'), api: commonDynamic.get('api').productHistory }), hAsync("div", { class: "buttons" }, product.get('negotiateEnabled') ?
       hAsync("ks-product-negotiate", null, hAsync("ks-product-button", null, product.get('negotiate').heading))
       : null, (installments.payuId && installments.payuKey) || installments.caParameters ?
       hAsync("ks-product-installments", { name: installments.button }, installments.payuId && installments.payuKey ?
@@ -26076,11 +26252,11 @@ class PageProduct {
       hAsync("ks-container", null, youtube.map(id => hAsync("ks-product-youtube", { "video-id": id })), comments ? hAsync("ks-product-comments", null) : null)
       : null, (similar === null || similar === void 0 ? void 0 : similar.length) > 0 ? [
       hAsync("h3", null, product.get('similarHeading')),
-      hAsync("ks-product-container", null, similar.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice })))
+      hAsync("ks-product-container", null, similar.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice, unavailable: card.unavailable })))
     ]
       : null, (accessories === null || accessories === void 0 ? void 0 : accessories.length) > 0 ? [
       hAsync("h3", null, product.get('accessoriesHeading')),
-      hAsync("ks-product-container", null, accessories.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice })))
+      hAsync("ks-product-container", null, accessories.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice, unavailable: card.unavailable })))
     ]
       : null);
   }
@@ -26101,35 +26277,64 @@ class PageProduct {
   }; }
 }
 
-const paginationCss = "ks-pagination{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}ks-pagination[count='1']{display:none}ks-pagination a{display:inline-block;width:42px;height:42px;line-height:42px;padding:0 10px;-webkit-box-sizing:border-box;box-sizing:border-box;border:1px solid #e5e5e5;background-color:white;color:#252525;vertical-align:middle;font-size:.875rem;text-align:center;text-decoration:none;text-transform:none;-webkit-transition:border 0.3s ease;transition:border 0.3s ease}ks-pagination a:hover{border:1px solid #b9b9b9;text-decoration:none;color:#252525}ks-pagination a.active{border:1px solid #252525;background-color:#252525;color:white;cursor:default}.separator{width:15px}";
+const recipes = createStore({});
+
+const recipesCss = "ks-page-recipes ks-article-container{padding:20px 0px;padding:0px 10px;-webkit-box-sizing:border-box;box-sizing:border-box}ks-page-recipes ks-article-container>div{-ms-flex-pack:center;justify-content:center}";
+
+class PageRecipes {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+  }
+  componentWillLoad() {
+    const recipesDataElement = document.getElementById(this.recipesData);
+    const recipesData = JSON.parse(recipesDataElement.innerHTML);
+    Object.keys(recipesData).map(key => {
+      recipes.set(key, recipesData[key]);
+    });
+  }
+  render() {
+    const navigation = recipes.get('navigation');
+    const cards = recipes.get('recipes');
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("ks-listing-header", { heading: recipes.get('title'), breadcrumbs: recipes.get('breadcrumbs'), description: recipes.get('description'), categories: recipes.get('categories'), tags: recipes.get('tags') }), navigation && (cards === null || cards === void 0 ? void 0 : cards.length) > 0 ?
+      hAsync("ks-listing-navigation", null, hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.paginationBase, pattern: navigation.pattern }))
+      : null, (cards === null || cards === void 0 ? void 0 : cards.length) > 0 ?
+      hAsync("ks-article-container", null, cards.map(card => hAsync("ks-recipe-card", { heading: card.heading, link: card.link, cuisine: card.cuisine, "cuisine-link": card.cuisineLink, category: card.category, "category-link": card.categoryLink, image: card.image, width: card.width, height: card.height })))
+      : null, navigation && (cards === null || cards === void 0 ? void 0 : cards.length) > 0 ?
+      hAsync("ks-listing-navigation", null, hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.paginationBase, pattern: navigation.pattern }))
+      : null);
+  }
+  static get style() { return recipesCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-page-recipes",
+    "$members$": {
+      "skipbase": [4],
+      "commonData": [1, "common-data"],
+      "commonDynamicData": [1, "common-dynamic-data"],
+      "recipesData": [1, "recipes-data"]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const paginationCss = "ks-pagination{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}ks-pagination[count='1']{display:none}ks-pagination a{display:inline-block;width:42px;height:42px;line-height:42px;padding:0 10px;-webkit-box-sizing:border-box;box-sizing:border-box;border:1px solid #e5e5e5;background-color:white;color:#252525;vertical-align:middle;font-size:.875rem;text-align:center;text-decoration:none;text-transform:none;-webkit-transition:border 0.3s ease;transition:border 0.3s ease}ks-pagination a:hover{border:1px solid #b9b9b9;text-decoration:none;color:#252525}ks-pagination a.active{border:1px solid #252525;background-color:#252525;color:white;cursor:default}ks-pagination .separator{width:15px;display:none}ks-pagination .desktop{display:none}@media (min-width: 960px){ks-pagination .separator,ks-pagination .desktop{display:block}}";
 
 class Pagination {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.base = "";
     this.pattern = "";
-    this.space = 6;
-    this.edges = true;
-  }
-  handleResize() {
-    if (window.innerWidth > 960) {
-      this.space = 6;
-      this.edges = true;
-    }
-    else {
-      this.space = 4;
-      this.edges = false;
-    }
-  }
-  componentWillLoad() {
-    this.handleResize();
   }
   render() {
     if (!this.count || !this.current || this.count < 2)
       return;
     let pages = new Array();
     pages.push(this.current);
-    let space = this.space;
+    let mobilePages = [...pages];
+    let space = 6;
+    let mobileSpace = 3;
     let left = this.current;
     let right = this.current;
     while (space > 0) {
@@ -26137,6 +26342,8 @@ class Pagination {
       let rightFinished = false;
       if (left - 1 > 0) {
         pages.push(left - 1);
+        if (space >= mobileSpace)
+          mobilePages.push(left - 1);
         left--;
         space--;
       }
@@ -26144,6 +26351,8 @@ class Pagination {
         leftFinished = true;
       if (right + 1 <= this.count) {
         pages.push(right + 1);
+        if (space >= mobileSpace)
+          mobilePages.push(right + 1);
         right++;
         space--;
       }
@@ -26153,6 +26362,7 @@ class Pagination {
         break;
     }
     pages.sort((a, b) => a - b);
+    mobilePages.sort((a, b) => a - b);
     return [
       this.current > 1 ?
         hAsync("a", { href: this.link(this.current - 1) }, hAsync("ks-icon", { name: "chevron-left", size: 0.9 }))
@@ -26160,15 +26370,16 @@ class Pagination {
       pages.map(page => {
         if (page == this.current)
           return hAsync("a", { class: "active" }, page.toString());
-        if (page == pages[0] && this.edges) {
-          const ret = hAsync("a", { href: this.link(1) }, "1");
+        const desktop = !mobilePages.includes(page) ? "desktop" : "";
+        if (page == pages[0]) {
+          const ret = hAsync("a", { class: desktop, href: this.link(1) }, "1");
           return page == 1 ? ret : [ret, hAsync("div", { class: "separator" })];
         }
-        if (page == pages[pages.length - 1] && this.edges) {
-          const ret = hAsync("a", { href: this.link(this.count) }, this.count);
+        if (page == pages[pages.length - 1]) {
+          const ret = hAsync("a", { class: desktop, href: this.link(this.count) }, this.count);
           return page == this.count ? ret : [hAsync("div", { class: "separator" }), ret];
         }
-        return hAsync("a", { href: this.link(page) }, page.toString());
+        return hAsync("a", { class: desktop, href: this.link(page) }, page.toString());
       }),
       this.current < this.count ?
         hAsync("a", { href: this.link(this.current + 1) }, hAsync("ks-icon", { name: "chevron-right", size: 0.9 }))
@@ -26188,11 +26399,9 @@ class Pagination {
       "count": [514],
       "current": [2],
       "base": [1],
-      "pattern": [1],
-      "space": [32],
-      "edges": [32]
+      "pattern": [1]
     },
-    "$listeners$": [[9, "resize", "handleResize"]],
+    "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": [["count", "count"]]
   }; }
@@ -26450,7 +26659,7 @@ async function addToFavourites(id) {
   const navbar = document.querySelector('ks-navbar');
   let cartBody = new FormData();
   cartBody.append("id", id);
-  const api = common.get('api').addToFavourites;
+  const api = commonDynamic.get('api').addToFavourites;
   return Fetch(api, cartBody)
     .then(() => navbar.IncrementHeart())
     .catch(error => errorpopup.show(error));
@@ -26461,7 +26670,7 @@ async function removeFromFavourites(id) {
   let cartBody = new FormData();
   cartBody.append("id", id);
   cartBody.append("akcja", "usun");
-  const api = common.get('api').removeFromFavourites;
+  const api = commonDynamic.get('api').removeFromFavourites;
   return Fetch(api, cartBody)
     .then(() => navbar.DecrementHeart())
     .catch(error => errorpopup.show(error));
@@ -26480,7 +26689,7 @@ class ProductCard {
   }
   cart() {
     this.cartLoading = true;
-    addToCart(this.productId, 1, this.name, this.currentPrice, "", 1, this.link)
+    addToCart(this.productId, 1, this.name, parseFloat(this.currentPrice), "", 1, this.link)
       .then(() => this.cartLoading = false);
   }
   favourites() {
@@ -26501,14 +26710,12 @@ class ProductCard {
     }
   }
   render() {
-    const currentPrice = this.currentPrice ? this.currentPrice.toFixed(2) + " zł" : "";
-    const previousPrice = this.previousPrice ? this.previousPrice.toFixed(2) + " zł" : "";
     const translations = common.get('translations');
     return [
       hAsync("a", { href: this.link, "aria-label": this.name, class: "top" }, hAsync("ks-img2", { fill: true, limit: true, center: true, src: this.img, webp: this.webp, width: 280, height: 280, alt: this.name }), hAsync("span", null, this.name)),
       hAsync("div", { class: "price" }, this.previousPrice ?
-        hAsync("s", { class: "previous" }, previousPrice)
-        : null, hAsync("span", { class: "current" }, currentPrice)),
+        hAsync("s", { class: "previous" }, this.previousPrice, " z\u0142")
+        : null, hAsync("span", { class: "current" }, this.currentPrice, " z\u0142")),
       hAsync("div", { class: "bottom" }, this.unavailable ? hAsync("a", { href: this.link, class: "unavailable" }, translations.unavailable)
         : this.linkOnly ? hAsync("a", { href: this.link, class: "link" }, translations.seeMore)
           : [
@@ -26526,14 +26733,14 @@ class ProductCard {
     "$flags$": 0,
     "$tagName$": "ks-product-card",
     "$members$": {
-      "unavailable": [4],
+      "unavailable": [516],
       "linkOnly": [4, "link-only"],
       "name": [1],
       "img": [1],
       "webp": [1],
       "link": [1],
-      "currentPrice": [2, "current-price"],
-      "previousPrice": [2, "previous-price"],
+      "currentPrice": [1, "current-price"],
+      "previousPrice": [1, "previous-price"],
       "productId": [1, "product-id"],
       "cartLoading": [32],
       "favLoading": [32],
@@ -26541,7 +26748,7 @@ class ProductCard {
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
+    "$attrsToReflect$": [["unavailable", "unavailable"]]
   }; }
 }
 
@@ -26660,6 +26867,46 @@ class ProductCount {
     "$flags$": 0,
     "$tagName$": "ks-product-traits",
     "$members$": undefined,
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const productHistoryCss = "ks-product-history>ks-product-attribute{cursor:pointer}ks-product-history .history{height:100%;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column}ks-product-history h3{margin-top:5px}ks-product-history .list{overflow-y:auto;-webkit-animation:fade-in 0.3s 1;animation:fade-in 0.3s 1}ks-product-history .list>*{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between}ks-product-history .list>*>span:first-child{margin-right:30px}ks-product-history .list>*>span:last-child{margin-right:10px;font-weight:600}";
+
+class ProductHistory {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.data = [];
+  }
+  componentDidRender() {
+    this.panel = this.root.querySelector('ks-sidepanel');
+  }
+  open() {
+    this.panel.show();
+    Fetch(this.api)
+      .then(response => response.json())
+      .then(data => this.data = data);
+  }
+  render() {
+    return [
+      hAsync("ks-product-attribute", { icon: "calendar", faded: true, onClick: () => this.open() }, this.name),
+      hAsync("ks-sidepanel", { left: true }, hAsync("div", { class: "history" }, hAsync("h3", null, this.name), this.data.length > 0 ?
+        hAsync("div", { class: "list" }, this.data.map(entry => hAsync("div", { class: "entry" }, hAsync("span", null, entry.date), hAsync("span", null, entry.price))))
+        : hAsync("ks-loader", { dark: true, large: true })))
+    ];
+  }
+  get root() { return getElement(this); }
+  static get style() { return productHistoryCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-product-history",
+    "$members$": {
+      "api": [1],
+      "name": [1],
+      "data": [32]
+    },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": []
@@ -27287,7 +27534,7 @@ class ProductSuggestions {
     }
   }
   render() {
-    return hAsync("ks-overlay", null, hAsync("div", { class: "content" }, hAsync("div", { class: "top" }, hAsync("div", { class: "heading" }, "Dodano do koszyka"), hAsync("div", { class: "name" }, this.name), hAsync("div", { class: "buttons" }, hAsync("ks-button", { secondary: true, name: "Przejd\u017A do koszyka", onClick: () => this.toCart() }), hAsync("ks-button", { name: "Przegl\u0105daj dalej", onClick: () => this.hide() }))), hAsync("div", { class: "bottom" }, this.loading ? null : hAsync("h3", { class: "suggestion-heading" }, this.suggestionHeading), this.loading ? hAsync("ks-loader", { dark: true, large: true }) : null, hAsync("div", { class: "swiper-container product-suggestions", style: { display: this.loading ? "none" : "block" } }, hAsync("div", { class: "swiper-wrapper" }, this.products.map((product) => hAsync("div", { class: "swiper-slide" }, hAsync("ks-product-card", { "link-only": true, name: product.name, img: product.image, webp: product.webp, link: product.link, currentPrice: parseFloat(product.currentPrice), previousPrice: product.previousPrice != "0.00" ? parseFloat(product.previousPrice) : null }))))), hAsync("div", { class: "fade-left" }), hAsync("div", { class: "fade-right" }))));
+    return hAsync("ks-overlay", null, hAsync("div", { class: "content" }, hAsync("div", { class: "top" }, hAsync("div", { class: "heading" }, "Dodano do koszyka"), hAsync("div", { class: "name" }, this.name), hAsync("div", { class: "buttons" }, hAsync("ks-button", { secondary: true, name: "Przejd\u017A do koszyka", onClick: () => this.toCart() }), hAsync("ks-button", { name: "Przegl\u0105daj dalej", onClick: () => this.hide() }))), hAsync("div", { class: "bottom" }, this.loading ? null : hAsync("h3", { class: "suggestion-heading" }, this.suggestionHeading), this.loading ? hAsync("ks-loader", { dark: true, large: true }) : null, hAsync("div", { class: "swiper-container product-suggestions", style: { display: this.loading ? "none" : "block" } }, hAsync("div", { class: "swiper-wrapper" }, this.products.map((product) => hAsync("div", { class: "swiper-slide" }, hAsync("ks-product-card", { "link-only": true, name: product.name, img: product.image, webp: product.webp, link: product.link, currentPrice: product.currentPrice, previousPrice: product.previousPrice != "0.00" ? product.previousPrice : null }))))), hAsync("div", { class: "fade-left" }), hAsync("div", { class: "fade-right" }))));
   }
   get root() { return getElement(this); }
   static get style() { return productSuggestionsCss; }
@@ -27889,7 +28136,7 @@ class RecipeCard {
     this.hideOnOdd = false;
   }
   render() {
-    return (hAsync("a", { href: this.link }, hAsync("ks-img2", { horizontal: true, src: this.image, width: this.width, height: this.height, alt: this.heading }), hAsync("div", { class: "info" }, hAsync("h3", null, this.heading), hAsync("div", null, hAsync("a", { href: this.cuisineLink }, this.cuisine), hAsync("span", { class: "dot" }, "\u2022"), hAsync("a", { href: this.categoryLink }, this.category)))));
+    return (hAsync("a", { href: this.link }, hAsync("ks-img2", { horizontal: true, src: this.image, webp: this.webp, width: this.width, height: this.height, alt: this.heading }), hAsync("div", { class: "info" }, hAsync("h3", null, this.heading), hAsync("div", null, hAsync("a", { href: this.cuisineLink }, this.cuisine), hAsync("span", { class: "dot" }, "\u2022"), hAsync("a", { href: this.categoryLink }, this.category)))));
   }
   get root() { return getElement(this); }
   static get style() { return recipeCardCss; }
@@ -27898,6 +28145,7 @@ class RecipeCard {
     "$tagName$": "ks-recipe-card",
     "$members$": {
       "image": [1],
+      "webp": [1],
       "width": [2],
       "height": [2],
       "heading": [1],
@@ -28500,6 +28748,7 @@ registerComponents([
   NavbarSearch,
   NavbarSidebar,
   NewsletterPopup,
+  NotFound$1,
   NotFound,
   OrderAddressField,
   OrderAddressSection,
@@ -28530,7 +28779,10 @@ registerComponents([
   PageBase,
   PageFooter,
   PageHeader,
+  PageHome,
+  PageListing,
   PageProduct,
+  PageRecipes,
   Pagination,
   ProductAdmin,
   ProductAttribute,
@@ -28543,6 +28795,7 @@ registerComponents([
   ProductContainer,
   ProductCount$1,
   ProductCount,
+  ProductHistory,
   ProductImages,
   ProductInfo$1,
   ProductInfo,
