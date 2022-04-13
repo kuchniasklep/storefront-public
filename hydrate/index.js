@@ -26230,7 +26230,7 @@ class PageProduct {
       hAsync("ks-product-tooltip", { message: recycle.message }, hAsync("ks-product-attribute", { icon: "recycle" }, recycle.shortMessage))
       : null, model || ean ?
       hAsync("ks-product-attribute", { style: { marginTop: "15px" }, icon: "file", faded: true }, hAsync("span", { style: { marginRight: "15px" } }, model ? hAsync("span", { style: { marginRight: "7px" } }, "Model: ", model, " ") : null, ean ? hAsync("span", null, "EAN: ", ean) : null))
-      : null, hAsync("ks-product-history", { name: product.get('history'), api: commonDynamic.get('api').productHistory }), hAsync("div", { class: "buttons" }, product.get('negotiateEnabled') ?
+      : null, hAsync("ks-product-history", { name: product.get('history'), productId: product.get('id'), api: commonDynamic.get('api').productHistory }), hAsync("div", { class: "buttons" }, product.get('negotiateEnabled') ?
       hAsync("ks-product-negotiate", null, hAsync("ks-product-button", null, product.get('negotiate').heading))
       : null, (installments.payuId && installments.payuKey) || installments.caParameters ?
       hAsync("ks-product-installments", { name: installments.button }, installments.payuId && installments.payuKey ?
@@ -26878,21 +26878,23 @@ const productHistoryCss = "ks-product-history>ks-product-attribute{cursor:pointe
 class ProductHistory {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.data = [];
+    this.data = null;
   }
   componentDidRender() {
     this.panel = this.root.querySelector('ks-sidepanel');
   }
   open() {
     this.panel.show();
-    Fetch(this.api)
+    let body = new FormData();
+    body.append("id", this.productId);
+    Fetch(this.api, body)
       .then(response => response.json())
       .then(data => this.data = data);
   }
   render() {
     return [
       hAsync("ks-product-attribute", { icon: "calendar", faded: true, onClick: () => this.open() }, this.name),
-      hAsync("ks-sidepanel", { left: true }, hAsync("div", { class: "history" }, hAsync("h3", null, this.name), this.data.length > 0 ?
+      hAsync("ks-sidepanel", { left: true }, hAsync("div", { class: "history" }, hAsync("h3", null, this.name), this.data !== null ?
         hAsync("div", { class: "list" }, this.data.map(entry => hAsync("div", { class: "entry" }, hAsync("span", null, entry.date), hAsync("span", null, entry.price))))
         : hAsync("ks-loader", { dark: true, large: true })))
     ];
@@ -26904,6 +26906,7 @@ class ProductHistory {
     "$tagName$": "ks-product-history",
     "$members$": {
       "api": [1],
+      "productId": [1, "product-id"],
       "name": [1],
       "data": [32]
     },
