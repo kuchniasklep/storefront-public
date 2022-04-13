@@ -26009,7 +26009,7 @@ class PageHome {
       hAsync("ks-see-more", { href: recipesMore, text: seeMore })
     ] : null, articles ? [
       hAsync("h3", null, articlesHeading),
-      hAsync("ks-article-container", null, articles.map(article => hAsync("ks-article-card", { heading: article.heading, image: article.image, webp: article.webp, date: article.date, views: article.views }, hAsync("p", null, article.description)))),
+      hAsync("ks-article-container", null, articles.map(article => hAsync("ks-article-card", { link: article.link, heading: article.heading, image: article.image, webp: article.webp, date: article.date, views: article.views }, hAsync("p", null, article.description)))),
       hAsync("ks-see-more", { href: articlesMore, text: seeMore })
     ] : null);
   }
