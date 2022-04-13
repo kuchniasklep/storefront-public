@@ -26892,6 +26892,8 @@ class ProductHistory {
       .then(data => this.data = data);
   }
   render() {
+    if (!this.name)
+      return;
     return [
       hAsync("ks-product-attribute", { icon: "calendar", faded: true, onClick: () => this.open() }, this.name),
       hAsync("ks-sidepanel", { left: true }, hAsync("div", { class: "history" }, hAsync("h3", null, this.name), this.data !== null ?
