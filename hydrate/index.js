@@ -28482,7 +28482,7 @@ class Sorting {
   }; }
 }
 
-const topBannerCss = "ks-top-banner{display:block;position:relative;height:40px;padding-right:90px;font-family:var(--font-emphasis);font-size:16px;line-height:16px;font-weight:700;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;cursor:pointer;-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-top-banner[hidden]{display:none}ks-top-banner a{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;height:100%;color:inherit !important;text-decoration:none !important}ks-top-banner a>ks-img{width:auto}@media only screen and (max-width: 959px){ks-top-banner{font-size:14px;line-height:14px;padding-right:20px}}@media only screen and (max-width: 480px){ks-top-banner a>span{max-width:150px;margin:0}ks-top-banner{font-size:13px;line-height:13px}}";
+const topBannerCss = "ks-top-banner{display:block;position:relative;padding:10px 10px;font-family:var(--font-emphasis);font-size:15px;font-weight:700;line-height:15px;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;cursor:pointer;-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-top-banner[hidden]{display:none}ks-top-banner .container{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;height:100%;color:inherit !important;text-decoration:none !important;text-align:center}ks-top-banner ks-img2{width:auto;height:35px;margin:-8px 3px -8px 0px}@media only screen and (max-width: 959px){ks-top-banner{font-size:14px;line-height:14px}}@media only screen and (max-width: 480px){ks-top-banner{font-size:13px;line-height:13px}}";
 
 class TopBanner {
   constructor(hostRef) {
@@ -28492,9 +28492,13 @@ class TopBanner {
     const notice = common.get("topNotice");
     if (!notice || Object.keys(notice).length <= 0)
       return hAsync(Host, { hidden: true });
-    return hAsync(Host, { style: { backgroundColor: notice.color } }, hAsync("a", { href: notice.link }, notice.image ?
-      hAsync("ks-img", { vertical: true, sync: true, src: notice.image })
-      : null, hAsync("span", null, notice.message)));
+    const content = [
+      notice.image ? hAsync("ks-img2", { vertical: true, sync: true, src: notice.image }) : null,
+      hAsync("span", null, notice.message)
+    ];
+    return hAsync(Host, { style: { backgroundColor: notice.color, color: notice.textColor } }, notice.link ?
+      hAsync("a", { class: "container", href: notice.link }, content) :
+      hAsync("div", { class: "container" }, content));
   }
   static get style() { return topBannerCss; }
   static get cmpMeta() { return {
