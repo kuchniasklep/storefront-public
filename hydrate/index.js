@@ -12259,6 +12259,35 @@ async function Fetch(url, body = null) {
     return response;
   });
 }
+// cart fetch functions, required analysis and potential refactoring
+async function formfetch(url, formProperties) {
+  let body = null;
+  if (formProperties) {
+    body = new FormData();
+    Object.entries(formProperties).forEach(([key, value]) => {
+      body.append(key, value);
+    });
+  }
+  return internalfetch(url, body);
+}
+async function jsonfetch(url, data) {
+  return internalfetch(url, JSON.stringify(data));
+}
+async function internalfetch(url, body) {
+  const headers = new Headers();
+  headers.append('pragma', 'no-cache');
+  headers.append('cache-control', 'no-cache');
+  return fetch(url, {
+    method: 'POST',
+    body: body,
+    headers: headers,
+    credentials: "same-origin"
+  }).then(response => {
+    if (!response.ok)
+      throw { name: response.status, message: response.statusText };
+    return response;
+  });
+}
 
 async function addToCart(id, count, name, price, traits = "", place = 1, url = "") {
   const errorpopup = document.querySelector('ks-error-popup');
@@ -12515,36 +12544,7 @@ class Card {
   }; }
 }
 
-async function formfetch(url, formProperties) {
-  let body = null;
-  if (formProperties) {
-    body = new FormData();
-    Object.entries(formProperties).forEach(([key, value]) => {
-      body.append(key, value);
-    });
-  }
-  return internalfetch(url, body);
-}
-async function jsonfetch(url, data) {
-  return internalfetch(url, JSON.stringify(data));
-}
-async function internalfetch(url, body) {
-  const headers = new Headers();
-  headers.append('pragma', 'no-cache');
-  headers.append('cache-control', 'no-cache');
-  return fetch(url, {
-    method: 'POST',
-    body: body,
-    headers: headers,
-    credentials: "same-origin"
-  }).then(response => {
-    if (!response.ok)
-      throw { name: response.status, message: response.statusText };
-    return response;
-  });
-}
-
-const store = createStore({
+const cart = createStore({
   api: {},
   totalValue: 0,
   productValue: 0,
@@ -12553,9 +12553,10 @@ const store = createStore({
   totalShippingTime: "",
   otherValues: [],
   shippingProgress: {},
-  products: [],
+  products: {},
   deals: [],
   dealGroups: [],
+  countries: [],
   shipping: [],
   payment: [],
   shippingMessage: "",
@@ -12570,302 +12571,8 @@ const store = createStore({
   recycle: [],
   easyprotect: {},
   insured: {},
+  progressBar: false
 });
-async function easyprotectChange(insured) {
-  const api = store.get("api").easyprotectChange;
-  loading();
-  await jsonfetch(api, insured)
-    .then(response => response.json())
-    .then(json => update(json));
-  loaded();
-}
-async function easyprotectRemove(id) {
-  const api = store.get("api").easyprotectRemove;
-  loading();
-  await formfetch(api, { "id": id })
-    .then(response => response.json())
-    .then(json => update(json));
-  loaded();
-}
-function update(data) {
-  Object.keys(data).map(key => {
-    store.set(key, data[key]);
-  });
-}
-function loading() {
-  store.set("loading", store.get("loading") + 1);
-}
-function loaded() {
-  store.set("loading", store.get("loading") - 1);
-}
-
-const cartCss = "ks-cart{display:block;-webkit-box-sizing:border-box;box-sizing:border-box;overflow:hidden;width:100%;background:var(--card-background);color:var(--card-text-color);-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow)}";
-
-class Cart {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.dataId = "";
-    this.api = "";
-    this.productRemove = "";
-    this.productCount = "";
-    this.addDeal = "";
-    this.countryChange = "";
-    this.shippingChange = "";
-    this.paymentChange = "";
-    this.discountCode = "";
-    this.discountPoints = "";
-    this.discountRemove = "";
-    this.easyprotectChange = "";
-    this.easyprotectRemove = "";
-    this.recycleChange = "";
-    this.lastProductCountCall = {};
-    this.ProductCountCall = async (id, current, last) => {
-      const data = await this.ProductLoadingWrapper(async () => {
-        return this.fetch(this.productCount, {
-          "id": id,
-          "ilosc": current.toString()
-        });
-      });
-      if (data) {
-        this.ShowMessageFromData("Błąd ilości produktu", data, async (cleanedData) => {
-          if ('error' in cleanedData) {
-            this.messagePopup.show("Błąd ilości produktu", cleanedData.error.message);
-            store.set("products", this.GetCorrectedProductAmounts(id, cleanedData.error.amount, cleanedData.error.maxAmount));
-          }
-          else
-            await this.update(cleanedData);
-          if ('discount' in cleanedData == false)
-            this.RemoveDiscount();
-        });
-      }
-      else {
-        store.set("products", this.GetCorrectedProductAmounts(id, last));
-        this.SetAmount(last, `ks-cart-product[ikey="${id}"] ks-cart-spinner`);
-      }
-    };
-  }
-  async componentWillLoad() {
-    this.errorPopup = document.querySelector("ks-error-popup");
-    this.messagePopup = document.querySelector('ks-message-popup');
-    let data;
-    if (this.dataId) {
-      const dataElement = document.getElementById(this.dataId);
-      data = JSON.parse(dataElement.innerHTML);
-    }
-    else
-      data = await this.fetch(this.api);
-    this.update(data);
-    store.set("api", {
-      productRemove: this.productRemove,
-      productCount: this.productCount,
-      addDeal: this.addDeal,
-      countryChange: this.countryChange,
-      shippingChange: this.shippingChange,
-      paymentChange: this.paymentChange,
-      discountCode: this.discountCode,
-      discountPoints: this.discountPoints,
-      discountRemove: this.discountRemove,
-      easyprotectChange: this.easyprotectChange,
-      easyprotectRemove: this.easyprotectRemove,
-      recycleChange: this.recycleChange
-    });
-  }
-  async RemoveProduct(event) {
-    const id = event.detail;
-    const data = await this.ProductLoadingWrapper(async () => {
-      return this.fetch(this.productRemove, { "id": id });
-    });
-    if (data) {
-      if (data.products.length == 0)
-        document.location.reload();
-      else
-        this.ShowMessageFromData("Błąd usuwania produktu", data, async (cleanedData) => {
-          this.update(cleanedData);
-          if ('discount' in cleanedData == false)
-            this.RemoveDiscount();
-        });
-    }
-    const product = document.querySelector(`ks-cart-product[ikey="${id}"]`);
-    if (product)
-      product.ResetLoading();
-  }
-  async ProductCount(event) {
-    const id = event.detail[0];
-    const count = event.detail[1];
-    const last = event.detail[2];
-    if (this.lastProductCountCall[id]) {
-      this.lastProductCountCall[id] = () => this.ProductCountCall(id, count, last);
-    }
-    else {
-      this.lastProductCountCall[id] = () => { };
-      this.ProductCountCall(id, count, last).then(() => {
-        if (this.lastProductCountCall[id]) {
-          this.lastProductCountCall[id]();
-          this.lastProductCountCall[id] = undefined;
-        }
-      });
-    }
-  }
-  GetCorrectedProductAmounts(id, amount, maxAmount) {
-    const products = store.get("products");
-    products[id].amount = amount;
-    if (maxAmount)
-      products[id].maxAmount = maxAmount;
-    return products;
-  }
-  GetDataWithoutProducts(data) {
-    const dataWithoutProducts = data;
-    delete dataWithoutProducts.products;
-    return dataWithoutProducts;
-  }
-  SetAmount(amount, querySelector) {
-    console.log("test");
-    const component = document.querySelector(querySelector);
-    if (component && 'SetAmount' in component)
-      component.SetAmount(amount);
-  }
-  async AddDeal(event) {
-    var _a;
-    const id = event.detail;
-    store.set("loadingDeals", true);
-    const data = await this.fetch(this.addDeal, { "id": id });
-    store.set("loadingDeals", false);
-    if (!data || 'error' in data) {
-      this.messagePopup.show("Błąd dodawania gratisu", data.error.message);
-      return;
-    }
-    else
-      await this.update(data);
-    for (const key in store.get('products')) {
-      const product = store.get('products')[key];
-      const spinner = document.querySelector(`ks-cart-product[product-id="${product.id}"] ks-cart-spinner`);
-      (_a = spinner) === null || _a === void 0 ? void 0 : _a.SetAmount(product.amount);
-    }
-  }
-  async CountryChange(event) {
-    const code = event.detail;
-    this.StartLoading(`ks-cart-select-shipping`);
-    this.StartLoading(`ks-cart-select-payment`);
-    this.update(await this.fetch(this.countryChange, { "data": code }));
-    this.ResetLoading(`ks-cart-select-shipping`);
-    this.ResetLoading(`ks-cart-select-payment`);
-  }
-  async ShippingChange(event) {
-    const id = event.detail;
-    this.StartLoading(`ks-cart-select-payment`);
-    this.update(await this.fetch(this.shippingChange, { "data": id.toString() }));
-    this.ResetLoading(`ks-cart-select-payment`);
-  }
-  async PaymentChange(event) {
-    const id = event.detail;
-    this.update(await this.fetch(this.paymentChange, { "data": id.toString() }));
-  }
-  async DiscountRemove() {
-    await this.update(await this.fetch(this.discountRemove));
-    this.RemoveDiscount();
-  }
-  async DiscountCodeAdd(event) {
-    const code = event.detail;
-    const data = await this.fetch(this.discountCode, { "data": code });
-    this.ShowMessageFromData("Błąd dodawania kodu", data, (pData) => {
-      this.update(pData);
-    });
-    this.ResetLoading(`ks-cart-discount-code`);
-  }
-  async DiscountPointsAdd(event) {
-    const points = event.detail;
-    const data = await this.fetch(this.discountPoints, { "data": points.toString() });
-    this.ScrollToElement('ks-cart-discount-container ks-cart-heading');
-    this.update(data);
-    this.ResetLoading(`ks-cart-discount-points`);
-  }
-  ;
-  StartLoading(querySelector) {
-    const component = document.querySelector(querySelector);
-    if (component && 'StartLoading' in component)
-      component.StartLoading();
-  }
-  ResetLoading(querySelector) {
-    const component = document.querySelector(querySelector);
-    if (component && 'ResetLoading' in component)
-      component.ResetLoading();
-  }
-  ScrollToElement(querySelector) {
-    const heading = document.querySelectorAll(querySelector);
-    let scrollAmount = 0;
-    if (heading.length == 2)
-      scrollAmount = heading[1].getBoundingClientRect().top - heading[0].getBoundingClientRect().top;
-    if (scrollAmount)
-      window.scrollBy(0, -scrollAmount);
-  }
-  RemoveDiscount() {
-    store.set("discount", {});
-  }
-  ShowMessageFromData(name, data, callback) {
-    if ('message' in data) {
-      this.messagePopup.show(name, data.message);
-      delete data.message;
-      // Update state after modal animation finishes.
-      setTimeout(() => {
-        callback(data);
-      }, 200);
-    }
-    else
-      callback(data);
-  }
-  async ProductLoadingWrapper(func) {
-    store.set("loadingProducts", store.get("loadingProducts") + 1);
-    const output = await func();
-    store.set("loadingProducts", store.get("loadingProducts") - 1);
-    return output;
-  }
-  async fetch(url, formProperties) {
-    store.set("loading", store.get("loading") + 1);
-    return formfetch(url, formProperties)
-      .then(response => response.json())
-      .then(json => {
-      store.set("loading", store.get("loading") - 1);
-      return json;
-    })
-      .catch(error => {
-      store.set("loading", store.get("loading") - 1);
-      this.errorPopup.show(error);
-      return {};
-    });
-  }
-  async update(data) {
-    Object.keys(data).map(key => {
-      store.set(key, data[key]);
-    });
-  }
-  render() {
-    return hAsync("slot", null);
-  }
-  static get style() { return cartCss; }
-  static get cmpMeta() { return {
-    "$flags$": 4,
-    "$tagName$": "ks-cart",
-    "$members$": {
-      "dataId": [1, "data-id"],
-      "api": [1],
-      "productRemove": [1, "product-remove"],
-      "productCount": [1, "product-count"],
-      "addDeal": [1, "add-deal"],
-      "countryChange": [1, "country-change"],
-      "shippingChange": [1, "shipping-change"],
-      "paymentChange": [1, "payment-change"],
-      "discountCode": [1, "discount-code"],
-      "discountPoints": [1, "discount-points"],
-      "discountRemove": [1, "discount-remove"],
-      "easyprotectChange": [1, "easyprotect-change"],
-      "easyprotectRemove": [1, "easyprotect-remove"],
-      "recycleChange": [1, "recycle-change"]
-    },
-    "$listeners$": [[0, "removeProduct", "RemoveProduct"], [0, "productCount", "ProductCount"], [0, "addDeal", "AddDeal"], [0, "countryChange", "CountryChange"], [0, "shippingChange", "ShippingChange"], [0, "paymentChange", "PaymentChange"], [0, "discountRemove", "DiscountRemove"], [0, "discountCodeAdd", "DiscountCodeAdd"], [0, "discountPointsAdd", "DiscountPointsAdd"]],
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
 
 const cartButtonsCss = "ks-cart-buttons{display:block}ks-cart-buttons>.confirm{-ms-flex:1;flex:1;width:100%;font-size:28px;font-weight:700;padding:20px}";
 
@@ -12887,11 +12594,11 @@ class CartButtons {
     }
   }
   componentDidLoad() {
-    this.LoadingWatcher(store.get("loading"));
-    store.onChange("loading", (loading) => this.LoadingWatcher(loading));
+    this.LoadingWatcher(cart.get("loading"));
+    cart.onChange("loading", (loading) => this.LoadingWatcher(loading));
   }
   async clickHandler() {
-    if (!store.get("loading")) {
+    if (!cart.get("loading")) {
       const shippingSelect = document.querySelector("ks-cart-select-shipping");
       const paymentSelect = document.querySelector("ks-cart-select-payment");
       const shippingValid = await shippingSelect.Validate();
@@ -12908,7 +12615,7 @@ class CartButtons {
     }
   }
   render() {
-    return (hAsync("button", { class: "confirm uk-button uk-button-danger ks-text-decorated", onClick: () => this.clickHandler() }, this.loadingDelayed && store.get("loading") ?
+    return (hAsync("button", { class: "confirm uk-button uk-button-danger ks-text-decorated", onClick: () => this.clickHandler() }, this.loadingDelayed && cart.get("loading") ?
       hAsync("div", { class: "uk-animation-fade", "uk-spinner": true }) :
       hAsync("span", null, "DO KASY")));
   }
@@ -12933,6 +12640,7 @@ class CartCountrySelect {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.countryChange = createEvent(this, "countryChange", 7);
+    this.heading = "";
   }
   ChangeHandler(event) {
     const target = event.target;
@@ -12940,16 +12648,18 @@ class CartCountrySelect {
   }
   render() {
     return [
-      hAsync("ks-cart-heading", null, "WYSY\u0141KA I P\u0141ATNO\u015A\u0106"),
-      hAsync("div", { class: "select" }, hAsync("div", { class: "icons" }, hAsync("span", { "uk-icon": "icon: world; ratio: 1.2;" }), hAsync("span", { "uk-icon": "icon: triangle-down; ratio: 1.2;" })), hAsync("select", { onChange: (ev) => this.ChangeHandler(ev) }, hAsync("slot", null)))
+      hAsync("ks-cart-heading", null, this.heading),
+      hAsync("div", { class: "select" }, hAsync("div", { class: "icons" }, hAsync("span", { "uk-icon": "icon: world; ratio: 1.2;" }), hAsync("span", { "uk-icon": "icon: triangle-down; ratio: 1.2;" })), hAsync("select", { onChange: (ev) => this.ChangeHandler(ev) }, cart.get('countries').map(country => hAsync("option", { value: country.value, selected: country === null || country === void 0 ? void 0 : country.selected }, country.name))))
     ];
   }
   get root() { return getElement(this); }
   static get style() { return cartCountrySelectCss; }
   static get cmpMeta() { return {
-    "$flags$": 4,
+    "$flags$": 0,
     "$tagName$": "ks-cart-country-select",
-    "$members$": undefined,
+    "$members$": {
+      "heading": [1]
+    },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": []
@@ -12970,8 +12680,8 @@ class CartDeal {
   render() {
     return [
       hAsync("a", { href: this.link }, hAsync("div", { class: "image" }, hAsync("div", { class: "circle center" }, hAsync("ks-img", { src: this.img, alt: this.name, vertical: true, center: true })), hAsync("svg", { class: "fx fx1 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "80", fill: "transparent", stroke: "white", "stroke-width": "3", "stroke-dasharray": "50, 32" })), hAsync("svg", { class: "fx fx2 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "88", fill: "transparent", stroke: "white", "stroke-width": "3", "stroke-dasharray": "50,59" })), hAsync("svg", { class: "fx fx3 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "96", fill: "transparent", stroke: "white", "stroke-width": "3", "stroke-dasharray": "30,30" })), hAsync("svg", { class: "fx fx4 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "106", fill: "transparent", stroke: "white", "stroke-width": "3", "stroke-dasharray": "70,60" })))),
-      hAsync("div", { class: "text ks-text-decorated" }, hAsync("div", { class: "top" }, hAsync("a", { href: this.link }, this.name)), hAsync("div", { class: "bottom" }, this.price, hAsync("button", { class: "ks-text-decorated small", onClick: () => this.Add() }, store.get('loadingDeals') ? hAsync("div", { "uk-spinner": "ratio: 0.8" }) : hAsync("span", null, "DODAJ DO KOSZYKA")))),
-      hAsync("button", { class: "ks-text-decorated large", onClick: () => this.Add() }, store.get('loadingDeals') ? hAsync("div", { "uk-spinner": "ratio: 0.8" }) : hAsync("span", null, "DODAJ DO KOSZYKA"))
+      hAsync("div", { class: "text ks-text-decorated" }, hAsync("div", { class: "top" }, hAsync("a", { href: this.link }, this.name)), hAsync("div", { class: "bottom" }, this.price, hAsync("button", { class: "ks-text-decorated small", onClick: () => this.Add() }, cart.get('loadingDeals') ? hAsync("div", { "uk-spinner": "ratio: 0.8" }) : hAsync("span", null, "DODAJ DO KOSZYKA")))),
+      hAsync("button", { class: "ks-text-decorated large", onClick: () => this.Add() }, cart.get('loadingDeals') ? hAsync("div", { "uk-spinner": "ratio: 0.8" }) : hAsync("span", null, "DODAJ DO KOSZYKA"))
     ];
   }
   static get style() { return dealCss; }
@@ -12998,8 +12708,8 @@ class CartDealContainer {
   }
   render() {
     return [
-      store.get("dealGroups").map((group) => hAsync("ks-cart-deal-group", { key: group.name, name: group.name, deals: group.deals })),
-      store.get("deals").map((product) => hAsync("ks-cart-deal", { key: product.id, ikey: product.id, name: product.name, link: product.link, img: product.img, price: product.price }))
+      cart.get("dealGroups").map((group) => hAsync("ks-cart-deal-group", { key: group.name, name: group.name, deals: group.deals })),
+      cart.get("deals").map((product) => hAsync("ks-cart-deal", { key: product.id, ikey: product.id, name: product.name, link: product.link, img: product.img, price: product.price }))
     ];
   }
   get root() { return getElement(this); }
@@ -13033,8 +12743,8 @@ class CartDealGroup {
   render() {
     return [
       hAsync("a", { href: this.currentDeal.link }, hAsync("div", { class: "image" }, hAsync("div", { class: "circle center" }, hAsync("ks-img", { src: this.currentDeal.img, alt: this.name, vertical: true, center: true })), hAsync("svg", { class: "fx fx1 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "80", fill: "transparent", stroke: "white", "stroke-width": "3", "stroke-dasharray": "50, 32" })), hAsync("svg", { class: "fx fx2 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "88", fill: "transparent", stroke: "white", "stroke-width": "3", "stroke-dasharray": "50,59" })), hAsync("svg", { class: "fx fx3 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "96", fill: "transparent", stroke: "white", "stroke-width": "3", "stroke-dasharray": "30,30" })), hAsync("svg", { class: "fx fx4 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "106", fill: "transparent", stroke: "white", "stroke-width": "3", "stroke-dasharray": "70,60" })))),
-      hAsync("div", { class: "text ks-text-decorated" }, hAsync("div", { class: "top" }, hAsync("a", { href: this.currentDeal.link }, this.name), hAsync("div", { class: "variants" }, hAsync("label", null, "Wybierz kolor:"), hAsync("select", { class: "ks-text-decorated", onChange: event => this.change(event.target) }, this.deals.map(deal => hAsync("option", null, deal.name))))), hAsync("div", { class: "bottom" }, this.currentDeal.price, hAsync("button", { class: "ks-text-decorated small", onClick: () => this.Add() }, store.get('loadingDeals') ? hAsync("div", { "uk-spinner": "ratio: 0.8" }) : hAsync("span", null, "DODAJ DO KOSZYKA")))),
-      hAsync("button", { class: "ks-text-decorated large", onClick: () => this.Add() }, store.get('loadingDeals') ? hAsync("div", { "uk-spinner": "ratio: 0.8" }) : hAsync("span", null, "DODAJ DO KOSZYKA"))
+      hAsync("div", { class: "text ks-text-decorated" }, hAsync("div", { class: "top" }, hAsync("a", { href: this.currentDeal.link }, this.name), hAsync("div", { class: "variants" }, hAsync("label", null, "Wybierz kolor:"), hAsync("select", { class: "ks-text-decorated", onChange: event => this.change(event.target) }, this.deals.map(deal => hAsync("option", null, deal.name))))), hAsync("div", { class: "bottom" }, this.currentDeal.price, hAsync("button", { class: "ks-text-decorated small", onClick: () => this.Add() }, cart.get('loadingDeals') ? hAsync("div", { "uk-spinner": "ratio: 0.8" }) : hAsync("span", null, "DODAJ DO KOSZYKA")))),
+      hAsync("button", { class: "ks-text-decorated large", onClick: () => this.Add() }, cart.get('loadingDeals') ? hAsync("div", { "uk-spinner": "ratio: 0.8" }) : hAsync("span", null, "DODAJ DO KOSZYKA"))
     ];
   }
   static get style() { return dealGroupCss; }
@@ -13127,10 +12837,10 @@ class CartDiscountContainer {
     this.disablePoints = false;
   }
   render() {
-    const discount = store.get("discount");
-    const points = store.get("points");
-    const pointsForOrder = store.get("pointsForOrder");
-    const productValue = store.get("productValue");
+    const discount = cart.get("discount");
+    const points = cart.get("points");
+    const pointsForOrder = cart.get("pointsForOrder");
+    const productValue = cart.get("productValue");
     if (Object.keys(discount).length !== 0) {
       return (hAsync("nav", { class: "uk-animation-fade" }, hAsync("ks-cart-heading", null, discount.heading), hAsync("ks-cart-discount-ticket", { name: discount.name, value: discount.value })));
     }
@@ -13372,11 +13082,11 @@ class CartEasyprotect {
   }
   componentWillLoad() {
     const update = () => {
-      this.insured = Object.entries(store.get("insured"));
-      this.enabled = Object.keys(store.get("easyprotect")).length > 0;
+      this.insured = Object.entries(cart.get("insured"));
+      this.enabled = Object.keys(cart.get("easyprotect")).length > 0;
     };
-    store.onChange("insured", update);
-    store.onChange("easyprotect", update);
+    cart.onChange("insured", update);
+    cart.onChange("easyprotect", update);
     update();
   }
   render() {
@@ -13400,6 +13110,215 @@ class CartEasyprotect {
   }; }
 }
 
+async function removeProduct(id) {
+  const data = await ProductLoadingWrapper(async () => {
+    return fetch$1(cart.get('api').productRemove, { "id": id });
+  });
+  if (data) {
+    if (data.products.length == 0)
+      document.location.reload();
+    else
+      ShowMessageFromData("Błąd usuwania produktu", data, async (cleanedData) => {
+        update(cleanedData);
+        if ('discount' in cleanedData == false)
+          this.RemoveDiscount();
+      });
+  }
+  const product = document.querySelector(`ks-cart-product[ikey="${id}"]`);
+  if (product)
+    product.ResetLoading();
+}
+var lastProductCountCall = {};
+async function productCount(id, count, last) {
+  if (lastProductCountCall[id]) {
+    lastProductCountCall[id] = () => ProductCountCall(id, count, last);
+  }
+  else {
+    lastProductCountCall[id] = () => { };
+    ProductCountCall(id, count, last).then(() => {
+      if (lastProductCountCall[id]) {
+        lastProductCountCall[id]();
+        lastProductCountCall[id] = undefined;
+      }
+    });
+  }
+}
+async function ProductCountCall(id, current, last) {
+  const data = await ProductLoadingWrapper(async () => {
+    return fetch$1(cart.get('api').productCount, {
+      "id": id,
+      "ilosc": current.toString()
+    });
+  });
+  if (data) {
+    ShowMessageFromData("Błąd ilości produktu", data, async (cleanedData) => {
+      if ('error' in cleanedData) {
+        messagePopup().show("Błąd ilości produktu", cleanedData.error.message);
+        cart.set("products", GetCorrectedProductAmounts(id, cleanedData.error.amount, cleanedData.error.maxAmount));
+      }
+      else
+        await update(cleanedData);
+      if ('discount' in cleanedData == false)
+        RemoveDiscount();
+    });
+  }
+  else {
+    cart.set("products", GetCorrectedProductAmounts(id, last));
+    this.SetAmount(last, `ks-cart-product[ikey="${id}"] ks-cart-spinner`);
+  }
+}
+function GetCorrectedProductAmounts(id, amount, maxAmount) {
+  const products = cart.get("products");
+  products[id].amount = amount;
+  if (maxAmount)
+    products[id].maxAmount = maxAmount;
+  return products;
+}
+/*function GetDataWithoutProducts(data: any) {
+    const dataWithoutProducts = data;
+    delete dataWithoutProducts.products;
+    return dataWithoutProducts;
+}
+
+function SetAmount(amount: number, querySelector: string) {
+    console.log("test");
+    const component = document.querySelector(querySelector) as any;
+    if(component && 'SetAmount' in component)
+        component.SetAmount(amount);
+}*/
+async function addDeal(id) {
+  var _a;
+  cart.set("loadingDeals", true);
+  const data = await fetch$1(cart.get('api').addDeal, { "id": id });
+  cart.set("loadingDeals", false);
+  if (!data || 'error' in data) {
+    messagePopup().show("Błąd dodawania gratisu", data.error.message);
+    return;
+  }
+  else
+    await update(data);
+  for (const key in cart.get('products')) {
+    const product = cart.get('products')[key];
+    const spinner = document.querySelector(`ks-cart-product[product-id="${product.id}"] ks-cart-spinner`);
+    (_a = spinner) === null || _a === void 0 ? void 0 : _a.SetAmount(product.amount);
+  }
+}
+async function countryChange(code) {
+  StartLoading(`ks-cart-select-shipping`);
+  StartLoading(`ks-cart-select-payment`);
+  update(await fetch$1(cart.get('api').countryChange, { "data": code }));
+  ResetLoading(`ks-cart-select-shipping`);
+  ResetLoading(`ks-cart-select-payment`);
+}
+async function shippingChange(id) {
+  StartLoading(`ks-cart-select-payment`);
+  update(await fetch$1(cart.get('api').shippingChange, { "data": id.toString() }));
+  ResetLoading(`ks-cart-select-payment`);
+}
+async function paymentChange(id) {
+  update(await fetch$1(cart.get('api').paymentChange, { "data": id.toString() }));
+}
+async function discountRemove() {
+  update(await fetch$1(cart.get('api').discountRemove));
+  RemoveDiscount();
+}
+function RemoveDiscount() {
+  cart.set("discount", {});
+}
+async function discountCodeAdd(code) {
+  const data = await fetch$1(cart.get('api').discountCode, { "data": code });
+  ShowMessageFromData("Błąd dodawania kodu", data, (pData) => {
+    update(pData);
+  });
+  ResetLoading(`ks-cart-discount-code`);
+}
+async function discountPointsAdd(points) {
+  const data = await fetch$1(cart.get('api').discountPoints, { "data": points.toString() });
+  ScrollToElement('ks-cart-discount-container ks-cart-heading');
+  update(data);
+  ResetLoading(`ks-cart-discount-points`);
+}
+function ScrollToElement(querySelector) {
+  const heading = document.querySelectorAll(querySelector);
+  let scrollAmount = 0;
+  if (heading.length == 2)
+    scrollAmount = heading[1].getBoundingClientRect().top - heading[0].getBoundingClientRect().top;
+  if (scrollAmount)
+    window.scrollBy(0, -scrollAmount);
+}
+async function easyprotectChange(insured) {
+  const api = cart.get("api").easyprotectChange;
+  loading();
+  await jsonfetch(api, insured)
+    .then(response => response.json())
+    .then(json => update(json));
+  loaded();
+}
+async function easyprotectRemove(id) {
+  const api = cart.get("api").easyprotectRemove;
+  loading();
+  await formfetch(api, { "id": id })
+    .then(response => response.json())
+    .then(json => update(json));
+  loaded();
+}
+function StartLoading(querySelector) {
+  const component = document.querySelector(querySelector);
+  if (component && 'StartLoading' in component)
+    component.StartLoading();
+}
+function ResetLoading(querySelector) {
+  const component = document.querySelector(querySelector);
+  if (component && 'ResetLoading' in component)
+    component.ResetLoading();
+}
+async function ShowMessageFromData(name, data, callback) {
+  if ('message' in data) {
+    messagePopup().show(name, data.message);
+    delete data.message;
+    // Update state after modal animation finishes.
+    setTimeout(() => {
+      callback(data);
+    }, 200);
+  }
+  else
+    callback(data);
+}
+async function ProductLoadingWrapper(func) {
+  cart.set("loadingProducts", cart.get("loadingProducts") + 1);
+  const output = await func();
+  cart.set("loadingProducts", cart.get("loadingProducts") - 1);
+  return output;
+}
+async function fetch$1(url, formProperties) {
+  loading();
+  return formfetch(url, formProperties)
+    .then(response => response.json())
+    .then(json => {
+    loaded();
+    return json;
+  })
+    .catch(error => {
+    loaded();
+    this.errorPopup.show(error);
+    return {};
+  });
+}
+function update(data) {
+  Object.keys(data).map(key => {
+    cart.set(key, data[key]);
+  });
+}
+function loading() {
+  cart.set("loading", cart.get("loading") + 1);
+}
+function loaded() {
+  cart.set("loading", cart.get("loading") - 1);
+}
+function messagePopup() {
+  return document.querySelector('ks-message-popup');
+}
+
 const cartEasyprotectDialogCss = "ks-cart-easyprotect-dialog{display:block}ks-cart-easyprotect-dialog .hidden{display:none}ks-cart-easyprotect-dialog .content{background-color:var(--card-background);-webkit-box-shadow:var(--big-shadow);box-shadow:var(--big-shadow);color:var(--card-text-color);position:relative;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:720px;width:100%}ks-cart-easyprotect-dialog .content h2{font-size:24px;font-weight:700;text-align:center;margin-top:30px}ks-cart-easyprotect-dialog .content p{text-align:center;margin:10px 10px 20px 10px}ks-cart-easyprotect-dialog .content>.products .items{padding:10px 20px;max-height:320px;overflow-y:auto}ks-cart-easyprotect-dialog .content>.warranty .items{padding:0 20px 0 20px;max-height:270px;overflow-y:auto}ks-cart-easyprotect-dialog .content.hidden{display:none}ks-cart-easyprotect-dialog .content.hide{opacity:0;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-cart-easyprotect-dialog ks-button{z-index:20;position:relative;margin-top:20px;-webkit-box-shadow:0 2px 20px rgba(255, 255, 255, 0.3);box-shadow:0 2px 20px rgba(255, 255, 255, 0.3);border-top:#8057c1 1px solid}ks-cart-easyprotect-dialog ks-button[disabled]{border-top:#bebebe 1px solid}ks-cart-easyprotect-dialog ks-button button{background-color:var(--easyprotect-color);border-color:var(--easyprotect-color)}ks-cart-easyprotect-dialog ks-button button:hover{background-color:var(--easyprotect-color-hover) !important;border-color:var(--easyprotect-color-hover) !important}ks-cart-easyprotect-dialog ks-button button:active{background-color:var(--easyprotect-color-active) !important;border-color:var(--easyprotect-color-active) !important}ks-cart-easyprotect-dialog ks-button[disabled] button{background-color:#e2e2e2 !important;border-color:#e2e2e2 !important;color:#3d3d3d !important;cursor:auto}ks-cart-easyprotect-dialog ks-overlay .content{-webkit-animation:0.4s vertical-swipe-out 1;animation:0.4s vertical-swipe-out 1}ks-cart-easyprotect-dialog ks-overlay.active .content{-webkit-animation:0.4s vertical-swipe-in 1;animation:0.4s vertical-swipe-in 1}@media (max-width: 720px){ks-cart-easyprotect-dialog .content{height:100%}ks-cart-easyprotect-dialog .content>.products,ks-cart-easyprotect-dialog .content>.warranty{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;height:100%;max-height:100%;padding:0}ks-cart-easyprotect-dialog .content>.products>.items,ks-cart-easyprotect-dialog .content>.warranty>.items{padding:0 10px 0 10px;max-height:none}ks-cart-easyprotect-dialog ks-button{margin-top:auto}ks-cart-easyprotect-dialog .content p{margin:5px 10px 15px 10px}}@media (max-width: 420px){ks-cart-easyprotect-dialog .content h2{font-size:20px;margin:20px 10px 10px 10px}ks-cart-easyprotect-dialog .content p{font-size:15px}}ks-cart-easyprotect-dialog .content .close,ks-cart-easyprotect-dialog .content .back{position:absolute;top:20px;z-index:20;border-radius:50px;padding:10px;-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-cart-easyprotect-dialog .content .close:hover,ks-cart-easyprotect-dialog .content .back:hover{background-color:#f2f2f2}ks-cart-easyprotect-dialog .content .close:active,ks-cart-easyprotect-dialog .content .back:active{background-color:#dbdbdb}ks-cart-easyprotect-dialog .content .close{right:20px}ks-cart-easyprotect-dialog .content .back{left:20px}@media (max-width: 420px){ks-cart-easyprotect-dialog .content .close,ks-cart-easyprotect-dialog .content .back{padding:3px;top:17px}ks-cart-easyprotect-dialog .content .close{right:8px}ks-cart-easyprotect-dialog .content .back{left:8px}}ks-cart-easyprotect-dialog .content .loading{position:absolute;top:0;bottom:0;left:0;right:0;z-index:100;background-color:white;-webkit-animation:fade-in 0.3s ease;animation:fade-in 0.3s ease}";
 
 class CartEasyprotectDialog {
@@ -13413,18 +13332,18 @@ class CartEasyprotectDialog {
       this.updateEligible();
     };
     update();
-    store.onChange("easyprotect", update);
-    store.onChange("insured", update);
+    cart.onChange("easyprotect", update);
+    cart.onChange("insured", update);
   }
   componentDidLoad() {
     this.overlay = this.root.querySelector("ks-overlay");
   }
   updateEligible() {
-    const insured = Object.keys(store.get("insured"));
-    const available = Object.keys(store.get("easyprotect"));
+    const insured = Object.keys(cart.get("insured"));
+    const available = Object.keys(cart.get("easyprotect"));
     this.eligible = available
-      .filter(id => !insured.includes(id) && store.get('products')[id] !== undefined)
-      .map(id => store.get('products')[id]);
+      .filter(id => !insured.includes(id) && cart.get('products')[id] !== undefined)
+      .map(id => cart.get('products')[id]);
   }
   updateStep() {
     if (this.eligible.length == 1) {
@@ -13447,7 +13366,7 @@ class CartEasyprotectDialog {
     return hAsync("div", { class: "products" }, hAsync("slot", { name: "products" }), hAsync("div", { class: "items" }, this.eligible.map(item => hAsync("ks-cart-easyprotect-product", { image: item.img, name: item.name, warranty: item.warranty, onClick: () => this.toggle(item.id), active: this.active.includes(item.id) }))), hAsync("ks-button", { tall: true, name: "Przejd\u017A dalej", onClick: () => this.addProducts(), disabled: this.active.length <= 0 }), hAsync("div", { class: "close", onClick: () => this.hide() }, hAsync("ks-icon", { name: "x", size: 1.2 })));
   }
   warranty() {
-    const chosen = Object.keys(store.get("easyprotect"))
+    const chosen = Object.keys(cart.get("easyprotect"))
       .filter(id => this.active.includes(id));
     return [
       hAsync("div", { class: "warranty" }, hAsync("slot", { name: "warranty" }), hAsync("div", { class: "items" }, chosen.map(id => hAsync("ks-cart-easyprotect-warranty", { "product-id": id }))), hAsync("ks-button", { tall: true, name: "Dodaj gwarancj\u0119", onClick: () => this.addWarranty(), disabled: this.active.length <= 0 }), hAsync("div", { class: "close", onClick: () => this.hide() }, hAsync("ks-icon", { name: "x", size: 1.2 })), this.eligible.length > 1 ?
@@ -13575,9 +13494,9 @@ class CartEasyprotectWarranty {
   componentWillLoad() {
     if (this.productId) {
       if (!this.active)
-        this.active = Object.keys(store.get("easyprotect")[this.productId])[0];
+        this.active = Object.keys(cart.get("easyprotect")[this.productId])[0];
       this.update();
-      store.onChange("easyprotect", () => this.update());
+      cart.onChange("easyprotect", () => this.update());
     }
   }
   componentWillUpdate() {
@@ -13587,10 +13506,10 @@ class CartEasyprotectWarranty {
     }
   }
   update() {
-    if (store.get("easyprotect")[this.productId] === undefined)
+    if (cart.get("easyprotect")[this.productId] === undefined)
       return;
-    this.name = store.get("products")[this.productId].name;
-    this.options = store.get("easyprotect")[this.productId];
+    this.name = cart.get("products")[this.productId].name;
+    this.options = cart.get("easyprotect")[this.productId];
     this.entries = Object.entries(this.options);
     this.price = this.options[this.active];
   }
@@ -13808,11 +13727,11 @@ class CartProductContainer {
     registerInstance(this, hostRef);
   }
   render() {
-    const products = Object.entries(store.get("products"));
+    const products = Object.entries(cart.get("products"));
     return [
       hAsync("ks-cart-product-heading", { removable: true }),
       products.map(([id, product]) => hAsync("ks-cart-product", { removable: true, key: id, "product-id": id, name: product.name, link: product.link, img: product.img, price: product.price, amount: product.amount, "max-amount": product.maxAmount, "shipping-time": product.shippingTime })),
-      hAsync("ks-cart-product-price", { amount: store.get("productAmount"), price: store.get("productValue"), loading: store.get("loadingProducts"), "shipping-time": store.get("totalShippingTime") })
+      hAsync("ks-cart-product-price", { amount: cart.get("productAmount"), price: cart.get("productValue"), loading: cart.get("loadingProducts"), "shipping-time": cart.get("totalShippingTime") })
     ];
   }
   get root() { return getElement(this); }
@@ -13934,7 +13853,7 @@ class CartProgressBar {
     this.numberPlacement = false;
   }
   componentWillLoad() {
-    this.shippingProgress = store.get("shippingProgress");
+    this.shippingProgress = cart.get("shippingProgress");
     this.resizeHandler();
     if (!this.shippingProgress) {
       this.root.hidden = true;
@@ -13946,7 +13865,7 @@ class CartProgressBar {
   }
   resizeHandler() {
     if (this.shippingProgress) {
-      const barWidth = Math.min(store.get("productValue") / this.shippingProgress.threshold * 100, 100);
+      const barWidth = Math.min(cart.get("productValue") / this.shippingProgress.threshold * 100, 100);
       this.numberPlacement = (barWidth / 100 * window.innerWidth) > 200;
     }
   }
@@ -13954,7 +13873,7 @@ class CartProgressBar {
     this.componentWillLoad();
   }
   render() {
-    const productValue = store.get("productValue");
+    const productValue = cart.get("productValue");
     const data = this.shippingProgress;
     if (!data)
       return null;
@@ -13995,9 +13914,9 @@ class CartRecycle {
   }
   componentWillLoad() {
     const update = () => {
-      this.enabled = store.get("recycle").length > 0;
+      this.enabled = cart.get("recycle").length > 0;
     };
-    store.onChange("recycle", update);
+    cart.onChange("recycle", update);
     update();
   }
   send(event) {
@@ -14007,7 +13926,7 @@ class CartRecycle {
     const recycle_form = this.root.querySelector("form");
     event.preventDefault();
     const body = new FormData(recycle_form);
-    fetch(store.get('api').recycleChange, {
+    fetch(cart.get('api').recycleChange, {
       method: 'POST',
       headers: recycle_headers,
       credentials: "same-origin",
@@ -14015,7 +13934,7 @@ class CartRecycle {
     });
   }
   render() {
-    return hAsync(Host, { class: !this.enabled ? "hidden" : "" }, hAsync("slot", null), hAsync("form", { method: "post", name: "recycle", onChange: e => this.send(e) }, store.get("recycle").map(product => hAsync("ks-input-check", { name: `recycle[${product.id}]`, value: product.name, label: product.name, checked: product.checked }))));
+    return hAsync(Host, { class: !this.enabled ? "hidden" : "" }, hAsync("slot", null), hAsync("form", { method: "post", name: "recycle", onChange: e => this.send(e) }, cart.get("recycle").map(product => hAsync("ks-input-check", { name: `recycle[${product.id}]`, value: product.name, label: product.name, checked: product.checked }))));
   }
   get root() { return getElement(this); }
   static get style() { return cartRecycleCss; }
@@ -14112,10 +14031,10 @@ class CartSelectPayment {
   }
   render() {
     if (this.valid)
-      this.active = store.get("activePayment");
+      this.active = cart.get("activePayment");
     if (this.loading)
       return (hAsync("div", { class: "center" }, hAsync("nav", { "uk-spinner": true })));
-    const activeItem = store.get("payment").find((value) => {
+    const activeItem = cart.get("payment").find((value) => {
       return value.id == this.active;
     });
     return [
@@ -14125,7 +14044,7 @@ class CartSelectPayment {
         } }, hAsync("div", { class: "selectSlot" }, this.active == -1 ?
         hAsync("ks-cart-select-item", { name: "Wybierz metod\u0119 p\u0142atno\u015Bci" }) :
         hAsync("ks-cart-select-item", { logo: activeItem.logo, name: activeItem.name, price: activeItem.price })), hAsync("div", { class: "selectIcon" }, hAsync("span", { "uk-icon": "icon: triangle-down; ratio: 1.3" }))),
-      hAsync("div", { class: "items", hidden: !this.toggled }, store.get("payment").map((item) => hAsync("ks-cart-select-item", { key: item.id, logo: item.logo, name: item.name, price: item.price, color: item.color, onClick: () => this.ActivateItem(item.id) })))
+      hAsync("div", { class: "items", hidden: !this.toggled }, cart.get("payment").map((item) => hAsync("ks-cart-select-item", { key: item.id, logo: item.logo, name: item.name, price: item.price, color: item.color, onClick: () => this.ActivateItem(item.id) })))
     ];
   }
   get root() { return getElement(this); }
@@ -14187,7 +14106,7 @@ class CartSelectShipping {
     this.root.classList.add("ks-cart-select");
   }
   ActivateItem(id) {
-    if (id != store.get("activeShipping"))
+    if (id != cart.get("activeShipping"))
       this.shippingChange.emit(id);
     this.toggled = false;
     this.active = id;
@@ -14196,10 +14115,10 @@ class CartSelectShipping {
   }
   render() {
     if (this.valid)
-      this.active = store.get("activeShipping");
+      this.active = cart.get("activeShipping");
     if (this.loading)
       return (hAsync("div", { class: "center" }, hAsync("nav", { "uk-spinner": true })));
-    const activeItem = store.get("shipping").find((value) => {
+    const activeItem = cart.get("shipping").find((value) => {
       return value.id == this.active;
     });
     return [
@@ -14209,7 +14128,7 @@ class CartSelectShipping {
         } }, hAsync("div", { class: "selectSlot" }, this.active == -1 ?
         hAsync("ks-cart-select-item", { name: "Wybierz metod\u0119 wysy\u0142ki" }) :
         hAsync("ks-cart-select-item", { logo: activeItem.logo, name: activeItem.name, price: activeItem.price })), hAsync("div", { class: "selectIcon" }, hAsync("span", { "uk-icon": "icon: triangle-down; ratio: 1.3" }))),
-      hAsync("div", { class: "items", hidden: !this.toggled }, store.get("shipping").map((item) => hAsync("ks-cart-select-item", { key: item.id, logo: item.logo, name: item.name, price: item.price, color: item.color, onClick: () => this.ActivateItem(item.id) })))
+      hAsync("div", { class: "items", hidden: !this.toggled }, cart.get("shipping").map((item) => hAsync("ks-cart-select-item", { key: item.id, logo: item.logo, name: item.name, price: item.price, color: item.color, onClick: () => this.ActivateItem(item.id) })))
     ];
   }
   get root() { return getElement(this); }
@@ -14239,7 +14158,7 @@ class CartShippingMessage {
     registerInstance(this, hostRef);
   }
   render() {
-    return hAsync("ks-cart-message", { message: store.get("shippingMessage") });
+    return hAsync("ks-cart-message", { message: cart.get("shippingMessage") });
   }
   static get cmpMeta() { return {
     "$flags$": 0,
@@ -14370,11 +14289,11 @@ class CartSummaryContainer {
     registerInstance(this, hostRef);
   }
   render() {
-    const productValue = store.get("productValue").toFixed(2);
-    const totalValue = store.get("totalValue").toFixed(2);
+    const productValue = cart.get("productValue").toFixed(2);
+    const totalValue = cart.get("totalValue").toFixed(2);
     return [
       hAsync("ks-cart-summary", { text: "Warto\u015B\u0107 produkt\u00F3w:", price: productValue }),
-      store.get("otherValues").map(item => hAsync("ks-cart-summary", { text: item.name, price: item.value.toFixed(2), emphasis: item.value < 0 })),
+      cart.get("otherValues").map(item => hAsync("ks-cart-summary", { text: item.name, price: item.value.toFixed(2), emphasis: item.value < 0 })),
       hAsync("ks-cart-summary", { large: true, text: "Razem:", price: totalValue })
     ];
   }
@@ -25917,6 +25836,73 @@ class PageBase {
   }; }
 }
 
+const cartCss = "ks-page-cart{-ms-flex:1 1 0px;flex:1 1 0}ks-page-cart ks-nocontent{-ms-flex:1 1 0px;flex:1 1 0}ks-page-cart .card{display:block;padding:0px;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:1200px;width:100%;margin:20px auto;background:var(--card-background);color:var(--card-text-color);-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow)}@media screen and (max-width: 1200px){ks-page-cart .card{margin:0px auto}}ks-page-cart ks-cart-easyprotect-product>.image{padding:5px 0px;max-width:70px;max-height:70px}ks-page-cart ks-cart-discount-code ks-input-text{margin-bottom:0}ks-page-cart ks-cart-discount-code .messsage{padding:8px;-webkit-box-sizing:border-box;box-sizing:border-box}ks-page-cart .paypo-message{display:-ms-flexbox;display:flex;margin:0px 0 10px 0;-ms-flex-pack:end;justify-content:flex-end}@media screen and (max-width: 720px){ks-page-cart .paypo-message{margin:0px 0 40px 0;-ms-flex-pack:center;justify-content:center}}";
+
+class PageCart {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+  }
+  componentWillLoad() {
+    const cartDataElement = document.getElementById(this.cartData);
+    const cartData = JSON.parse(cartDataElement.innerHTML);
+    update(cartData);
+  }
+  async RemoveProduct(event) {
+    removeProduct(event.detail);
+  }
+  async ProductCount(event) {
+    productCount(...event.detail);
+  }
+  async AddDeal(event) {
+    addDeal(event.detail);
+  }
+  async CountryChange(event) {
+    countryChange(event.detail);
+  }
+  async ShippingChange(event) {
+    shippingChange(event.detail);
+  }
+  async PaymentChange(event) {
+    paymentChange(event.detail);
+  }
+  async DiscountRemove() {
+    discountRemove();
+  }
+  async DiscountCodeAdd(event) {
+    discountCodeAdd(event.detail);
+  }
+  async DiscountPointsAdd(event) {
+    discountPointsAdd(event.detail);
+  }
+  ;
+  render() {
+    const discountStrings = cart.get('discountStrings');
+    const easyprotectStrings = cart.get('easyprotectStrings');
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, Object.keys(cart === null || cart === void 0 ? void 0 : cart.get('products')).length > 0 ? hAsync("div", { class: "card" }, hAsync("ks-order-progress", { current: 0 }), (cart === null || cart === void 0 ? void 0 : cart.get('progressBar')) ? [
+      hAsync("ks-cart-progress-bar", null),
+      hAsync("br", null)
+    ] : null, hAsync("div", { class: "uk-padding@m uk-padding-small" }, hAsync("ks-cart-product-container", null)), hAsync("ks-cart-deal-container", null), easyprotectStrings ?
+      hAsync("ks-cart-easyprotect", { image: easyprotectStrings.heading, width: easyprotectStrings.width, height: easyprotectStrings.height }, hAsync("h2", null, easyprotectStrings.heading), hAsync("p", null, easyprotectStrings.description, hAsync("a", { href: easyprotectStrings.pdf, target: "_blank" }, easyprotectStrings.seeMore)), hAsync("ks-cart-easyprotect-dialog", { slot: "bottom" }, hAsync("h2", { slot: "products" }, easyprotectStrings.productsHeading), hAsync("p", { slot: "products" }, easyprotectStrings.productsMessage), hAsync("h2", { slot: "warranty" }, easyprotectStrings.warrantyHeading), hAsync("p", { slot: "warranty" }, easyprotectStrings.warrantyMessage)))
+      : null, hAsync("ks-cart-recycle", { id: "recycle" }, hAsync("h2", null, "Odbi\u00F3r zu\u017Cytego sprz\u0119tu"), hAsync("p", null, "Us\u0142uga darmowa, nie oferuje demonta\u017Cu. Odda\u0107 mo\u017Cna sprz\u0119t tego samego rodzaju i pe\u0142ni\u0105cy t\u0105 sam\u0105 funkcj\u0119 - w takiej ilo\u015Bci jak zamawiana.")), hAsync("div", { class: "uk-padding@m uk-padding-small" }, hAsync("ks-cart-country-select", { heading: "WYSY\u0141KA I P\u0141ATNO\u015A\u0106" }), hAsync("ks-cart-select-shipping", { name: "Wysylka" }), hAsync("br", null), hAsync("ks-cart-select-payment", { name: "Platnosc" }), hAsync("br", null), hAsync("ks-cart-shipping-message", null), hAsync("div", { class: "paypo-message" }, hAsync("ks-img2", { src: "/images/paypo-message.svg", width: 287, height: 72 })), hAsync("ks-cart-discount-container", { "info-message": discountStrings.infoMessage, "code-banner": discountStrings.codeBanner, "code-placeholder": discountStrings.codePlaceholder, "points-placeholder": discountStrings.pointsPlaceholder, "points-message": discountStrings.pointsMessage, "login-message": discountStrings.pointsLoggedInMessage, "no-points-heading": discountStrings.noPointsHeading, "no-points-message": discountStrings.noPointsMessage, "threshold-heading": discountStrings.thresholdHeading, "threshold-message": discountStrings.thresholdMessage, "login-url": common.get('loginLink'), "logged-in": commonDynamic.get('loggedIn'), "disable-points": !cart.get('points') }), hAsync("br", null)), hAsync("div", { class: "uk-padding@m uk-padding-small" }, hAsync("ks-cart-summary-container", null)), hAsync("ks-cart-buttons", { href: cart.get('api').order }))
+      :
+        hAsync("ks-nocontent", null, hAsync("h1", null, cart.get('noContentHeading')), hAsync("p", null, cart.get('noContentMessage'))));
+  }
+  static get style() { return cartCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-page-cart",
+    "$members$": {
+      "skipbase": [4],
+      "commonData": [1, "common-data"],
+      "commonDynamicData": [1, "common-dynamic-data"],
+      "cartData": [1, "cart-data"]
+    },
+    "$listeners$": [[0, "removeProduct", "RemoveProduct"], [0, "productCount", "ProductCount"], [0, "addDeal", "AddDeal"], [0, "countryChange", "CountryChange"], [0, "shippingChange", "ShippingChange"], [0, "paymentChange", "PaymentChange"], [0, "discountRemove", "DiscountRemove"], [0, "discountCodeAdd", "DiscountCodeAdd"], [0, "discountPointsAdd", "DiscountPointsAdd"]],
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
 const footerCss = "ks-page-footer{display:block;overflow:hidden;background-color:var(--footer-color);color:var(--footer-text-color);font-size:16px}ks-page-footer .about{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;padding:50px 70px 40px 70px;margin:auto}ks-page-footer .contact>span:first-of-type{display:block;color:var(--footer-heading-color);font-family:var(--font-emphasis);font-weight:700;font-size:18px;margin:0 0 15px 0}ks-page-footer .contact a,ks-page-footer .contact>span{display:block;text-decoration:none !important;font-size:16px;margin-bottom:5px;color:var(--footer-text-color);-webkit-transition:var(--transition-color);transition:var(--transition-color)}ks-page-footer .contact a:hover{color:var(--footer-text-color-hover)}ks-page-footer .contact a:active{color:var(--footer-text-color-active)}ks-page-footer .contact ks-icon{margin-right:5px}ks-page-footer .links{display:-ms-flexbox;display:flex;-ms-flex-pack:start;justify-content:flex-start;min-height:100px}ks-page-footer .newsletter{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-flow:column nowrap;flex-flow:column nowrap;text-align:center;padding:0 0 0 30px;-ms-flex-negative:0;flex-shrink:0}ks-page-footer .newsletter>div{font-family:var(--font-emphasis)}ks-page-footer .newsletter>div:last-of-type{font-size:48px;line-height:40px;font-weight:700;margin:5px 0 20px 0}ks-page-footer .newsletter ks-button{width:100%}ks-page-footer .portals{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;padding:20px;border-top:solid 1px #2b2b2b}ks-page-footer .portals>div{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;padding:10px}ks-page-footer .separator{width:1px;height:35px;margin:0 20px;background-color:#2b2b2b}ks-page-footer .software{background-color:var(--footer-color-darker);color:var(--footer-text-color-darker);font-size:13px;text-align:center;padding:10px}ks-page-footer .software>a{color:var(--footer-text-color-darker)}@media only screen and (max-width: 1060px){ks-page-footer .about{-ms-flex-direction:column;flex-direction:column;padding:50px 30px 40px 30px}ks-page-footer .contact{max-width:220px}ks-page-footer .links{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center}ks-page-footer .newsletter{margin-top:40px;padding:40px 0 0 0;border-top:solid 1px #2b2b2b}ks-page-footer .newsletter ks-button{max-width:290px}}@media only screen and (max-width: 640px){ks-page-footer .about{-ms-flex-direction:column;flex-direction:column;padding:30px}ks-page-footer .links{margin-top:0px;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;text-align:center}ks-page-footer .links>*{margin-top:40px;margin-right:0px;padding:0}ks-page-footer .newsletter>div{font-size:14px}ks-page-footer .newsletter>div:last-of-type{font-size:40px;margin-bottom:10px}ks-page-footer .portals>div:first-of-type{padding:20px}}";
 
 class PageFooter {
@@ -28671,7 +28657,6 @@ registerComponents([
   ButtonCart,
   ButtonFav,
   Card,
-  Cart,
   CartButtons,
   CartCountrySelect,
   CartDeal,
@@ -28786,6 +28771,7 @@ registerComponents([
   OrderToggleSection,
   Overlay,
   PageBase,
+  PageCart,
   PageFooter,
   PageHeader,
   PageHome,
