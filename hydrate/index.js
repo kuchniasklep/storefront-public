@@ -24767,68 +24767,6 @@ class OrderEnableection {
   }; }
 }
 
-class OrderForm$1 {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.loading = false;
-  }
-  render() {
-    return (hAsync("form", { action: this.action, method: this.method, onSubmit: (event) => this.Submit(event) }, hAsync("slot", null), hAsync("div", { class: "uk-position-relative" }, hAsync("button", { type: "submit", formnovalidate: true, class: "uk-button uk-button-danger uk-width-1-1 uk-width-expand@m ks-text-decorated", style: { fontSize: "28px", fontWeight: "700", padding: "20px" } }, "ZAMAWIAM I P\u0141AC\u0118"), this.loading ?
-      hAsync("div", { class: "uk-overlay uk-light uk-padding-remove uk-position-cover uk-animation-fade", style: { animationDuration: "0.3s", backgroundColor: "#e21334" } }, hAsync("div", { "uk-spinner": "ratio: 1.5", class: "uk-position-center" }))
-      : null), hAsync("ks-order-form-modal", null)));
-  }
-  async Submit(event) {
-    event.preventDefault();
-    const form = this.root.querySelector("form");
-    const inputs = form.querySelectorAll("ks-input-dynamic, ks-order-document-select, ks-input-text, ks-input-textarea, ks-input-check, ks-order-inpost, ks-order-pocztapunkt, ks-order-dpd");
-    let highestPosition = Number.MAX_VALUE;
-    let valid = true;
-    for (let i = 0; i < inputs.length; i++) {
-      const input = inputs[i];
-      if (input.closest("ks-input-dynamic *") != null)
-        continue;
-      await input.Validate();
-      if (!await input.IsValid()) {
-        const inputTop = input.getBoundingClientRect().top
-          - document.body.getBoundingClientRect().top;
-        if (inputTop < highestPosition)
-          highestPosition = inputTop;
-        valid = false;
-      }
-    }
-    if (valid) {
-      this.loading = true;
-      form.submit();
-    }
-    else {
-      try {
-        window.scroll({ top: highestPosition - 100, behavior: "smooth" });
-      }
-      catch (error) {
-        window.scroll(0, highestPosition - 100);
-      }
-    }
-  }
-  ShowPrompt(message) {
-    const prompt = this.root.querySelector("ks-order-form-modal");
-    prompt.setAttribute("message", message);
-    prompt.Show();
-  }
-  get root() { return getElement(this); }
-  static get cmpMeta() { return {
-    "$flags$": 4,
-    "$tagName$": "ks-order-confirmation-form",
-    "$members$": {
-      "action": [1],
-      "method": [1],
-      "loading": [32]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
-
 class OrderForm {
   constructor(hostRef) {
     registerInstance(this, hostRef);
@@ -26099,6 +26037,234 @@ class PageListing {
       "commonData": [1, "common-data"],
       "commonDynamicData": [1, "common-dynamic-data"],
       "listingData": [1, "listing-data"]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const orderConfirmation = createStore({
+  api: {},
+  totalValue: 0,
+  productValue: 0,
+  productAmount: 0,
+  pointsForOrder: 0,
+  totalShippingTime: "",
+  otherValues: [],
+  products: {},
+  easyprotect: [],
+  recycle: [],
+  shipping: {},
+  payment: {},
+  info: {},
+});
+
+const orderConfirmationCss = "ks-page-order-confirmation .card{display:block;padding:0px;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:1200px;width:100%;margin:20px auto;background:var(--card-background);color:var(--card-text-color);-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow)}ks-page-order-confirmation .easyprotect-info{margin-top:-15px;margin-bottom:30px;text-align:justify}ks-page-order-confirmation .pickupOption input{margin-right:10px;-webkit-transform:translate(0, 1px);transform:translate(0, 1px)}ks-page-order-confirmation .pickupOption label{width:auto}ks-page-order-confirmation .paymentContainer{text-align:center;padding:5px}";
+
+class PageOrderConfirmantion {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.loading = false;
+  }
+  componentWillLoad() {
+    const orderDataElement = document.getElementById(this.orderData);
+    const orderData = JSON.parse(orderDataElement.innerHTML);
+    Object.keys(orderData).map(key => {
+      orderConfirmation.set(key, orderData[key]);
+    });
+  }
+  async Submit(event) {
+    event.preventDefault();
+    const form = this.root.querySelector("form.card");
+    const inputs = form.querySelectorAll("ks-input-dynamic, ks-order-document-select, ks-input-text, ks-input-textarea, ks-input-check, ks-order-inpost, ks-order-pocztapunkt, ks-order-dpd");
+    console.log(form);
+    let highestPosition = Number.MAX_VALUE;
+    let valid = true;
+    for (let i = 0; i < inputs.length; i++) {
+      const input = inputs[i];
+      if (input.closest("ks-input-dynamic *") != null)
+        continue;
+      await input.Validate();
+      if (!await input.IsValid()) {
+        const inputTop = input.getBoundingClientRect().top
+          - document.body.getBoundingClientRect().top;
+        if (inputTop < highestPosition)
+          highestPosition = inputTop;
+        valid = false;
+      }
+    }
+    if (valid) {
+      this.loading = true;
+      form.submit();
+    }
+    else {
+      try {
+        window.scroll({ top: highestPosition - 100, behavior: "smooth" });
+      }
+      catch (error) {
+        window.scroll(0, highestPosition - 100);
+      }
+    }
+  }
+  ShowPrompt(message) {
+    const prompt = this.root.querySelector("ks-order-form-modal");
+    prompt.setAttribute("message", message);
+    prompt.Show();
+  }
+  render() {
+    var _a;
+    const products = Object.entries(orderConfirmation.get("products"));
+    const shipping = orderConfirmation.get('shipping');
+    const payment = orderConfirmation.get('payment');
+    const info = orderConfirmation.get('info');
+    const api = orderConfirmation.get('api');
+    const easyprotectStrings = orderConfirmation.get('easyprotectStrings');
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("form", { class: "card", action: api.submit, method: "post", onSubmit: (event) => this.Submit(event) }, hAsync("ks-tracker-order", { form: true, "event-id": orderConfirmation.get("eventId"), value: orderConfirmation.get("productValue"), products: Object.keys(orderConfirmation.get("products")).join(',') }), hAsync("ks-order-progress", { current: 1 }), hAsync("div", { class: "uk-padding@m uk-padding-small" }, hAsync("ks-cart-product-heading", null), products.map(([_, product]) => hAsync("ks-cart-product", { name: product.name, img: product.img, price: product.price, amount: product.amount, "shipping-time": product.shippingTime })), hAsync("ks-cart-product-price", { amount: orderConfirmation.get('productAmount'), price: orderConfirmation.get('productValue'), "shipping-time": orderConfirmation.get('totalShippingTime'), "edit-link": common.get('cartLink') }), hAsync("br", null), hAsync("br", null), orderConfirmation.get('easyprotect') ? [
+      hAsync("ks-order-heading", { heading: easyprotectStrings.heading, link: common.get('cartLink') }),
+      hAsync("p", { class: "easyprotect-info" }, easyprotectStrings.descriptionStart, hAsync("a", { href: easyprotectStrings.link, target: "_blank" }, easyprotectStrings.linkName), easyprotectStrings.descriptionEnd),
+      orderConfirmation.get('easyprotect').map(product => hAsync("ks-cart-easyprotect-warranty", { name: product.name, price: product.price, time: product.time })),
+      hAsync("br", null),
+      hAsync("br", null)
+    ] : null, ((_a = orderConfirmation.get('recycle')) === null || _a === void 0 ? void 0 : _a.length) > 0 ? [
+      hAsync("ks-order-heading", { heading: "Odbi\u00F3r zu\u017Cytego sprz\u0119tu", link: common.get('cartLink') + '#recycle' }),
+      hAsync("div", { style: { marginBottom: "40px" } }, orderConfirmation.get('recycle').map(product => hAsync("p", { style: { margin: "5px 0" } }, product)))
+    ] : null, hAsync("div", { class: "uk-child-width-1-2@m", "uk-grid": true, "uk-height-match": "ks-cart-tile > div" }, hAsync("div", null, hAsync("ks-order-heading", { heading: shipping.heading, link: common.get('cartLink') }), hAsync("ks-cart-tile", { logo: shipping.logo, name: shipping.name, price: shipping.price, color: shipping.color }, hAsync("div", null, shipping.info, shipping.type == "inpost" ?
+      hAsync("ks-order-inpost", { search: shipping.city, api: api.changeShippingLocation })
+      : shipping.type == "pocztapunkt" ? [
+        hAsync("script", { src: "https://mapa.ecommerce.poczta-polska.pl/widget/scripts/ppwidget.js" }),
+        hAsync("ks-order-pocztapunkt", { search: shipping.city, api: api.changeShippingLocation })
+      ] : shipping.type == "pickup" ?
+        hAsync("div", { class: "ListaWyboru" }, hAsync("div", { id: "ListaOpcjiWysylki" }, shipping.pickup.map(spot => hAsync("div", { class: "pickupOption" }, hAsync("input", { id: spot.key, type: "radio", value: spot.key, name: "lokalizacjaOsobisty", checked: spot.checked }), hAsync("label", { htmlFor: spot.key }, spot.value)))))
+        : null))), hAsync("div", null, hAsync("ks-order-heading", { heading: payment.heading, link: common.get('cartLink') }), hAsync("ks-cart-tile", { logo: payment.logo, name: payment.name, price: payment.price, color: payment.color }, payment.info))), hAsync("div", { class: "uk-child-width-1-2@m", "uk-grid": true }, hAsync("div", null, hAsync("ks-order-address-section", { heading: info.shippingInfoHeading, link: api.changeData }, hAsync("ks-order-address-field", { name: info.name.field }, hAsync("span", null, info.name.value)), info.company ?
+      hAsync("ks-order-address-field", { name: info.company.field }, hAsync("span", null, info.company.value))
+      : null, hAsync("ks-order-address-field", { name: info.address.field }, hAsync("span", { innerHTML: info.address.value })), hAsync("ks-order-address-field", { name: info.phone.field }, hAsync("span", null, info.phone.value)))), hAsync("div", null, hAsync("ks-order-address-section", { "hide-on-mobile": true, heading: info.documentInfoHeading, link: api.changeData }, info.documentName ?
+      hAsync("ks-order-address-field", { name: info.documentName.field }, hAsync("span", null, info.documentName.value))
+      : null, info.documentCompany ?
+      hAsync("ks-order-address-field", { name: info.documentCompany.field }, hAsync("span", null, info.documentCompany.value))
+      : null, hAsync("ks-order-address-field", { name: info.documentAddress.field }, hAsync("span", { innerHTML: info.documentAddress.value }))), hAsync("ks-order-document-select", { name: "dokument", api: api.changeDocument }), hAsync("br", null))), hAsync("br", null), hAsync("ks-input-textarea", { name: "komentarz", label: "Uwagi", rows: 4 }), hAsync("br", null), commonDynamic.get('loggedIn') ? [
+      hAsync("ks-input-check", { required: true, name: "regulamin", value: "1", label: info.rules }),
+      hAsync("br", null),
+      hAsync("br", null)
+    ] : null, hAsync("input", { type: "hidden", name: "zgoda_opinie", value: "1" }), orderConfirmation.get('otherValues').map(summary => hAsync("ks-cart-summary", { text: summary.name, price: summary.value.toString() })), hAsync("ks-cart-summary", { large: true, text: "Razem:", price: orderConfirmation.get('totalValue').toString() })), hAsync("div", { class: "uk-position-relative" }, hAsync("button", { type: "submit", formnovalidate: true, class: "uk-button uk-button-danger uk-width-1-1 uk-width-expand@m ks-text-decorated", style: { fontSize: "28px", fontWeight: "700", padding: "20px" } }, "ZAMAWIAM I P\u0141AC\u0118"), this.loading ?
+      hAsync("div", { class: "uk-overlay uk-light uk-padding-remove uk-position-cover uk-animation-fade", style: { animationDuration: "0.3s", backgroundColor: "#e21334" } }, hAsync("div", { "uk-spinner": "ratio: 1.5", class: "uk-position-center" }))
+      : null), hAsync("ks-order-form-modal", null)));
+  }
+  get root() { return getElement(this); }
+  static get style() { return orderConfirmationCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-page-order-confirmation",
+    "$members$": {
+      "skipbase": [4],
+      "commonData": [1, "common-data"],
+      "commonDynamicData": [1, "common-dynamic-data"],
+      "orderData": [1, "order-data"],
+      "loading": [32]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const orderSuccess = createStore({
+  eventId: "",
+  heading: "",
+  message: "",
+  homepage: "",
+});
+
+const orderSuccessCss = "";
+
+class PageOrderSuccess {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+  }
+  componentWillLoad() {
+    const orderDataElement = document.getElementById(this.orderData);
+    const orderData = JSON.parse(orderDataElement.innerHTML);
+    Object.keys(orderData).map(key => {
+      orderSuccess.set(key, orderData[key]);
+    });
+  }
+  render() {
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("h1", { class: "StrNaglowek" }, hAsync("span", null, orderSuccess.get('heading'))), hAsync("section", { class: "StrTresc" }, hAsync("div", { class: "Informacja" }, orderSuccess.get('message')), orderSuccess.get('error') ? [
+      hAsync("div", { style: { padding: "7px 5px 7px 0px;" }, id: "PlatnoscBladInfo" }, orderSuccess.get('errorString'), ":"),
+      hAsync("div", { class: "KomunikatBledu", id: "PlatnoscBladTresc" }, orderSuccess.get('error'))
+    ] : null, hAsync("br", null), orderSuccess.get('order') ?
+      hAsync("a", { href: orderSuccess.get('orderLink'), class: "przycisk Lewy" }, orderSuccess.get('order'))
+      : null, hAsync("a", { href: "/", class: "przycisk Prawy" }, orderSuccess.get('homepage')), hAsync("div", { class: "cl" })));
+  }
+  static get style() { return orderSuccessCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-page-order-success",
+    "$members$": {
+      "skipbase": [4],
+      "commonData": [1, "common-data"],
+      "commonDynamicData": [1, "common-dynamic-data"],
+      "orderData": [1, "order-data"]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const orderSummary = createStore({
+  eventId: "",
+  heading: "",
+  returnString: "",
+  returnLink: "",
+  orderNumber: "",
+  orderNumberString: "",
+  orderDate: "",
+  orderStatus: "",
+  orderStatusString: "",
+  orderPayment: "",
+  orderPaymentString: "",
+  orderShipping: "",
+  orderShippingString: "",
+  orderValue: "",
+  orderValueString: "",
+  proFormaApi: "",
+  proFormaString: "",
+  documentApi: "",
+  documentString: "",
+  payment: {}
+});
+
+const orderSummaryCss = "";
+
+class PageOrderSummary {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+  }
+  componentWillLoad() {
+    const orderDataElement = document.getElementById(this.orderData);
+    const orderData = JSON.parse(orderDataElement.innerHTML);
+    Object.keys(orderData).map(key => {
+      orderSummary.set(key, orderData[key]);
+    });
+  }
+  render() {
+    const payment = orderSummary.get('payment');
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("ks-order-summary-container", { heading: orderSummary.get('heading'), "return-heading": orderSummary.get('returnString'), "return-link": orderSummary.get('returnLink') }, hAsync("ks-order-summary-field", { dark: true, large: true }, hAsync("span", { slot: "left" }, orderSummary.get('orderNumberString'), " - ", orderSummary.get('orderNumber')), hAsync("span", { slot: "right" }, orderSummary.get('orderDate'))), hAsync("div", null, hAsync("ks-order-summary-field", null, hAsync("span", { slot: "left" }, orderSummary.get('orderStatusString')), hAsync("span", { slot: "right" }, orderSummary.get('orderStatus'))), hAsync("ks-order-separator", null), hAsync("ks-order-summary-field", null, hAsync("span", { slot: "left" }, orderSummary.get('orderPaymentString')), hAsync("span", { slot: "right" }, orderSummary.get('orderPayment'))), hAsync("ks-order-separator", null), hAsync("ks-order-summary-field", null, hAsync("span", { slot: "left" }, orderSummary.get('orderShippingString')), hAsync("span", { slot: "right" }, orderSummary.get('orderShipping'))), hAsync("ks-order-separator", null), hAsync("ks-order-summary-field", null, hAsync("span", { slot: "left" }, orderSummary.get('orderValueString')), hAsync("span", { id: "totalOrderValue", slot: "right" }, orderSummary.get('orderValue')))), hAsync("ks-order-summary-field", { single: true }, payment.info, payment.type == "creditagricole" ?
+      hAsync("form", { action: "https://ewniosek.credit-agricole.pl/eWniosek/simulator.jsp", method: "post", name: "payform", id: "payform", class: "cmxform" }, "';", payment.form.map(input => hAsync("input", { type: "hidden", value: input.value, name: input.name })), hAsync("div", { class: "paymentContainer" }, ";", hAsync("ks-order-summary-payment", { text: payment.button, image: payment.logo, color: "#009b9d", hover: "#14b1b3", active: "#1fbdbf" })))
+      : payment.type == "payu" ?
+        hAsync("form", { action: "https://www.platnosci.pl/paygw/UTF/NewPayment", method: "post", name: "payform", class: "cmxform" }, payment.form.map(input => hAsync("input", { type: "hidden", value: input.value, name: input.name })), hAsync("div", { class: "paymentContainer" }, hAsync("ks-order-summary-payment", { text: payment.button, image: payment.logo, color: "#5eb009", hover: "#6eb920", active: "#7ebe2e" })))
+        : null), hAsync("ks-order-button-pair", { split: 55, "link-left": orderSummary.get('proFormaApi'), "link-right": orderSummary.get('documentApi') }, hAsync("span", { slot: "left" }, orderSummary.get('proFormaString')), hAsync("span", { slot: "right" }, orderSummary.get('documentString')))));
+  }
+  static get style() { return orderSummaryCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-page-order-summary",
+    "$members$": {
+      "skipbase": [4],
+      "commonData": [1, "common-data"],
+      "commonDynamicData": [1, "common-dynamic-data"],
+      "orderData": [1, "order-data"]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
@@ -28754,7 +28920,6 @@ registerComponents([
   OrderDPD,
   OrderDocumentSelect,
   OrderEnableection,
-  OrderForm$1,
   OrderForm,
   OrderGuest,
   OrderHeading,
@@ -28776,6 +28941,9 @@ registerComponents([
   PageHeader,
   PageHome,
   PageListing,
+  PageOrderConfirmantion,
+  PageOrderSuccess,
+  PageOrderSummary,
   PageProduct,
   PageRecipes,
   Pagination,
