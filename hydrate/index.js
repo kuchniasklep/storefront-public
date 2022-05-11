@@ -26129,14 +26129,16 @@ class PageOrderConfirmantion {
     ] : null, ((_a = orderConfirmation.get('recycle')) === null || _a === void 0 ? void 0 : _a.length) > 0 ? [
       hAsync("ks-order-heading", { heading: "Odbi\u00F3r zu\u017Cytego sprz\u0119tu", link: common.get('cartLink') + '#recycle' }),
       hAsync("div", { style: { marginBottom: "40px" } }, orderConfirmation.get('recycle').map(product => hAsync("p", { style: { margin: "5px 0" } }, product)))
-    ] : null, hAsync("div", { class: "uk-child-width-1-2@m", "uk-grid": true, "uk-height-match": "ks-cart-tile > div" }, hAsync("div", null, hAsync("ks-order-heading", { heading: shipping.heading, link: common.get('cartLink') }), hAsync("ks-cart-tile", { logo: shipping.logo, name: shipping.name, price: shipping.price, color: shipping.color }, hAsync("div", null, shipping.info, shipping.type == "inpost" ?
+    ] : null, hAsync("div", { class: "uk-child-width-1-2@m", "uk-grid": true, "uk-height-match": "ks-cart-tile > div" }, hAsync("div", null, hAsync("ks-order-heading", { heading: shipping.heading, link: common.get('cartLink') }), hAsync("ks-cart-tile", { logo: shipping.logo, name: shipping.name, price: shipping.price, color: shipping.color }, hAsync("div", null, shipping.info, shipping.type == "wysylka_inpost" ?
       hAsync("ks-order-inpost", { search: shipping.city, api: api.changeShippingLocation })
-      : shipping.type == "pocztapunkt" ? [
-        hAsync("script", { src: "https://mapa.ecommerce.poczta-polska.pl/widget/scripts/ppwidget.js" }),
-        hAsync("ks-order-pocztapunkt", { search: shipping.city, api: api.changeShippingLocation })
-      ] : shipping.type == "pickup" ?
-        hAsync("div", { class: "ListaWyboru" }, hAsync("div", { id: "ListaOpcjiWysylki" }, shipping.pickup.map(spot => hAsync("div", { class: "pickupOption" }, hAsync("input", { id: spot.key, type: "radio", value: spot.key, name: "lokalizacjaOsobisty", checked: spot.checked }), hAsync("label", { htmlFor: spot.key }, spot.value)))))
-        : null))), hAsync("div", null, hAsync("ks-order-heading", { heading: payment.heading, link: common.get('cartLink') }), hAsync("ks-cart-tile", { logo: payment.logo, name: payment.name, price: payment.price, color: payment.color, innerHTML: payment.info }))), hAsync("div", { class: "uk-child-width-1-2@m", "uk-grid": true }, hAsync("div", null, hAsync("ks-order-address-section", { heading: info.shippingInfoHeading, link: api.changeData }, hAsync("ks-order-address-field", { name: info.name.field }, hAsync("span", null, info.name.value)), info.company ?
+      : shipping.type == "wysylka_dpdpickup" ?
+        hAsync("ks-order-dpd", { api: api.changeShippingLocation, button: "Wybierz punkt dostawy", "missing-message": "Wybierz punkt dostawy na mapie.", "point-message": "Wybrany punkt" })
+        : shipping.type == "wysylka_pocztapunkt" ? [
+          hAsync("script", { src: "https://mapa.ecommerce.poczta-polska.pl/widget/scripts/ppwidget.js" }),
+          hAsync("ks-order-pocztapunkt", { search: shipping.city, api: api.changeShippingLocation })
+        ] : shipping.type == "wysylka_odbior_osobisty" ?
+          hAsync("div", { class: "ListaWyboru" }, hAsync("div", { id: "ListaOpcjiWysylki" }, shipping.pickup.map(spot => hAsync("div", { class: "pickupOption" }, hAsync("input", { id: spot.key, type: "radio", value: spot.key, name: "lokalizacjaOsobisty", checked: spot.checked }), hAsync("label", { htmlFor: spot.key }, spot.value)))))
+          : null))), hAsync("div", null, hAsync("ks-order-heading", { heading: payment.heading, link: common.get('cartLink') }), hAsync("ks-cart-tile", { logo: payment.logo, name: payment.name, price: payment.price, color: payment.color, innerHTML: payment.info }))), hAsync("div", { class: "uk-child-width-1-2@m", "uk-grid": true }, hAsync("div", null, hAsync("ks-order-address-section", { heading: info.shippingInfoHeading, link: api.changeData }, hAsync("ks-order-address-field", { name: info.name.field }, hAsync("span", null, info.name.value)), info.company ?
       hAsync("ks-order-address-field", { name: info.company.field }, hAsync("span", null, info.company.value))
       : null, hAsync("ks-order-address-field", { name: info.address.field }, hAsync("span", { innerHTML: info.address.value })), hAsync("ks-order-address-field", { name: info.phone.field }, hAsync("span", null, info.phone.value)))), hAsync("div", null, hAsync("ks-order-address-section", { "hide-on-mobile": true, heading: info.documentInfoHeading, link: api.changeData }, info.documentName ?
       hAsync("ks-order-address-field", { name: info.documentName.field }, hAsync("span", null, info.documentName.value))
