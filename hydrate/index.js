@@ -26129,7 +26129,7 @@ class PageOrderConfirmantion {
     ] : null, ((_a = orderConfirmation.get('recycle')) === null || _a === void 0 ? void 0 : _a.length) > 0 ? [
       hAsync("ks-order-heading", { heading: "Odbi\u00F3r zu\u017Cytego sprz\u0119tu", link: common.get('cartLink') + '#recycle' }),
       hAsync("div", { style: { marginBottom: "40px" } }, orderConfirmation.get('recycle').map(product => hAsync("p", { style: { margin: "5px 0" } }, product)))
-    ] : null, hAsync("div", { class: "uk-child-width-1-2@m", "uk-grid": true, "uk-height-match": "ks-cart-tile > div" }, hAsync("div", null, hAsync("ks-order-heading", { heading: shipping.heading, link: common.get('cartLink') }), hAsync("ks-cart-tile", { logo: shipping.logo, name: shipping.name, price: shipping.price, color: shipping.color }, hAsync("div", null, shipping.info, shipping.type == "wysylka_inpost" ?
+    ] : null, hAsync("div", { class: "uk-child-width-1-2@m", "uk-grid": true, "uk-height-match": "ks-cart-tile > div" }, hAsync("div", null, hAsync("ks-order-heading", { heading: shipping.heading, link: common.get('cartLink') }), hAsync("ks-cart-tile", { logo: shipping.logo, name: shipping.name, price: shipping.price, color: shipping.color }, hAsync("div", null, hAsync("div", { innerHTML: shipping.info }), shipping.type == "wysylka_inpost" ?
       hAsync("ks-order-inpost", { search: shipping.city, api: api.changeShippingLocation })
       : shipping.type == "wysylka_dpdpickup" ?
         hAsync("ks-order-dpd", { api: api.changeShippingLocation, button: "Wybierz punkt dostawy", "missing-message": "Wybierz punkt dostawy na mapie.", "point-message": "Wybrany punkt" })
