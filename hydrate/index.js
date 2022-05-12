@@ -26112,6 +26112,30 @@ class PageOrderConfirmantion {
     prompt.setAttribute("message", message);
     prompt.Show();
   }
+  track() {
+    var _a;
+    eachTracker(item => item === null || item === void 0 ? void 0 : item.order_checkout(orderConfirmation.get('eventId'), Object.entries(orderConfirmation.get('products')).map(([id, product]) => {
+      return {
+        id: id,
+        name: product.name,
+        price: product.price,
+        quantity: product.amount
+      };
+    }), orderConfirmation.get('totalValue'), "PLN"));
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
+      currency: 'PLN',
+      value: orderConfirmation.get('totalValue'),
+      items: Object.entries(orderConfirmation.get('products')).map(([id, product]) => {
+        return {
+          item_id: id,
+          item_name: product.name,
+          currency: 'PLN',
+          price: product.price,
+          quantity: product.amount
+        };
+      }),
+    });
+  }
   render() {
     var _a;
     const products = Object.entries(orderConfirmation.get("products"));
@@ -26237,7 +26261,7 @@ const orderSummary = createStore({
   payment: {}
 });
 
-const orderSummaryCss = "";
+const orderSummaryCss = "ks-page-order-summary ks-order-summary-container{display:block;padding:0px;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:1200px;width:100%;margin:20px auto;background:var(--card-background);color:var(--card-text-color);-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow)}";
 
 class PageOrderSummary {
   constructor(hostRef) {
