@@ -26201,9 +26201,9 @@ const orderSuccess = createStore({
   homepage: "",
 });
 
-const orderSuccessCss = "";
+const orderEndCss = "ks-page-order-success .card{display:block;padding:0px;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:1200px;width:100%;margin:20px auto;background:var(--card-background);color:var(--card-text-color);-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow)}";
 
-class PageOrderSuccess {
+class PageOrderEnd {
   constructor(hostRef) {
     registerInstance(this, hostRef);
   }
@@ -26215,17 +26215,17 @@ class PageOrderSuccess {
     });
   }
   render() {
-    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("h1", { class: "StrNaglowek" }, hAsync("span", null, orderSuccess.get('heading'))), hAsync("section", { class: "StrTresc" }, hAsync("div", { class: "Informacja" }, orderSuccess.get('message')), orderSuccess.get('error') ? [
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("div", { class: "card" }, hAsync("h1", { class: "StrNaglowek" }, hAsync("span", null, orderSuccess.get('heading'))), hAsync("section", { class: "StrTresc" }, hAsync("div", { class: "Informacja" }, orderSuccess.get('message')), orderSuccess.get('error') ? [
       hAsync("div", { style: { padding: "7px 5px 7px 0px;" }, id: "PlatnoscBladInfo" }, orderSuccess.get('errorString'), ":"),
       hAsync("div", { class: "KomunikatBledu", id: "PlatnoscBladTresc" }, orderSuccess.get('error'))
     ] : null, hAsync("br", null), orderSuccess.get('order') ?
       hAsync("a", { href: orderSuccess.get('orderLink'), class: "przycisk Lewy" }, orderSuccess.get('order'))
-      : null, hAsync("a", { href: "/", class: "przycisk Prawy" }, orderSuccess.get('homepage')), hAsync("div", { class: "cl" })));
+      : null, hAsync("a", { href: "/", class: "przycisk Prawy" }, orderSuccess.get('homepage')), hAsync("div", { class: "cl" }))));
   }
-  static get style() { return orderSuccessCss; }
+  static get style() { return orderEndCss; }
   static get cmpMeta() { return {
     "$flags$": 0,
-    "$tagName$": "ks-page-order-success",
+    "$tagName$": "ks-page-order-end",
     "$members$": {
       "skipbase": [4],
       "commonData": [1, "common-data"],
@@ -28968,7 +28968,7 @@ registerComponents([
   PageHome,
   PageListing,
   PageOrderConfirmantion,
-  PageOrderSuccess,
+  PageOrderEnd,
   PageOrderSummary,
   PageProduct,
   PageRecipes,
