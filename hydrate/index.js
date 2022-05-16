@@ -26201,7 +26201,7 @@ const orderSuccess = createStore({
   homepage: "",
 });
 
-const orderEndCss = "ks-page-order-end .card{display:block;padding:0px;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:1200px;width:100%;margin:20px auto;background:var(--card-background);color:var(--card-text-color);-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow)}";
+const orderEndCss = "ks-page-order-end .card{display:block;padding:0px;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:800px;width:100%;margin:auto;padding:30px 20px;background:var(--card-background);color:var(--card-text-color);-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow);text-align:center}ks-page-order-end .card ks-icon{margin-right:10px}ks-page-order-end .card h1{font-size:22px;font-weight:700}ks-page-order-end .card .buttons{margin-top:30px;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-page-order-end .card .buttons ks-button{margin:5px}ks-page-order-end .card h2{margin:20px auto 5px auto;font-weight:700}";
 
 class PageOrderEnd {
   constructor(hostRef) {
@@ -26215,12 +26215,12 @@ class PageOrderEnd {
     });
   }
   render() {
-    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("div", { class: "card" }, hAsync("h1", { class: "StrNaglowek" }, hAsync("span", null, orderSuccess.get('heading'))), hAsync("section", { class: "StrTresc" }, hAsync("div", { class: "Informacja" }, orderSuccess.get('message')), orderSuccess.get('error') ? [
-      hAsync("div", { style: { padding: "7px 5px 7px 0px;" }, id: "PlatnoscBladInfo" }, orderSuccess.get('errorString'), ":"),
-      hAsync("div", { class: "KomunikatBledu", id: "PlatnoscBladTresc" }, orderSuccess.get('error'))
-    ] : null, hAsync("br", null), orderSuccess.get('order') ?
-      hAsync("a", { href: orderSuccess.get('orderLink'), class: "przycisk Lewy" }, orderSuccess.get('order'))
-      : null, hAsync("a", { href: "/", class: "przycisk Prawy" }, orderSuccess.get('homepage')), hAsync("div", { class: "cl" }))));
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("div", { class: "card" }, hAsync("h1", { class: "heading" }, orderSuccess.get('heading')), hAsync("section", { class: "content" }, hAsync("div", { class: "message" }, orderSuccess.get('message')), orderSuccess.get('error') ? [
+      hAsync("h2", null, orderSuccess.get('errorHeading')),
+      hAsync("div", null, orderSuccess.get('errorMessage'))
+    ] : null, hAsync("div", { class: "buttons" }, orderSuccess.get('order') ?
+      hAsync("ks-button", { round: true, link: orderSuccess.get('orderLink'), name: orderSuccess.get('order') })
+      : null, hAsync("ks-button", { round: true, link: "/", name: orderSuccess.get('homepage') })))));
   }
   static get style() { return orderEndCss; }
   static get cmpMeta() { return {
