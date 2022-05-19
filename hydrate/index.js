@@ -26228,6 +26228,8 @@ class PageProduct {
       hAsync("ks-product-tooltip", { message: points.message }, hAsync("ks-product-attribute", { icon: "gift" }, points.shortMessage))
       : null, recycle ?
       hAsync("ks-product-tooltip", { message: recycle.message }, hAsync("ks-product-attribute", { icon: "recycle" }, recycle.shortMessage))
+      : null, (installments === null || installments === void 0 ? void 0 : installments.attributeMessage) ?
+      hAsync("ks-product-attribute", { icon: "dollar-sign" }, installments === null || installments === void 0 ? void 0 : installments.attributeMessage)
       : null, model || ean ?
       hAsync("ks-product-attribute", { style: { marginTop: "15px" }, icon: "file", faded: true }, hAsync("span", { style: { marginRight: "15px" } }, model ? hAsync("span", { style: { marginRight: "7px" } }, "Model: ", model, " ") : null, ean ? hAsync("span", null, "EAN: ", ean) : null))
       : null, hAsync("ks-product-history", { name: product.get('history'), productId: product.get('id'), api: commonDynamic.get('api').productHistory }), hAsync("div", { class: "buttons" }, product.get('negotiateEnabled') ?
