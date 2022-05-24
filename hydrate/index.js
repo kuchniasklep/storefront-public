@@ -25784,6 +25784,28 @@ class PageCart {
     const cartDataElement = document.getElementById(this.cartData);
     const cartData = JSON.parse(cartDataElement.innerHTML);
     update(cartData);
+    this.track();
+  }
+  track() {
+    var _a, _b;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
+      'ecomm_prodid': Object.keys(cart.get('products')),
+      'ecomm_pagetype': 'cart',
+      'ecomm_totalvalue': cart.get('totalValue')
+    });
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push({
+      'currency': 'PLN',
+      'value': cart.get('productValue'),
+      'items': Object.entries(cart.get('products')).map(([id, product]) => {
+        return {
+          id: id,
+          name: product.name,
+          price: product.price,
+          quantity: product.amount,
+          category: product.category
+        };
+      })
+    });
   }
   async RemoveProduct(event) {
     removeProduct(event.detail);
@@ -26213,13 +26235,32 @@ class PageOrderEnd {
     Object.keys(orderData).map(key => {
       orderSuccess.set(key, orderData[key]);
     });
+    this.track();
+  }
+  track() {
+    var _a;
+    if (!orderSuccess.get('error'))
+      (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
+        currency: 'PLN',
+        transaction_id: orderSuccess.get('orderID'),
+        value: orderSuccess.get('orderValue'),
+        items: Object.entries(orderSuccess.get('products')).map(([id, product]) => {
+          return {
+            item_id: id,
+            item_name: product.name,
+            currency: 'PLN',
+            price: product.price,
+            quantity: product.amount
+          };
+        }),
+      });
   }
   render() {
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("div", { class: "card" }, hAsync("h1", { class: "heading" }, orderSuccess.get('heading')), hAsync("section", { class: "content" }, hAsync("div", { class: "message" }, orderSuccess.get('message')), orderSuccess.get('error') ? [
       hAsync("h2", null, orderSuccess.get('errorHeading')),
       hAsync("div", null, orderSuccess.get('errorMessage'))
-    ] : null, hAsync("div", { class: "buttons" }, orderSuccess.get('order') ?
-      hAsync("ks-button", { round: true, link: orderSuccess.get('orderLink'), name: orderSuccess.get('order') })
+    ] : null, hAsync("div", { class: "buttons" }, orderSuccess.get('orderString') ?
+      hAsync("ks-button", { round: true, link: orderSuccess.get('orderLink'), name: orderSuccess.get('orderString') })
       : null, hAsync("ks-button", { round: true, link: "/", name: orderSuccess.get('homepage') })))));
   }
   static get style() { return orderEndCss; }
@@ -26252,13 +26293,14 @@ const orderSummary = createStore({
   orderPaymentString: "",
   orderShipping: "",
   orderShippingString: "",
-  orderValue: "",
+  orderValue: null,
   orderValueString: "",
   proFormaApi: "",
   proFormaString: "",
   documentApi: "",
   documentString: "",
-  payment: {}
+  payment: {},
+  products: {}
 });
 
 const orderSummaryCss = "ks-page-order-summary ks-order-summary-container{display:block;padding:0px;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:1200px;width:100%;margin:20px auto;background:var(--card-background);color:var(--card-text-color);-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow)}";
@@ -26272,6 +26314,36 @@ class PageOrderSummary {
     const orderData = JSON.parse(orderDataElement.innerHTML);
     Object.keys(orderData).map(key => {
       orderSummary.set(key, orderData[key]);
+    });
+  }
+  track() {
+    var _a, _b, _c;
+    eachTracker(item => item === null || item === void 0 ? void 0 : item.order_placed(orderSummary.get('eventId'), Object.entries(orderSummary.get('products')).map(([id, product]) => {
+      return {
+        id: id,
+        name: product.name,
+        price: product.price,
+        quantity: product.amount
+      };
+    }), orderSummary.get('orderValue'), "PLN"));
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
+      'ecomm_prodid': Object.keys(orderSummary.get('products')),
+      'ecomm_pagetype': 'purchase',
+      'ecomm_totalvalue': orderSummary.get('orderValue')
+    });
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push({
+      currency: 'PLN',
+      value: orderSummary.get('orderValue'),
+      electronic: (_c = orderSummary === null || orderSummary === void 0 ? void 0 : orderSummary.get('payment')) === null || _c === void 0 ? void 0 : _c.electronic,
+      items: Object.entries(orderSummary.get('products')).map(([id, product]) => {
+        return {
+          item_id: id,
+          item_name: product.name,
+          currency: 'PLN',
+          price: product.price,
+          quantity: product.amount
+        };
+      }),
     });
   }
   render() {
@@ -26406,6 +26478,8 @@ class PageProduct {
       hAsync("ks-product-tooltip", { message: points.message }, hAsync("ks-product-attribute", { icon: "gift" }, points.shortMessage))
       : null, recycle ?
       hAsync("ks-product-tooltip", { message: recycle.message }, hAsync("ks-product-attribute", { icon: "recycle" }, recycle.shortMessage))
+      : null, (installments === null || installments === void 0 ? void 0 : installments.attributeMessage) ?
+      hAsync("ks-product-attribute", { icon: "dollar-sign" }, installments === null || installments === void 0 ? void 0 : installments.attributeMessage)
       : null, model || ean ?
       hAsync("ks-product-attribute", { style: { marginTop: "15px" }, icon: "file", faded: true }, hAsync("span", { style: { marginRight: "15px" } }, model ? hAsync("span", { style: { marginRight: "7px" } }, "Model: ", model, " ") : null, ean ? hAsync("span", null, "EAN: ", ean) : null))
       : null, hAsync("ks-product-history", { name: product.get('history'), productId: product.get('id'), api: commonDynamic.get('api').productHistory }), hAsync("div", { class: "buttons" }, product.get('negotiateEnabled') ?
