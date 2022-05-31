@@ -26318,26 +26318,24 @@ class PageOrderSummary {
     this.track();
   }
   track() {
-    var _a, _b, _c, _d;
-    if (!((_a = orderSummary.get('payment')) === null || _a === void 0 ? void 0 : _a.electronic)) {
-      eachTracker(item => item === null || item === void 0 ? void 0 : item.order_placed(orderSummary.get('eventId'), Object.entries(orderSummary.get('products')).map(([id, product]) => {
-        return {
-          id: id,
-          name: product.name,
-          price: product.price,
-          quantity: product.amount
-        };
-      }), orderSummary.get('orderValue'), "PLN"));
-    }
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push({
+    var _a, _b, _c;
+    eachTracker(item => item === null || item === void 0 ? void 0 : item.order_placed(orderSummary.get('eventId'), Object.entries(orderSummary.get('products')).map(([id, product]) => {
+      return {
+        id: id,
+        name: product.name,
+        price: product.price,
+        quantity: product.amount
+      };
+    }), orderSummary.get('orderValue'), "PLN"));
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
       'ecomm_prodid': Object.keys(orderSummary.get('products')),
       'ecomm_pagetype': 'purchase',
       'ecomm_totalvalue': orderSummary.get('orderValue')
     });
-    (_c = window.dataLayer) === null || _c === void 0 ? void 0 : _c.push({
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push({
       currency: 'PLN',
       value: orderSummary.get('orderValue'),
-      electronic: (_d = orderSummary === null || orderSummary === void 0 ? void 0 : orderSummary.get('payment')) === null || _d === void 0 ? void 0 : _d.electronic,
+      electronic: (_c = orderSummary === null || orderSummary === void 0 ? void 0 : orderSummary.get('payment')) === null || _c === void 0 ? void 0 : _c.electronic,
       items: Object.entries(orderSummary.get('products')).map(([id, product]) => {
         return {
           item_id: id,
