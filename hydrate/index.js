@@ -26095,6 +26095,7 @@ class PageOrderConfirmantion {
     Object.keys(orderData).map(key => {
       orderConfirmation.set(key, orderData[key]);
     });
+    this.track();
   }
   async Submit(event) {
     event.preventDefault();
