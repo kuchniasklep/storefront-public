@@ -26145,6 +26145,7 @@ const product = createStore({
   ean: "",
   reviews: {},
   infoBanner: {},
+  productBanner: {},
   notifyStrings: {},
   history: "",
   warranty: "",
@@ -26206,6 +26207,7 @@ class PageProduct {
     if (!(product === null || product === void 0 ? void 0 : product.get('name')))
       return false;
     const infoBanner = product.get("infoBanner");
+    const productBanner = product.get("productBanner");
     const points = product.get("points");
     const recycle = product.get("recycle");
     const installments = product.get('installments');
@@ -26240,7 +26242,9 @@ class PageProduct {
         : null, installments.caParameters ?
         hAsync("ks-product-calculator-ca", { price: product.get("currentPrice"), parameters: installments.caParameters }, hAsync("ks-product-button", { icon: installments.caIcon }))
         : null)
-      : null), hAsync("ks-product-brand", { slot: "brand" }))), (tags === null || tags === void 0 ? void 0 : tags.length) > 0 || (variants === null || variants === void 0 ? void 0 : variants.length) > 0 ?
+      : null), hAsync("ks-product-brand", { slot: "brand" }))), productBanner && (productBanner === null || productBanner === void 0 ? void 0 : productBanner.image) ?
+      hAsync("ks-container", null, hAsync("ks-info-banner", { image: productBanner.image, color: productBanner.color, width: productBanner.width, height: productBanner.height, name: productBanner.name, link: productBanner.link }))
+      : null, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 || (variants === null || variants === void 0 ? void 0 : variants.length) > 0 ?
       hAsync("ks-container", { padding: true }, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 && !((variants === null || variants === void 0 ? void 0 : variants.length) > 0) ?
         hAsync("ks-product-tags", null)
         : null, (variants === null || variants === void 0 ? void 0 : variants.length) > 0 ?
