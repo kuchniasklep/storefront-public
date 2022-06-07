@@ -26103,7 +26103,9 @@ class PageListing {
       hAsync("ks-listing-footer", { description: bottomDescription }, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 ?
         hAsync("div", { slot: "tags" }, tags.map(crumb => hAsync("a", { href: crumb.link }, crumb.name)))
         : null)
-      : null, hAsync("ks-zaufane", { listing: true, nobg: !(bottomDescription || (tags === null || tags === void 0 ? void 0 : tags.length) > 0), token: "sf15070062863a8f629c0", customer: "150700" }));
+      : null, !query ?
+      hAsync("ks-zaufane", { listing: true, nobg: !(bottomDescription || (tags === null || tags === void 0 ? void 0 : tags.length) > 0), token: "sf15070062863a8f629c0", customer: "150700" })
+      : null);
   }
   static get style() { return listingCss; }
   static get cmpMeta() { return {
