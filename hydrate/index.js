@@ -23423,7 +23423,7 @@ class Lightbox {
   }; }
 }
 
-const listingFooterCss = "ks-listing-footer{display:block;position:relative;z-index:1;padding:15px;-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow);background-color:white;text-align:center;font-size:0.875rem}ks-listing-footer *:not([slot=tags]){max-width:1200px;margin:15px auto 15px auto;padding:0 15px;line-height:1.5}ks-listing-footer *[slot=tags]{max-width:1200px;margin:auto}ks-listing-footer *[slot=tags]>*{display:inline-block;padding:3px 10px;margin:2px;margin-bottom:3px;line-height:1.5;background:#222222;color:#ffffff !important;vertical-align:middle;white-space:nowrap;border-radius:2px;text-decoration:none !important}";
+const listingFooterCss = "ks-listing-footer{display:block;position:relative;z-index:1;padding:15px;-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow);background-color:white;text-align:center;font-size:0.875rem}ks-listing-footer>*:not([slot=tags]){max-width:1200px;margin:15px auto 15px auto;padding:0 15px;line-height:1.5}ks-listing-footer *[slot=tags]{max-width:1200px;margin:auto}ks-listing-footer *[slot=tags]>*{display:inline-block;padding:3px 10px;margin:2px;margin-bottom:3px;line-height:1.5;background:#222222;color:#ffffff !important;vertical-align:middle;white-space:nowrap;border-radius:2px;text-decoration:none !important}";
 
 class ListingFooter {
   constructor(hostRef) {
@@ -23432,7 +23432,8 @@ class ListingFooter {
   render() {
     return [
       this.description ? hAsync("div", { innerHTML: this.description }) : null,
-      hAsync("slot", { name: "tags" })
+      hAsync("slot", { name: "tags" }),
+      hAsync("slot", { name: "comments" })
     ];
   }
   static get style() { return listingFooterCss; }
@@ -25949,7 +25950,7 @@ class PageHome {
     const articlesHeading = home.get('articlesHeading');
     const articlesMore = home.get('articlesMore');
     const seeMore = home.get('seeMore');
-    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, banners ? hAsync("ks-banner-container", null, banners.map((banner, index) => hAsync("ks-banner", { sync: index == 0, active: index == 0, name: banner.name, color: banner.color, link: banner.link, image: banner.image, webp: banner.webp, width: banner.width, height: banner.height, theme: banner.theme }))) : null, info ? hAsync("ks-homepage-info", null, hAsync("h1", { slot: "mainHeading" }, info.mainHeading), hAsync("p", { slot: "mainContent" }, info.mainParagraph), hAsync("h2", { slot: "firstHeading" }, info.firstHeading), hAsync("p", { slot: "firstContent" }, info.firstParagraph), hAsync("h2", { slot: "secondHeading" }, info.secondHeading), hAsync("p", { slot: "secondContent" }, info.secondParagraph), hAsync("h2", { slot: "thirdHeading" }, info.thirdHeading), hAsync("p", { slot: "thirdContent" }, info.thirdParagraph)) : null, products ? hAsync("ks-homepage-products", null, products.map(products => hAsync("ks-product-container", null, products.products.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice, unavailable: card.unavailable }))))) : null, featured ? hAsync("ks-featured-container", null, featured.map(banner => hAsync("ks-featured", { slot: banner.side, name: banner.name, image: banner.image, webp: banner.webp, link: banner.link, width: banner.width, height: banner.height }))) : null, recipes ? [
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, banners ? hAsync("ks-banner-container", null, banners.map((banner, index) => hAsync("ks-banner", { sync: index == 0, active: index == 0, name: banner.name, color: banner.color, link: banner.link, image: banner.image, webp: banner.webp, width: banner.width, height: banner.height, theme: banner.theme }))) : null, info ? hAsync("ks-homepage-info", null, hAsync("h1", { slot: "mainHeading" }, info.mainHeading), hAsync("p", { slot: "mainContent" }, info.mainParagraph), hAsync("h2", { slot: "firstHeading" }, info.firstHeading), hAsync("p", { slot: "firstContent" }, info.firstParagraph), hAsync("h2", { slot: "secondHeading" }, info.secondHeading), hAsync("p", { slot: "secondContent" }, info.secondParagraph), hAsync("h2", { slot: "thirdHeading" }, info.thirdHeading), hAsync("p", { slot: "thirdContent" }, info.thirdParagraph)) : null, hAsync("ks-zaufane", { home: true, token: "sf15070062863a73c5990", customer: "150700" }), products ? hAsync("ks-homepage-products", null, products.map(products => hAsync("ks-product-container", null, products.products.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice, unavailable: card.unavailable }))))) : null, featured ? hAsync("ks-featured-container", null, featured.map(banner => hAsync("ks-featured", { slot: banner.side, name: banner.name, image: banner.image, webp: banner.webp, link: banner.link, width: banner.width, height: banner.height }))) : null, recipes ? [
       hAsync("h3", null, recipesHeading),
       hAsync("ks-article-container", null, recipes.map(recipe => hAsync("ks-recipe-card", { heading: recipe.heading, cuisine: recipe.cuisine, category: recipe.category, link: recipe.link, image: recipe.image, webp: recipe.webp, width: recipe.width, height: recipe.height, "cuisine-link": recipe.cuisineLink, "category-link": recipe.categoryLink }))),
       hAsync("ks-see-more", { href: recipesMore, text: seeMore })
@@ -26048,6 +26049,8 @@ class PageListing {
       hAsync("ks-listing-footer", { description: bottomDescription }, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 ?
         hAsync("div", { slot: "tags" }, tags.map(crumb => hAsync("a", { href: crumb.link }, crumb.name)))
         : null)
+      : null, !query ?
+      hAsync("ks-zaufane", { listing: true, nobg: !(bottomDescription || (tags === null || tags === void 0 ? void 0 : tags.length) > 0), token: "sf15070062863a8f629c0", customer: "150700" })
       : null);
   }
   static get style() { return listingCss; }
@@ -26397,6 +26400,7 @@ const product = createStore({
   ean: "",
   reviews: {},
   infoBanner: {},
+  productBanner: {},
   notifyStrings: {},
   history: "",
   warranty: "",
@@ -26458,6 +26462,7 @@ class PageProduct {
     if (!(product === null || product === void 0 ? void 0 : product.get('name')))
       return false;
     const infoBanner = product.get("infoBanner");
+    const productBanner = product.get("productBanner");
     const points = product.get("points");
     const recycle = product.get("recycle");
     const installments = product.get('installments');
@@ -26492,7 +26497,9 @@ class PageProduct {
         : null, installments.caParameters ?
         hAsync("ks-product-calculator-ca", { price: product.get("currentPrice"), parameters: installments.caParameters }, hAsync("ks-product-button", { icon: installments.caIcon }))
         : null)
-      : null), hAsync("ks-product-brand", { slot: "brand" }))), (tags === null || tags === void 0 ? void 0 : tags.length) > 0 || (variants === null || variants === void 0 ? void 0 : variants.length) > 0 ?
+      : null), hAsync("ks-product-brand", { slot: "brand" }))), productBanner && (productBanner === null || productBanner === void 0 ? void 0 : productBanner.image) ?
+      hAsync("ks-container", null, hAsync("ks-info-banner", { image: productBanner.image, color: productBanner.color, width: productBanner.width, height: productBanner.height, name: productBanner.name, link: productBanner.link }))
+      : null, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 || (variants === null || variants === void 0 ? void 0 : variants.length) > 0 ?
       hAsync("ks-container", { padding: true }, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 && !((variants === null || variants === void 0 ? void 0 : variants.length) > 0) ?
         hAsync("ks-product-tags", null)
         : null, (variants === null || variants === void 0 ? void 0 : variants.length) > 0 ?
@@ -26512,7 +26519,7 @@ class PageProduct {
       hAsync("h3", null, product.get('accessoriesHeading')),
       hAsync("ks-product-container", null, accessories.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice, unavailable: card.unavailable })))
     ]
-      : null);
+      : null, hAsync("ks-zaufane", { listing: true, nobg: true, token: "sf15070062863aac5f8ea", customer: "150700" }));
   }
   static get style() { return productCss; }
   static get cmpMeta() { return {
@@ -28825,6 +28832,71 @@ class TrackerProduct {
   }; }
 }
 
+const zaufaneCss = "ks-zaufane{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;padding:0px;margin:20px 0px 0px 0px;height:150px}ks-zaufane[home] #ekw70.ekw70 .review-text-section{background-color:#ffffff}ks-zaufane[listing]{z-index:10;padding:20px;margin:0px}ks-zaufane[listing]:not([nobg]){background:white}ks-zaufane[listing][nobg] #ekw70.ekw70 .review-text-section{background-color:#ffffff}@media screen and (max-width: 767px){ks-zaufane{height:350px;padding:0px !important;margin:0px;background:-webkit-gradient(linear, \n            left top, left bottom, \n            from(#ffc400), \n            color-stop(42.85714285714286%, #ffc400), \n            color-stop(42.85714285714286%, #ffffff), \n            to(#ffffff)\n        ) !important;background:linear-gradient(180deg, \n            #ffc400 0%, \n            #ffc400 42.85714285714286%, \n            #ffffff 42.85714285714286%, \n            #ffffff 100%\n        ) !important}ks-zaufane[listing]:not([nobg]){background:-webkit-gradient(linear, \n            left top, left bottom, \n            from(#ffc400), \n            color-stop(42.85714285714286%, #ffc400), \n            color-stop(42.85714285714286%, #e5e4e2), \n            to(#e5e4e2)\n        ) !important;background:linear-gradient(180deg, \n            #ffc400 0%, \n            #ffc400 42.85714285714286%, \n            #e5e4e2 42.85714285714286%, \n            #e5e4e2 100%\n        ) !important}}";
+
+class Zaufane {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.home = false;
+    this.listing = false;
+    this.nobg = false;
+  }
+  componentDidLoad() {
+    var k = document.getElementsByClassName("ekomi-widget-" + this.token);
+    for (var x = 0; x < k.length; x++) {
+      this.registerWidget(window, this.token);
+    }
+  }
+  registerWidget(w, token) {
+    w['_ekomiWidgetsServerUrl'] = 'https://widgets.ekomi.com';
+    w['_customerId'] = this.customer;
+    if (w['_language'] == undefined) {
+      w['_language'] = new Array();
+    }
+    w['_language'][token] = 'auto';
+    if (typeof (w['_ekomiWidgetTokens']) !== 'undefined') {
+      w['_ekomiWidgetTokens'][w['_ekomiWidgetTokens'].length] = token;
+    }
+    else {
+      w['_ekomiWidgetTokens'] = new Array(token);
+    }
+    if (typeof (window === null || window === void 0 ? void 0 : window.ekomiWidgetJs) == 'undefined') {
+      window.ekomiWidgetJs = true;
+      var scr = document.createElement('script');
+      scr.src = 'https://sw-assets.ekomiapps.de/static_resources/widget.js';
+      var head = document.getElementsByTagName('head')[0];
+      head.appendChild(scr);
+    }
+    else {
+      if (typeof window.ekomiWidgetMain != 'undefined') {
+        window.ekomiWidgetMain('ajax', token);
+      }
+    }
+    return true;
+  }
+  render() {
+    return [
+      hAsync("div", { id: "widget-container", class: "ekomi-widget-container ekomi-widget-" + this.token }),
+      hAsync("a", { href: "https://www.ekomi-pl.com/opinie-kuchniasklep.html", target: "_blank" }, hAsync("img", { alt: "kuchniasklep.pl Reviews with ekomi-pl.com", src: "https://smart-widget-assets.ekomiapps.de/resources/ekomi_logo.png", style: { display: "none" } }))
+    ];
+  }
+  static get style() { return zaufaneCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-zaufane",
+    "$members$": {
+      "token": [1],
+      "customer": [1],
+      "home": [516],
+      "listing": [516],
+      "nobg": [516]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": [["home", "home"], ["listing", "listing"], ["nobg", "nobg"]]
+  }; }
+}
+
 const dialogCss = "ks-dialog{display:block}ks-dialog .content{background-color:var(--card-background);-webkit-box-shadow:var(--big-shadow);box-shadow:var(--big-shadow);color:var(--card-text-color);position:relative;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:720px;padding:30px;line-height:24px}ks-dialog[nopadding] .content{padding:0px !important}@media (max-width: 720px){ks-dialog .content{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;height:100%;padding:20px}ks-dialog[smallmobile] .content{height:auto;width:90%}}@media (max-width: 420px){ks-dialog .content{font-size:13px;line-height:18px;padding:15px}ks-dialog[smallmobile] .content{height:auto;min-width:280px}}ks-dialog ks-overlay .content{-webkit-animation:0.4s vertical-swipe-out 1;animation:0.4s vertical-swipe-out 1}ks-dialog ks-overlay.active .content{-webkit-animation:0.4s vertical-swipe-in 1;animation:0.4s vertical-swipe-in 1}ks-dialog .close{position:absolute;top:20px;right:20px;border-style:none;outline-style:none;background-color:transparent;z-index:200;-webkit-animation:fade-in 0.3s 1;animation:fade-in 0.3s 1}ks-dialog[dark] .close{color:white}ks-dialog .overlay{position:absolute;top:0;bottom:0;left:0;right:0;z-index:100;padding:30px;background-color:rgba(255,255,255, 0.8);-webkit-animation:fade-in 0.3s 1;animation:fade-in 0.3s 1}ks-dialog .opaque{background-color:#ffffff}ks-dialog .overlay>div{position:absolute;top:50%;left:50%;-webkit-transform:translate(-50%, -50%);transform:translate(-50%, -50%);-webkit-box-sizing:border-box;box-sizing:border-box;max-width:800px;width:80%;text-align:center}ks-dialog .overlay>div>*{-webkit-animation:vertical-swipe-in-short 0.5s;animation:vertical-swipe-in-short 0.5s}ks-dialog .overlay .header{font-family:var(--font-emphasis);font-size:20px;font-weight:700}";
 
 class dialog {
@@ -29098,6 +29170,7 @@ registerComponents([
   TopBanner,
   TrackerOrder,
   TrackerProduct,
+  Zaufane,
   dialog,
 ]);
 
