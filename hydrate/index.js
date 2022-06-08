@@ -25953,7 +25953,7 @@ class PageHeader {
     registerInstance(this, hostRef);
   }
   render() {
-    return hAsync(Host, null, hAsync("ks-top-banner", null), hAsync("ks-navbar", null), hAsync("ks-newsletter-popup", { api: common.get('newsletterApi'), "login-link": common.get('loginLink'), "register-link": common.get('registerLink'), "logged-in": commonDynamic.get('loggedIn') }), hAsync("ks-product-suggestions", { api: common.get('suggestionApi') }), hAsync("ks-error-popup", null), hAsync("ks-message-popup", null), hAsync("ks-cookie-popup", { message: common.get('cookieMessage'), button: common.get('cookieButton'), delay: common.get('cookieDelay') }));
+    return hAsync(Host, null, hAsync("ks-top-banner", null), hAsync("ks-navbar", null), hAsync("ks-newsletter-popup", { api: commonDynamic.get('api').newsletter, "login-link": common.get('loginLink'), "register-link": common.get('registerLink'), "logged-in": commonDynamic.get('loggedIn') }), hAsync("ks-product-suggestions", { api: common.get('suggestionApi') }), hAsync("ks-error-popup", null), hAsync("ks-message-popup", null), hAsync("ks-cookie-popup", { message: common.get('cookieMessage'), button: common.get('cookieButton'), delay: common.get('cookieDelay') }));
   }
   static get cmpMeta() { return {
     "$flags$": 0,
