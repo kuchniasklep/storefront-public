@@ -5668,7 +5668,7 @@ class Banner {
   }
   Newsletter(name) {
     var _a;
-    if (name == "Newlsetter")
+    if (name == "Newsletter")
       (_a = document.querySelector('ks-newsletter-popup')) === null || _a === void 0 ? void 0 : _a.Show();
   }
   render() {
