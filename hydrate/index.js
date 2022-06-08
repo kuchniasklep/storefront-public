@@ -5666,6 +5666,11 @@ class Banner {
   constructor(hostRef) {
     registerInstance(this, hostRef);
   }
+  Newsletter(name) {
+    var _a;
+    if (name == "Newlsetter")
+      (_a = document.querySelector('ks-newsletter-popup')) === null || _a === void 0 ? void 0 : _a.Show();
+  }
   render() {
     const theme = (this.active && this.theme) ? `:root {
 			--navbar-color: ${this.theme.navbarColor} !important;
@@ -5676,7 +5681,7 @@ class Banner {
 			--navbar-category-active: ${this.theme.categoryColorActive} !important;
 			--navbar-category-backdrop: ${this.theme.categoryColorBackdrop} !important;
 		}` : null;
-    return hAsync(Host, { class: "swiper-slide", style: { backgroundColor: this.color } }, hAsync("a", { href: this.link }, hAsync("ks-img2", { vertical: true, sync: this.sync, src: this.image, webp: this.webp, alt: this.name, width: this.width, height: this.height })), theme ? hAsync("style", { innerHTML: theme }) : null);
+    return hAsync(Host, { class: "swiper-slide", style: { backgroundColor: this.color } }, hAsync("a", { href: this.link ? this.link : null, onClick: () => this.Newsletter(this.name) }, hAsync("ks-img2", { vertical: true, sync: this.sync, src: this.image, webp: this.webp, alt: this.name, width: this.width, height: this.height })), theme ? hAsync("style", { innerHTML: theme }) : null);
   }
   static get style() { return bannerCss; }
   static get cmpMeta() { return {
