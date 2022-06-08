@@ -24303,7 +24303,7 @@ class NewsletterPopup {
     data.append("zgoda_newsletter_marketing", "1");
     data.append("zgoda_newsletter_info_handlowa", "1");
     data.append("popup", "1");
-    fetch(this.api + "?tok=" + ksNewsletterToken, { body: data, method: "post" })
+    fetch(this.api, { body: data, method: "post" })
       .then(async (response) => {
       const result = await response.text();
       if (result.search("SUCCESS") != -1)
