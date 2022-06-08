@@ -28595,10 +28595,6 @@ class Zaufane {
     this.nobg = false;
   }
   componentDidLoad() {
-    var k = document.getElementsByClassName("ekomi-widget-" + this.token);
-    for (var x = 0; x < k.length; x++) {
-      this.registerWidget(window, this.token);
-    }
   }
   registerWidget(w, token) {
     w['_ekomiWidgetsServerUrl'] = 'https://widgets.ekomi.com';
