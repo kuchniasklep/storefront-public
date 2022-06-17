@@ -26223,7 +26223,6 @@ class PageProduct {
     const variants = product.get('variants');
     const tabs = product.get('tabs');
     const youtube = product.get('youtube');
-    const comments = product.get('comments');
     const similar = product.get('similar');
     const accessories = product.get('accessories');
     const model = product.get('model') || product.get('catalog');
@@ -26262,9 +26261,9 @@ class PageProduct {
       hAsync("ks-container", null, hAsync("ks-product-tabs", { names: tabs.map(tab => tab.name).join(", ") }, tabs.map((tab, index) => hAsync("ks-product-tab", { name: tab.name, open: index == 0, main: index == 0, content: tab.content }))))
       : null, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 && (variants === null || variants === void 0 ? void 0 : variants.length) > 0 ?
       hAsync("ks-container", { padding: true }, hAsync("ks-product-tags", null))
-      : null, youtube || comments ?
-      hAsync("ks-container", null, youtube.map(id => hAsync("ks-product-youtube", { "video-id": id })), comments ? hAsync("ks-product-comments", null) : null)
-      : null, (similar === null || similar === void 0 ? void 0 : similar.length) > 0 ? [
+      : null, youtube ?
+      hAsync("ks-container", null, youtube.map(id => hAsync("ks-product-youtube", { "video-id": id })))
+      : null, hAsync("ks-zaufane-product", { product: product.get('id'), token: "sf15070062a0416b2b0c3", customer: "150700" }), (similar === null || similar === void 0 ? void 0 : similar.length) > 0 ? [
       hAsync("h3", null, product.get('similarHeading')),
       hAsync("ks-product-container", null, similar.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice, unavailable: card.unavailable })))
     ]
@@ -28646,6 +28645,63 @@ class Zaufane {
   }; }
 }
 
+const zaufaneProductCss = "ks-zaufane-product{display:block;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:1200px;width:100%;margin-left:auto;margin-right:auto;background:white}ks-zaufane-product .ekomi-widget-container .prc.container-fluid{padding:20px}ks-zaufane-product .ekomi-widget-container .row{margin:0px !important}ks-zaufane-product .prc .rating-details{background:none}ks-zaufane-product .prc .review{border-bottom:1px solid #e3e3e3}";
+
+class ZaufaneProduct {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+  }
+  componentDidLoad() {
+  }
+  registerWidget(w, token) {
+    w['_ekomiWidgetsServerUrl'] = 'https://widgets.ekomi.com';
+    w['_customerId'] = this.customer;
+    if (w['_language'] == undefined) {
+      w['_language'] = new Array();
+    }
+    w['_language'][token] = 'auto';
+    if (typeof (w['_ekomiWidgetTokens']) !== 'undefined') {
+      w['_ekomiWidgetTokens'][w['_ekomiWidgetTokens'].length] = token;
+    }
+    else {
+      w['_ekomiWidgetTokens'] = new Array(token);
+    }
+    if (typeof (window.ekomiWidgetJs) == 'undefined') {
+      window.ekomiWidgetJs = true;
+      var scr = document.createElement('script');
+      scr.src = 'https://sw-assets.ekomiapps.de/static_resources/widget.js';
+      var head = document.getElementsByTagName('head')[0];
+      head.appendChild(scr);
+    }
+    else {
+      if (typeof window.ekomiWidgetMain != 'undefined') {
+        window.ekomiWidgetMain('ajax', token);
+      }
+    }
+    return true;
+  }
+  render() {
+    return [
+      hAsync("div", { id: "widget-container", class: "data-ekomi-emp ekomi-widget-container ekomi-widget-" + this.token }),
+      hAsync("div", { id: "ekomi-product-widget-identifier", class: "prod-data-emp", style: { display: "none" } }, this.product),
+      hAsync("a", { href: "https://www.ekomi-pl.com/opinie-kuchniasklep.html", target: "_blank" }, hAsync("img", { alt: "kuchniasklep.pl Reviews with ekomi-pl.com", src: "https://smart-widget-assets.ekomiapps.de/resources/ekomi_logo.png", style: { display: "none" } }))
+    ];
+  }
+  static get style() { return zaufaneProductCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-zaufane-product",
+    "$members$": {
+      "product": [1],
+      "token": [1],
+      "customer": [1]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
 const dialogCss = "ks-dialog{display:block}ks-dialog .content{background-color:var(--card-background);-webkit-box-shadow:var(--big-shadow);box-shadow:var(--big-shadow);color:var(--card-text-color);position:relative;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:720px;padding:30px;line-height:24px}ks-dialog[nopadding] .content{padding:0px !important}@media (max-width: 720px){ks-dialog .content{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;height:100%;padding:20px}ks-dialog[smallmobile] .content{height:auto;width:90%}}@media (max-width: 420px){ks-dialog .content{font-size:13px;line-height:18px;padding:15px}ks-dialog[smallmobile] .content{height:auto;min-width:280px}}ks-dialog ks-overlay .content{-webkit-animation:0.4s vertical-swipe-out 1;animation:0.4s vertical-swipe-out 1}ks-dialog ks-overlay.active .content{-webkit-animation:0.4s vertical-swipe-in 1;animation:0.4s vertical-swipe-in 1}ks-dialog .close{position:absolute;top:20px;right:20px;border-style:none;outline-style:none;background-color:transparent;z-index:200;-webkit-animation:fade-in 0.3s 1;animation:fade-in 0.3s 1}ks-dialog[dark] .close{color:white}ks-dialog .overlay{position:absolute;top:0;bottom:0;left:0;right:0;z-index:100;padding:30px;background-color:rgba(255,255,255, 0.8);-webkit-animation:fade-in 0.3s 1;animation:fade-in 0.3s 1}ks-dialog .opaque{background-color:#ffffff}ks-dialog .overlay>div{position:absolute;top:50%;left:50%;-webkit-transform:translate(-50%, -50%);transform:translate(-50%, -50%);-webkit-box-sizing:border-box;box-sizing:border-box;max-width:800px;width:80%;text-align:center}ks-dialog .overlay>div>*{-webkit-animation:vertical-swipe-in-short 0.5s;animation:vertical-swipe-in-short 0.5s}ks-dialog .overlay .header{font-family:var(--font-emphasis);font-size:20px;font-weight:700}";
 
 class dialog {
@@ -28918,6 +28974,7 @@ registerComponents([
   TrackerOrder,
   TrackerProduct,
   Zaufane,
+  ZaufaneProduct,
   dialog,
 ]);
 
