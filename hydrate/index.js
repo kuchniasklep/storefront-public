@@ -5666,6 +5666,11 @@ class Banner {
   constructor(hostRef) {
     registerInstance(this, hostRef);
   }
+  Newsletter(name) {
+    var _a;
+    if (name == "Newsletter")
+      (_a = document.querySelector('ks-newsletter-popup')) === null || _a === void 0 ? void 0 : _a.Show();
+  }
   render() {
     const theme = (this.active && this.theme) ? `:root {
 			--navbar-color: ${this.theme.navbarColor} !important;
@@ -5676,7 +5681,7 @@ class Banner {
 			--navbar-category-active: ${this.theme.categoryColorActive} !important;
 			--navbar-category-backdrop: ${this.theme.categoryColorBackdrop} !important;
 		}` : null;
-    return hAsync(Host, { class: "swiper-slide", style: { backgroundColor: this.color } }, hAsync("a", { href: this.link }, hAsync("ks-img2", { vertical: true, sync: this.sync, src: this.image, webp: this.webp, alt: this.name, width: this.width, height: this.height })), theme ? hAsync("style", { innerHTML: theme }) : null);
+    return hAsync(Host, { class: "swiper-slide", style: { backgroundColor: this.color } }, hAsync("a", { href: this.link ? this.link : null, onClick: () => this.Newsletter(this.name) }, hAsync("ks-img2", { vertical: true, sync: this.sync, src: this.image, webp: this.webp, alt: this.name, width: this.width, height: this.height })), theme ? hAsync("style", { innerHTML: theme }) : null);
   }
   static get style() { return bannerCss; }
   static get cmpMeta() { return {
@@ -24222,7 +24227,7 @@ class NewsletterPopup {
     data.append("zgoda_newsletter_marketing", "1");
     data.append("zgoda_newsletter_info_handlowa", "1");
     data.append("popup", "1");
-    fetch(this.api + "?tok=" + ksNewsletterToken, { body: data, method: "post" })
+    fetch(this.api, { body: data, method: "post" })
       .then(async (response) => {
       const result = await response.text();
       if (result.search("SUCCESS") != -1)
@@ -25899,7 +25904,7 @@ class PageHeader {
     registerInstance(this, hostRef);
   }
   render() {
-    return hAsync(Host, null, hAsync("ks-top-banner", null), hAsync("ks-navbar", null), hAsync("ks-newsletter-popup", { api: common.get('newsletterApi'), "login-link": common.get('loginLink'), "register-link": common.get('registerLink') }), hAsync("ks-product-suggestions", { api: common.get('suggestionApi') }), hAsync("ks-error-popup", null), hAsync("ks-message-popup", null), hAsync("ks-cookie-popup", { message: common.get('cookieMessage'), button: common.get('cookieButton'), delay: common.get('cookieDelay') }));
+    return hAsync(Host, null, hAsync("ks-top-banner", null), hAsync("ks-navbar", null), hAsync("ks-newsletter-popup", { api: commonDynamic.get('api').newsletter, "login-link": common.get('loginLink'), "register-link": common.get('registerLink'), "logged-in": commonDynamic.get('loggedIn') }), hAsync("ks-product-suggestions", { api: common.get('suggestionApi') }), hAsync("ks-error-popup", null), hAsync("ks-message-popup", null), hAsync("ks-cookie-popup", { message: common.get('cookieMessage'), button: common.get('cookieButton'), delay: common.get('cookieDelay') }));
   }
   static get cmpMeta() { return {
     "$flags$": 0,
@@ -26470,7 +26475,6 @@ class PageProduct {
     const variants = product.get('variants');
     const tabs = product.get('tabs');
     const youtube = product.get('youtube');
-    const comments = product.get('comments');
     const similar = product.get('similar');
     const accessories = product.get('accessories');
     const model = product.get('model') || product.get('catalog');
@@ -26509,9 +26513,9 @@ class PageProduct {
       hAsync("ks-container", null, hAsync("ks-product-tabs", { names: tabs.map(tab => tab.name).join(", ") }, tabs.map((tab, index) => hAsync("ks-product-tab", { name: tab.name, open: index == 0, main: index == 0, content: tab.content }))))
       : null, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 && (variants === null || variants === void 0 ? void 0 : variants.length) > 0 ?
       hAsync("ks-container", { padding: true }, hAsync("ks-product-tags", null))
-      : null, youtube || comments ?
-      hAsync("ks-container", null, youtube.map(id => hAsync("ks-product-youtube", { "video-id": id })), comments ? hAsync("ks-product-comments", null) : null)
-      : null, (similar === null || similar === void 0 ? void 0 : similar.length) > 0 ? [
+      : null, youtube ?
+      hAsync("ks-container", null, youtube.map(id => hAsync("ks-product-youtube", { "video-id": id })))
+      : null, hAsync("ks-zaufane-product", { product: product.get('id'), token: "sf15070062a0416b2b0c3", customer: "150700" }), (similar === null || similar === void 0 ? void 0 : similar.length) > 0 ? [
       hAsync("h3", null, product.get('similarHeading')),
       hAsync("ks-product-container", null, similar.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice, unavailable: card.unavailable })))
     ]
@@ -28842,10 +28846,6 @@ class Zaufane {
     this.nobg = false;
   }
   componentDidLoad() {
-    var k = document.getElementsByClassName("ekomi-widget-" + this.token);
-    for (var x = 0; x < k.length; x++) {
-      this.registerWidget(window, this.token);
-    }
   }
   registerWidget(w, token) {
     w['_ekomiWidgetsServerUrl'] = 'https://widgets.ekomi.com';
@@ -28894,6 +28894,63 @@ class Zaufane {
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": [["home", "home"], ["listing", "listing"], ["nobg", "nobg"]]
+  }; }
+}
+
+const zaufaneProductCss = "ks-zaufane-product{display:block;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:1200px;width:100%;margin-left:auto;margin-right:auto;background:white}ks-zaufane-product .ekomi-widget-container .prc.container-fluid{padding:20px}ks-zaufane-product .ekomi-widget-container .row{margin:0px !important}ks-zaufane-product .prc .rating-details{background:none}ks-zaufane-product .prc .review{border-bottom:1px solid #e3e3e3}";
+
+class ZaufaneProduct {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+  }
+  componentDidLoad() {
+  }
+  registerWidget(w, token) {
+    w['_ekomiWidgetsServerUrl'] = 'https://widgets.ekomi.com';
+    w['_customerId'] = this.customer;
+    if (w['_language'] == undefined) {
+      w['_language'] = new Array();
+    }
+    w['_language'][token] = 'auto';
+    if (typeof (w['_ekomiWidgetTokens']) !== 'undefined') {
+      w['_ekomiWidgetTokens'][w['_ekomiWidgetTokens'].length] = token;
+    }
+    else {
+      w['_ekomiWidgetTokens'] = new Array(token);
+    }
+    if (typeof (window.ekomiWidgetJs) == 'undefined') {
+      window.ekomiWidgetJs = true;
+      var scr = document.createElement('script');
+      scr.src = 'https://sw-assets.ekomiapps.de/static_resources/widget.js';
+      var head = document.getElementsByTagName('head')[0];
+      head.appendChild(scr);
+    }
+    else {
+      if (typeof window.ekomiWidgetMain != 'undefined') {
+        window.ekomiWidgetMain('ajax', token);
+      }
+    }
+    return true;
+  }
+  render() {
+    return [
+      hAsync("div", { id: "widget-container", class: "data-ekomi-emp ekomi-widget-container ekomi-widget-" + this.token }),
+      hAsync("div", { id: "ekomi-product-widget-identifier", class: "prod-data-emp", style: { display: "none" } }, this.product),
+      hAsync("a", { href: "https://www.ekomi-pl.com/opinie-kuchniasklep.html", target: "_blank" }, hAsync("img", { alt: "kuchniasklep.pl Reviews with ekomi-pl.com", src: "https://smart-widget-assets.ekomiapps.de/resources/ekomi_logo.png", style: { display: "none" } }))
+    ];
+  }
+  static get style() { return zaufaneProductCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-zaufane-product",
+    "$members$": {
+      "product": [1],
+      "token": [1],
+      "customer": [1]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
   }; }
 }
 
@@ -29171,6 +29228,7 @@ registerComponents([
   TrackerOrder,
   TrackerProduct,
   Zaufane,
+  ZaufaneProduct,
   dialog,
 ]);
 
