@@ -23628,6 +23628,33 @@ class Loader {
   }; }
 }
 
+const logoBannerCss = "ks-logo-banner{margin:5px}";
+
+class LogoBanner {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+  }
+  render() {
+    return hAsync("a", { target: "_blank", href: this.link ? this.link : null }, hAsync("ks-img2", { src: this.image, webp: this.webp, alt: this.name, width: this.width, height: this.height }));
+  }
+  static get style() { return logoBannerCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-logo-banner",
+    "$members$": {
+      "name": [1],
+      "image": [1],
+      "webp": [1],
+      "link": [1],
+      "width": [2],
+      "height": [2]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
 const messagePopupCss = "ks-message-popup{display:block}ks-message-popup .title{margin-top:10px;text-align:center;font-size:20px;font-weight:700;font-family:var(--font-emphasis)}ks-message-popup .message{padding:15px 30px;color:var(--card-text-color);text-align:center;font-size:18px}ks-message-popup ks-button{margin-bottom:10px}";
 
 Swiper.use([Pagination$2, Thumbs$1]);
@@ -25982,9 +26009,10 @@ const home = createStore({
   articlesHeading: "",
   articlesMore: "",
   seeMore: "",
+  logoBanners: []
 });
 
-const homeCss = "ks-page-home{display:block}ks-page-home>*>h3{font-size:24px;margin:25px 0;text-align:center}";
+const homeCss = "ks-page-home{display:block}ks-page-home>*>h3{font-size:24px;margin:25px 0;text-align:center}ks-page-home .logo-banner-container{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;padding:10px}";
 
 class PageHome {
   constructor(hostRef) {
@@ -26009,6 +26037,7 @@ class PageHome {
     const articlesHeading = home.get('articlesHeading');
     const articlesMore = home.get('articlesMore');
     const seeMore = home.get('seeMore');
+    const logoBanners = home.get('logoBanners');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, banners ? hAsync("ks-banner-container", null, banners.map((banner, index) => hAsync("ks-banner", { sync: index == 0, active: index == 0, name: banner.name, color: banner.color, link: banner.link, image: banner.image, webp: banner.webp, width: banner.width, height: banner.height, theme: banner.theme }))) : null, info ? hAsync("ks-homepage-info", null, hAsync("h1", { slot: "mainHeading" }, info.mainHeading), hAsync("p", { slot: "mainContent" }, info.mainParagraph), hAsync("h2", { slot: "firstHeading" }, info.firstHeading), hAsync("p", { slot: "firstContent" }, info.firstParagraph), hAsync("h2", { slot: "secondHeading" }, info.secondHeading), hAsync("p", { slot: "secondContent" }, info.secondParagraph), hAsync("h2", { slot: "thirdHeading" }, info.thirdHeading), hAsync("p", { slot: "thirdContent" }, info.thirdParagraph)) : null, hAsync("ks-zaufane", { home: true, token: "sf15070062863a73c5990", customer: "150700" }), products ? hAsync("ks-homepage-products", null, products.map(products => hAsync("ks-product-container", null, products.products.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice, unavailable: card.unavailable }))))) : null, featured ? hAsync("ks-featured-container", null, featured.map(banner => hAsync("ks-featured", { slot: banner.side, name: banner.name, image: banner.image, webp: banner.webp, link: banner.link, width: banner.width, height: banner.height }))) : null, recipes ? [
       hAsync("h3", null, recipesHeading),
       hAsync("ks-article-container", null, recipes.map(recipe => hAsync("ks-recipe-card", { heading: recipe.heading, cuisine: recipe.cuisine, category: recipe.category, link: recipe.link, image: recipe.image, webp: recipe.webp, width: recipe.width, height: recipe.height, "cuisine-link": recipe.cuisineLink, "category-link": recipe.categoryLink }))),
@@ -26017,7 +26046,9 @@ class PageHome {
       hAsync("h3", null, articlesHeading),
       hAsync("ks-article-container", null, articles.map(article => hAsync("ks-article-card", { link: article.link, heading: article.heading, image: article.image, webp: article.webp, date: article.date, views: article.views }, hAsync("p", null, article.description)))),
       hAsync("ks-see-more", { href: articlesMore, text: seeMore })
-    ] : null);
+    ] : null, (logoBanners === null || logoBanners === void 0 ? void 0 : logoBanners.length) > 0 ?
+      hAsync("div", { class: "logo-banner-container" }, logoBanners.map(banner => hAsync("ks-logo-banner", { name: banner.name, image: banner.image, webp: banner.webp, link: banner.link, width: banner.width, height: banner.height })))
+      : null);
   }
   static get style() { return homeCss; }
   static get cmpMeta() { return {
@@ -28878,6 +28909,7 @@ registerComponents([
   ListingHeader,
   ListingNavigation,
   Loader,
+  LogoBanner,
   MessagePopup,
   MiniCart,
   Navbar,
