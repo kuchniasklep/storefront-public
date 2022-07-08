@@ -1,0 +1,1 @@
+import{r as s,h as t}from"./index-6e14abe0.js";const r=class{constructor(t){s(this,t)}render(){return t("a",{target:"_blank",href:this.link?this.link:null},t("ks-img2",{src:this.image,webp:this.webp,alt:this.name,width:this.width,height:this.height}))}};r.style="ks-logo-banner{margin:5px}";export{r as ks_logo_banner}
