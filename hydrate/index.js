@@ -14239,6 +14239,31 @@ class CartSelectShipping {
   }; }
 }
 
+const cartPaymentCalculatorsCss = "ks-cart-payment-calculators ks-button{max-width:300px;margin:0px auto 20px auto}";
+
+class CartShippingMessage$1 {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+  }
+  render() {
+    return (this.creditagricoleParameters && store.get("activePayment") == this.creditagricoleId) ?
+      hAsync("ks-product-calculator-ca", { price: store.get("totalValue").toString(), parameters: this.creditagricoleParameters }, hAsync("ks-button", { round: true, name: "Oblicz raty" }))
+      : null;
+  }
+  static get style() { return cartPaymentCalculatorsCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-cart-payment-calculators",
+    "$members$": {
+      "creditagricoleId": [2, "creditagricole-id"],
+      "creditagricoleParameters": [1, "creditagricole-parameters"]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
 class CartShippingMessage {
   constructor(hostRef) {
     registerInstance(this, hostRef);
@@ -26620,11 +26645,24 @@ class ProductCalculatorCA {
     this.width = 820;
     this.height = 680;
   }
+  componentDidLoad() {
+    this.CreditAgricoleButton = document.querySelector("ks-product-calculator-ca > *:first-child");
+    if (this.CreditAgricoleButton) {
+      this.CreditAgricoleButton.addEventListener("click", () => {
+        var iWidth = this.width;
+        var iHeight = this.height;
+        var iX = (screen.availWidth - iWidth) / 2;
+        var iY = (screen.availHeight - iHeight) / 2;
+        var wartosc = this.price;
+        var parametryLukas = this.parameters;
+        var lukas = parametryLukas.split(';');
+        let adres = 'https://ewniosek.credit-agricole.pl/eWniosek/simulator.jsp?PARAM_TYPE=RAT&PARAM_PROFILE=' + lukas[0] + '&PARAM_CREDIT_AMOUNT=' + wartosc;
+        window.open(adres, 'Policz_rate_LUKAS', 'height=' + iHeight + ', width=' + iWidth + ',top=' + iY + ',left=' + iX + ',directories=no,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no');
+      });
+    }
+  }
   render() {
-    return [
-      hAsync("slot", null),
-      hAsync("script", null, "let CreditAgricoleButton = document.querySelector(\"ks-product-calculator-ca ", '>', " *:first-child\"); CreditAgricoleButton.addEventListener(\"click\", function(event)", "{", "var iWidth = ", this.width, "; var iHeight = ", this.height, "; var iX = (screen.availWidth - iWidth) / 2; var iY = (screen.availHeight - iHeight) / 2; var wartosc = ", this.price, "; var parametryLukas = \"", this.parameters, "\"; var lukas = parametryLukas.split(';'); var adres = 'https://ewniosek.credit-agricole.pl/eWniosek/simulator.jsp?PARAM_TYPE=RAT&PARAM_PROFILE=' + lukas[0] + '&PARAM_CREDIT_AMOUNT=' + wartosc; window.open(adres, 'Policz_rate_LUKAS', 'height=' + iHeight + ', width=' + iWidth + ',top=' + iY + ',left=' + iX + ',directories=no,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no');", '}', ");")
-    ];
+    return hAsync("slot", null);
   }
   static get cmpMeta() { return {
     "$flags$": 4,
@@ -28858,6 +28896,7 @@ registerComponents([
   CartSelectItem,
   CartSelectPayment,
   CartSelectShipping,
+  CartShippingMessage$1,
   CartShippingMessage,
   CartSpinner,
   CartSummary,
