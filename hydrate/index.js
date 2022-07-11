@@ -27307,6 +27307,7 @@ const productNotifyCss = "ks-product-notify{display:block}ks-product-notify fiel
 class ProductNotify {
   constructor(hostRef) {
     registerInstance(this, hostRef);
+    this.initialized = false;
   }
   async requestHandler(event) {
     const notifyStrings = product.get("notifyStrings");
@@ -27341,6 +27342,7 @@ class ProductNotify {
     });
   }
   async show() {
+    this.initialized = true;
     this.dialog.show();
   }
   componentDidLoad() {
@@ -27348,7 +27350,9 @@ class ProductNotify {
   }
   render() {
     const notifyStrings = product.get("notifyStrings");
-    return hAsync("ks-dialog", null, hAsync("form", { onSubmit: e => this.requestHandler(e) }, hAsync("fieldset", null, hAsync("div", { class: "info" }, hAsync("h3", null, notifyStrings.heading), hAsync("p", null, notifyStrings.paragraph)), hAsync("ks-input-text", { email: true, name: "email", required: true, nomessage: true, placeholder: "E-mail", icon: "mail" }), hAsync("ks-input-check", { checked: true, name: "backorders", nomessage: true, label: notifyStrings.backorders }), hAsync("ks-input-check", { name: "zgoda", required: true, nomessage: true, label: notifyStrings.agreement }), hAsync("ks-button", { submit: true, name: "POWIADOM MNIE" }))));
+    return hAsync("ks-dialog", null, this.initialized ?
+      hAsync("form", { onSubmit: e => this.requestHandler(e) }, hAsync("fieldset", null, hAsync("div", { class: "info" }, hAsync("h3", null, notifyStrings.heading), hAsync("p", null, notifyStrings.paragraph)), hAsync("ks-input-text", { email: true, name: "email", required: true, nomessage: true, placeholder: "E-mail", icon: "mail" }), hAsync("ks-input-check", { checked: true, name: "backorders", nomessage: true, label: notifyStrings.backorders }), hAsync("ks-input-check", { name: "zgoda", required: true, nomessage: true, label: notifyStrings.agreement }), hAsync("ks-button", { submit: true, name: "POWIADOM MNIE" })))
+      : null);
   }
   get root() { return getElement(this); }
   static get style() { return productNotifyCss; }
@@ -27358,6 +27362,7 @@ class ProductNotify {
     "$members$": {
       "resultHeading": [32],
       "resultParagraph": [32],
+      "initialized": [32],
       "show": [64]
     },
     "$listeners$": undefined,
