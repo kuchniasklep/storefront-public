@@ -26473,7 +26473,7 @@ class Pagination {
   }; }
 }
 
-const productAdminCss = "ks-product-admin{display:none}ks-product-admin[enabled]{display:block}ks-product-admin .bar{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-align:center;align-items:center;background-color:#181818;color:white}ks-product-admin .bar>div:not(.links){padding:17px}ks-product-admin .bar>.links{display:-ms-flexbox;display:flex;-ms-flex-pack:end;justify-content:flex-end;-ms-flex:1;flex:1}ks-product-admin .bar>.links .button{display:block;padding:17px;color:white;background-color:#252525;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease;border-style:none;outline-style:none;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none}ks-product-admin .bar>.links .button:hover{color:white;background-color:#353535}ks-product-admin .bar>.links .button:active{color:white;background-color:#454545}ks-product-admin .bar>.links .button:nth-child(2n){background-color:#303030}ks-product-admin .bar>.links .button:nth-child(2n):hover{background-color:#404040}ks-product-admin .bar>.links .button:nth-child(2n):active{background-color:#505050}ks-product-admin .distributors{display:table;background-color:#000000;color:#ffffff;width:100%;-webkit-box-sizing:border-box;box-sizing:border-box;overflow:hidden}ks-product-admin .distributors[hidden]{display:none !important;visibility:hidden !important}ks-product-admin .distributors th{font-weight:700;font-size:15.5px !important;font-family:var(--font-emphasis);border-bottom:2px solid #181818;border-right:2px solid #181818}ks-product-admin .distributors td{font-weight:500;font-size:14px;border-right:2px solid #181818}ks-product-admin .distributors th,ks-product-admin .distributors td{text-align:center;padding:8px 20px}ks-product-admin .distributors th:first-child,ks-product-admin .distributors td:first-child{text-align:left}ks-product-admin .distributors *:last-child td{padding:8px 20px 14px 20px}ks-product-admin td.overwrite{color:var(--color-secondary)}@media only screen and (max-width: 640px) and (min-width: 340px){ks-product-admin .bar{font-size:14px}ks-product-admin .bar>div:not(.links){padding:17px 10px}}@media only screen and (max-width: 420px){ks-product-admin .bar{font-size:12px}ks-product-admin .bar>div:not(.links){padding:17px 8px}ks-product-admin .bar .hide-mobile{display:none !important}}@media only screen and (max-width: 960px){ks-product-admin .bar>.links button{display:none !important}ks-product-admin .distributors{display:none !important;visibility:hidden !important}}";
+const productAdminCss = "ks-product-admin{display:none}ks-product-admin[enabled]{display:block}ks-product-admin .bar{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-align:center;align-items:center;background-color:#181818;color:white}ks-product-admin .set .bar{background-color:#353535}ks-product-admin .bar>div{-ms-flex:0 1 auto;flex:0 1 auto;white-space:nowrap}ks-product-admin .bar>div:not(.links).name{-ms-flex:1 1 auto;flex:1 1 auto;width:100%;overflow:hidden;text-overflow:ellipsis}ks-product-admin .bar>div:not(.links){padding:17px}ks-product-admin .bar>.links{display:-ms-flexbox;display:flex;-ms-flex-pack:end;justify-content:flex-end;-ms-flex:1;flex:1}ks-product-admin .bar>.links .button{display:block;padding:17px;color:white;background-color:#252525;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease;border-style:none;outline-style:none;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none}ks-product-admin .bar>.links .button:hover{color:white;background-color:#353535}ks-product-admin .bar>.links .button:active{color:white;background-color:#454545}ks-product-admin .bar>.links .button:nth-child(2n){background-color:#303030}ks-product-admin .bar>.links .button:nth-child(2n):hover{background-color:#404040}ks-product-admin .bar>.links .button:nth-child(2n):active{background-color:#505050}ks-product-admin .distributors{display:table;background-color:#000000;color:#ffffff;width:100%;-webkit-box-sizing:border-box;box-sizing:border-box;overflow:hidden}ks-product-admin .distributors[hidden]{display:none !important;visibility:hidden !important}ks-product-admin .distributors th{font-weight:700;font-size:15.5px !important;font-family:var(--font-emphasis);border-bottom:2px solid #181818;border-right:2px solid #181818}ks-product-admin .distributors td{font-weight:500;font-size:14px;border-right:2px solid #181818}ks-product-admin .distributors th,ks-product-admin .distributors td{text-align:center;padding:8px 20px}ks-product-admin .distributors th:first-child,ks-product-admin .distributors td:first-child{text-align:left}ks-product-admin .distributors *:last-child td{padding:8px 20px 14px 20px}ks-product-admin td.overwrite{color:var(--color-secondary)}@media only screen and (max-width: 640px) and (min-width: 340px){ks-product-admin .bar{font-size:14px}ks-product-admin .bar>div:not(.links){padding:17px 10px}}@media only screen and (max-width: 420px){ks-product-admin .bar{font-size:12px}ks-product-admin .bar>div:not(.links){padding:17px 8px}ks-product-admin .bar .hide-mobile{display:none !important}}@media only screen and (max-width: 960px){ks-product-admin .bar>.links button{display:none !important}ks-product-admin .distributors{display:none !important;visibility:hidden !important}}";
 
 class ProductAdmin {
   constructor(hostRef) {
@@ -26487,20 +26487,43 @@ class ProductAdmin {
     this.enabled = !!productDynamic.get("loaded") && !!Object.keys(admin).length;
     if (!this.enabled)
       return null;
-    const hasDistributors = ((_a = admin.distributors) === null || _a === void 0 ? void 0 : _a.length) > 0;
+    const isSet = ((_a = admin === null || admin === void 0 ? void 0 : admin.set) === null || _a === void 0 ? void 0 : _a.length) > 0;
     return [
-      hAsync("div", { class: "bar" }, hAsync("div", null, hAsync("ks-icon", { name: "home" }), " ", admin.homeQuantity), admin.externalQuantity != "" ?
-        hAsync("div", null, hAsync("ks-icon", { name: "truck" }), " ", admin.externalQuantity)
-        : null, admin.availability != "" ?
-        hAsync("div", null, hAsync("ks-icon", { class: "hide-mobile", name: "x-octagon" }), " ", admin.availability)
-        : null, admin.overwrite ?
-        hAsync("div", null, hAsync("ks-icon", { class: "hide-mobile", name: "alert-octagon" }), " Nadpisany")
-        : null, hAsync("div", { class: "links" }, hAsync("a", { class: "button", href: admin.link }, hAsync("ks-icon", { name: "edit" })), hasDistributors ?
+      hAsync("div", { class: "bar" }, this.currentSettings(admin), hAsync("div", { class: "links" }, hAsync("a", { class: "button", href: admin.link }, hAsync("ks-icon", { name: "edit" })), this.hasDistributors(admin) || isSet ?
         hAsync("button", { class: "button", onClick: () => this.expanded = !this.expanded }, hAsync("ks-icon", { name: this.expanded ? "chevron-up" : "chevron-down" }))
         : null)),
-      hasDistributors ?
-        hAsync("div", { class: "distributors", hidden: !this.expanded }, hAsync("tr", null, hAsync("th", null, "Dystrybutor"), hAsync("th", null, "Czas wysy\u0142ki"), hAsync("th", null, "Stan zewn\u0119trzny"), hAsync("th", null, "Tryb niedost\u0119pno\u015Bci"), hAsync("th", null, "Komunikaty")), admin.distributors.map(distributor => hAsync("tr", { class: distributor.overwrite && "overwrite" }, hAsync("td", null, distributor.name), hAsync("td", null, distributor.time), hAsync("td", null, distributor.quantity), hAsync("td", null, distributor.unavailableMode), hAsync("td", null, distributor.warning))))
-        : null
+      isSet ?
+        hAsync("div", { class: "set", hidden: !this.expanded }, admin.set.map(item => [
+          hAsync("div", { class: "bar" }, hAsync("div", { class: "name" }, item.name), this.currentSettings(item), hAsync("div", { class: "links" }, hAsync("a", { class: "button", href: item.link }, hAsync("ks-icon", { name: "edit" })))),
+          this.distributors(item)
+        ]))
+        : null,
+      this.distributors(admin)
+    ];
+  }
+  hasDistributors(obj) {
+    var _a;
+    return ((_a = obj === null || obj === void 0 ? void 0 : obj.distributors) === null || _a === void 0 ? void 0 : _a.length) > 0;
+  }
+  distributors(obj) {
+    var _a;
+    return this.hasDistributors(obj) ?
+      hAsync("div", { class: "distributors", hidden: !this.expanded }, hAsync("tr", null, hAsync("th", null, "Dystrybutor"), hAsync("th", null, "Czas wysy\u0142ki"), hAsync("th", null, "Stan zewn\u0119trzny"), hAsync("th", null, "Tryb niedost\u0119pno\u015Bci"), hAsync("th", null, "Komunikaty")), (_a = obj === null || obj === void 0 ? void 0 : obj.distributors) === null || _a === void 0 ? void 0 :
+        _a.map(distributor => hAsync("tr", { class: distributor.overwrite && "overwrite" }, hAsync("td", null, distributor.name), hAsync("td", null, distributor.time), hAsync("td", null, distributor.quantity), hAsync("td", null, distributor.unavailableMode), hAsync("td", null, distributor.warning))))
+      : null;
+  }
+  currentSettings(item) {
+    return [
+      hAsync("div", null, hAsync("ks-icon", { name: "home" }), " ", item.homeQuantity),
+      item.externalQuantity != "" ?
+        hAsync("div", null, hAsync("ks-icon", { name: "truck" }), " ", item.externalQuantity)
+        : null,
+      item.availability != "" ?
+        hAsync("div", null, hAsync("ks-icon", { class: "hide-mobile", name: "x-octagon" }), " ", item.availability)
+        : null,
+      item.overwrite ?
+        hAsync("div", null, hAsync("ks-icon", { class: "hide-mobile", name: "alert-octagon" }), " Nadpisany")
+        : null,
     ];
   }
   static get style() { return productAdminCss; }
