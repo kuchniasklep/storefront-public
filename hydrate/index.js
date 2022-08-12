@@ -13760,7 +13760,7 @@ class CartProduct {
     const price = this.price.toFixed(2).replace(".", ",") + " zł";
     const inlineBlockOnMobile = { display: this.removable || this.shippingTime ? "block" : "inline-block" };
     return [
-      hAsync("div", { class: "ks-text-decorated", "uk-grid": true }, hAsync("a", { class: "product-image", href: this.link }, hAsync("ks-img2", { src: this.img, width: 150, height: 150, alt: "zdj\u0119cie produktu" })), hAsync("div", { class: "description" }, hAsync("a", { href: this.link, innerHTML: this.name }), this.mobile >= 1 ?
+      hAsync("div", { class: "ks-text-decorated", "uk-grid": true }, hAsync("a", { class: "product-image", href: this.link }, hAsync("ks-img2", { center: true, src: this.img, width: 150, height: 150, alt: "zdj\u0119cie produktu" })), hAsync("div", { class: "description" }, hAsync("a", { href: this.link, innerHTML: this.name }), this.mobile >= 1 ?
         hAsync("div", { class: "numbers" }, hAsync("div", { style: inlineBlockOnMobile }, hAsync("span", { class: "price" }, price), hAsync("span", { class: "shipping" }, this.shippingTime)), hAsync("div", { style: inlineBlockOnMobile }, this.removable ?
           hAsync("ks-cart-spinner", { onChanged: (e) => this.onCountHandler(e.detail), "initial-value": this.amount, max: this.maxAmount }) :
           hAsync("div", { class: "amount" }, this.amount, " szt.")))
