@@ -25995,7 +25995,7 @@ class EdroneTracker {
     _edrone.first_name = customer.firstName;
     _edrone.last_name = customer.lastName;
     _edrone.subscriber_status = customer.subscriber ? 1 : 0;
-    _edrone.country = customer.countryCode;
+    _edrone.country = customer.countryISO2;
     _edrone.city = customer.city;
     _edrone.phone = customer.phone;
   }
@@ -26038,7 +26038,7 @@ class EdroneTracker {
     _edrone.first_name = customer.firstName;
     _edrone.last_name = customer.lastName;
     _edrone.subscriber_status = customer.subscriber ? 1 : 0;
-    _edrone.country = customer.countryCode;
+    _edrone.country = customer.countryISO2;
     _edrone.city = customer.city;
     _edrone.phone = customer.phone;
     _edrone.action_type = 'other';
@@ -26063,7 +26063,7 @@ class EdroneTracker {
     _edrone.product_category_ids = products.map(product => product.categories.map(category => category.id).join('~')).join('|');
     _edrone.product_category_names = products.map(product => product.categories.map(category => category.name).join('~')).join('|');
     _edrone.order_id = order.id;
-    _edrone.country = customer.countryCode;
+    _edrone.country = customer.countryISO2;
     _edrone.city = customer.city;
     _edrone.base_currency = customer.currency;
     _edrone.order_currency = order.currency;
@@ -26082,7 +26082,7 @@ class EdroneTracker {
       const customer = commonDynamic.customer;
       _edrone.first_name = customer.firstName;
       _edrone.last_name = customer.lastName;
-      _edrone.country = customer.countryCode;
+      _edrone.country = customer.countryISO2;
       _edrone.city = customer.city;
       _edrone.phone = customer.phone;
     }
