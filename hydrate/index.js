@@ -25983,7 +25983,7 @@ class PageBase {
     });
   }
   render() {
-    return hAsync(Host, null, !this.skipbase && hAsync("ks-page-header", null), hAsync("slot", null), !this.skipbase && hAsync("ks-page-footer", null));
+    return hAsync(Host, null, !this.skipbase && hAsync("ks-page-header", null), hAsync("slot", null), !this.skipbase && hAsync("ks-page-footer", null), hAsync("ks-newsletter-popup", { displayOnLoad: common.get('newsletterPopup'), api: commonDynamic.get('api').newsletter, "login-link": common.get('loginLink'), "register-link": common.get('registerLink'), "logged-in": commonDynamic.get('loggedIn') }), hAsync("ks-product-suggestions", { api: common.get('suggestionApi') }), hAsync("ks-error-popup", null), hAsync("ks-message-popup", null), hAsync("ks-cookie-popup", { message: common.get('cookieMessage'), button: common.get('cookieButton'), delay: common.get('cookieDelay') }));
   }
   static get style() { return baseCss; }
   static get cmpMeta() { return {
@@ -26037,7 +26037,7 @@ class PageHeader {
   render() {
     return hAsync(Host, null, common.get('developmentWarning') ?
       hAsync("ks-development-warning", null)
-      : null, hAsync("ks-top-banner", null), hAsync("ks-navbar", null), hAsync("ks-newsletter-popup", { displayOnLoad: common.get('newsletterPopup'), api: commonDynamic.get('api').newsletter, "login-link": common.get('loginLink'), "register-link": common.get('registerLink'), "logged-in": commonDynamic.get('loggedIn') }), hAsync("ks-product-suggestions", { api: common.get('suggestionApi') }), hAsync("ks-error-popup", null), hAsync("ks-message-popup", null), hAsync("ks-cookie-popup", { message: common.get('cookieMessage'), button: common.get('cookieButton'), delay: common.get('cookieDelay') }));
+      : null, hAsync("ks-top-banner", null), hAsync("ks-navbar", null));
   }
   static get cmpMeta() { return {
     "$flags$": 0,
