@@ -12242,6 +12242,7 @@ function loadtracker() {
 const commonDynamic = createStore({
   loaded: false,
   loggedIn: false,
+  customer: {},
   cartCount: 0,
   heartCount: 0,
   api: {},
@@ -12265,16 +12266,16 @@ async function Fetch(url, body = null) {
   });
 }
 
-async function addToCart(id, count, name, price, traits = "", place = 1, url = "") {
+async function addToCart(product, place = 1) {
   const errorpopup = document.querySelector('ks-error-popup');
   const messagepopup = document.querySelector('ks-message-popup');
   const navbar = document.querySelector('ks-navbar');
   let body = new FormData();
-  body.append("id", id);
-  body.append("ilosc", count.toString());
-  body.append("nazwa", name);
-  body.append("value", price.toString());
-  body.append("cechy", traits);
+  body.append("id", product.id);
+  body.append("ilosc", product.quantity.toString());
+  body.append("nazwa", product.name);
+  body.append("value", product.currentPrice.toString());
+  body.append("cechy", product.traitIDs);
   body.append("akcja", 'dodaj');
   body.append("miejsce", place.toString());
   const api = commonDynamic.get('api').addToCart;
@@ -12283,15 +12284,15 @@ async function addToCart(id, count, name, price, traits = "", place = 1, url = "
     .then(async (data) => {
     if (!data.status) {
       if (data.productLink)
-        messagepopup.show("Wymagany wybór cechy", data.message, "Przejdź do produktu", url);
+        messagepopup.show("Wymagany wybór cechy", data.message, "Przejdź do produktu", product.link);
       else
         messagepopup.show("Błąd dodawania produktu", data.message);
       return;
     }
-    navbar.IncrementCart(count.toString());
-    OpenSuggestions(id, name);
+    navbar.IncrementCart(product.quantity.toString());
+    OpenSuggestions(product.id, product.name);
     if (data.event)
-      eachTracker(item => item === null || item === void 0 ? void 0 : item.addToCart(data.event, id, name, price, 1, "PLN"));
+      eachTracker(item => item === null || item === void 0 ? void 0 : item.addToCart(product, data.event));
   })
     .catch(error => {
     errorpopup.show(error);
@@ -12338,7 +12339,20 @@ class ButtonCart {
   }
   async cart(count) {
     this.loading = true;
-    await addToCart(this.productId, count, this.name, this.price, this.traits, 1, this.url);
+    const categories = JSON.parse(this.categories);
+    const product = {
+      id: this.productId,
+      traitIDs: "",
+      sku: this.sku,
+      name: this.name,
+      link: this.url,
+      image: this.imgFull,
+      currentPrice: this.price,
+      quantity: parseInt(count),
+      currency: this.currency,
+      categories: categories
+    };
+    await addToCart(product, 1);
     this.loading = false;
   }
   ;
@@ -12362,9 +12376,13 @@ class ButtonCart {
     "$tagName$": "ks-button-cart",
     "$members$": {
       "productId": [513, "product-id"],
+      "sku": [513],
+      "imgFull": [513, "img-full"],
+      "currency": [513],
       "name": [513],
       "url": [513],
       "price": [514],
+      "categories": [513],
       "count": [1537],
       "traits": [513],
       "expand": [516],
@@ -12378,7 +12396,7 @@ class ButtonCart {
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["productId", "product-id"], ["name", "name"], ["url", "url"], ["price", "price"], ["count", "count"], ["traits", "traits"], ["expand", "expand"], ["padding", "padding"], ["disabled", "disabled"]]
+    "$attrsToReflect$": [["productId", "product-id"], ["sku", "sku"], ["imgFull", "img-full"], ["currency", "currency"], ["name", "name"], ["url", "url"], ["price", "price"], ["categories", "categories"], ["count", "count"], ["traits", "traits"], ["expand", "expand"], ["padding", "padding"], ["disabled", "disabled"]]
   }; }
 }
 
@@ -25770,61 +25788,64 @@ class TikTokTracker {
       }, 100);
     });
   }
-  pageview() {
+  pageview(_commonDynamic, _eventID) {
     this.ttq.then(ttq => {
       ttq.track("Browse");
     });
   }
-  product(_eventID, productId, name, price, currency) {
+  product(product, _eventID = "") {
     this.ttq.then(ttq => {
       ttq.track('ViewContent', {
         content_type: 'product',
-        content_id: productId,
-        content_name: name,
-        currency: currency,
-        price: price,
+        content_id: product.id,
+        content_name: product.name,
+        currency: product.currency,
+        price: product.currentPrice,
         quantity: 1,
-        value: price
+        value: product.currentPrice
       });
     });
   }
-  addToCart(_eventID, productId, name, price, quantity, currency) {
+  // @ts-ignore
+  category(_listing, _eventID) {
+  }
+  addToCart(product, _eventID) {
     this.ttq.then(ttq => {
       ttq.track('AddToCart', {
         content_type: 'product',
-        content_id: productId,
-        content_name: name,
-        currency: currency,
-        price: price,
-        quantity: quantity,
-        value: price * quantity
+        content_id: product.id,
+        content_name: product.name,
+        currency: product.currency,
+        price: product.currentPrice,
+        quantity: product.quantity,
+        value: product.currentPrice * product.quantity
       });
     });
   }
-  order_checkout(_eventID, products, value, currency) {
+  order_checkout(_commonDynamic, order, _eventID) {
     this.ttq.then(ttq => {
       ttq.track('StartCheckout', {
-        contents: this.transformProducts(products),
-        currency: currency,
-        value: value
+        contents: this.transformProducts(order.products),
+        value: order.productValue,
+        currency: order.currency
       });
     });
   }
-  order_form(_eventID, products, value, currency) {
+  order_form(_commonDynamic, order, _eventID) {
     this.ttq.then(ttq => {
       ttq.track('AddBilling', {
-        contents: this.transformProducts(products),
-        value: value,
-        currency: currency
+        contents: this.transformProducts(order.products),
+        value: order.productValue,
+        currency: order.currency
       });
     });
   }
-  order_placed(_eventID, products, value, currency) {
+  order_placed(_commonDynamic, order, _eventID) {
     this.ttq.then(ttq => {
       ttq.track('Checkout', {
-        contents: this.transformProducts(products),
-        value: value,
-        currency: currency
+        contents: this.transformProducts(order.products),
+        value: order.productValue,
+        currency: order.currency
       });
     });
   }
@@ -25837,6 +25858,8 @@ class TikTokTracker {
         });
     });*/
   }
+  subscribe(_commonDynamic, _subscription) {
+  }
   transformProducts(products) {
     return products.map(product => {
       return {
@@ -25844,7 +25867,7 @@ class TikTokTracker {
         content_type: 'product',
         content_name: product.name,
         quantity: product.quantity,
-        price: product.price
+        price: product.currentPrice
       };
     });
   }
@@ -25880,63 +25903,66 @@ class FacebookTracker {
       resolve(fbq);
     });
   }
-  pageview(eventID) {
+  pageview(_commonDynamic, _eventID) {
     this.pixel.then(fbq => {
-      fbq('track', 'PageView', {}, { eventID: eventID });
+      fbq('track', 'PageView', {}, { eventID: _eventID });
     });
   }
-  product(eventID, productId, name, price, currency) {
+  product(product, _eventID = "") {
     this.pixel.then(fbq => {
       fbq('track', "ViewContent", {
         content_type: 'product',
-        content_name: name,
-        value: price,
-        currency: currency,
-        content_ids: [productId]
+        content_name: product.name,
+        value: product.currentPrice,
+        currency: product.currency,
+        content_ids: [product.id]
       }, {
-        eventID: eventID
-      });
-    });
-  }
-  addToCart(eventID, productId, name, price, quantity, currency) {
-    this.pixel.then(fbq => {
-      fbq('track', 'AddToCart', {
-        content_type: 'product',
-        content_name: name,
-        value: price,
-        currency: currency,
-        contents: [
-          { id: productId, quantity: quantity }
-        ]
-      }, {
-        eventID: eventID
-      });
-    });
-  }
-  order_checkout(eventID, products, value, currency) {
-    this.pixel.then(fbq => {
-      fbq('track', "InitiateCheckout", {
-        contents: this.transformProducts(products),
-        content_type: 'product',
-        value: value,
-        currency: currency
-      }, {
-        eventID: eventID
+        eventID: _eventID
       });
     });
   }
   // @ts-ignore
-  order_form(eventID, products, value, currency) {
+  category(_listing, _eventID) {
   }
-  order_placed(eventID, products, value, currency) {
+  addToCart(product, _eventID) {
+    this.pixel.then(fbq => {
+      fbq('track', 'AddToCart', {
+        content_type: 'product',
+        content_name: product.name,
+        value: product.currentPrice,
+        currency: product.currency,
+        contents: [
+          { id: product.id, quantity: product.quantity }
+        ]
+      }, {
+        eventID: _eventID
+      });
+    });
+  }
+  order_checkout(_commonDynamic, order, _eventID) {
+    this.pixel.then(fbq => {
+      fbq('track', "InitiateCheckout", {
+        contents: this.transformProducts(order.products),
+        content_type: 'product',
+        value: order.productValue,
+        currency: order.currency
+      }, {
+        eventID: _eventID
+      });
+    });
+  }
+  // @ts-ignore
+  order_form(commonDynamic, order, _eventID) {
+  }
+  order_placed(_commonDynamic, order, _eventID) {
     this.pixel.then(fbq => {
       fbq('track', 'Purchase', {
-        contents: this.transformProducts(products),
+        contents: this.transformProducts(order.products),
         content_type: 'product',
-        value: value,
-        currency: currency
+        value: order.productValue,
+        currency: order.currency
       }, {
-        eventID: eventID
+        eventID: _eventID
       });
     });
   }
@@ -25947,6 +25973,8 @@ class FacebookTracker {
       });
     });
   }
+  subscribe(_commonDynamic, _subscription) {
+  }
   transformProducts(products) {
     return products.map(product => {
       return {
@@ -25954,6 +25982,111 @@ class FacebookTracker {
         quantity: product.quantity
       };
     });
+  }
+}
+
+class EdroneTracker {
+  pageview(commonDynamic, _eventID) {
+    if (!commonDynamic.loggedIn || !commonDynamic.customer)
+      return;
+    const customer = commonDynamic.customer;
+    window._edrone = window._edrone || {};
+    _edrone.email = customer.email;
+    _edrone.first_name = customer.firstName;
+    _edrone.last_name = customer.lastName;
+    _edrone.subscriber_status = customer.subscriber ? 1 : 0;
+    _edrone.country = customer.countryCode;
+    _edrone.city = customer.city;
+    _edrone.phone = customer.phone;
+  }
+  product(product, _eventID = "") {
+    window._edrone = window._edrone || {};
+    _edrone.product_skus = product.model;
+    _edrone.product_ids = product.id;
+    _edrone.product_titles = encodeURI(product.name);
+    if ((product === null || product === void 0 ? void 0 : product.images.length) > 0)
+      _edrone.product_images = encodeURI(product.images[0].full.url);
+    _edrone.product_urls = encodeURI(document.location.href);
+    _edrone.product_availability = product.availability;
+    _edrone.product_category_ids = product.categories.map(crumb => crumb.id).join('~');
+    _edrone.product_category_names = product.categories.map(crumb => crumb.name).join('~');
+    _edrone.action_type = 'product_view';
+  }
+  category(listing, _eventID) {
+    window._edrone = window._edrone || {};
+    _edrone.product_category_ids = listing.categories.map(category => category.id).join('~');
+    _edrone.product_category_names = listing.categories.map(category => category.name).join('~');
+    _edrone.action_type = 'category_view';
+  }
+  addToCart(product, _eventID) {
+    _edrone.product_ids = product.id;
+    _edrone.product_skus = product.sku;
+    _edrone.product_titles = product.name;
+    _edrone.product_images = product.image;
+    _edrone.product_urls = product.link;
+    _edrone.product_category_ids = product.categories.map(category => category.id).join('~');
+    _edrone.product_category_names = product.categories.map(category => category.name).join('~');
+    _edrone.action_type = "add_to_cart";
+  }
+  // @ts-ignore
+  order_checkout(commonDynamic, order, _eventID) {
+    if (!commonDynamic.loggedIn || !commonDynamic.customer)
+      return;
+    const customer = commonDynamic.customer;
+    window._edrone = window._edrone || {};
+    _edrone.email = customer.email;
+    _edrone.first_name = customer.firstName;
+    _edrone.last_name = customer.lastName;
+    _edrone.subscriber_status = customer.subscriber ? 1 : 0;
+    _edrone.country = customer.countryCode;
+    _edrone.city = customer.city;
+    _edrone.phone = customer.phone;
+    _edrone.action_type = 'other';
+  }
+  // @ts-ignore
+  order_form(commonDynamic, order, _eventID) {
+  }
+  order_placed(commonDynamic, order, _eventID) {
+    const customer = commonDynamic.customer;
+    const products = order.products;
+    window._edrone = window._edrone || {};
+    _edrone.email = customer.email;
+    _edrone.first_name = customer.firstName;
+    _edrone.last_name = customer.lastName;
+    _edrone.subscriber_status = customer.subscriber ? 1 : 0;
+    _edrone.product_skus = products.map(product => product.sku).join('|');
+    _edrone.product_ids = products.map(product => product.id).join('|');
+    _edrone.product_titles = products.map(product => encodeURI(product.id)).join('|');
+    _edrone.product_images = products.map(product => encodeURI(product.image)).join('|');
+    _edrone.product_urls = products.map(product => encodeURI(product.link)).join('|');
+    _edrone.product_counts = products.map(product => product.quantity).join('|');
+    _edrone.product_category_ids = products.map(product => product.categories.map(category => category.id).join('~')).join('|');
+    _edrone.product_category_names = products.map(product => product.categories.map(category => category.name).join('~')).join('|');
+    _edrone.order_id = order.id;
+    _edrone.country = customer.countryCode;
+    _edrone.city = customer.city;
+    _edrone.base_currency = customer.currency;
+    _edrone.order_currency = order.currency;
+    _edrone.base_payment_value = order.productValue;
+    _edrone.order_payment_value = order.productValue;
+    _edrone.action_type = 'order';
+  }
+  search(_query) {
+  }
+  subscribe(commonDynamic, subscription) {
+    window._edrone = window._edrone || {};
+    _edrone.customer_tags = subscription.place;
+    _edrone.email = subscription.email;
+    _edrone.subscriber_status = subscription.subscriber ? 1 : 0;
+    if (!commonDynamic.loggedIn || !commonDynamic.customer) {
+      const customer = commonDynamic.customer;
+      _edrone.first_name = customer.firstName;
+      _edrone.last_name = customer.lastName;
+      _edrone.country = customer.countryCode;
+      _edrone.city = customer.city;
+      _edrone.phone = customer.phone;
+    }
+    _edrone.action_type = 'subscribe';
   }
 }
 
@@ -25978,7 +26111,9 @@ class PageBase {
         append(new TikTokTracker());
       if (tracking.facebook)
         append(new FacebookTracker(tracking.facebook));
-      eachTracker(item => item === null || item === void 0 ? void 0 : item.pageview(tracking.pageview));
+      if (tracking.edrone)
+        append(new EdroneTracker());
+      eachTracker(item => item === null || item === void 0 ? void 0 : item.pageview(commonDynamic.state, tracking.pageview));
       resolve();
     });
   }
@@ -26212,6 +26347,7 @@ const product = createStore({
   id: "",
   name: "",
   breadcrumbs: [],
+  categories: [],
   description: "",
   attributes: [],
   currency: "",
@@ -26276,7 +26412,7 @@ class PageProduct {
   }
   track() {
     var _a, _b;
-    eachTracker(item => item === null || item === void 0 ? void 0 : item.product(productDynamic.get("eventId"), product.get("id"), product.get("name"), parseFloat(product.get("currentPrice")), product.get("currency")));
+    eachTracker(item => item === null || item === void 0 ? void 0 : item.product(product.state, productDynamic.get("eventId")));
     const categories = product.get('breadcrumbs');
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
       'ecomm_prodid': product.get("id"),
@@ -26818,7 +26954,20 @@ class ProductCard {
   }
   cart() {
     this.cartLoading = true;
-    addToCart(this.productId, 1, this.name, parseFloat(this.currentPrice), "", 1, this.link)
+    const categories = JSON.parse(this.categories);
+    const product = {
+      id: this.productId,
+      traitIDs: "",
+      sku: this.sku,
+      name: this.name,
+      link: this.link,
+      image: this.imgFull,
+      currentPrice: parseFloat(this.currentPrice),
+      quantity: 1,
+      currency: this.currency,
+      categories: categories
+    };
+    addToCart(product, 1)
       .then(() => this.cartLoading = false);
   }
   favourites() {
@@ -26864,13 +27013,17 @@ class ProductCard {
     "$members$": {
       "unavailable": [516],
       "linkOnly": [4, "link-only"],
+      "productId": [1, "product-id"],
       "name": [1],
+      "sku": [1],
       "img": [1],
+      "imgFull": [1, "img-full"],
       "webp": [1],
       "link": [1],
       "currentPrice": [1, "current-price"],
       "previousPrice": [1, "previous-price"],
-      "productId": [1, "product-id"],
+      "currency": [1],
+      "categories": [1],
       "cartLoading": [32],
       "favLoading": [32],
       "favSuccess": [32]
@@ -27188,12 +27341,19 @@ class ProductInfo$1 {
   }
   async AddToCart() {
     product.set("cartLoading", true);
-    const id = product.get("id");
-    const count = product.get("count");
-    const traitIDs = product.get("traitIDs");
-    const name = product.get("name");
-    const value = parseFloat(product.get("currentPrice"));
-    await addToCart(id, count, name, value, traitIDs, 0);
+    const productData = {
+      id: product.get("id"),
+      traitIDs: product.get("traitIDs"),
+      sku: product.get("model"),
+      name: product.get("name"),
+      link: product.get("link"),
+      image: product.get("images")[0].full.url,
+      currentPrice: parseFloat(product.get("currentPrice")),
+      quantity: product.get("count"),
+      currency: product.get("currency"),
+      categories: product.get('categories')
+    };
+    await addToCart(productData, 0);
     product.set("cartLoading", false);
   }
   async AddToFavourites() {
@@ -27973,7 +28133,7 @@ class ProductWide {
       previousPrice = this.previousPrice.replace(".", ",") + " zł";
     return (hAsync("ks-flex", { between: true, middle: true, column: this.mobile ? true : false, style: this.mobile ? { display: "block", marginBottom: "20px" } : { display: "block" } }, hAsync("a", { href: this.link }, hAsync("ks-image", { src: this.img, width: "200", height: "200", contain: true, alt: "zdj\u0119cie produktu" })), hAsync("a", { href: this.link, class: "uk-flex-1 uk-padding-small uk-link-reset " + (this.mobile ? "uk-text-center" : "") }, hAsync("span", { class: "uk-h3 uk-margin-small-bottom" }, this.name), hAsync("br", null), this.unavailable ? hAsync("span", { class: "uk-h5 uk-text-normal uk-text-danger" }, "Produkt niedost\u0119pny") : null, hAsync("div", { class: "uk-margin-small-top" }, hAsync("span", { class: "uk-h4 uk-text-bold uk-text-normal uk-text-danger" }, currentPrice), this.previousPrice ? hAsync("span", { class: "uk-h4 uk-text-muted uk-margin-left" }, hAsync("s", null, previousPrice)) : null), hAsync("p", { class: "uk-text-small uk-visible@m" }, hAsync("slot", null))), hAsync("div", { class: "uk-flex " + (this.mobile ? "uk-width-1-1" : "uk-flex-column") }, hAsync("ks-button-fav", { subtract: true, padding: true, expand: true, "product-id": this.productId }), this.unavailable ?
       hAsync("ks-button-cart", { padding: true, expand: true, disabled: true }) :
-      hAsync("ks-button-cart", { padding: true, expand: true, "product-id": this.productId, name: this.name, price: parseFloat(this.currentPrice) }))));
+      hAsync("ks-button-cart", { padding: true, expand: true, "product-id": this.productId, url: this.link, sku: this.sku, imgFull: this.imgFull, currency: this.currency, categories: this.categories, name: this.name, price: parseFloat(this.currentPrice) }))));
   }
   get root() { return getElement(this); }
   static get cmpMeta() { return {
@@ -27982,10 +28142,14 @@ class ProductWide {
     "$members$": {
       "unavailable": [4],
       "name": [1],
+      "sku": [1],
       "img": [1],
+      "imgFull": [1, "img-full"],
       "link": [1],
       "currentPrice": [1, "current-price"],
       "previousPrice": [1, "previous-price"],
+      "currency": [1],
+      "categories": [1],
       "productId": [1, "product-id"],
       "uniqueId": [1, "unique-id"],
       "cartLoading": [32],
@@ -28646,19 +28810,20 @@ class TrackerOrder {
     this.checkout = false;
     this.form = false;
     this.placed = false;
+    this.subscribed = false;
     this.eventId = "";
-    this.currency = "PLN";
   }
   componentWillLoad() {
-    const products = typeof this.products == "string" ?
-      JSON.parse(this.products) : this.products;
+    const data = JSON.parse(this.data);
     eachTracker(item => {
       if (this.checkout)
-        item === null || item === void 0 ? void 0 : item.order_checkout(this.eventId, products, this.value, this.currency);
+        item === null || item === void 0 ? void 0 : item.order_checkout(commonDynamic.state, data, this.eventId);
       else if (this.form)
-        item === null || item === void 0 ? void 0 : item.order_form(this.eventId, products, this.value, this.currency);
+        item === null || item === void 0 ? void 0 : item.order_form(commonDynamic.state, data, this.eventId);
       else if (this.placed)
-        item === null || item === void 0 ? void 0 : item.order_placed(this.eventId, products, this.value, this.currency);
+        item === null || item === void 0 ? void 0 : item.order_placed(commonDynamic.state, data, this.eventId);
+      else if (this.subscribed)
+        item === null || item === void 0 ? void 0 : item.subscribe(commonDynamic.state, data);
     });
   }
   static get cmpMeta() { return {
@@ -28668,10 +28833,9 @@ class TrackerOrder {
       "checkout": [4],
       "form": [4],
       "placed": [4],
+      "subscribed": [4],
       "eventId": [1, "event-id"],
-      "products": [1],
-      "value": [2],
-      "currency": [1]
+      "data": [1]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
