@@ -25989,46 +25989,50 @@ class FacebookTracker {
 
 class EdroneTracker {
   pageview(commonDynamic, _eventID) {
+    console.log("PAGEVIEW");
     if (!commonDynamic.loggedIn || !commonDynamic.customer)
       return;
     const customer = commonDynamic.customer;
     window._edrone = window._edrone || {};
-    _edrone.email = customer.email;
-    _edrone.first_name = customer.firstName;
-    _edrone.last_name = customer.lastName;
-    _edrone.subscriber_status = customer.subscriber ? 1 : 0;
-    _edrone.country = customer.countryISO2;
-    _edrone.city = customer.city;
-    _edrone.phone = customer.phone;
+    window._edrone.email = customer.email;
+    window._edrone.first_name = customer.firstName;
+    window._edrone.last_name = customer.lastName;
+    window._edrone.subscriber_status = customer.subscriber ? 1 : 0;
+    window._edrone.country = customer.countryISO2;
+    window._edrone.city = customer.city;
+    window._edrone.phone = customer.phone;
+    console.log(window._edrone);
   }
   product(product, _eventID = "") {
+    console.log("Product");
     window._edrone = window._edrone || {};
-    _edrone.product_skus = product.model;
-    _edrone.product_ids = product.id;
-    _edrone.product_titles = encodeURI(product.name);
+    window._edrone.product_skus = product.model;
+    window._edrone.product_ids = product.id;
+    window._edrone.product_titles = encodeURI(product.name);
     if ((product === null || product === void 0 ? void 0 : product.images.length) > 0)
-      _edrone.product_images = encodeURI(product.images[0].full.url);
-    _edrone.product_urls = encodeURI(document.location.href);
-    _edrone.product_availability = product.availability;
-    _edrone.product_category_ids = product.categories.map(crumb => crumb.id).join('~');
-    _edrone.product_category_names = product.categories.map(crumb => crumb.name).join('~');
-    _edrone.action_type = 'product_view';
+      window._edrone.product_images = encodeURI(product.images[0].full.url);
+    window._edrone.product_urls = encodeURI(document.location.href);
+    window._edrone.product_availability = product.availability;
+    window._edrone.product_category_ids = product.categories.map(crumb => crumb.id).join('~');
+    window._edrone.product_category_names = product.categories.map(crumb => crumb.name).join('~');
+    window._edrone.action_type = 'product_view';
+    console.log(window._edrone);
   }
   category(listing, _eventID) {
     window._edrone = window._edrone || {};
-    _edrone.product_category_ids = listing.categories.map(category => category.id).join('~');
-    _edrone.product_category_names = listing.categories.map(category => category.name).join('~');
-    _edrone.action_type = 'category_view';
+    window._edrone.product_category_ids = listing.categories.map(category => category.id).join('~');
+    window._edrone.product_category_names = listing.categories.map(category => category.name).join('~');
+    window._edrone.action_type = 'category_view';
   }
   addToCart(product, _eventID) {
-    _edrone.product_ids = product.id;
-    _edrone.product_skus = product.sku;
-    _edrone.product_titles = product.name;
-    _edrone.product_images = product.image;
-    _edrone.product_urls = product.link;
-    _edrone.product_category_ids = product.categories.map(category => category.id).join('~');
-    _edrone.product_category_names = product.categories.map(category => category.name).join('~');
-    _edrone.action_type = "add_to_cart";
+    window._edrone.product_ids = product.id;
+    window._edrone.product_skus = product.sku;
+    window._edrone.product_titles = product.name;
+    window._edrone.product_images = product.image;
+    window._edrone.product_urls = product.link;
+    window._edrone.product_category_ids = product.categories.map(category => category.id).join('~');
+    window._edrone.product_category_names = product.categories.map(category => category.name).join('~');
+    window._edrone.action_type = "add_to_cart";
   }
   // @ts-ignore
   order_checkout(commonDynamic, order, _eventID) {
@@ -26036,14 +26040,14 @@ class EdroneTracker {
       return;
     const customer = commonDynamic.customer;
     window._edrone = window._edrone || {};
-    _edrone.email = customer.email;
-    _edrone.first_name = customer.firstName;
-    _edrone.last_name = customer.lastName;
-    _edrone.subscriber_status = customer.subscriber ? 1 : 0;
-    _edrone.country = customer.countryISO2;
-    _edrone.city = customer.city;
-    _edrone.phone = customer.phone;
-    _edrone.action_type = 'other';
+    window._edrone.email = customer.email;
+    window._edrone.first_name = customer.firstName;
+    window._edrone.last_name = customer.lastName;
+    window._edrone.subscriber_status = customer.subscriber ? 1 : 0;
+    window._edrone.country = customer.countryISO2;
+    window._edrone.city = customer.city;
+    window._edrone.phone = customer.phone;
+    window._edrone.action_type = 'other';
   }
   // @ts-ignore
   order_form(commonDynamic, order, _eventID) {
@@ -26052,43 +26056,43 @@ class EdroneTracker {
     const customer = commonDynamic.customer;
     const products = order.products;
     window._edrone = window._edrone || {};
-    _edrone.email = customer.email;
-    _edrone.first_name = customer.firstName;
-    _edrone.last_name = customer.lastName;
-    _edrone.subscriber_status = customer.subscriber ? 1 : 0;
-    _edrone.product_skus = products.map(product => product.sku).join('|');
-    _edrone.product_ids = products.map(product => product.id).join('|');
-    _edrone.product_titles = products.map(product => encodeURI(product.id)).join('|');
-    _edrone.product_images = products.map(product => encodeURI(product.image)).join('|');
-    _edrone.product_urls = products.map(product => encodeURI(product.link)).join('|');
-    _edrone.product_counts = products.map(product => product.quantity).join('|');
-    _edrone.product_category_ids = products.map(product => product.categories.map(category => category.id).join('~')).join('|');
-    _edrone.product_category_names = products.map(product => product.categories.map(category => category.name).join('~')).join('|');
-    _edrone.order_id = order.id;
-    _edrone.country = customer.countryISO2;
-    _edrone.city = customer.city;
-    _edrone.base_currency = customer.currency;
-    _edrone.order_currency = order.currency;
-    _edrone.base_payment_value = order.productValue;
-    _edrone.order_payment_value = order.productValue;
-    _edrone.action_type = 'order';
+    window._edrone.email = customer.email;
+    window._edrone.first_name = customer.firstName;
+    window._edrone.last_name = customer.lastName;
+    window._edrone.subscriber_status = customer.subscriber ? 1 : 0;
+    window._edrone.product_skus = products.map(product => product.sku).join('|');
+    window._edrone.product_ids = products.map(product => product.id).join('|');
+    window._edrone.product_titles = products.map(product => encodeURI(product.id)).join('|');
+    window._edrone.product_images = products.map(product => encodeURI(product.image)).join('|');
+    window._edrone.product_urls = products.map(product => encodeURI(product.link)).join('|');
+    window._edrone.product_counts = products.map(product => product.quantity).join('|');
+    window._edrone.product_category_ids = products.map(product => product.categories.map(category => category.id).join('~')).join('|');
+    window._edrone.product_category_names = products.map(product => product.categories.map(category => category.name).join('~')).join('|');
+    window._edrone.order_id = order.id;
+    window._edrone.country = customer.countryISO2;
+    window._edrone.city = customer.city;
+    window._edrone.base_currency = customer.currency;
+    window._edrone.order_currency = order.currency;
+    window._edrone.base_payment_value = order.productValue;
+    window._edrone.order_payment_value = order.productValue;
+    window._edrone.action_type = 'order';
   }
   search(_query) {
   }
   subscribe(commonDynamic, subscription) {
     window._edrone = window._edrone || {};
-    _edrone.customer_tags = subscription.place;
-    _edrone.email = subscription.email;
-    _edrone.subscriber_status = subscription.subscriber ? 1 : 0;
+    window._edrone.customer_tags = subscription.place;
+    window._edrone.email = subscription.email;
+    window._edrone.subscriber_status = subscription.subscriber ? 1 : 0;
     if (!commonDynamic.loggedIn || !commonDynamic.customer) {
       const customer = commonDynamic.customer;
-      _edrone.first_name = customer.firstName;
-      _edrone.last_name = customer.lastName;
-      _edrone.country = customer.countryISO2;
-      _edrone.city = customer.city;
-      _edrone.phone = customer.phone;
+      window._edrone.first_name = customer.firstName;
+      window._edrone.last_name = customer.lastName;
+      window._edrone.country = customer.countryISO2;
+      window._edrone.city = customer.city;
+      window._edrone.phone = customer.phone;
     }
-    _edrone.action_type = 'subscribe';
+    window._edrone.action_type = 'subscribe';
   }
 }
 
