@@ -12346,7 +12346,8 @@ class ButtonCart {
       sku: this.sku,
       name: this.name,
       link: this.url,
-      image: this.imgFull,
+      image: this.img,
+      imageFull: this.imgFull,
       currentPrice: this.price,
       quantity: parseInt(count),
       currency: this.currency,
@@ -12377,6 +12378,7 @@ class ButtonCart {
     "$members$": {
       "productId": [513, "product-id"],
       "sku": [513],
+      "img": [513],
       "imgFull": [513, "img-full"],
       "currency": [513],
       "name": [513],
@@ -12396,7 +12398,7 @@ class ButtonCart {
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["productId", "product-id"], ["sku", "sku"], ["imgFull", "img-full"], ["currency", "currency"], ["name", "name"], ["url", "url"], ["price", "price"], ["categories", "categories"], ["count", "count"], ["traits", "traits"], ["expand", "expand"], ["padding", "padding"], ["disabled", "disabled"]]
+    "$attrsToReflect$": [["productId", "product-id"], ["sku", "sku"], ["img", "img"], ["imgFull", "img-full"], ["currency", "currency"], ["name", "name"], ["url", "url"], ["price", "price"], ["categories", "categories"], ["count", "count"], ["traits", "traits"], ["expand", "expand"], ["padding", "padding"], ["disabled", "disabled"]]
   }; }
 }
 
@@ -26315,7 +26317,7 @@ class PageListing {
           : null))
         : null, hAsync("ks-sorting", { post: navigation.paginationBase }), hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.paginationBase, pattern: navigation.pattern }))
       : null, (products === null || products === void 0 ? void 0 : products.length) > 0 ?
-      hAsync("ks-product-container", null, products.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, currentPrice: card.currentPrice, previousPrice: card.previousPrice, unavailable: card.unavailable })))
+      hAsync("ks-product-container", null, products.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, sku: card.sku, name: card.name, img: card.image, imgFull: card.imageFull, webp: card.webp, currentPrice: card.currentPrice, previousPrice: card.previousPrice, unavailable: card.unavailable, currency: card.currency, categories: card.categories })))
       :
         hAsync("ks-nocontent", null, hAsync("h1", null, listing.get('noContentHeading')), hAsync("p", null, listing.get('noContentMessage'))), navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 ?
       hAsync("ks-listing-navigation", { products: navigation.products }, hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.paginationBase, pattern: navigation.pattern }))
@@ -26961,7 +26963,8 @@ class ProductCard {
       sku: this.sku,
       name: this.name,
       link: this.link,
-      image: this.imgFull,
+      image: this.img,
+      imageFull: this.imgFull,
       currentPrice: parseFloat(this.currentPrice),
       quantity: 1,
       currency: this.currency,
@@ -27347,7 +27350,8 @@ class ProductInfo$1 {
       sku: product.get("model"),
       name: product.get("name"),
       link: product.get("link"),
-      image: product.get("images")[0].full.url,
+      image: product.get("images")[0].preview.url,
+      imageFull: product.get("images")[0].full.url,
       currentPrice: parseFloat(product.get("currentPrice")),
       quantity: product.get("count"),
       currency: product.get("currency"),
