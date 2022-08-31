@@ -26013,6 +26013,7 @@ class EdroneTracker {
     window._edrone.product_category_ids = product.categories.map(crumb => crumb.id).join('~');
     window._edrone.product_category_names = product.categories.map(crumb => crumb.name).join('~');
     window._edrone.action_type = 'product_view';
+    console.log(product);
   }
   listing(listing, _eventID) {
     window._edrone = window._edrone || {};
