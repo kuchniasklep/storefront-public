@@ -26016,8 +26016,9 @@ class EdroneTracker {
   }
   listing(listing, _eventID) {
     window._edrone = window._edrone || {};
-    window._edrone.product_category_ids = listing.categories.map(category => category.id).join('~');
-    window._edrone.product_category_names = listing.categories.map(category => category.name).join('~');
+    const categories = listing.breadcrumbs.filter(category => category.id != "0");
+    window._edrone.product_category_ids = categories.map(category => category.id).join('~');
+    window._edrone.product_category_names = categories.map(category => category.name).join('~');
     window._edrone.action_type = 'category_view';
   }
   addToCart(product, _eventID) {
