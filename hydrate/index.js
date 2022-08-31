@@ -25809,7 +25809,7 @@ class TikTokTracker {
     });
   }
   // @ts-ignore
-  category(_listing, _eventID) {
+  listing(_listing, _eventID) {
   }
   addToCart(product, _eventID) {
     this.ttq.then(ttq => {
@@ -25924,7 +25924,7 @@ class FacebookTracker {
     });
   }
   // @ts-ignore
-  category(_listing, _eventID) {
+  listing(_listing, _eventID) {
   }
   addToCart(product, _eventID) {
     this.pixel.then(fbq => {
@@ -25989,7 +25989,6 @@ class FacebookTracker {
 
 class EdroneTracker {
   pageview(commonDynamic, _eventID) {
-    console.log("PAGEVIEW");
     if (!commonDynamic.loggedIn || !commonDynamic.customer)
       return;
     const customer = commonDynamic.customer;
@@ -26001,10 +26000,8 @@ class EdroneTracker {
     window._edrone.country = customer.countryISO2;
     window._edrone.city = customer.city;
     window._edrone.phone = customer.phone;
-    console.log(window._edrone);
   }
   product(product, _eventID = "") {
-    console.log("Product");
     window._edrone = window._edrone || {};
     window._edrone.product_skus = product.model;
     window._edrone.product_ids = product.id;
@@ -26016,9 +26013,8 @@ class EdroneTracker {
     window._edrone.product_category_ids = product.categories.map(crumb => crumb.id).join('~');
     window._edrone.product_category_names = product.categories.map(crumb => crumb.name).join('~');
     window._edrone.action_type = 'product_view';
-    console.log(window._edrone);
   }
-  category(listing, _eventID) {
+  listing(listing, _eventID) {
     window._edrone = window._edrone || {};
     window._edrone.product_category_ids = listing.categories.map(category => category.id).join('~');
     window._edrone.product_category_names = listing.categories.map(category => category.name).join('~');
@@ -26285,6 +26281,11 @@ class PageListing {
     Object.keys(listingData).map(key => {
       listing.set(key, listingData[key]);
     });
+    this.track();
+  }
+  track() {
+    if (!listing.get('query'))
+      eachTracker(item => item === null || item === void 0 ? void 0 : item.listing(listing.state, null));
   }
   render() {
     if (!(listing === null || listing === void 0 ? void 0 : listing.get('title')))
