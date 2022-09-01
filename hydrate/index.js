@@ -26013,7 +26013,6 @@ class EdroneTracker {
     window._edrone.product_category_ids = product.categories.map(crumb => crumb.id).join('~');
     window._edrone.product_category_names = product.categories.map(crumb => crumb.name).join('~');
     window._edrone.action_type = 'product_view';
-    console.log(product);
   }
   listing(listing, _eventID) {
     window._edrone = window._edrone || {};
@@ -26026,7 +26025,7 @@ class EdroneTracker {
     window._edrone.product_ids = product.id;
     window._edrone.product_skus = product.sku;
     window._edrone.product_titles = product.name;
-    window._edrone.product_images = product.image;
+    window._edrone.product_images = product.imageFull;
     window._edrone.product_urls = product.link;
     window._edrone.product_category_ids = product.categories.map(category => category.id).join('~');
     window._edrone.product_category_names = product.categories.map(category => category.name).join('~');
@@ -28825,7 +28824,8 @@ class TrackerOrder {
     this.eventId = "";
   }
   componentWillLoad() {
-    const data = JSON.parse(this.data);
+    const dataElement = document.getElementById(this.dataId);
+    const data = JSON.parse(dataElement.innerHTML);
     eachTracker(item => {
       if (this.checkout)
         item === null || item === void 0 ? void 0 : item.order_checkout(commonDynamic.state, data, this.eventId);
@@ -28846,7 +28846,7 @@ class TrackerOrder {
       "placed": [4],
       "subscribed": [4],
       "eventId": [1, "event-id"],
-      "data": [1]
+      "dataId": [1, "data-id"]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
