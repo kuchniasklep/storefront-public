@@ -25826,7 +25826,7 @@ class TikTokTracker {
   }
   order_checkout(_commonDynamic, order, _eventID) {
     this.ttq.then(ttq => {
-      ttq.track('StartCheckout', {
+      ttq.track('AddBilling', {
         contents: this.transformProducts(order.products),
         value: order.productValue,
         currency: order.currency
@@ -25835,7 +25835,7 @@ class TikTokTracker {
   }
   order_form(_commonDynamic, order, _eventID) {
     this.ttq.then(ttq => {
-      ttq.track('AddBilling', {
+      ttq.track('StartCheckout', {
         contents: this.transformProducts(order.products),
         value: order.productValue,
         currency: order.currency
@@ -25941,7 +25941,9 @@ class FacebookTracker {
       });
     });
   }
-  order_checkout(_commonDynamic, order, _eventID) {
+  order_checkout(_commonDynamic, _order, _eventID) {
+  }
+  order_form(_commonDynamic, order, _eventID) {
     this.pixel.then(fbq => {
       fbq('track', "InitiateCheckout", {
         contents: this.transformProducts(order.products),
@@ -25952,9 +25954,6 @@ class FacebookTracker {
         eventID: _eventID
       });
     });
-  }
-  // @ts-ignore
-  order_form(commonDynamic, order, _eventID) {
   }
   order_placed(_commonDynamic, order, _eventID) {
     this.pixel.then(fbq => {
