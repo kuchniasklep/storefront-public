@@ -12339,7 +12339,7 @@ class ButtonCart {
   }
   async cart(count) {
     this.loading = true;
-    const categories = JSON.parse(this.categories);
+    const categories = JSON.parse(encodeURI(this.categories));
     const product = {
       id: this.productId,
       traitIDs: "",
@@ -26961,7 +26961,7 @@ class ProductCard {
   }
   cart() {
     this.cartLoading = true;
-    const categories = JSON.parse(this.categories);
+    const categories = JSON.parse(encodeURI(this.categories));
     const product = {
       id: this.productId,
       traitIDs: "",
