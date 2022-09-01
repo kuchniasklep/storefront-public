@@ -26227,7 +26227,7 @@ class PageHome {
     const articlesHeading = home.get('articlesHeading');
     const articlesMore = home.get('articlesMore');
     const seeMore = home.get('seeMore');
-    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, banners ? hAsync("ks-banner-container", null, banners.map((banner, index) => hAsync("ks-banner", { sync: index == 0, active: index == 0, name: banner.name, color: banner.color, link: banner.link, image: banner.image, webp: banner.webp, width: banner.width, height: banner.height, theme: banner.theme }))) : null, info ? hAsync("ks-homepage-info", null, hAsync("h1", { slot: "mainHeading" }, info.mainHeading), hAsync("p", { slot: "mainContent" }, info.mainParagraph), hAsync("h2", { slot: "firstHeading" }, info.firstHeading), hAsync("p", { slot: "firstContent" }, info.firstParagraph), hAsync("h2", { slot: "secondHeading" }, info.secondHeading), hAsync("p", { slot: "secondContent" }, info.secondParagraph), hAsync("h2", { slot: "thirdHeading" }, info.thirdHeading), hAsync("p", { slot: "thirdContent" }, info.thirdParagraph)) : null, hAsync("ks-zaufane", { home: true, token: "sf15070062863a73c5990", customer: "150700" }), products ? hAsync("ks-homepage-products", null, products.map(products => hAsync("ks-product-container", null, products.products.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice, unavailable: card.unavailable }))))) : null, featured ? hAsync("ks-featured-container", null, featured.map(banner => hAsync("ks-featured", { slot: banner.side, name: banner.name, image: banner.image, webp: banner.webp, link: banner.link, width: banner.width, height: banner.height }))) : null, recipes ? [
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, banners ? hAsync("ks-banner-container", null, banners.map((banner, index) => hAsync("ks-banner", { sync: index == 0, active: index == 0, name: banner.name, color: banner.color, link: banner.link, image: banner.image, webp: banner.webp, width: banner.width, height: banner.height, theme: banner.theme }))) : null, info ? hAsync("ks-homepage-info", null, hAsync("h1", { slot: "mainHeading" }, info.mainHeading), hAsync("p", { slot: "mainContent" }, info.mainParagraph), hAsync("h2", { slot: "firstHeading" }, info.firstHeading), hAsync("p", { slot: "firstContent" }, info.firstParagraph), hAsync("h2", { slot: "secondHeading" }, info.secondHeading), hAsync("p", { slot: "secondContent" }, info.secondParagraph), hAsync("h2", { slot: "thirdHeading" }, info.thirdHeading), hAsync("p", { slot: "thirdContent" }, info.thirdParagraph)) : null, hAsync("ks-zaufane", { home: true, token: "sf15070062863a73c5990", customer: "150700" }), products ? hAsync("ks-homepage-products", null, products.map(products => hAsync("ks-product-container", null, products.products.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, sku: card.sku, name: card.name, img: card.image, imgFull: card.imageFull, webp: card.webp, currentPrice: card.currentPrice, previousPrice: card.previousPrice, unavailable: card.unavailable, currency: card.currency, categories: card.categories }))))) : null, featured ? hAsync("ks-featured-container", null, featured.map(banner => hAsync("ks-featured", { slot: banner.side, name: banner.name, image: banner.image, webp: banner.webp, link: banner.link, width: banner.width, height: banner.height }))) : null, recipes ? [
       hAsync("h3", null, recipesHeading),
       hAsync("ks-article-container", null, recipes.map(recipe => hAsync("ks-recipe-card", { heading: recipe.heading, cuisine: recipe.cuisine, category: recipe.category, link: recipe.link, image: recipe.image, webp: recipe.webp, width: recipe.width, height: recipe.height, "cuisine-link": recipe.cuisineLink, "category-link": recipe.categoryLink }))),
       hAsync("ks-see-more", { href: recipesMore, text: seeMore })
@@ -26507,6 +26507,59 @@ class PageProduct {
       "commonDynamicData": [1, "common-dynamic-data"],
       "productData": [1, "product-data"],
       "productDynamicData": [1, "product-dynamic-data"]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const recipe = createStore({});
+
+const recipeCss = "";
+
+class PageRecipe {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+  }
+  componentWillLoad() {
+    const recipeDataElement = document.getElementById(this.recipeData);
+    const recipeData = JSON.parse(recipeDataElement.innerHTML);
+    Object.keys(recipeData).map(key => {
+      recipe.set(key, recipeData[key]);
+    });
+    this.track();
+  }
+  track() {
+    window.dataLayer.push({
+      'type': 'recipe',
+      'name': recipe.get('title'),
+      'category': recipe.get('category'),
+      'cuisine': recipe.get('cuisine'),
+    });
+  }
+  render() {
+    var _a, _b, _c;
+    const nutrition = recipe.get('nutrition');
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("ks-container", null, hAsync("div", { class: "recipe-container" }, hAsync("ks-recipe-info", { image: recipe.get('image'), time: recipe.get('time'), yield: recipe.get('yield'), cuisine: recipe.get('cuisine'), "cuisine-link": recipe.get('cuisineLink'), category: recipe.get('category'), "category-link": recipe.get('categoryLink') }, hAsync("h1", { slot: "heading" }, recipe.get('title')), hAsync("p", { slot: "summary" }, recipe.get('summary')), hAsync("ks-recipe-nutrition", { type: 'kalorie', value: nutrition.calories, slot: 'nutrition' }), hAsync("ks-recipe-nutrition", { type: 't\u0142uszcze', value: nutrition.fats, slot: 'nutrition' }), hAsync("ks-recipe-nutrition", { type: 'nasycone', value: nutrition.saturatedFats, slot: 'nutrition' }), hAsync("ks-recipe-nutrition", { type: 'cukry', value: nutrition.sugars, slot: 'nutrition' }), hAsync("ks-recipe-nutrition", { type: 's\u00F3l', value: nutrition.salt, slot: 'nutrition' }), hAsync("ks-recipe-nutrition", { type: 'bia\u0142ka', value: nutrition.protein, slot: 'nutrition' }), hAsync("ks-recipe-nutrition", { type: 'w\u0119glowodany', value: nutrition.carbohydrates, slot: 'nutrition' })), hAsync("ks-recipe-procedure", null, (_a = recipe === null || recipe === void 0 ? void 0 : recipe.get("ingredients")) === null || _a === void 0 ? void 0 :
+      _a.map(ingredient => hAsync("ks-recipe-ingredient", { name: ingredient.name, amount: ingredient.amount, slot: 'ingredients' })), (_b = recipe === null || recipe === void 0 ? void 0 : recipe.get("preparation")) === null || _b === void 0 ? void 0 :
+      _b.map(section => {
+        var _a;
+        return [
+          hAsync("h2", { slot: 'preparation' }, section.name),
+          hAsync("p", { slot: 'preparation' }, (_a = section === null || section === void 0 ? void 0 : section.steps) === null || _a === void 0 ? void 0 : _a.join(' '))
+        ];
+      })))), hAsync("ks-product-container", null, (_c = recipe === null || recipe === void 0 ? void 0 : recipe.get('suggestions')) === null || _c === void 0 ? void 0 : _c.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, sku: card.sku, name: card.name, img: card.image, imgFull: card.imageFull, webp: card.webp, currentPrice: card.currentPrice, previousPrice: card.previousPrice, unavailable: card.unavailable, currency: card.currency, categories: card.categories }))));
+  }
+  static get style() { return recipeCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-page-recipe",
+    "$members$": {
+      "skipbase": [4],
+      "commonData": [1, "common-data"],
+      "commonDynamicData": [1, "common-dynamic-data"],
+      "recipeData": [1, "recipe-data"]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
@@ -29216,6 +29269,7 @@ registerComponents([
   PageHome,
   PageListing,
   PageProduct,
+  PageRecipe,
   PageRecipes,
   Pagination,
   ProductAdmin,
