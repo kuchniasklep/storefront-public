@@ -26298,6 +26298,7 @@ class PageRecipe$1 {
     this.removeAllLoading = true;
     removeAllFavourites().then(() => {
       this.removeAllLoading = false;
+      location.reload();
     });
   }
   render() {
@@ -26961,6 +26962,7 @@ class ProductCard {
     this.favLoading = true;
     removeFromFavourites(this.productId).then(() => {
       this.favLoading = false;
+      location.reload();
     });
   }
   render() {
