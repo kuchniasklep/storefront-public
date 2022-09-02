@@ -12220,7 +12220,7 @@ const createStore = (defaultState, shouldUpdate) => {
 
 let resolve;
 const tracker = createStore({
-  loaded: true,
+  loaded: loadtracker(),
   resolved: new Promise(r => resolve = r),
   trackers: []
 });
@@ -12229,6 +12229,14 @@ function eachTracker(callable) {
     tracker.get("trackers").forEach(item => {
       callable(item);
     });
+  });
+}
+function loadtracker() {
+  return new Promise(resolve => {
+    resolve();
+    /*window.addEventListener("load", function() {
+        resolve();
+    });*/
   });
 }
 
