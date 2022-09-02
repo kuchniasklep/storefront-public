@@ -6055,7 +6055,7 @@ function qsa(selector, context) {
   return a;
 }
 
-function $$1(selector, context) {
+function $(selector, context) {
   var window = getWindow();
   var document = getDocument();
   var arr = [];
@@ -6098,7 +6098,7 @@ function $$1(selector, context) {
   return new Dom7(arrayUnique(arr));
 }
 
-$$1.fn = Dom7.prototype;
+$.fn = Dom7.prototype;
 
 function addClass() {
   for (var _len = arguments.length, classes = new Array(_len), _key = 0; _key < _len; _key++) {
@@ -6238,12 +6238,12 @@ function on() {
       eventData.unshift(e);
     }
 
-    if ($$1(target).is(targetSelector)) listener.apply(target, eventData);else {
-      var _parents = $$1(target).parents(); // eslint-disable-line
+    if ($(target).is(targetSelector)) listener.apply(target, eventData);else {
+      var _parents = $(target).parents(); // eslint-disable-line
 
 
       for (var k = 0; k < _parents.length; k += 1) {
-        if ($$1(_parents[k]).is(targetSelector)) listener.apply(_parents[k], eventData);
+        if ($(_parents[k]).is(targetSelector)) listener.apply(_parents[k], eventData);
       }
     }
   }
@@ -6497,7 +6497,7 @@ function each(callback) {
 
 function filter(callback) {
   var result = arrayFilter(this, callback);
-  return $$1(result);
+  return $(result);
 }
 
 function html(html) {
@@ -6536,7 +6536,7 @@ function is(selector) {
     if (el.matches) return el.matches(selector);
     if (el.webkitMatchesSelector) return el.webkitMatchesSelector(selector);
     if (el.msMatchesSelector) return el.msMatchesSelector(selector);
-    compareWith = $$1(selector);
+    compareWith = $(selector);
 
     for (i = 0; i < compareWith.length; i += 1) {
       if (compareWith[i] === el) return true;
@@ -6588,16 +6588,16 @@ function eq(index) {
   var length = this.length;
 
   if (index > length - 1) {
-    return $$1([]);
+    return $([]);
   }
 
   if (index < 0) {
     var returnIndex = length + index;
-    if (returnIndex < 0) return $$1([]);
-    return $$1([this[returnIndex]]);
+    if (returnIndex < 0) return $([]);
+    return $([this[returnIndex]]);
   }
 
-  return $$1([this[index]]);
+  return $([this[index]]);
 }
 
 function append() {
@@ -6656,36 +6656,36 @@ function prepend(newChild) {
 function next(selector) {
   if (this.length > 0) {
     if (selector) {
-      if (this[0].nextElementSibling && $$1(this[0].nextElementSibling).is(selector)) {
-        return $$1([this[0].nextElementSibling]);
+      if (this[0].nextElementSibling && $(this[0].nextElementSibling).is(selector)) {
+        return $([this[0].nextElementSibling]);
       }
 
-      return $$1([]);
+      return $([]);
     }
 
-    if (this[0].nextElementSibling) return $$1([this[0].nextElementSibling]);
-    return $$1([]);
+    if (this[0].nextElementSibling) return $([this[0].nextElementSibling]);
+    return $([]);
   }
 
-  return $$1([]);
+  return $([]);
 }
 
 function nextAll(selector) {
   var nextEls = [];
   var el = this[0];
-  if (!el) return $$1([]);
+  if (!el) return $([]);
 
   while (el.nextElementSibling) {
     var _next = el.nextElementSibling; // eslint-disable-line
 
     if (selector) {
-      if ($$1(_next).is(selector)) nextEls.push(_next);
+      if ($(_next).is(selector)) nextEls.push(_next);
     } else nextEls.push(_next);
 
     el = _next;
   }
 
-  return $$1(nextEls);
+  return $(nextEls);
 }
 
 function prev(selector) {
@@ -6693,36 +6693,36 @@ function prev(selector) {
     var el = this[0];
 
     if (selector) {
-      if (el.previousElementSibling && $$1(el.previousElementSibling).is(selector)) {
-        return $$1([el.previousElementSibling]);
+      if (el.previousElementSibling && $(el.previousElementSibling).is(selector)) {
+        return $([el.previousElementSibling]);
       }
 
-      return $$1([]);
+      return $([]);
     }
 
-    if (el.previousElementSibling) return $$1([el.previousElementSibling]);
-    return $$1([]);
+    if (el.previousElementSibling) return $([el.previousElementSibling]);
+    return $([]);
   }
 
-  return $$1([]);
+  return $([]);
 }
 
 function prevAll(selector) {
   var prevEls = [];
   var el = this[0];
-  if (!el) return $$1([]);
+  if (!el) return $([]);
 
   while (el.previousElementSibling) {
     var _prev = el.previousElementSibling; // eslint-disable-line
 
     if (selector) {
-      if ($$1(_prev).is(selector)) prevEls.push(_prev);
+      if ($(_prev).is(selector)) prevEls.push(_prev);
     } else prevEls.push(_prev);
 
     el = _prev;
   }
 
-  return $$1(prevEls);
+  return $(prevEls);
 }
 
 function parent(selector) {
@@ -6731,14 +6731,14 @@ function parent(selector) {
   for (var i = 0; i < this.length; i += 1) {
     if (this[i].parentNode !== null) {
       if (selector) {
-        if ($$1(this[i].parentNode).is(selector)) parents.push(this[i].parentNode);
+        if ($(this[i].parentNode).is(selector)) parents.push(this[i].parentNode);
       } else {
         parents.push(this[i].parentNode);
       }
     }
   }
 
-  return $$1(parents);
+  return $(parents);
 }
 
 function parents(selector) {
@@ -6749,7 +6749,7 @@ function parents(selector) {
 
     while (_parent) {
       if (selector) {
-        if ($$1(_parent).is(selector)) parents.push(_parent);
+        if ($(_parent).is(selector)) parents.push(_parent);
       } else {
         parents.push(_parent);
       }
@@ -6758,14 +6758,14 @@ function parents(selector) {
     }
   }
 
-  return $$1(parents);
+  return $(parents);
 }
 
 function closest(selector) {
   var closest = this; // eslint-disable-line
 
   if (typeof selector === 'undefined') {
-    return $$1([]);
+    return $([]);
   }
 
   if (!closest.is(selector)) {
@@ -6786,7 +6786,7 @@ function find(selector) {
     }
   }
 
-  return $$1(foundElements);
+  return $(foundElements);
 }
 
 function children(selector) {
@@ -6796,13 +6796,13 @@ function children(selector) {
     var childNodes = this[i].children;
 
     for (var j = 0; j < childNodes.length; j += 1) {
-      if (!selector || $$1(childNodes[j]).is(selector)) {
+      if (!selector || $(childNodes[j]).is(selector)) {
         children.push(childNodes[j]);
       }
     }
   }
 
-  return $$1(children);
+  return $(children);
 }
 
 function remove() {
@@ -6852,7 +6852,7 @@ var Methods = {
   remove: remove
 };
 Object.keys(Methods).forEach(function (methodName) {
-  Object.defineProperty($$1.fn, methodName, {
+  Object.defineProperty($.fn, methodName, {
     value: Methods[methodName],
     writable: true
   });
@@ -7962,7 +7962,7 @@ function updateSlidesProgress(translate) {
     slide.progress = rtl ? -slideProgress : slideProgress;
   }
 
-  swiper.visibleSlides = $$1(swiper.visibleSlides);
+  swiper.visibleSlides = $(swiper.visibleSlides);
 }
 
 function updateProgress(translate) {
@@ -8149,7 +8149,7 @@ function updateActiveIndex(newActiveIndex) {
 function updateClickedSlide(e) {
   var swiper = this;
   var params = swiper.params;
-  var slide = $$1(e.target).closest("." + params.slideClass)[0];
+  var slide = $(e.target).closest("." + params.slideClass)[0];
   var slideFound = false;
   var slideIndex;
 
@@ -8167,7 +8167,7 @@ function updateClickedSlide(e) {
     swiper.clickedSlide = slide;
 
     if (swiper.virtual && swiper.params.virtual.enabled) {
-      swiper.clickedIndex = parseInt($$1(slide).attr('data-swiper-slide-index'), 10);
+      swiper.clickedIndex = parseInt($(slide).attr('data-swiper-slide-index'), 10);
     } else {
       swiper.clickedIndex = slideIndex;
     }
@@ -8824,7 +8824,7 @@ function slideToClickedSlide() {
 
   if (params.loop) {
     if (swiper.animating) return;
-    realIndex = parseInt($$1(swiper.clickedSlide).attr('data-swiper-slide-index'), 10);
+    realIndex = parseInt($(swiper.clickedSlide).attr('data-swiper-slide-index'), 10);
 
     if (params.centeredSlides) {
       if (slideToIndex < swiper.loopedSlides - slidesPerView / 2 || slideToIndex > swiper.slides.length - swiper.loopedSlides + slidesPerView / 2) {
@@ -8874,7 +8874,7 @@ function loopCreate() {
 
     if (blankSlidesNum !== params.slidesPerGroup) {
       for (var i = 0; i < blankSlidesNum; i += 1) {
-        var blankNode = $$1(document.createElement('div')).addClass(params.slideClass + " " + params.slideBlankClass);
+        var blankNode = $(document.createElement('div')).addClass(params.slideClass + " " + params.slideBlankClass);
         $wrapperEl.append(blankNode);
       }
 
@@ -8893,7 +8893,7 @@ function loopCreate() {
   var prependSlides = [];
   var appendSlides = [];
   slides.each(function (el, index) {
-    var slide = $$1(el);
+    var slide = $(el);
 
     if (index < swiper.loopedSlides) {
       appendSlides.push(el);
@@ -8907,11 +8907,11 @@ function loopCreate() {
   });
 
   for (var _i = 0; _i < appendSlides.length; _i += 1) {
-    $wrapperEl.append($$1(appendSlides[_i].cloneNode(true)).addClass(params.slideDuplicateClass));
+    $wrapperEl.append($(appendSlides[_i].cloneNode(true)).addClass(params.slideDuplicateClass));
   }
 
   for (var _i2 = prependSlides.length - 1; _i2 >= 0; _i2 -= 1) {
-    $wrapperEl.prepend($$1(prependSlides[_i2].cloneNode(true)).addClass(params.slideDuplicateClass));
+    $wrapperEl.prepend($(prependSlides[_i2].cloneNode(true)).addClass(params.slideDuplicateClass));
   }
 }
 
@@ -9214,7 +9214,7 @@ function onTouchStart(event) {
 
   var e = event;
   if (e.originalEvent) e = e.originalEvent;
-  var $targetEl = $$1(e.target);
+  var $targetEl = $(e.target);
 
   if (params.touchEventsTarget === 'wrapper') {
     if (!$targetEl.closest(swiper.wrapperEl).length) return;
@@ -9228,7 +9228,7 @@ function onTouchStart(event) {
   var swipingClassHasValue = !!params.noSwipingClass && params.noSwipingClass !== '';
 
   if (swipingClassHasValue && e.target && e.target.shadowRoot && event.path && event.path[0]) {
-    $targetEl = $$1(event.path[0]);
+    $targetEl = $(event.path[0]);
   }
 
   var noSwipingSelector = params.noSwipingSelector ? params.noSwipingSelector : "." + params.noSwipingClass;
@@ -9278,7 +9278,7 @@ function onTouchStart(event) {
     var preventDefault = true;
     if ($targetEl.is(data.focusableElements)) preventDefault = false;
 
-    if (document.activeElement && $$1(document.activeElement).is(data.focusableElements) && document.activeElement !== $targetEl[0]) {
+    if (document.activeElement && $(document.activeElement).is(data.focusableElements) && document.activeElement !== $targetEl[0]) {
       document.activeElement.blur();
     }
 
@@ -9354,7 +9354,7 @@ function onTouchMove(event) {
   }
 
   if (data.isTouchEvent && document.activeElement) {
-    if (e.target === document.activeElement && $$1(e.target).is(data.focusableElements)) {
+    if (e.target === document.activeElement && $(e.target).is(data.focusableElements)) {
       data.isMoved = true;
       swiper.allowClick = false;
       return;
@@ -10269,7 +10269,7 @@ function loadImage(imageEl, src, srcset, sizes, checkForComplete, callback) {
     if (callback) callback();
   }
 
-  var isPicture = $$1(imageEl).parent('picture')[0];
+  var isPicture = $(imageEl).parent('picture')[0];
 
   if (!isPicture && (!imageEl.complete || !checkForComplete)) {
     if (src) {
@@ -10522,9 +10522,9 @@ var Swiper = /*#__PURE__*/function () {
     params = extend({}, params);
     if (el && !params.el) params.el = el;
 
-    if (params.el && $$1(params.el).length > 1) {
+    if (params.el && $(params.el).length > 1) {
       var swipers = [];
-      $$1(params.el).each(function (containerEl) {
+      $(params.el).each(function (containerEl) {
         var newParams = extend({}, params, {
           el: containerEl
         });
@@ -10598,7 +10598,7 @@ var Swiper = /*#__PURE__*/function () {
     } // Save Dom lib
 
 
-    swiper.$ = $$1; // Extend Swiper
+    swiper.$ = $; // Extend Swiper
 
     extend(swiper, {
       enabled: swiper.params.enabled,
@@ -10606,7 +10606,7 @@ var Swiper = /*#__PURE__*/function () {
       // Classes
       classNames: [],
       // Slides
-      slides: $$1(),
+      slides: $(),
       slidesGrid: [],
       snapGrid: [],
       slidesSizesGrid: [],
@@ -10894,7 +10894,7 @@ var Swiper = /*#__PURE__*/function () {
     var swiper = this;
     if (swiper.mounted) return true; // Find el
 
-    var $el = $$1(el || swiper.params.el);
+    var $el = $(el || swiper.params.el);
     el = $el[0];
 
     if (!el) {
@@ -10909,7 +10909,7 @@ var Swiper = /*#__PURE__*/function () {
 
     var getWrapper = function getWrapper() {
       if (el && el.shadowRoot && el.shadowRoot.querySelector) {
-        var res = $$1(el.shadowRoot.querySelector(getWrapperSelector())); // Children needs to return slot items
+        var res = $(el.shadowRoot.querySelector(getWrapperSelector())); // Children needs to return slot items
 
         res.children = function (options) {
           return $el.children(options);
@@ -10927,7 +10927,7 @@ var Swiper = /*#__PURE__*/function () {
     if ($wrapperEl.length === 0 && swiper.params.createElements) {
       var document = getDocument();
       var wrapper = document.createElement('div');
-      $wrapperEl = $$1(wrapper);
+      $wrapperEl = $(wrapper);
       wrapper.className = swiper.params.wrapperClass;
       $el.append(wrapper);
       $el.children("." + swiper.params.slideClass).each(function (slideEl) {
@@ -11160,7 +11160,7 @@ var Pagination$1 = {
 
       if ($el.length > 1) {
         bullets.each(function (bullet) {
-          var $bullet = $$1(bullet);
+          var $bullet = $(bullet);
           var bulletIndex = $bullet.index();
 
           if (bulletIndex === current) {
@@ -11317,7 +11317,7 @@ var Pagination$1 = {
     });
     var params = swiper.params.pagination;
     if (!params.el) return;
-    var $el = $$1(params.el);
+    var $el = $(params.el);
     if ($el.length === 0) return;
 
     if (swiper.params.uniqueNavElements && typeof params.el === 'string' && $el.length > 1) {
@@ -11346,7 +11346,7 @@ var Pagination$1 = {
     if (params.clickable) {
       $el.on('click', classesToSelector(params.bulletClass), function onClick(e) {
         e.preventDefault();
-        var index = $$1(this).index() * swiper.params.slidesPerGroup;
+        var index = $(this).index() * swiper.params.slidesPerGroup;
         if (swiper.params.loop) index += swiper.loopedSlides;
         swiper.slideTo(index);
       });
@@ -11463,7 +11463,7 @@ var Pagination$2 = {
     click: function click(swiper, e) {
       var targetEl = e.target;
 
-      if (swiper.params.pagination.el && swiper.params.pagination.hideOnClick && swiper.pagination.$el.length > 0 && !$$1(targetEl).hasClass(swiper.params.pagination.bulletClass)) {
+      if (swiper.params.pagination.el && swiper.params.pagination.hideOnClick && swiper.pagination.$el.length > 0 && !$(targetEl).hasClass(swiper.params.pagination.bulletClass)) {
         if (swiper.navigation && (swiper.navigation.nextEl && targetEl === swiper.navigation.nextEl || swiper.navigation.prevEl && targetEl === swiper.navigation.prevEl)) return;
         var isHidden = swiper.pagination.$el.hasClass(swiper.params.pagination.hiddenClass);
 
@@ -11736,12 +11736,12 @@ var Thumbs = {
     if (!thumbsSwiper) return;
     var clickedIndex = thumbsSwiper.clickedIndex;
     var clickedSlide = thumbsSwiper.clickedSlide;
-    if (clickedSlide && $$1(clickedSlide).hasClass(swiper.params.thumbs.slideThumbActiveClass)) return;
+    if (clickedSlide && $(clickedSlide).hasClass(swiper.params.thumbs.slideThumbActiveClass)) return;
     if (typeof clickedIndex === 'undefined' || clickedIndex === null) return;
     var slideToIndex;
 
     if (thumbsSwiper.params.loop) {
-      slideToIndex = parseInt($$1(thumbsSwiper.clickedSlide).attr('data-swiper-slide-index'), 10);
+      slideToIndex = parseInt($(thumbsSwiper.clickedSlide).attr('data-swiper-slide-index'), 10);
     } else {
       slideToIndex = clickedIndex;
     }
@@ -12034,6 +12034,41 @@ class Button {
   }; }
 }
 
+class Card {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.padding = false;
+    this.small = false;
+    this.margin = false;
+    this.height = false;
+  }
+  componentDidLoad() {
+    this.root.style.display = "block";
+    if (this.height)
+      this.root.style.height = "100%";
+  }
+  render() {
+    const padding = this.padding ? this.small ? "uk-padding-small" : "" : "uk-padding-remove";
+    const margin = this.margin ? "uk-margin-bottom" : "";
+    const height = this.height ? "uk-height-1-1" : "";
+    return (hAsync("div", { class: "uk-card uk-card-default uk-card-body " + padding + " " + margin + " " + height }, hAsync("slot", null)));
+  }
+  get root() { return getElement(this); }
+  static get cmpMeta() { return {
+    "$flags$": 4,
+    "$tagName$": "ks-card",
+    "$members$": {
+      "padding": [4],
+      "small": [4],
+      "margin": [4],
+      "height": [4]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
 const appendToMap = (map, propName, value) => {
     const items = map.get(propName);
     if (!items) {
@@ -12217,329 +12252,6 @@ const createStore = (defaultState, shouldUpdate) => {
     map.use(stencilSubscription());
     return map;
 };
-
-let resolve;
-const tracker = createStore({
-  loaded: loadtracker(),
-  resolved: new Promise(r => resolve = r),
-  trackers: []
-});
-function eachTracker(callable) {
-  tracker.get("resolved").then(() => {
-    tracker.get("trackers").forEach(item => {
-      callable(item);
-    });
-  });
-}
-function loadtracker() {
-  return new Promise(resolve => {
-    resolve();
-    /*window.addEventListener("load", function() {
-        resolve();
-    });*/
-  });
-}
-
-const commonDynamic = createStore({
-  loaded: false,
-  loggedIn: false,
-  customer: {},
-  cartCount: 0,
-  heartCount: 0,
-  api: {},
-  tracking: {}
-});
-
-async function Fetch(url, body = null) {
-  const headers = new Headers();
-  headers.append('pragma', 'no-cache');
-  headers.append('cache-control', 'no-cache');
-  return fetch(url, {
-    method: 'POST',
-    body: body,
-    headers: headers,
-    credentials: "same-origin"
-  })
-    .then(response => {
-    if (!response.ok)
-      throw { name: response.status, message: response.statusText };
-    return response;
-  });
-}
-
-async function addToCart(product, place = 1) {
-  const errorpopup = document.querySelector('ks-error-popup');
-  const messagepopup = document.querySelector('ks-message-popup');
-  const navbar = document.querySelector('ks-navbar');
-  let body = new FormData();
-  body.append("id", product.id);
-  body.append("ilosc", product.quantity.toString());
-  body.append("nazwa", product.name);
-  body.append("value", product.currentPrice.toString());
-  body.append("cechy", product.traitIDs);
-  body.append("akcja", 'dodaj');
-  body.append("miejsce", place.toString());
-  const api = commonDynamic.get('api').addToCart;
-  return Fetch(api, body)
-    .then(async (data) => data.json())
-    .then(async (data) => {
-    if (!data.status) {
-      if (data.productLink)
-        messagepopup.show("Wymagany wybór cechy", data.message, "Przejdź do produktu", product.link);
-      else
-        messagepopup.show("Błąd dodawania produktu", data.message);
-      return;
-    }
-    navbar.IncrementCart(product.quantity.toString());
-    OpenSuggestions(product.id, product.name);
-    if (data.event)
-      eachTracker(item => item === null || item === void 0 ? void 0 : item.addToCart(product, data.event));
-  })
-    .catch(error => {
-    errorpopup.show(error);
-  });
-}
-function OpenSuggestions(id, name) {
-  const suggestions = document.querySelector("ks-product-suggestions");
-  suggestions.show(id, name);
-}
-
-const buttonCartCss = "ks-button-cart{display:block;height:100%}ks-button-cart[expand]{-ms-flex:1;flex:1}ks-button-cart[padding] button{padding:5px;min-height:50px}@media (min-width: 700px){ks-button-cart[padding] button{padding:10px;min-height:60px}}ks-button-cart button{position:relative;display:block;width:100%;height:100%;min-height:42px;min-width:44px;padding:1px 10px;font-size:.875rem;line-height:40px;text-align:center;text-decoration:none;text-transform:none;font-family:var(--font-regular);outline:none;border:none;border-radius:0px;color:white;background-color:var(--product-card-primary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-button-cart button:hover{background-color:var(--product-card-primary-hover)}ks-button-cart button:active{background-color:var(--product-card-primary-active)}ks-button-cart[disabled] button{background-color:var(--product-card-disabled-color) !important;color:var(--product-card-disabled-text) !important}";
-
-class ButtonCart {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.count = "1";
-    this.traits = "";
-    this.expand = false;
-    this.padding = false;
-    this.icon = false;
-    this.product = false;
-    this.loading = false;
-  }
-  ClickHandler(count) {
-    if (!this.disabled && !this.loading) {
-      this.cart(count || this.count);
-    }
-  }
-  async fetch(url, body) {
-    const headers = new Headers();
-    headers.append('pragma', 'no-cache');
-    headers.append('cache-control', 'no-cache');
-    return fetch(url, {
-      method: 'POST',
-      body: body,
-      headers: headers,
-      credentials: "same-origin"
-    })
-      .then(response => {
-      if (!response.ok)
-        throw { name: response.status, message: response.statusText };
-      return response;
-    });
-  }
-  async cart(count) {
-    this.loading = true;
-    const categories = JSON.parse(decodeURI(this.categories));
-    const product = {
-      id: this.productId,
-      traitIDs: "",
-      sku: this.sku,
-      name: this.name,
-      link: this.url,
-      image: this.img,
-      imageFull: this.imgFull,
-      currentPrice: this.price,
-      quantity: parseInt(count),
-      currency: this.currency,
-      categories: categories
-    };
-    await addToCart(product, 1);
-    this.loading = false;
-  }
-  ;
-  async AddToCart(count) {
-    this.ClickHandler(count);
-  }
-  async SetCount(count) {
-    this.count = count;
-  }
-  render() {
-    return hAsync("button", { "aria-label": "Do koszyka", disabled: this.disabled, onClick: () => this.ClickHandler() }, this.loading ?
-      hAsync("ks-loader", { large: true })
-      : this.icon ?
-        hAsync("ks-icon", { name: "shopping-bag", size: 0.9 }) :
-        hAsync("span", null, "DO KOSZYKA"));
-  }
-  get root() { return getElement(this); }
-  static get style() { return buttonCartCss; }
-  static get cmpMeta() { return {
-    "$flags$": 0,
-    "$tagName$": "ks-button-cart",
-    "$members$": {
-      "productId": [513, "product-id"],
-      "sku": [513],
-      "img": [513],
-      "imgFull": [513, "img-full"],
-      "currency": [513],
-      "name": [513],
-      "url": [513],
-      "price": [514],
-      "categories": [513],
-      "count": [1537],
-      "traits": [513],
-      "expand": [516],
-      "padding": [516],
-      "icon": [4],
-      "disabled": [516],
-      "product": [4],
-      "loading": [32],
-      "AddToCart": [64],
-      "SetCount": [64]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["productId", "product-id"], ["sku", "sku"], ["img", "img"], ["imgFull", "img-full"], ["currency", "currency"], ["name", "name"], ["url", "url"], ["price", "price"], ["categories", "categories"], ["count", "count"], ["traits", "traits"], ["expand", "expand"], ["padding", "padding"], ["disabled", "disabled"]]
-  }; }
-}
-
-async function cartfetch(url, body) {
-  const headers = new Headers();
-  headers.append('pragma', 'no-cache');
-  headers.append('cache-control', 'no-cache');
-  return fetch(url, {
-    method: 'POST',
-    body: body,
-    headers: headers,
-    credentials: "same-origin"
-  })
-    .then(response => {
-    if (!response.ok)
-      throw { name: response.status, message: response.statusText };
-    return response;
-  });
-}
-function AddToFavourites(id, finished) {
-  const navbar = document.querySelector('ks-navbar');
-  const errorpopup = document.querySelector('ks-error-popup');
-  let cartBody = new FormData();
-  cartBody.append("id", id);
-  cartfetch("inne/do_schowka.php?tok=" + ksFavouritesToken, cartBody)
-    .then(() => {
-    if (finished)
-      finished();
-    navbar.IncrementHeart();
-  })
-    .catch(error => {
-    errorpopup.show(error);
-    if (finished)
-      finished();
-  });
-}
-function RemoveFromFavourites(id, finished) {
-  $.post("inne/do_schowka.php?tok=" + ksFavouritesRemoveToken, {
-    id: id,
-    akcja: 'usun'
-  }, function () {
-    window.location.reload();
-    if (finished)
-      finished();
-  });
-}
-function RemoveAllFavourites(finished) {
-  $.post("inne/schowek_usun.php?tok=" + ksFavouritesRemoveAllToken, {}, function () {
-    window.location.reload();
-    if (finished)
-      finished();
-  });
-}
-
-const buttonFavCss = "ks-button-fav{display:block;height:100%}ks-button-fav[expand]{-ms-flex:1;flex:1}ks-button-fav[padding] button{padding:5px;min-height:50px}@media (min-width: 700px){ks-button-fav[padding] button{min-height:60px;padding:10px}}ks-button-fav button{position:relative;display:block;width:100%;height:100%;min-height:42px;min-width:44px;padding:1px 10px;font-size:.875rem;line-height:40px;text-align:center;text-decoration:none;text-transform:none;outline:none;border:none;border-radius:0px;color:white;background-color:var(--product-card-secondary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-button-fav button:hover{background-color:var(--product-card-secondary-hover)}ks-button-fav button:active{background-color:var(--product-card-secondary-active)}ks-button-fav .success{display:-ms-flexbox;display:flex;position:absolute;top:0;left:0;width:100%;height:100%;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;background-color:var(--product-card-secondary);-webkit-animation:fade-in 0.2s 1;animation:fade-in 0.2s 1}";
-
-class ButtonFav {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.subtract = false;
-    this.expand = false;
-    this.padding = false;
-    this.loading = false;
-    this.success = false;
-  }
-  ClickHandler() {
-    if (!this.loading && !this.success) {
-      this.loading = true;
-      if (this.subtract)
-        RemoveFromFavourites(this.productId, () => this.ResultHandler());
-      else
-        AddToFavourites(this.productId, () => this.ResultHandler());
-    }
-  }
-  ResultHandler() {
-    this.loading = true;
-    this.success = true;
-    const navbar = document.querySelector("ks-navbar");
-    if (this.subtract)
-      navbar.DecrementHeart();
-  }
-  render() {
-    return (hAsync("button", { "aria-label": "Do koszyka", onClick: () => this.ClickHandler() }, this.loading ? hAsync("ks-loader", null) :
-      hAsync("ks-icon", { name: this.subtract ? "x" : "star" }), this.success ?
-      hAsync("div", { class: "success" }, hAsync("ks-icon", { name: "check" }))
-      : null));
-  }
-  get root() { return getElement(this); }
-  static get style() { return buttonFavCss; }
-  static get cmpMeta() { return {
-    "$flags$": 0,
-    "$tagName$": "ks-button-fav",
-    "$members$": {
-      "productId": [513, "product-id"],
-      "subtract": [4],
-      "expand": [516],
-      "padding": [516],
-      "loading": [32],
-      "success": [32]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["productId", "product-id"], ["expand", "expand"], ["padding", "padding"]]
-  }; }
-}
-
-class Card {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.padding = false;
-    this.small = false;
-    this.margin = false;
-    this.height = false;
-  }
-  componentDidLoad() {
-    this.root.style.display = "block";
-    if (this.height)
-      this.root.style.height = "100%";
-  }
-  render() {
-    const padding = this.padding ? this.small ? "uk-padding-small" : "" : "uk-padding-remove";
-    const margin = this.margin ? "uk-margin-bottom" : "";
-    const height = this.height ? "uk-height-1-1" : "";
-    return (hAsync("div", { class: "uk-card uk-card-default uk-card-body " + padding + " " + margin + " " + height }, hAsync("slot", null)));
-  }
-  get root() { return getElement(this); }
-  static get cmpMeta() { return {
-    "$flags$": 4,
-    "$tagName$": "ks-card",
-    "$members$": {
-      "padding": [4],
-      "small": [4],
-      "margin": [4],
-      "height": [4]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
 
 async function formfetch(url, formProperties) {
   let body = null;
@@ -14829,34 +14541,6 @@ class ErrorPopup {
       "visible": [32],
       "show": [64],
       "hide": [64]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
-
-class FavouritesHeader {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-  }
-  render() {
-    const value = this.value
-      .replace(".", ",");
-    return [
-      hAsync("ks-flex", { between: true, middle: true, gutter: true }, hAsync("div", { class: "uk-text-center uk-width-1-1 uk-width-auto@m ks-text-decorated", style: { padding: "0 20px" } }, hAsync("span", { class: "uk-h1" }, "SCHOWEK: "), hAsync("span", { class: "uk-h1 uk-text-danger uk-text-bold", style: { marginLeft: "10px" } }, value)), hAsync("div", { class: "uk-text-center uk-width-1-1 uk-width-auto@m" }, hAsync("button", { class: "uk-button uk-button-danger uk-border-pill", style: { padding: "3px 30px" }, onClick: () => {
-          RemoveAllFavourites();
-        } }, "WYCZY\u015A\u0106 SCHOWEK"))),
-      hAsync("br", { class: "uk-hidden@m" }),
-      hAsync("hr", null)
-    ];
-  }
-  get root() { return getElement(this); }
-  static get cmpMeta() { return {
-    "$flags$": 0,
-    "$tagName$": "ks-favourites-header",
-    "$members$": {
-      "value": [1]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
@@ -23846,6 +23530,16 @@ class MiniCart {
   }; }
 }
 
+const commonDynamic = createStore({
+  loaded: false,
+  loggedIn: false,
+  customer: {},
+  cartCount: 0,
+  heartCount: 0,
+  api: {},
+  tracking: {}
+});
+
 const navbarCss = "ks-navbar{display:block;min-height:104px;background-color:var(--navbar-color);-webkit-transition:background-color 0.2s ease;transition:background-color 0.2s ease}ks-navbar>nav{display:-ms-flexbox;display:flex;position:relative;color:var(--navbar-text-color)}ks-navbar>nav>.logo{display:-ms-flexbox;display:flex;-ms-flex:1;flex:1;-ms-flex-align:center;align-items:center}ks-navbar>nav>.search{display:-ms-flexbox;display:flex;-ms-flex:unset;flex:unset;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}ks-navbar>nav>.buttons{display:-ms-flexbox;display:flex;-ms-flex:unset;flex:unset;-ms-flex-pack:end;justify-content:flex-end;-ms-flex-align:center;align-items:center;opacity:0;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-navbar>nav>.buttons.loaded{opacity:1}ks-navbar>nav>.logo>div{margin-right:auto;margin-left:15px;max-width:217px;width:100%;-ms-flex-pack:start;justify-content:flex-start}ks-navbar>nav>.logo>div ks-img{max-width:217px;margin-right:15px}ks-navbar>nav>.logo>div .promo{display:block;font-size:11px;font-weight:700;text-decoration:none;color:var(--navbar-text-color);white-space:nowrap}@media only screen and (min-width: 640px){ks-navbar>nav>.logo{-ms-flex:1;flex:1}ks-navbar>nav>.buttons{-ms-flex:1;flex:1}}@media only screen and (min-width: 1400px){ks-navbar>nav>.search{-ms-flex:1;flex:1}ks-navbar>nav>.logo>div ks-img{width:217px}ks-navbar>nav>.logo>div{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;max-width:unset;width:unset}ks-navbar>nav>.logo>div .promo{margin-left:15px;display:block;padding:8px 20px 5px 20px;border-radius:50px;background-color:var(--navbar-text-color);color:var(--navbar-color);font-size:13px;font-weight:700}ks-navbar>nav>.logo>div a.promo{-webkit-box-shadow:0 0 0px rgba(255, 255, 255, 0.529);box-shadow:0 0 0px rgba(255, 255, 255, 0.529);-webkit-transition:-webkit-box-shadow 0.2s ease;transition:-webkit-box-shadow 0.2s ease;transition:box-shadow 0.2s ease;transition:box-shadow 0.2s ease, -webkit-box-shadow 0.2s ease}ks-navbar>nav>.logo>div a.promo:hover{-webkit-box-shadow:0 0 15px rgba(255, 255, 255, 0.529);box-shadow:0 0 15px rgba(255, 255, 255, 0.529)}ks-navbar>nav>.logo>div a.promo:active{-webkit-box-shadow:0 0 8px rgba(255, 255, 255, 0.529);box-shadow:0 0 8px rgba(255, 255, 255, 0.529)}}#ks-navbar-menu-buttons{-webkit-box-sizing:border-box;box-sizing:border-box;min-height:70px;padding:0 15px;text-decoration:none}@media only screen and (max-width: 639px){ks-navbar .tablet-desktop{display:none}}@media only screen and (max-width: 959px){ks-navbar .desktop{display:none}}@media only screen and (min-width: 960px){ks-navbar .mobile-tablet{display:none}}";
 
 class Navbar {
@@ -25780,6 +25474,28 @@ class Overlay {
   }; }
 }
 
+let resolve;
+const tracker = createStore({
+  loaded: loadtracker(),
+  resolved: new Promise(r => resolve = r),
+  trackers: []
+});
+function eachTracker(callable) {
+  tracker.get("resolved").then(() => {
+    tracker.get("trackers").forEach(item => {
+      callable(item);
+    });
+  });
+}
+function loadtracker() {
+  return new Promise(resolve => {
+    resolve();
+    /*window.addEventListener("load", function() {
+        resolve();
+    });*/
+  });
+}
+
 class TikTokTracker {
   constructor() {
     this.ttq = new Promise(resolve => {
@@ -26516,6 +26232,99 @@ class PageProduct {
   }; }
 }
 
+const favourites = createStore({});
+
+async function Fetch(url, body = null) {
+  const headers = new Headers();
+  headers.append('pragma', 'no-cache');
+  headers.append('cache-control', 'no-cache');
+  return fetch(url, {
+    method: 'POST',
+    body: body,
+    headers: headers,
+    credentials: "same-origin"
+  })
+    .then(response => {
+    if (!response.ok)
+      throw { name: response.status, message: response.statusText };
+    return response;
+  });
+}
+
+async function addToFavourites(id) {
+  const errorpopup = document.querySelector('ks-error-popup');
+  const navbar = document.querySelector('ks-navbar');
+  let cartBody = new FormData();
+  cartBody.append("id", id);
+  const api = commonDynamic.get('api').addToFavourites;
+  return Fetch(api, cartBody)
+    .then(() => navbar.IncrementHeart())
+    .catch(error => errorpopup.show(error));
+}
+async function removeFromFavourites(id) {
+  const errorpopup = document.querySelector('ks-error-popup');
+  const navbar = document.querySelector('ks-navbar');
+  let cartBody = new FormData();
+  cartBody.append("id", id);
+  cartBody.append("akcja", "usun");
+  const api = commonDynamic.get('api').removeFromFavourites;
+  return Fetch(api, cartBody)
+    .then(() => navbar.DecrementHeart())
+    .catch(error => errorpopup.show(error));
+}
+async function removeAllFavourites() {
+  const errorpopup = document.querySelector('ks-error-popup');
+  const api = commonDynamic.get('api').removeAllFavourites;
+  return Fetch(api).catch(error => errorpopup.show(error));
+}
+
+const favouritesCss = "ks-page-favourites{display:block}ks-page-favourites .favourites-container{background:#fff;color:#373737;-webkit-box-shadow:0 2px 8px rgb(0 0 0 / 15%);box-shadow:0 2px 8px rgb(0 0 0 / 15%);padding:20px 30px}ks-page-favourites .favourites-header{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-wrap:nowrap;flex-wrap:nowrap}ks-page-favourites .favourites-header .removeAll{width:100%;display:-ms-flexbox;display:flex;-ms-flex-pack:end;justify-content:flex-end}ks-page-favourites .favourites-header .removeAll ks-button{max-width:250px;width:100%}ks-page-favourites .favourites-header>span{font-size:26px;line-height:26px;font-weight:700;font-family:var(--font-emphasis);white-space:nowrap}ks-page-favourites .favourites-header .valueString{margin-right:10px}ks-page-favourites .favourites-header .value{color:var(--color-secondary)}ks-page-favourites .empty{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;-ms-flex:1 0 auto;flex:1 0 auto;min-height:320px;padding:40px 40px}ks-page-favourites .empty-cart h1{font-size:20px;font-weight:700;margin-bottom:30px}ks-page-favourites .empty-cart ks-button{max-width:300px;width:100%}@media screen and (max-width: 550px){ks-page-favourites .favourites-header{-ms-flex-wrap:wrap;flex-wrap:wrap;-ms-flex-pack:center;justify-content:center}ks-page-favourites .favourites-header>span{font-size:20px;line-height:20px}ks-page-favourites .favourites-header .removeAll{-ms-flex-pack:center;justify-content:center;width:100%;margin-top:10px}}";
+
+class PageRecipe$1 {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.removeAllLoading = false;
+  }
+  componentWillLoad() {
+    const favouritesDataElement = document.getElementById(this.favouritesData);
+    const favouritesData = JSON.parse(favouritesDataElement.innerHTML);
+    Object.keys(favouritesData).map(key => {
+      favourites.set(key, favouritesData[key]);
+    });
+  }
+  removeAll() {
+    if (this.removeAllLoading)
+      return;
+    this.removeAllLoading = true;
+    removeAllFavourites().then(() => {
+      this.removeAllLoading = false;
+    });
+  }
+  render() {
+    const products = favourites.get('products');
+    const descriptions = favourites.get('descriptions');
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("ks-container", null, (products === null || products === void 0 ? void 0 : products.length) > 0 ?
+      hAsync("div", { class: "favourites-container" }, hAsync("div", { class: "favourites-header" }, hAsync("span", { class: "valueString" }, favourites.get('valueString')), hAsync("span", { class: "value" }, favourites.get('value')), hAsync("div", { class: "removeAll" }, hAsync("ks-button", { secondary: true, round: true, name: favourites.get('removeAllString'), onClick: () => this.removeAll }))), hAsync("hr", null), hAsync("div", { class: "product-container" }, products === null || products === void 0 ? void 0 : products.map(card => hAsync("ks-product-fav-card", { "product-id": card.id, link: card.link, sku: card.sku, name: card.name, summary: descriptions[card.id], img: card.image, imgFull: card.imageFull, webp: card.webp, currentPrice: card.currentPrice, previousPrice: card.previousPrice, unavailable: card.unavailable, currency: card.currency, categories: card.categories }))))
+      :
+        hAsync("div", { class: "empty" }, hAsync("h1", null, favourites.get('emptyHeading')), hAsync("ks-button", { round: true, border: true, name: favourites.get('emptyButton'), link: "/" }))));
+  }
+  static get style() { return favouritesCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-page-favourites",
+    "$members$": {
+      "skipbase": [4],
+      "commonData": [1, "common-data"],
+      "commonDynamicData": [1, "common-dynamic-data"],
+      "favouritesData": [1, "favourites-data"],
+      "removeAllLoading": [32]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
 const recipe = createStore({});
 
 const recipeCss = "ks-page-recipe{display:block}ks-page-recipe .recipe-container{background:#fff;color:#373737;-webkit-box-shadow:0 2px 8px rgb(0 0 0 / 15%);box-shadow:0 2px 8px rgb(0 0 0 / 15%);margin-bottom:0}ks-page-recipe .suggested-heading{text-align:center;margin-top:20px !important;font-weight:700}ks-page-recipe ks-product-container{margin-bottom:15px !important}";
@@ -26985,31 +26794,46 @@ class ProductCalculatorPayU {
   }; }
 }
 
-async function addToFavourites(id) {
+async function addToCart(product, place = 1) {
   const errorpopup = document.querySelector('ks-error-popup');
+  const messagepopup = document.querySelector('ks-message-popup');
   const navbar = document.querySelector('ks-navbar');
-  let cartBody = new FormData();
-  cartBody.append("id", id);
-  const api = commonDynamic.get('api').addToFavourites;
-  return Fetch(api, cartBody)
-    .then(() => navbar.IncrementHeart())
-    .catch(error => errorpopup.show(error));
+  let body = new FormData();
+  body.append("id", product.id);
+  body.append("ilosc", product.quantity.toString());
+  body.append("nazwa", product.name);
+  body.append("value", product.currentPrice.toString());
+  body.append("cechy", product.traitIDs);
+  body.append("akcja", 'dodaj');
+  body.append("miejsce", place.toString());
+  const api = commonDynamic.get('api').addToCart;
+  return Fetch(api, body)
+    .then(async (data) => data.json())
+    .then(async (data) => {
+    if (!data.status) {
+      if (data.productLink)
+        messagepopup.show("Wymagany wybór cechy", data.message, "Przejdź do produktu", product.link);
+      else
+        messagepopup.show("Błąd dodawania produktu", data.message);
+      return;
+    }
+    navbar.IncrementCart(product.quantity.toString());
+    OpenSuggestions(product.id, product.name);
+    if (data.event)
+      eachTracker(item => item === null || item === void 0 ? void 0 : item.addToCart(product, data.event));
+  })
+    .catch(error => {
+    errorpopup.show(error);
+  });
 }
-async function removeFromFavourites(id) {
-  const errorpopup = document.querySelector('ks-error-popup');
-  const navbar = document.querySelector('ks-navbar');
-  let cartBody = new FormData();
-  cartBody.append("id", id);
-  cartBody.append("akcja", "usun");
-  const api = commonDynamic.get('api').removeFromFavourites;
-  return Fetch(api, cartBody)
-    .then(() => navbar.DecrementHeart())
-    .catch(error => errorpopup.show(error));
+function OpenSuggestions(id, name) {
+  const suggestions = document.querySelector("ks-product-suggestions");
+  suggestions.show(id, name);
 }
 
 const productCardCss = "ks-product-card{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:justify;justify-content:space-between;width:100%;text-align:center;background:var(--card-background);color:var(--card-text-color);-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow)}@media (min-width: 360px){ks-product-card{width:calc(50% - 15px)}}@media (min-width: 640px){ks-product-card{width:228px}}ks-product-card .top{display:block;padding:15px;min-height:200px;color:inherit !important;text-decoration:none !important;font-size:14px}ks-product-card ks-img2{height:auto;margin-bottom:10px;max-width:100%}ks-product-card .price>*{display:block;font-family:var(--font-emphasis)}ks-product-card .price .previous{color:#888888;font-size:15px}ks-product-card .price .current{color:var(--color-secondary);font-weight:bold;font-size:17px}ks-product-card .bottom{display:-ms-flexbox;display:flex;margin-top:10px}ks-product-card .bottom .unavailable,ks-product-card .bottom .link{display:block;width:100%;padding:10px 10px;font-size:.875rem;text-align:center;text-decoration:none;text-transform:none;color:white;background-color:var(--color-secondary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-product-card .bottom .unavailable{color:#252525;background-color:#f1f1f1}ks-product-card .bottom .link:hover{background-color:var(--color-secondary-hover)}ks-product-card .bottom .link:active{background-color:var(--color-secondary-active)}ks-product-card[unavailable] .top,ks-product-card[unavailable] .price{opacity:0.6}ks-product-card[unavailable] .price .current{color:#252525}@media (max-width: 420px){ks-product-card .top{font-size:13px;padding:8px}ks-product-card .price{line-height:18px}}ks-product-card .cart{position:relative;display:block;width:100%;height:100%;min-height:42px;min-width:44px;padding:1px 10px;font-size:.875rem;line-height:40px;text-align:center;text-decoration:none;text-transform:none;font-family:var(--font-regular);outline:none;border:none;border-radius:0px;color:white;background-color:var(--product-card-primary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-product-card .cart:hover{background-color:var(--product-card-primary-hover)}ks-product-card .cart:active{background-color:var(--product-card-primary-active)}ks-product-card .fav{position:relative;display:block;height:100%;min-height:42px;min-width:44px;padding:1px 10px;font-size:.875rem;line-height:40px;text-align:center;text-decoration:none;text-transform:none;outline:none;border:none;border-radius:0px;color:white;background-color:var(--product-card-secondary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-product-card .fav:hover{background-color:var(--product-card-secondary-hover)}ks-product-card .fav:active{background-color:var(--product-card-secondary-active)}ks-product-card .fav .success{display:-ms-flexbox;display:flex;position:absolute;top:0;left:0;width:100%;height:100%;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;background-color:var(--product-card-secondary);-webkit-animation:fade-in 0.2s 1;animation:fade-in 0.2s 1}";
 
-class ProductCard {
+class ProductCard$1 {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.unavailable = false;
@@ -27082,6 +26906,83 @@ class ProductCard {
       "linkOnly": [4, "link-only"],
       "productId": [1, "product-id"],
       "name": [1],
+      "sku": [1],
+      "img": [1],
+      "imgFull": [1, "img-full"],
+      "webp": [1],
+      "link": [1],
+      "currentPrice": [1, "current-price"],
+      "previousPrice": [1, "previous-price"],
+      "currency": [1],
+      "categories": [1],
+      "cartLoading": [32],
+      "favLoading": [32],
+      "favSuccess": [32]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": [["unavailable", "unavailable"]]
+  }; }
+}
+
+const productFavCardCss = "ks-product-fav-card{display:-ms-flexbox;display:flex;-ms-flex-align:stretch;align-items:stretch;-ms-flex-wrap:nowrap;flex-wrap:nowrap}ks-product-fav-card>a{width:100%;display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-wrap:nowrap;flex-wrap:nowrap;text-decoration:none !important;color:#000 !important}ks-product-fav-card .image{max-height:180px;max-width:180px;margin-right:20px}ks-product-fav-card h3{font-family:var(--font-emphasis);margin-bottom:5px;font-size:20px}ks-product-fav-card p{font-size:15px}ks-product-fav-card .price{font-size:18px;font-family:var(--font-emphasis)}ks-product-fav-card .price .current{font-weight:700;color:var(--color-secondary)}ks-product-fav-card .price .previous{margin:0px 10px;color:#909090}ks-product-fav-card .buttons{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-wrap:nowrap;flex-wrap:nowrap;padding:10px 0px;margin-left:10px}ks-product-fav-card .buttons button{background-color:var(--color-secondary);color:white;border-style:none;width:50px;height:100%;position:relative;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease}ks-product-fav-card .buttons button:hover{background-color:var(--color-secondary-hover)}ks-product-fav-card .buttons button:active{background-color:var(--color-secondary-active)}ks-product-fav-card .buttons .cart{border-top:solid 1px var(--color-secondary-darker)}ks-product-fav-card .buttons .cart span{display:none}ks-product-fav-card[unavailable] .buttons .cart{border-top:none;background-color:var(--color-faded);color:var(--color-faded-text)}@media screen and (max-width: 750px){ks-product-fav-card p{display:none}}@media screen and (max-width: 550px){ks-product-fav-card{-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;text-align:center}ks-product-fav-card>a{-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center}ks-product-fav-card .image{margin:0}ks-product-fav-card .buttons{-ms-flex-direction:row;flex-direction:row;margin:0;width:100%}ks-product-fav-card .buttons button{height:40px}ks-product-fav-card .buttons .fav{-ms-flex:1 0 40px;flex:1 0 40px;width:40px;border-radius:100px;margin-right:5px}ks-product-fav-card .buttons .cart{width:100%;border-radius:10px}ks-product-fav-card .buttons .cart ks-icon{display:none}ks-product-fav-card .buttons .cart span{display:inline}}";
+
+class ProductCard {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.unavailable = false;
+    this.linkOnly = false;
+    this.cartLoading = false;
+    this.favLoading = false;
+    this.favSuccess = false;
+  }
+  cart() {
+    this.cartLoading = true;
+    const categories = JSON.parse(decodeURI(this.categories));
+    const product = {
+      id: this.productId,
+      traitIDs: "",
+      sku: this.sku,
+      name: this.name,
+      link: this.link,
+      image: this.img,
+      imageFull: this.imgFull,
+      currentPrice: parseFloat(this.currentPrice),
+      quantity: 1,
+      currency: this.currency,
+      categories: categories
+    };
+    addToCart(product, 1)
+      .then(() => this.cartLoading = false);
+  }
+  favourites() {
+    if (this.favLoading)
+      return;
+    this.favLoading = true;
+    removeFromFavourites(this.productId).then(() => {
+      this.favLoading = false;
+    });
+  }
+  render() {
+    const translations = common.get('translations');
+    return [
+      hAsync("a", { href: this.link, "aria-label": this.name }, hAsync("div", { class: "image" }, hAsync("ks-img2", { fill: true, limit: true, center: true, src: this.img, webp: this.webp, width: 280, height: 280, alt: this.name })), hAsync("div", { class: "info" }, hAsync("h3", null, this.name), hAsync("div", { class: "price" }, hAsync("span", { class: "current" }, this.currentPrice, " z\u0142"), this.previousPrice ? hAsync("s", { class: "previous" }, this.previousPrice, " z\u0142") : null), this.summary ? hAsync("p", null, this.summary) : null)),
+      hAsync("div", { class: "buttons" }, hAsync("button", { class: "fav", onClick: () => this.favourites() }, this.favLoading ? hAsync("ks-loader", null) : hAsync("ks-icon", { name: "x" })), hAsync("button", { disabled: this.unavailable, class: "cart", onClick: () => this.cart() }, this.cartLoading ? hAsync("ks-loader", null) : [
+        hAsync("ks-icon", { name: "shopping-bag" }),
+        hAsync("span", null, this.unavailable ? translations.unavailable : translations.addToCart)
+      ]))
+    ];
+  }
+  static get style() { return productFavCardCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-product-fav-card",
+    "$members$": {
+      "unavailable": [516],
+      "linkOnly": [4, "link-only"],
+      "productId": [1, "product-id"],
+      "name": [1],
+      "summary": [1],
       "sku": [1],
       "img": [1],
       "imgFull": [1, "img-full"],
@@ -28169,66 +28070,6 @@ class ProductVariants {
   }; }
 }
 
-class ProductWide {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.unavailable = false;
-    this.cartLoading = false;
-    this.mobile = false;
-  }
-  componentDidLoad() {
-    this.root.style.display = "block";
-  }
-  CartHandler(success) {
-    if (!success)
-      this.cartLoading = false;
-  }
-  resizeHandler() {
-    if (window.innerWidth <= 700)
-      this.mobile = true;
-    else
-      this.mobile = false;
-  }
-  componentWillLoad() {
-    this.resizeHandler();
-  }
-  render() {
-    let currentPrice;
-    if (this.currentPrice)
-      currentPrice = this.currentPrice.replace(".", ",") + " zł";
-    let previousPrice;
-    if (this.previousPrice)
-      previousPrice = this.previousPrice.replace(".", ",") + " zł";
-    return (hAsync("ks-flex", { between: true, middle: true, column: this.mobile ? true : false, style: this.mobile ? { display: "block", marginBottom: "20px" } : { display: "block" } }, hAsync("a", { href: this.link }, hAsync("ks-image", { src: this.img, width: "200", height: "200", contain: true, alt: "zdj\u0119cie produktu" })), hAsync("a", { href: this.link, class: "uk-flex-1 uk-padding-small uk-link-reset " + (this.mobile ? "uk-text-center" : "") }, hAsync("span", { class: "uk-h3 uk-margin-small-bottom" }, this.name), hAsync("br", null), this.unavailable ? hAsync("span", { class: "uk-h5 uk-text-normal uk-text-danger" }, "Produkt niedost\u0119pny") : null, hAsync("div", { class: "uk-margin-small-top" }, hAsync("span", { class: "uk-h4 uk-text-bold uk-text-normal uk-text-danger" }, currentPrice), this.previousPrice ? hAsync("span", { class: "uk-h4 uk-text-muted uk-margin-left" }, hAsync("s", null, previousPrice)) : null), hAsync("p", { class: "uk-text-small uk-visible@m" }, hAsync("slot", null))), hAsync("div", { class: "uk-flex " + (this.mobile ? "uk-width-1-1" : "uk-flex-column") }, hAsync("ks-button-fav", { subtract: true, padding: true, expand: true, "product-id": this.productId }), this.unavailable ?
-      hAsync("ks-button-cart", { padding: true, expand: true, disabled: true }) :
-      hAsync("ks-button-cart", { padding: true, expand: true, "product-id": this.productId, url: this.link, sku: this.sku, imgFull: this.imgFull, currency: this.currency, categories: this.categories, name: this.name, price: parseFloat(this.currentPrice) }))));
-  }
-  get root() { return getElement(this); }
-  static get cmpMeta() { return {
-    "$flags$": 4,
-    "$tagName$": "ks-product-wide",
-    "$members$": {
-      "unavailable": [4],
-      "name": [1],
-      "sku": [1],
-      "img": [1],
-      "imgFull": [1, "img-full"],
-      "link": [1],
-      "currentPrice": [1, "current-price"],
-      "previousPrice": [1, "previous-price"],
-      "currency": [1],
-      "categories": [1],
-      "productId": [1, "product-id"],
-      "uniqueId": [1, "unique-id"],
-      "cartLoading": [32],
-      "mobile": [32]
-    },
-    "$listeners$": [[9, "resize", "resizeHandler"]],
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
-
 const productYoutubeCss = "ks-product-youtube{display:block;position:relative;overflow:hidden;-webkit-box-sizing:border-box;box-sizing:border-box;padding-top:56.25%;background-color:black}ks-product-youtube iframe{position:absolute;top:0;left:0;bottom:0;right:0;width:100%;height:100%}";
 
 class ProductYoutube {
@@ -29148,8 +28989,6 @@ registerComponents([
   BannerContainer,
   Breadcrumbs,
   Button,
-  ButtonCart,
-  ButtonFav,
   Card,
   Cart,
   CartButtons,
@@ -29196,7 +29035,6 @@ registerComponents([
   DescriptionTextImage,
   DevelopmentWarning,
   ErrorPopup,
-  FavouritesHeader,
   Featured,
   FeaturedContainer,
   Filter,
@@ -29274,6 +29112,7 @@ registerComponents([
   PageHome,
   PageListing,
   PageProduct,
+  PageRecipe$1,
   PageRecipe,
   PageRecipes,
   Pagination,
@@ -29284,6 +29123,7 @@ registerComponents([
   ProductButton,
   ProductCalculatorCA,
   ProductCalculatorPayU,
+  ProductCard$1,
   ProductCard,
   ProductContainer,
   ProductCount$1,
@@ -29307,7 +29147,6 @@ registerComponents([
   ProductTitle,
   ProductVariant,
   ProductVariants,
-  ProductWide,
   ProductYoutube,
   PromotionalPopup,
   RadioTile,
