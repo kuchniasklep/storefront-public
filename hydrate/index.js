@@ -12220,7 +12220,7 @@ const createStore = (defaultState, shouldUpdate) => {
 
 let resolve;
 const tracker = createStore({
-  loaded: loadtracker(),
+  loaded: true,
   resolved: new Promise(r => resolve = r),
   trackers: []
 });
@@ -12228,13 +12228,6 @@ function eachTracker(callable) {
   tracker.get("resolved").then(() => {
     tracker.get("trackers").forEach(item => {
       callable(item);
-    });
-  });
-}
-function loadtracker() {
-  return new Promise(resolve => {
-    window.addEventListener("load", function () {
-      resolve();
     });
   });
 }
@@ -26022,6 +26015,7 @@ class EdroneTracker {
     window._edrone.action_type = 'category_view';
   }
   addToCart(product, _eventID) {
+    console.log(product);
     window._edrone.product_ids = product.id;
     window._edrone.product_skus = product.sku;
     window._edrone.product_titles = product.name;
