@@ -26516,7 +26516,7 @@ class PageProduct {
 
 const recipe = createStore({});
 
-const recipeCss = "";
+const recipeCss = "ks-page-recipe{display:block}ks-page-recipe .recipe-container{background:#fff;color:#373737;-webkit-box-shadow:0 2px 8px rgb(0 0 0 / 15%);box-shadow:0 2px 8px rgb(0 0 0 / 15%)}ks-page-recipe .suggested-heading{text-align:center;margin-top:10px;font-weight:700}ks-page-recipe ks-product-container{margin-bottom:15px}";
 
 class PageRecipe {
   constructor(hostRef) {
@@ -26539,7 +26539,7 @@ class PageRecipe {
     });
   }
   render() {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     const nutrition = recipe.get('nutrition');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("ks-container", null, hAsync("div", { class: "recipe-container" }, hAsync("ks-recipe-info", { image: recipe.get('image'), time: recipe.get('time'), yield: recipe.get('yield'), cuisine: recipe.get('cuisine'), "cuisine-link": recipe.get('cuisineLink'), category: recipe.get('category'), "category-link": recipe.get('categoryLink') }, hAsync("h1", { slot: "heading" }, recipe.get('title')), hAsync("p", { slot: "summary" }, recipe.get('summary')), hAsync("ks-recipe-nutrition", { type: 'kalorie', value: nutrition.calories, slot: 'nutrition' }), hAsync("ks-recipe-nutrition", { type: 't\u0142uszcze', value: nutrition.fats, slot: 'nutrition' }), hAsync("ks-recipe-nutrition", { type: 'nasycone', value: nutrition.saturatedFats, slot: 'nutrition' }), hAsync("ks-recipe-nutrition", { type: 'cukry', value: nutrition.sugars, slot: 'nutrition' }), hAsync("ks-recipe-nutrition", { type: 's\u00F3l', value: nutrition.salt, slot: 'nutrition' }), hAsync("ks-recipe-nutrition", { type: 'bia\u0142ka', value: nutrition.protein, slot: 'nutrition' }), hAsync("ks-recipe-nutrition", { type: 'w\u0119glowodany', value: nutrition.carbohydrates, slot: 'nutrition' })), hAsync("ks-recipe-procedure", null, (_a = recipe === null || recipe === void 0 ? void 0 : recipe.get("ingredients")) === null || _a === void 0 ? void 0 :
       _a.map(ingredient => hAsync("ks-recipe-ingredient", { name: ingredient.name, amount: ingredient.amount, slot: 'ingredients' })), (_b = recipe === null || recipe === void 0 ? void 0 : recipe.get("preparation")) === null || _b === void 0 ? void 0 :
@@ -26549,7 +26549,9 @@ class PageRecipe {
           hAsync("h2", { slot: 'preparation' }, section.name),
           hAsync("p", { slot: 'preparation' }, (_a = section === null || section === void 0 ? void 0 : section.steps) === null || _a === void 0 ? void 0 : _a.join(' '))
         ];
-      })))), hAsync("ks-product-container", null, (_c = recipe === null || recipe === void 0 ? void 0 : recipe.get('suggestions')) === null || _c === void 0 ? void 0 : _c.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, sku: card.sku, name: card.name, img: card.image, imgFull: card.imageFull, webp: card.webp, currentPrice: card.currentPrice, previousPrice: card.previousPrice, unavailable: card.unavailable, currency: card.currency, categories: card.categories }))));
+      })))), ((_c = recipe === null || recipe === void 0 ? void 0 : recipe.get('suggestions')) === null || _c === void 0 ? void 0 : _c.length) > 0 ?
+      hAsync("ks-container", null, hAsync("h3", { class: "suggested-heading" }, "Produkty Polecane"), hAsync("ks-product-container", null, (_d = recipe === null || recipe === void 0 ? void 0 : recipe.get('suggestions')) === null || _d === void 0 ? void 0 : _d.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, sku: card.sku, name: card.name, img: card.image, imgFull: card.imageFull, webp: card.webp, currentPrice: card.currentPrice, previousPrice: card.previousPrice, unavailable: card.unavailable, currency: card.currency, categories: card.categories }))))
+      : null);
   }
   static get style() { return recipeCss; }
   static get cmpMeta() { return {
