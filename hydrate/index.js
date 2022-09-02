@@ -26516,7 +26516,7 @@ class PageProduct {
 
 const recipe = createStore({});
 
-const recipeCss = "ks-page-recipe{display:block}ks-page-recipe .recipe-container{background:#fff;color:#373737;-webkit-box-shadow:0 2px 8px rgb(0 0 0 / 15%);box-shadow:0 2px 8px rgb(0 0 0 / 15%)}ks-page-recipe .suggested-heading{text-align:center;margin-top:10px;font-weight:700}ks-page-recipe ks-product-container{margin-bottom:15px}";
+const recipeCss = "ks-page-recipe{display:block}ks-page-recipe .recipe-container{background:#fff;color:#373737;-webkit-box-shadow:0 2px 8px rgb(0 0 0 / 15%);box-shadow:0 2px 8px rgb(0 0 0 / 15%)}ks-page-recipe .suggested-heading{text-align:center;margin-top:20px !important;font-weight:700}ks-page-recipe ks-product-container{margin-bottom:15px !important}";
 
 class PageRecipe {
   constructor(hostRef) {
