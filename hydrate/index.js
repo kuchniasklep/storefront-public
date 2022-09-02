@@ -24070,6 +24070,28 @@ async function ValidateInput(root) {
   return valid;
 }
 
+let resolve;
+const tracker = createStore({
+  loaded: loadtracker(),
+  resolved: new Promise(r => resolve = r),
+  trackers: []
+});
+function eachTracker(callable) {
+  tracker.get("resolved").then(() => {
+    tracker.get("trackers").forEach(item => {
+      callable(item);
+    });
+  });
+}
+function loadtracker() {
+  return new Promise(resolve => {
+    resolve();
+    /*window.addEventListener("load", function() {
+        resolve();
+    });*/
+  });
+}
+
 const newsletterPopupCss = "ks-newsletter-popup{display:block}ks-newsletter-popup form{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:justify;justify-content:space-between;height:100%;width:100%;max-width:720px}ks-newsletter-popup .info{padding:60px 60px 20px 60px;fill:#252525;-ms-flex:1 0 auto;flex:1 0 auto;min-height:10px}ks-newsletter-popup .info .top{width:100%;margin-bottom:10px;font-size:initial;max-height:30px}ks-newsletter-popup .info .heading{width:100%;font-family:var(--font-emphasis);font-size:initial;max-height:80px;margin-bottom:10px}ks-newsletter-popup .info p{text-align:center;margin-top:10px}ks-newsletter-popup .buttons{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;min-height:10px;margin-top:30px}ks-newsletter-popup .buttons>*{-ms-flex:1;flex:1}ks-newsletter-popup .close{color:black !important}ks-newsletter-popup ks-input-check{margin:20px;font-size:13px;line-height:18px}ks-newsletter-popup .email-form{display:-ms-flexbox;display:flex}ks-newsletter-popup .email-form>*{margin-bottom:0px}ks-newsletter-popup .email-form>* input{height:60px}ks-newsletter-popup .email-form>ks-button{width:30%}ks-newsletter-popup .email-form>ks-input-text{width:100%}@media (max-width: 720px){ks-newsletter-popup .info .heading{max-height:50px}}@media (max-width: 540px){ks-newsletter-popup .info{padding:70px 25px 20px 25px;min-height:180px}ks-newsletter-popup .info .top{display:none}ks-newsletter-popup .info p{font-size:13px}ks-newsletter-popup ks-input-check{font-size:11px;line-height:16px}ks-newsletter-popup .email-form{display:block}ks-newsletter-popup .email-form>ks-button{width:100%}ks-newsletter-popup .buttons{display:block;margin-top:0px}ks-newsletter-popup .buttons>*:first-child{border-bottom:1px solid #3a3a3a}ks-newsletter-popup ks-input-check{margin:15px}ks-newsletter-popup .info .heading{width:100%;max-height:40px}}";
 
 class NewsletterPopup {
@@ -24103,8 +24125,10 @@ class NewsletterPopup {
     fetch(this.api, { body: data, method: "post" })
       .then(async (response) => {
       const result = await response.text();
-      if (result.search("SUCCESS") != -1)
+      if (result.search("SUCCESS") != -1) {
         this.dialog.showSuccess(this.successHeading, result.replace("SUCCESS", ""));
+        this.track(data.get("email").toString());
+      }
       else
         this.dialog.showFailure(this.faliureHeading, result);
     })
@@ -24116,6 +24140,14 @@ class NewsletterPopup {
         message = error.message;
       this.dialog.showFailure(this.faliureHeading, message);
     });
+  }
+  track(email) {
+    const data = {
+      email: email,
+      subscriber: true,
+      place: "Zapis do newslettera | Popup"
+    };
+    eachTracker(item => item === null || item === void 0 ? void 0 : item.subscribe(commonDynamic.state, data));
   }
   async Show() {
     this.dialog.show();
@@ -25472,28 +25504,6 @@ class Overlay {
     "$lazyBundleId$": "-",
     "$attrsToReflect$": [["dark", "dark"]]
   }; }
-}
-
-let resolve;
-const tracker = createStore({
-  loaded: loadtracker(),
-  resolved: new Promise(r => resolve = r),
-  trackers: []
-});
-function eachTracker(callable) {
-  tracker.get("resolved").then(() => {
-    tracker.get("trackers").forEach(item => {
-      callable(item);
-    });
-  });
-}
-function loadtracker() {
-  return new Promise(resolve => {
-    resolve();
-    /*window.addEventListener("load", function() {
-        resolve();
-    });*/
-  });
 }
 
 class TikTokTracker {
