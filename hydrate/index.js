@@ -26297,7 +26297,6 @@ class PageRecipe$1 {
       return;
     this.removeAllLoading = true;
     removeAllFavourites().then(() => {
-      this.removeAllLoading = false;
       location.reload();
     });
   }
