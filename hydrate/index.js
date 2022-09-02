@@ -26516,7 +26516,7 @@ class PageProduct {
 
 const recipe = createStore({});
 
-const recipeCss = "ks-page-recipe{display:block}ks-page-recipe .recipe-container{background:#fff;color:#373737;-webkit-box-shadow:0 2px 8px rgb(0 0 0 / 15%);box-shadow:0 2px 8px rgb(0 0 0 / 15%)}ks-page-recipe .suggested-heading{text-align:center;margin-top:20px !important;font-weight:700}ks-page-recipe ks-product-container{margin-bottom:15px !important}";
+const recipeCss = "ks-page-recipe{display:block}ks-page-recipe .recipe-container{background:#fff;color:#373737;-webkit-box-shadow:0 2px 8px rgb(0 0 0 / 15%);box-shadow:0 2px 8px rgb(0 0 0 / 15%);margin-bottom:0}ks-page-recipe .suggested-heading{text-align:center;margin-top:20px !important;font-weight:700}ks-page-recipe ks-product-container{margin-bottom:15px !important}";
 
 class PageRecipe {
   constructor(hostRef) {
@@ -26549,9 +26549,10 @@ class PageRecipe {
           hAsync("h2", { slot: 'preparation' }, section.name),
           hAsync("p", { slot: 'preparation' }, (_a = section === null || section === void 0 ? void 0 : section.steps) === null || _a === void 0 ? void 0 : _a.join(' '))
         ];
-      })))), ((_c = recipe === null || recipe === void 0 ? void 0 : recipe.get('suggestions')) === null || _c === void 0 ? void 0 : _c.length) > 0 ?
-      hAsync("ks-container", null, hAsync("h3", { class: "suggested-heading" }, "Produkty Polecane"), hAsync("ks-product-container", null, (_d = recipe === null || recipe === void 0 ? void 0 : recipe.get('suggestions')) === null || _d === void 0 ? void 0 : _d.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, sku: card.sku, name: card.name, img: card.image, imgFull: card.imageFull, webp: card.webp, currentPrice: card.currentPrice, previousPrice: card.previousPrice, unavailable: card.unavailable, currency: card.currency, categories: card.categories }))))
-      : null);
+      })))), ((_c = recipe === null || recipe === void 0 ? void 0 : recipe.get('suggestions')) === null || _c === void 0 ? void 0 : _c.length) > 0 ? [
+      hAsync("h3", { class: "suggested-heading" }, "Produkty Polecane"),
+      hAsync("ks-product-container", null, (_d = recipe === null || recipe === void 0 ? void 0 : recipe.get('suggestions')) === null || _d === void 0 ? void 0 : _d.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, sku: card.sku, name: card.name, img: card.image, imgFull: card.imageFull, webp: card.webp, currentPrice: card.currentPrice, previousPrice: card.previousPrice, unavailable: card.unavailable, currency: card.currency, categories: card.categories })))
+    ] : null);
   }
   static get style() { return recipeCss; }
   static get cmpMeta() { return {
