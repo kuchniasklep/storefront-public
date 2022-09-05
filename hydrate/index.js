@@ -24125,6 +24125,7 @@ class NewsletterPopup {
       if (result.search("SUCCESS") != -1) {
         this.dialog.showSuccess(this.successHeading, result.replace("SUCCESS", ""));
         this.track();
+        this.setSubscription();
       }
       else
         this.dialog.showFailure(this.faliureHeading, result);
@@ -24145,6 +24146,11 @@ class NewsletterPopup {
       place: "Zapis do newslettera | Popup"
     };
     eachTracker(item => item === null || item === void 0 ? void 0 : item.subscribe(commonDynamic.state, data));
+  }
+  setSubscription() {
+    let customer = commonDynamic.get('customer');
+    customer.subscriber = !this.subscribed;
+    commonDynamic.set('customer', customer);
   }
   async Show() {
     this.dialog.show();
