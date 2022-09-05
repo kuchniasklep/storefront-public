@@ -24100,6 +24100,7 @@ class NewsletterPopup {
     this.successHeading = "ZAPISANO DO NEWSLETTERA";
     this.successUnsubHeading = "WYPISANO Z NEWSLETTERA";
     this.faliureHeading = "BŁĄD ZAPISU";
+    this.success = false;
   }
   componentDidLoad() {
     this.dialog = this.root.querySelector("ks-dialog");
@@ -24127,7 +24128,7 @@ class NewsletterPopup {
         const heading = this.subscribed ? this.successUnsubHeading : this.successHeading;
         this.dialog.showSuccess(heading, result.replace("SUCCESS", ""));
         this.track();
-        this.setSubscription();
+        this.success = true;
       }
       else
         this.dialog.showFailure(this.faliureHeading, result);
@@ -24164,6 +24165,10 @@ class NewsletterPopup {
     expirationDate.setMonth(expirationDate.getMonth() + 1);
     expiration = "expires=" + expirationDate.toUTCString() + "; ";
     document.cookie = "newsletterPopup=tak; " + expiration + "path=/";
+    if (this.success) {
+      this.setSubscription();
+      this.success = false;
+    }
   }
   render() {
     return [
