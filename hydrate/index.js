@@ -25788,7 +25788,7 @@ class EdroneTracker {
     window._edrone.product_skus = product.sku;
     window._edrone.product_titles = product.name;
     window._edrone.product_images = product.imageFull;
-    window._edrone.product_urls = product.link;
+    window._edrone.product_urls = encodeURI(document.baseURI + product.link);
     window._edrone.product_category_ids = product.categories.map(category => category.id).join('~');
     window._edrone.product_category_names = product.categories.map(category => category.name).join('~');
     window._edrone.action_type = "add_to_cart";
@@ -25825,7 +25825,7 @@ class EdroneTracker {
     window._edrone.product_ids = products.map(product => product.id).join('|');
     window._edrone.product_titles = products.map(product => encodeURI(product.id)).join('|');
     window._edrone.product_images = products.map(product => encodeURI(product.image)).join('|');
-    window._edrone.product_urls = products.map(product => encodeURI(product.link)).join('|');
+    window._edrone.product_urls = products.map(product => encodeURI(document.baseURI + product.link)).join('|');
     window._edrone.product_counts = products.map(product => product.quantity).join('|');
     window._edrone.product_category_ids = products.map(product => product.categories.map(category => category.id).join('~')).join('|');
     window._edrone.product_category_names = products.map(product => product.categories.map(category => category.name).join('~')).join('|');
