@@ -20188,11 +20188,12 @@ class InfoMessage {
   }; }
 }
 
-const inputCheckCss = "ks-input-check{display:block;margin-bottom:15px}ks-input-check label{position:relative}ks-input-check input{display:-ms-inline-flexbox;display:inline-flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;height:16px;width:16px;overflow:hidden;margin:0px 8px 2px 0px;vertical-align:middle;-webkit-appearance:none;-moz-appearance:none;appearance:none;background-color:#e7e7e7;background-repeat:no-repeat;background-position:50% 50%;border:1px solid #ccc;-webkit-box-sizing:border-box;box-sizing:border-box;border-radius:0;font:inherit;-webkit-transition:.2s ease-in-out;transition:.2s ease-in-out;-webkit-transition-property:background-color,border;transition-property:background-color,border}ks-input-check input:focus{outline:none;border-color:#222222}ks-input-check[invalid] input{border-color:var(--color-secondary-darker)}ks-input-check[invalid] input:focus{border-color:var(--color-secondary-darker)}ks-input-check input:checked{background-color:#222222;border-color:transparent}ks-input-check input[type=\"radio\"]{border-radius:50%}ks-input-check ks-icon{position:absolute;top:4px;left:0.5px;color:#e7e7e7}@media (max-width: 420px){ks-input-check ks-icon{top:2px}}ks-input-check input[type=\"radio\"]:checked::after{content:\"\";background-color:white;margin-top:0px;width:6px;height:6px;border-radius:50%}ks-input-check[invalid] span{color:var(--color-secondary-darker)}ks-input-check[invalid] p{margin:10px 0px 0px 0px;color:var(--color-secondary-darker);font-weight:700}ks-input-check[large] label{display:-ms-flexbox;display:flex}ks-input-check[large] label input{width:32px;height:32px;margin:1px 12px 2px 0px}ks-input-check[large] label span{width:100%}ks-input-check[large] input:checked::after{margin-top:2px;font-size:18px}ks-input-check[large] input[type=\"radio\"]:checked::after{margin-top:0px;width:16px;height:16px}ks-input-check[large] p{margin-left:40px}";
+const inputCheckCss = "ks-input-check{display:block;margin-bottom:15px}ks-input-check label{position:relative}ks-input-check input{display:-ms-inline-flexbox;display:inline-flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;height:16px;width:16px;overflow:hidden;margin:0px 8px 2px 0px;vertical-align:middle;-webkit-appearance:none;-moz-appearance:none;appearance:none;background-color:#e7e7e7;background-repeat:no-repeat;background-position:50% 50%;border:1px solid #ccc;-webkit-box-sizing:border-box;box-sizing:border-box;border-radius:0;font:inherit;-webkit-transition:.2s ease-in-out;transition:.2s ease-in-out;-webkit-transition-property:background-color,border;transition-property:background-color,border}ks-input-check input:focus{outline:none;border-color:#222222}ks-input-check[invalid] input{border-color:var(--color-secondary-darker)}ks-input-check[invalid] input:focus{border-color:var(--color-secondary-darker)}ks-input-check input:checked{background-color:#222222;border-color:transparent}ks-input-check input[type=\"radio\"]{border-radius:50%}ks-input-check ks-icon{position:absolute;top:4px;left:0.5px;color:#e7e7e7}@media (max-width: 420px){ks-input-check ks-icon{top:2px}}ks-input-check input[type=\"radio\"]:checked::after{content:\"\";background-color:white;margin-top:0px;width:6px;height:6px;border-radius:50%}ks-input-check[invalid] span{color:var(--color-secondary-darker)}ks-input-check[invalid] p{margin:10px 0px 0px 0px;color:var(--color-secondary-darker);font-weight:700}ks-input-check[large] label{display:-ms-flexbox;display:flex}ks-input-check[large] label input{width:32px;height:32px;margin:1px 12px 2px 0px}ks-input-check[large] label span{width:100%}ks-input-check[large] ks-icon{top:6px;left:3px}ks-input-check[large] input:checked::after{margin-top:2px;font-size:18px}ks-input-check[large] input[type=\"radio\"]:checked::after{margin-top:0px;width:16px;height:16px}ks-input-check[large] p{margin-left:40px}";
 
 class InputCheck {
   constructor(hostRef) {
     registerInstance(this, hostRef);
+    this.checked = false;
     this.nomessage = false;
     this.invalid = false;
     this.invalidMessage = "";
@@ -20202,19 +20203,13 @@ class InputCheck {
       this.checkbox ? "checkbox" :
         "checkbox";
     return [
-      hAsync("label", null, hAsync("input", { name: this.name, type: type, checked: this.currentCheck, value: this.value, onChange: (event) => {
-          this.currentCheck = event.target.checked;
-          this.Validate();
-        } }), type == "checkbox" ?
-        hAsync("ks-icon", { name: "check", size: 0.64 })
+      hAsync("label", null, hAsync("input", { name: this.name, type: type, checked: this.checked, value: this.value, onChange: () => this.Validate() }), type == "checkbox" ?
+        hAsync("ks-icon", { name: "check", size: this.large ? 1.0 : 0.64 })
         : null, hAsync("span", { innerHTML: this.label })),
       this.invalid && this.required && !this.nomessage ?
         hAsync("p", null, this.invalidMessage)
         : null
     ];
-  }
-  componentWillLoad() {
-    this.currentCheck = this.checked;
   }
   async IsValid() {
     return !this.invalid;
@@ -24092,13 +24087,14 @@ function loadtracker() {
   });
 }
 
-const newsletterPopupCss = "ks-newsletter-popup{display:block}ks-newsletter-popup form{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:justify;justify-content:space-between;height:100%;width:100%;max-width:720px}ks-newsletter-popup .info{padding:60px 60px 20px 60px;fill:#252525;-ms-flex:1 0 auto;flex:1 0 auto;min-height:10px}ks-newsletter-popup .info .top{width:100%;margin-bottom:10px;font-size:initial;max-height:30px}ks-newsletter-popup .info .heading{width:100%;font-family:var(--font-emphasis);font-size:initial;max-height:80px;margin-bottom:10px}ks-newsletter-popup .info p{text-align:center;margin-top:10px}ks-newsletter-popup .buttons{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;min-height:10px;margin-top:30px}ks-newsletter-popup .buttons>*{-ms-flex:1;flex:1}ks-newsletter-popup .close{color:black !important}ks-newsletter-popup ks-input-check{margin:20px;font-size:13px;line-height:18px}ks-newsletter-popup .email-form{display:-ms-flexbox;display:flex}ks-newsletter-popup .email-form>*{margin-bottom:0px}ks-newsletter-popup .email-form>* input{height:60px}ks-newsletter-popup .email-form>ks-button{width:30%}ks-newsletter-popup .email-form>ks-input-text{width:100%}@media (max-width: 720px){ks-newsletter-popup .info .heading{max-height:50px}}@media (max-width: 540px){ks-newsletter-popup .info{padding:70px 25px 20px 25px;min-height:180px}ks-newsletter-popup .info .top{display:none}ks-newsletter-popup .info p{font-size:13px}ks-newsletter-popup ks-input-check{font-size:11px;line-height:16px}ks-newsletter-popup .email-form{display:block}ks-newsletter-popup .email-form>ks-button{width:100%}ks-newsletter-popup .buttons{display:block;margin-top:0px}ks-newsletter-popup .buttons>*:first-child{border-bottom:1px solid #3a3a3a}ks-newsletter-popup ks-input-check{margin:15px}ks-newsletter-popup .info .heading{width:100%;max-height:40px}}";
+const newsletterPopupCss = "ks-newsletter-popup{display:block}ks-newsletter-popup form{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:justify;justify-content:space-between;height:100%;width:100%;max-width:720px}ks-newsletter-popup .info{padding:60px 60px 20px 60px;fill:#252525;-ms-flex:1 0 auto;flex:1 0 auto;min-height:10px}ks-newsletter-popup .info .top{width:100%;margin-bottom:10px;font-size:initial;max-height:30px}ks-newsletter-popup .info .heading{width:100%;font-family:var(--font-emphasis);font-size:initial;max-height:80px;margin-bottom:10px}ks-newsletter-popup .info p{text-align:center;margin-top:10px}ks-newsletter-popup .buttons{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;min-height:10px;margin-top:30px}ks-newsletter-popup .buttons>*{-ms-flex:1;flex:1}ks-newsletter-popup .close{color:black !important}ks-newsletter-popup ks-input-check{margin:20px;font-size:13px;line-height:18px}ks-newsletter-popup .email-form{display:-ms-flexbox;display:flex}ks-newsletter-popup .email-form>*{margin-bottom:0px}ks-newsletter-popup .email-form>* input{height:60px}ks-newsletter-popup .email-form>ks-button{width:30%}ks-newsletter-popup .email-form>ks-input-text{width:100%}ks-newsletter-popup .email{-ms-flex:1 0 0px;flex:1 0 0;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;background-color:#e5e5e5;color:black;font-size:18px;min-height:50px}@media (max-width: 720px){ks-newsletter-popup .info .heading{max-height:50px}ks-newsletter-popup .email{font-size:16px}}@media (max-width: 540px){ks-newsletter-popup .info{padding:70px 25px 20px 25px;min-height:180px}ks-newsletter-popup .info .top{display:none}ks-newsletter-popup .info p{font-size:13px}ks-newsletter-popup ks-input-check{font-size:11px;line-height:16px}ks-newsletter-popup .email-form{display:block}ks-newsletter-popup .email-form>ks-button{width:100%}ks-newsletter-popup .buttons{display:block;margin-top:0px}ks-newsletter-popup .buttons>*:first-child{border-bottom:1px solid #3a3a3a}ks-newsletter-popup ks-input-check{margin:15px}ks-newsletter-popup .info .heading{width:100%;max-height:40px}}";
 
 class NewsletterPopup {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.displayOnLoad = false;
     this.loggedIn = false;
+    this.subscribed = false;
     this.agreement = "Wyrażam zgodę na przetwarzanie danych osobowych do celów marketingowych, w celu zbadania opinii o sklepie oraz na otrzymywanie informacji handlowych na wskazany przeze mnie adres e-mail.";
     this.infoMessage = "Aby otrzymać kupon rabatowy musisz posiadać konto w naszym sklepie. Minimalna wartość zamówienia wynosi: 100,00 zł";
     this.successHeading = "ZAPISANO DO NEWSLETTERA";
@@ -24119,15 +24115,16 @@ class NewsletterPopup {
     this.dialog.showLoading();
     const target = event.target;
     const data = new FormData(target);
-    data.append("zgoda_newsletter_marketing", "1");
-    data.append("zgoda_newsletter_info_handlowa", "1");
+    if (this.subscribed)
+      data.append("unsubscribe", "1");
+    data.append("email", this.email);
     data.append("popup", "1");
     fetch(this.api, { body: data, method: "post" })
       .then(async (response) => {
       const result = await response.text();
       if (result.search("SUCCESS") != -1) {
         this.dialog.showSuccess(this.successHeading, result.replace("SUCCESS", ""));
-        this.track(data.get("email").toString());
+        this.track();
       }
       else
         this.dialog.showFailure(this.faliureHeading, result);
@@ -24141,10 +24138,10 @@ class NewsletterPopup {
       this.dialog.showFailure(this.faliureHeading, message);
     });
   }
-  track(email) {
+  track() {
     const data = {
-      email: email,
-      subscriber: true,
+      email: this.email,
+      subscriber: !this.subscribed,
       place: "Zapis do newslettera | Popup"
     };
     eachTracker(item => item === null || item === void 0 ? void 0 : item.subscribe(commonDynamic.state, data));
@@ -24164,8 +24161,8 @@ class NewsletterPopup {
       hAsync("ks-dialog", { dark: true, smallmobile: true, nopadding: true, onClosed: () => this.SetCookie() }, hAsync("form", { onSubmit: e => this.requestHandler(e) }, hAsync("div", { class: "info" }, hAsync("svg", { class: "top", viewBox: "0 0 303 15", width: 909, height: 45 }, hAsync("text", { x: "0", y: "12" }, "Zapisz si\u0119 do naszego Newslettera i zyskaj")), hAsync("svg", { class: "heading", viewBox: "0 0 96 12", width: 960, height: 130 }, hAsync("text", { x: "-1", y: "12" }, "KUPON 10Z\u0141")), hAsync("p", null, this.infoMessage)), !this.loggedIn ?
         hAsync("div", { class: "buttons" }, hAsync("ks-button", { tall: true, name: "ZALOGUJ SI\u0118", link: this.loginLink }), hAsync("ks-button", { tall: true, name: "NOWE KONTO", link: this.registerLink }))
         : [
-          hAsync("ks-input-check", { large: true, required: true, nomessage: true, name: "zgoda", label: this.agreement }),
-          hAsync("div", { class: "email-form" }, hAsync("ks-input-text", { email: true, required: true, nomessage: true, center: true, name: "email", placeholder: "Adres email", value: this.email ? this.email : null }), hAsync("ks-button", { submit: true, name: "ZAPISZ SI\u0118" }))
+          this.subscribed ? null : hAsync("ks-input-check", { large: true, required: true, nomessage: true, name: "zgoda", label: this.agreement }),
+          hAsync("div", { class: "email-form" }, hAsync("div", { class: "email" }, this.email), hAsync("ks-button", { submit: true, secondary: this.subscribed, name: this.subscribed ? "WYPISZ SIĘ" : "ZAPISZ SIĘ" }))
         ]))
     ];
   }
@@ -24180,6 +24177,7 @@ class NewsletterPopup {
       "registerLink": [1, "register-link"],
       "displayOnLoad": [4, "display-on-load"],
       "loggedIn": [4, "logged-in"],
+      "subscribed": [4],
       "email": [1],
       "agreement": [1],
       "infoMessage": [1, "info-message"],
@@ -24806,6 +24804,9 @@ class OrderForm {
         if (!response.ok)
           throw response.status;
         else {
+          const email = form.querySelector('input[type=email]');
+          const subscription = form.querySelector('input[name=biuletyn]');
+          this.track(email === null || email === void 0 ? void 0 : email.value, subscription === null || subscription === void 0 ? void 0 : subscription.checked);
           window.location.href = this.destination;
         }
       })
@@ -24826,6 +24827,16 @@ class OrderForm {
       else
         window.scroll(0, highestPosition - 100);
     }
+  }
+  track(email = "", subscription = false) {
+    if (!email || !subscription)
+      return;
+    const data = {
+      email: email,
+      subscriber: true,
+      place: "Zapis do newslettera | Zamówienie"
+    };
+    eachTracker(item => item === null || item === void 0 ? void 0 : item.subscribe(commonDynamic.state, data));
   }
   ShowPrompt(message) {
     const prompt = this.root.querySelector("ks-order-form-modal");
@@ -25715,6 +25726,11 @@ class FacebookTracker {
 }
 
 class EdroneTracker {
+  init(async = undefined) {
+    var _a, _b;
+    if ((_a = window._edrone) === null || _a === void 0 ? void 0 : _a.page_loaded)
+      (_b = window._edrone) === null || _b === void 0 ? void 0 : _b.init(async);
+  }
   pageview(commonDynamic, _eventID) {
     if (!commonDynamic.loggedIn || !commonDynamic.customer)
       return;
@@ -25727,6 +25743,7 @@ class EdroneTracker {
     window._edrone.country = customer.countryISO2;
     window._edrone.city = customer.city;
     window._edrone.phone = customer.phone;
+    this.init();
   }
   product(product, _eventID = "") {
     window._edrone = window._edrone || {};
@@ -25740,6 +25757,7 @@ class EdroneTracker {
     window._edrone.product_category_ids = product.categories.map(crumb => crumb.id).join('~');
     window._edrone.product_category_names = product.categories.map(crumb => crumb.name).join('~');
     window._edrone.action_type = 'product_view';
+    this.init();
   }
   listing(listing, _eventID) {
     window._edrone = window._edrone || {};
@@ -25747,6 +25765,7 @@ class EdroneTracker {
     window._edrone.product_category_ids = categories.map(category => category.id).join('~');
     window._edrone.product_category_names = categories.map(category => category.name).join('~');
     window._edrone.action_type = 'category_view';
+    this.init();
   }
   addToCart(product, _eventID) {
     window._edrone = window._edrone || {};
@@ -25758,6 +25777,7 @@ class EdroneTracker {
     window._edrone.product_category_ids = product.categories.map(category => category.id).join('~');
     window._edrone.product_category_names = product.categories.map(category => category.name).join('~');
     window._edrone.action_type = "add_to_cart";
+    this.init();
   }
   // @ts-ignore
   order_checkout(commonDynamic, order, _eventID) {
@@ -25773,6 +25793,7 @@ class EdroneTracker {
     window._edrone.city = customer.city;
     window._edrone.phone = customer.phone;
     window._edrone.action_type = 'other';
+    this.init();
   }
   // @ts-ignore
   order_form(commonDynamic, order, _eventID) {
@@ -25801,6 +25822,7 @@ class EdroneTracker {
     window._edrone.base_payment_value = order.productValue;
     window._edrone.order_payment_value = order.productValue;
     window._edrone.action_type = 'order';
+    this.init();
   }
   search(_query) {
   }
@@ -25809,7 +25831,7 @@ class EdroneTracker {
     window._edrone.customer_tags = subscription.place;
     window._edrone.email = subscription.email;
     window._edrone.subscriber_status = subscription.subscriber ? 1 : 0;
-    if (!commonDynamic.loggedIn || !commonDynamic.customer) {
+    if (commonDynamic.loggedIn && commonDynamic.customer) {
       const customer = commonDynamic.customer;
       window._edrone.first_name = customer.firstName;
       window._edrone.last_name = customer.lastName;
@@ -25818,6 +25840,7 @@ class EdroneTracker {
       window._edrone.phone = customer.phone;
     }
     window._edrone.action_type = 'subscribe';
+    this.init(false);
   }
 }
 
@@ -25849,7 +25872,8 @@ class PageBase {
     });
   }
   render() {
-    return hAsync(Host, null, !this.skipbase && hAsync("ks-page-header", null), hAsync("slot", null), !this.skipbase && hAsync("ks-page-footer", null), hAsync("ks-newsletter-popup", { displayOnLoad: common.get('newsletterPopup'), api: commonDynamic.get('api').newsletter, "login-link": common.get('loginLink'), "register-link": common.get('registerLink'), "logged-in": commonDynamic.get('loggedIn') }), hAsync("ks-product-suggestions", { api: common.get('suggestionApi') }), hAsync("ks-error-popup", null), hAsync("ks-message-popup", null), hAsync("ks-cookie-popup", { message: common.get('cookieMessage'), button: common.get('cookieButton'), delay: common.get('cookieDelay') }));
+    var _a, _b;
+    return hAsync(Host, null, !this.skipbase && hAsync("ks-page-header", null), hAsync("slot", null), !this.skipbase && hAsync("ks-page-footer", null), hAsync("ks-newsletter-popup", { displayOnLoad: common.get('newsletterPopup'), api: commonDynamic.get('api').newsletter, "login-link": common.get('loginLink'), "register-link": common.get('registerLink'), "logged-in": commonDynamic.get('loggedIn'), email: (_a = commonDynamic.get('customer')) === null || _a === void 0 ? void 0 : _a.email, subscribed: (_b = commonDynamic.get('customer')) === null || _b === void 0 ? void 0 : _b.subscriber }), hAsync("ks-product-suggestions", { api: common.get('suggestionApi') }), hAsync("ks-error-popup", null), hAsync("ks-message-popup", null), hAsync("ks-cookie-popup", { message: common.get('cookieMessage'), button: common.get('cookieButton'), delay: common.get('cookieDelay') }));
   }
   static get style() { return baseCss; }
   static get cmpMeta() { return {
@@ -28729,7 +28753,6 @@ class TrackerOrder {
     this.checkout = false;
     this.form = false;
     this.placed = false;
-    this.subscribed = false;
     this.eventId = "";
   }
   componentWillLoad() {
@@ -28742,8 +28765,6 @@ class TrackerOrder {
         item === null || item === void 0 ? void 0 : item.order_form(commonDynamic.state, data, this.eventId);
       else if (this.placed)
         item === null || item === void 0 ? void 0 : item.order_placed(commonDynamic.state, data, this.eventId);
-      else if (this.subscribed)
-        item === null || item === void 0 ? void 0 : item.subscribe(commonDynamic.state, data);
     });
   }
   static get cmpMeta() { return {
@@ -28753,7 +28774,6 @@ class TrackerOrder {
       "checkout": [4],
       "form": [4],
       "placed": [4],
-      "subscribed": [4],
       "eventId": [1, "event-id"],
       "dataId": [1, "data-id"]
     },
