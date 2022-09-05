@@ -24098,6 +24098,7 @@ class NewsletterPopup {
     this.agreement = "Wyrażam zgodę na przetwarzanie danych osobowych do celów marketingowych, w celu zbadania opinii o sklepie oraz na otrzymywanie informacji handlowych na wskazany przeze mnie adres e-mail.";
     this.infoMessage = "Aby otrzymać kupon rabatowy musisz posiadać konto w naszym sklepie. Minimalna wartość zamówienia wynosi: 100,00 zł";
     this.successHeading = "ZAPISANO DO NEWSLETTERA";
+    this.successUnsubHeading = "WYPISANO Z NEWSLETTERA";
     this.faliureHeading = "BŁĄD ZAPISU";
   }
   componentDidLoad() {
@@ -24123,7 +24124,8 @@ class NewsletterPopup {
       .then(async (response) => {
       const result = await response.text();
       if (result.search("SUCCESS") != -1) {
-        this.dialog.showSuccess(this.successHeading, result.replace("SUCCESS", ""));
+        const heading = this.subscribed ? this.successUnsubHeading : this.successHeading;
+        this.dialog.showSuccess(heading, result.replace("SUCCESS", ""));
         this.track();
         this.setSubscription();
       }
@@ -24151,6 +24153,7 @@ class NewsletterPopup {
     let customer = commonDynamic.get('customer');
     customer.subscriber = !this.subscribed;
     commonDynamic.set('customer', customer);
+    this.subscribed = !this.subscribed;
   }
   async Show() {
     this.dialog.show();
@@ -24183,11 +24186,12 @@ class NewsletterPopup {
       "registerLink": [1, "register-link"],
       "displayOnLoad": [4, "display-on-load"],
       "loggedIn": [4, "logged-in"],
-      "subscribed": [4],
+      "subscribed": [1028],
       "email": [1],
       "agreement": [1],
       "infoMessage": [1, "info-message"],
       "successHeading": [1, "success-heading"],
+      "successUnsubHeading": [1, "success-unsub-heading"],
       "faliureHeading": [1, "faliure-heading"],
       "Show": [64]
     },
