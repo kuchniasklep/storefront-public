@@ -24849,7 +24849,7 @@ class OrderForm {
     const data = {
       email: email,
       subscriber: true,
-      place: "Zapis do newslettera | Zamówienie"
+      place: "Zapis do newslettera | Rejestracja Zamówienie"
     };
     eachTracker(item => item === null || item === void 0 ? void 0 : item.subscribe(commonDynamic.state, data));
   }
@@ -26896,7 +26896,7 @@ class ProductCard$1 {
   }
   cart() {
     this.cartLoading = true;
-    const categories = JSON.parse(decodeURI(this.categories));
+    const categories = JSON.parse(this.categories);
     const product = {
       id: this.productId,
       traitIDs: "",
