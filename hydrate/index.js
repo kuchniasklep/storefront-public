@@ -25787,7 +25787,7 @@ class EdroneTracker {
     window._edrone.product_ids = product.id;
     window._edrone.product_skus = product.sku;
     window._edrone.product_titles = product.name;
-    window._edrone.product_images = product.imageFull;
+    window._edrone.product_images = encodeURI(document.baseURI + product.imageFull);
     window._edrone.product_urls = encodeURI(document.baseURI + product.link);
     window._edrone.product_category_ids = product.categories.map(category => category.id).join('~');
     window._edrone.product_category_names = product.categories.map(category => category.name).join('~');
