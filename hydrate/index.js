@@ -26990,7 +26990,7 @@ class ProductCard {
   }
   cart() {
     this.cartLoading = true;
-    const categories = JSON.parse(decodeURI(this.categories));
+    const categories = JSON.parse(this.categories);
     const product = {
       id: this.productId,
       traitIDs: "",
