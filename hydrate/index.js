@@ -23583,7 +23583,7 @@ class Navbar {
         hAsync("ks-navbar-button", { name: "Twoje konto", link: common.get('accountLink'), icon: "user", class: "desktop" })
         : null, hAsync("ks-navbar-button", { name: "Schowek", link: common.get('heartLink'), icon: "star", count: heartCount, class: "tablet-desktop" }), hAsync("ks-navbar-button", { name: "Koszyk", link: common.get('cartLink'), icon: "shopping-bag", count: cartCount }), !commonDynamic.get('loggedIn') ?
         hAsync("ks-navbar-button", { name: "Zaloguj", link: common.get('loginLink'), icon: "user", class: "desktop" })
-        : null, commonDynamic.get('loggedIn') ?
+        : null, commonDynamic.get('loggedIn') || commonDynamic.get('guest') ?
         hAsync("ks-navbar-button", { name: "Wyloguj", link: common.get('logoutLink'), icon: "log-out", class: "desktop" })
         : null, hAsync("ks-navbar-button", { name: "Menu", icon: "menu", class: "mobile-tablet", onClick: () => this.root.querySelector("ks-navbar-sidebar").show() })), hAsync("ks-navbar-contact-panel", null)),
       hAsync("ks-navbar-categories", null),
