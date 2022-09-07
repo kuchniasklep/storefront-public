@@ -23579,13 +23579,13 @@ class Navbar {
       hAsync("nav", null, hAsync("div", { class: "logo" }, hAsync("div", null, hAsync("a", { href: "/" }, hAsync("ks-img", { contained: true, sync: true, src: common.get("logo"), width: 217, height: 35, alt: "kuchniasklep.pl" })), common.get("promo") ? common.get("promoLink") && !this.mobile ?
         hAsync("a", { class: "promo", href: common.get("promoLink") }, common.get("promo")) :
         hAsync("span", { class: "promo" }, common.get("promo"))
-        : null)), hAsync("div", { class: "search" }, hAsync("ks-navbar-search", null)), hAsync("div", { class: ["buttons", loaded].join(' '), id: "ks-navbar-menu-buttons" }, hAsync("ks-navbar-button", { name: "Kontakt", icon: "phone", class: "tablet-desktop", onClick: () => this.root.querySelector("ks-navbar-contact-panel").Toggle() }), commonDynamic.get('loggedIn') && !commonDynamic.get('guest') ?
-        hAsync("ks-navbar-button", { name: "Twoje konto", link: common.get('accountLink'), icon: "user", class: "desktop" })
-        : null, hAsync("ks-navbar-button", { name: "Schowek", link: common.get('heartLink'), icon: "star", count: heartCount, class: "tablet-desktop" }), hAsync("ks-navbar-button", { name: "Koszyk", link: common.get('cartLink'), icon: "shopping-bag", count: cartCount }), !commonDynamic.get('loggedIn') ?
-        hAsync("ks-navbar-button", { name: "Zaloguj", link: common.get('loginLink'), icon: "user", class: "desktop" })
+        : null)), hAsync("div", { class: "search" }, hAsync("ks-navbar-search", null)), hAsync("div", { class: ["buttons", loaded].join(' '), id: "ks-navbar-menu-buttons" }, hAsync("ks-navbar-button", { id: "navbar-button-contact", name: "Kontakt", icon: "phone", class: "tablet-desktop", onClick: () => this.root.querySelector("ks-navbar-contact-panel").Toggle() }), commonDynamic.get('loggedIn') && !commonDynamic.get('guest') ?
+        hAsync("ks-navbar-button", { id: "navbar-button-account", name: "Twoje konto", link: common.get('accountLink'), icon: "user", class: "desktop" })
+        : null, hAsync("ks-navbar-button", { id: "navbar-button-fav", name: "Schowek", link: common.get('heartLink'), icon: "star", count: heartCount, class: "tablet-desktop" }), hAsync("ks-navbar-button", { id: "navbar-button-cart", name: "Koszyk", link: common.get('cartLink'), icon: "shopping-bag", count: cartCount }), !commonDynamic.get('loggedIn') ?
+        hAsync("ks-navbar-button", { id: "navbar-button-login", name: "Zaloguj", link: common.get('loginLink'), icon: "user", class: "desktop" })
         : null, commonDynamic.get('loggedIn') || commonDynamic.get('guest') ?
-        hAsync("ks-navbar-button", { name: "Wyloguj", link: common.get('logoutLink'), icon: "log-out", class: "desktop" })
-        : null, hAsync("ks-navbar-button", { name: "Menu", icon: "menu", class: "mobile-tablet", onClick: () => this.root.querySelector("ks-navbar-sidebar").show() })), hAsync("ks-navbar-contact-panel", null)),
+        hAsync("ks-navbar-button", { id: "navbar-button-logout", name: "Wyloguj", link: common.get('logoutLink'), icon: "log-out", class: "desktop" })
+        : null, hAsync("ks-navbar-button", { id: "navbar-button-menu", name: "Menu", icon: "menu", class: "mobile-tablet", onClick: () => this.root.querySelector("ks-navbar-sidebar").show() })), hAsync("ks-navbar-contact-panel", null)),
       hAsync("ks-navbar-categories", null),
       hAsync("ks-navbar-sidebar", null),
       hAsync("ks-navbar-search", { mobile: true })
