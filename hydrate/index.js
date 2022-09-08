@@ -12822,7 +12822,7 @@ class CartDiscountCode {
   render() {
     return [
       hAsync("form", { onSubmit: (e) => this.discountCodeAddHandler(e) }, hAsync("ks-input-text", { emphasis: true, center: true, placeholder: this.placeholder, name: "discountCode" }), hAsync("button", { type: "submit", class: "uk-button uk-button-secondary" }, this.loading ? hAsync("div", { "uk-spinner": true }) : hAsync("span", null, "Aktywuj"))),
-      hAsync("div", { class: "message", onClick: () => { var _a; return (_a = document.querySelector('ks-newsletter-popup')) === null || _a === void 0 ? void 0 : _a.Show(); } }, hAsync("ks-img", { vertical: true, center: true, src: this.image }))
+      hAsync("div", { class: "message", onClick: () => { var _a; return (_a = document.querySelector('ks-newsletter-popup-edrone')) === null || _a === void 0 ? void 0 : _a.Show(); } }, hAsync("ks-img", { vertical: true, center: true, src: this.image }))
     ];
   }
   static get style() { return cartDiscountCodeCss; }
@@ -24202,6 +24202,84 @@ class NewsletterPopup {
   }; }
 }
 
+const newsletterPopupEdroneCss = "ks-newsletter-popup-edrone{display:block}ks-newsletter-popup-edrone form{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:justify;justify-content:space-between;height:100%;width:100%;max-width:720px}ks-newsletter-popup-edrone .info{padding:60px 60px 20px 60px;fill:#252525;-ms-flex:1 0 auto;flex:1 0 auto;min-height:10px}ks-newsletter-popup-edrone .info .top{width:100%;margin-bottom:10px;font-size:initial;max-height:30px}ks-newsletter-popup-edrone .info .heading{width:100%;font-family:var(--font-emphasis);font-size:initial;max-height:80px;margin-bottom:10px}ks-newsletter-popup-edrone .info p{text-align:center;margin-top:10px}ks-newsletter-popup-edrone .buttons{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;min-height:10px;margin-top:30px}ks-newsletter-popup-edrone .inputs{padding:0px 20px}ks-newsletter-popup-edrone .close{color:black !important}ks-newsletter-popup-edrone .button{padding:0px 20px 20px 20px}ks-newsletter-popup-edrone ks-input-check{margin:0px 20px 20px 20px;font-size:13px;line-height:18px}@media (max-width: 720px){ks-newsletter-popup-edrone .info .heading{max-height:50px}ks-newsletter-popup-edrone .email{font-size:16px}}@media (max-width: 540px){ks-newsletter-popup-edrone .info{padding:70px 25px 20px 25px;min-height:140px}ks-newsletter-popup-edrone .info .top{display:none}ks-newsletter-popup-edrone .info p{font-size:13px}ks-newsletter-popup-edrone ks-input-check{font-size:11px;line-height:16px}ks-newsletter-popup-edrone ks-input-check{margin:15px}ks-newsletter-popup-edrone .info .heading{width:100%;max-height:40px}}";
+
+class NewsletterPopupEdrone {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.displayOnLoad = false;
+    this.agreement = "Wyrażam zgodę na przetwarzanie danych osobowych do celów marketingowych, w celu zbadania opinii o sklepie oraz na otrzymywanie informacji handlowych na wskazany przeze mnie adres e-mail.";
+    this.infoMessage = "Kupon rabatowy zostaje przyznany tylko raz na adres email. Minimalna wartość zamówienia wynosi: 100,00 zł";
+    this.successHeading = "ZAPISANO DO NEWSLETTERA";
+    this.successMessage = "Dziękujemy za dołączenie do grona subskrybentów. Niedługo otrzymasz wiadomość potwierdzającą.";
+    this.success = false;
+  }
+  componentDidLoad() {
+    this.dialog = this.root.querySelector("ks-dialog");
+    if (this.displayOnLoad && document.cookie.search("newsletterPopup=tak") == -1) {
+      setTimeout(() => {
+        this.Show();
+      }, 4000);
+    }
+  }
+  async requestHandler(event) {
+    event.preventDefault();
+    if (!await ValidateInput(this.root.querySelector('form')))
+      return;
+    this.dialog.showLoading();
+    const target = event.target;
+    const data = new FormData(target);
+    this.track(data.get('email'), data.get('name'));
+    this.dialog.showSuccess(this.successHeading, this.successMessage);
+    this.success = true;
+  }
+  track(email, name) {
+    const data = {
+      email: email,
+      name: name,
+      subscriber: true,
+      place: "Zapis do newslettera | Popup"
+    };
+    console.log(data);
+    eachTracker(item => item === null || item === void 0 ? void 0 : item.subscribe(commonDynamic.state, data));
+  }
+  async Show() {
+    this.dialog.show();
+  }
+  SetCookie() {
+    var expiration = "";
+    var expirationDate = new Date();
+    expirationDate.setMonth(expirationDate.getMonth() + 1);
+    expiration = "expires=" + expirationDate.toUTCString() + "; ";
+    document.cookie = "newsletterPopup=tak; " + expiration + "path=/";
+    if (this.success) {
+      this.success = false;
+    }
+  }
+  render() {
+    return [
+      hAsync("ks-dialog", { dark: true, smallmobile: true, nopadding: true, onClosed: () => this.SetCookie() }, hAsync("form", { onSubmit: e => this.requestHandler(e) }, hAsync("div", { class: "info" }, hAsync("svg", { class: "top", viewBox: "0 0 303 15", width: 909, height: 45 }, hAsync("text", { x: "0", y: "12" }, "Zapisz si\u0119 do naszego Newslettera i zyskaj")), hAsync("svg", { class: "heading", viewBox: "0 0 96 12", width: 960, height: 130 }, hAsync("text", { x: "-1", y: "12" }, "KUPON 10Z\u0141")), hAsync("p", null, this.infoMessage)), hAsync("div", { class: "inputs" }, hAsync("ks-input-text", { email: true, center: true, required: true, placeholder: "Adres email", name: "email" }), hAsync("ks-input-text", { center: true, required: true, placeholder: "Twoje imi\u0119", name: "name" })), hAsync("ks-input-check", { large: true, required: true, nomessage: true, name: "zgoda", label: this.agreement }), hAsync("div", { class: "button" }, hAsync("ks-button", { submit: true, round: true, name: "ZAPISZ SI\u0118" }))))
+    ];
+  }
+  get root() { return getElement(this); }
+  static get style() { return newsletterPopupEdroneCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-newsletter-popup-edrone",
+    "$members$": {
+      "displayOnLoad": [4, "display-on-load"],
+      "agreement": [1],
+      "infoMessage": [1, "info-message"],
+      "successHeading": [1, "success-heading"],
+      "successMessage": [1, "success-message"],
+      "Show": [64]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
 const nocontentCss = "ks-nocontent{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;padding:50px 30px 70px 30px;text-align:center}ks-nocontent .content{max-width:800px;margin:15px 0}ks-nocontent .content h1{font-size:1.275rem;font-family:var(--font-emphasis);font-weight:700}ks-nocontent .content h1{font-size:1.275rem}ks-nocontent .buttons{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-nocontent .buttons>*{margin:5px}@media (max-width: 640px){ks-nocontent{padding:30px 15px 50px 15px}}";
 
 class NotFound$1 {
@@ -25844,6 +25922,8 @@ class EdroneTracker {
     window._edrone = window._edrone || {};
     window._edrone.customer_tags = subscription.place;
     window._edrone.email = subscription.email;
+    if (subscription === null || subscription === void 0 ? void 0 : subscription.name)
+      window._edrone.first_name = subscription.name;
     window._edrone.subscriber_status = subscription.subscriber ? 1 : 0;
     if (commonDynamic.loggedIn && commonDynamic.customer) {
       const customer = commonDynamic.customer;
@@ -25886,7 +25966,7 @@ class PageBase {
     });
   }
   render() {
-    return hAsync(Host, null, !this.skipbase && hAsync("ks-page-header", null), hAsync("slot", null), !this.skipbase && hAsync("ks-page-footer", null), hAsync("ks-product-suggestions", { api: common.get('suggestionApi') }), hAsync("ks-error-popup", null), hAsync("ks-message-popup", null), hAsync("ks-cookie-popup", { message: common.get('cookieMessage'), button: common.get('cookieButton'), delay: common.get('cookieDelay') }));
+    return hAsync(Host, null, !this.skipbase && hAsync("ks-page-header", null), hAsync("slot", null), !this.skipbase && hAsync("ks-page-footer", null), hAsync("ks-newsletter-popup-edrone", { displayOnLoad: common.get('newsletterPopup') }), hAsync("ks-product-suggestions", { api: common.get('suggestionApi') }), hAsync("ks-error-popup", null), hAsync("ks-message-popup", null), hAsync("ks-cookie-popup", { message: common.get('cookieMessage'), button: common.get('cookieButton'), delay: common.get('cookieDelay') }));
   }
   static get style() { return baseCss; }
   static get cmpMeta() { return {
@@ -25917,7 +25997,7 @@ class PageFooter {
     const address = common.get('address');
     const softwareLink = common.get('softwareLink');
     return [
-      hAsync("div", { class: "about" }, hAsync("div", { class: "links" }, common.get('footerLinks').map(section => hAsync("ks-footer-links", { heading: section.name }, section.items.map(item => hAsync("li", null, hAsync("a", { href: item.link }, item.name))))), hAsync("div", { class: "contact" }, hAsync("span", null, "Kontakt"), hAsync("a", { style: { "display": "none" } }), hAsync("a", { href: `tel:${phone}` }, hAsync("ks-icon", { name: "phone" }), hAsync("span", null, phone)), hAsync("a", { href: `mailto:${email}` }, hAsync("ks-icon", { name: "mail" }), hAsync("span", null, email)), hAsync("span", null, hAsync("ks-icon", { name: "clock", size: 0.9 }), " ", time), hAsync("span", null, hAsync("ks-icon", { name: "home", size: 0.9 }), " ", company), hAsync("span", null, hAsync("ks-icon", { name: "map-pin", size: 0.9 }), " ", address))), hAsync("div", { class: "newsletter" }, hAsync("div", null, "Zapisz si\u0119 do naszego newslettera i zyskaj"), hAsync("div", null, "KUPON 10Z\u0141"), hAsync("ks-button", { light: true, border: true, name: "ZAPISZ SI\u0118", onClick: () => { var _a; return (_a = document.querySelector('ks-newsletter-popup')) === null || _a === void 0 ? void 0 : _a.Show(); } }))),
+      hAsync("div", { class: "about" }, hAsync("div", { class: "links" }, common.get('footerLinks').map(section => hAsync("ks-footer-links", { heading: section.name }, section.items.map(item => hAsync("li", null, hAsync("a", { href: item.link }, item.name))))), hAsync("div", { class: "contact" }, hAsync("span", null, "Kontakt"), hAsync("a", { style: { "display": "none" } }), hAsync("a", { href: `tel:${phone}` }, hAsync("ks-icon", { name: "phone" }), hAsync("span", null, phone)), hAsync("a", { href: `mailto:${email}` }, hAsync("ks-icon", { name: "mail" }), hAsync("span", null, email)), hAsync("span", null, hAsync("ks-icon", { name: "clock", size: 0.9 }), " ", time), hAsync("span", null, hAsync("ks-icon", { name: "home", size: 0.9 }), " ", company), hAsync("span", null, hAsync("ks-icon", { name: "map-pin", size: 0.9 }), " ", address))), hAsync("div", { class: "newsletter" }, hAsync("div", null, "Zapisz si\u0119 do naszego newslettera i zyskaj"), hAsync("div", null, "KUPON 10Z\u0141"), hAsync("ks-button", { light: true, border: true, name: "ZAPISZ SI\u0118", onClick: () => { var _a; return (_a = document.querySelector('ks-newsletter-popup-edrone')) === null || _a === void 0 ? void 0 : _a.Show(); } }))),
       hAsync("div", { class: "portals" }, hAsync("div", null, common.get('social').map(social => hAsync("ks-footer-button", { width: social.width, height: social.height, href: social.link, image: social.image }))), hAsync("div", null, common.get('reviewers').map(reviewer => hAsync("ks-footer-button", { width: reviewer.width, height: reviewer.height, href: reviewer.link, image: reviewer.image })))),
       hAsync("div", { class: "software" }, hAsync("a", { href: softwareLink, rel: "nofollow" }, "Oprogramowanie sklepu ShopGold"))
     ];
@@ -29121,6 +29201,7 @@ registerComponents([
   NavbarSearch,
   NavbarSidebar,
   NewsletterPopup,
+  NewsletterPopupEdrone,
   NotFound$1,
   NotFound,
   OrderAddressField,
