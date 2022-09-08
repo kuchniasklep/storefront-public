@@ -26298,7 +26298,7 @@ class PageProduct {
     const ean = product.get('ean');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, infoBanner ?
       hAsync("ks-info-banner", { image: infoBanner.image, color: infoBanner.color, width: infoBanner.width, height: infoBanner.height, name: infoBanner.name, link: infoBanner.link, theme: infoBanner.theme })
-      : null, hAsync("ks-container", null, hAsync("ks-product-notify", null), hAsync("ks-product-admin", null), hAsync("ks-product-info", null, product.get('traits') ?
+      : null, hAsync("ks-container", null, hAsync("ks-product-notify-edrone", null), hAsync("ks-product-admin", null), hAsync("ks-product-info", null, product.get('traits') ?
       hAsync("ks-product-traits", null)
       : null, hAsync("ks-product-purchase", null), hAsync("ks-product-shipping", null), product.get('warranty') ?
       hAsync("ks-product-attribute", { style: { marginTop: "15px" }, icon: "tool", href: product.get('warrantyLink') }, product.get('warranty'))
@@ -27672,6 +27672,63 @@ class ProductNotify {
   }; }
 }
 
+const productNotifyEdroneCss = "ks-product-notify-edrone{display:block}ks-product-notify-edrone fieldset{border:none;margin:0;padding:0}ks-product-notify-edrone .info{text-align:center;margin-bottom:40px}ks-product-notify-edrone .info a{text-decoration:none;color:black;margin:0 5px}ks-product-notify-edrone h3{font-family:var(--font-emphasis);font-size:20px;font-weight:700}ks-product-notify-edrone ks-input-check{margin-bottom:5px}ks-product-notify-edrone ks-button{margin-top:20px}";
+
+class ProductNotifyEdrone {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+  }
+  async requestHandler(event) {
+    const notifyStrings = product.get("notifyStrings");
+    const productId = product.get("id");
+    const api = commonDynamic.get('tracking').edroneWishlistApi;
+    event.preventDefault();
+    if (!await ValidateInput(this.root.querySelector('form')))
+      return;
+    this.dialog.showLoading();
+    const target = event.target;
+    const data = new FormData(target);
+    data.append("app_id", commonDynamic.get('tracking').edroneAppId);
+    data.append("topic_id", productId);
+    data.append("topic_campaign_id", '0');
+    await fetch(api, { body: data, method: "post" })
+      .then(() => {
+      this.dialog.showSuccess(notifyStrings.successHeading, notifyStrings.successParagraph);
+    })
+      .catch(async (error) => {
+      let message = "";
+      if (!window.navigator.onLine)
+        message = "Brak internetu.";
+      else if (error.message != "")
+        message = error.message;
+      console.log(error.message);
+      this.dialog.showFailure(notifyStrings.errorHeading, message);
+    });
+  }
+  async show() {
+    this.dialog.show();
+  }
+  componentDidLoad() {
+    this.dialog = this.root.querySelector('ks-dialog');
+  }
+  render() {
+    const notifyStrings = product.get("notifyStrings");
+    return hAsync("ks-dialog", null, hAsync("form", { onSubmit: e => this.requestHandler(e) }, hAsync("fieldset", null, hAsync("div", { class: "info" }, hAsync("h3", null, notifyStrings.heading), hAsync("p", null, notifyStrings.paragraph)), hAsync("ks-input-text", { email: true, name: "email", required: true, nomessage: true, placeholder: "E-mail", icon: "mail" }), hAsync("ks-input-check", { name: "zgoda", required: true, nomessage: true, label: notifyStrings.agreement }), hAsync("ks-button", { submit: true, name: "POWIADOM MNIE" }))));
+  }
+  get root() { return getElement(this); }
+  static get style() { return productNotifyEdroneCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-product-notify-edrone",
+    "$members$": {
+      "show": [64]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
 const productPointsCss = "ks-product-points{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-product-points>div:first-child{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;width:20%;font-family:var(--font-emphasis);font-weight:700;font-size:32px;color:#ffffff;background-color:#ee1438}ks-product-points>div:last-child{display:-ms-flexbox;display:flex;-ms-flex:1 0 auto;flex:1 0 auto;font-size:14px;padding:15px}@media screen and (max-width: 640px){ks-product-points>div:first-child{width:100%;padding:10px 0}}";
 
 class ProductPoints {
@@ -27745,7 +27802,7 @@ class ProductPurchase {
         this.addToCart.emit();
     }
     else
-      document.querySelector("ks-product-notify").show();
+      document.querySelector("ks-product-notify-edrone").show();
   }
   FavouritesHandler() {
     if (!product.get("favouritesLoading") && !product.get("favouritesCompleted")) {
@@ -29258,6 +29315,7 @@ registerComponents([
   ProductInfo,
   ProductNegotiate,
   ProductNotify,
+  ProductNotifyEdrone,
   ProductPoints,
   ProductPrice,
   ProductPurchase,
