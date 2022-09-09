@@ -25863,7 +25863,7 @@ class EdroneTracker {
     window._edrone = window._edrone || {};
     window._edrone.product_ids = product.id;
     window._edrone.product_skus = product.sku;
-    window._edrone.product_titles = product.name;
+    window._edrone.product_titles = encodeURI(product.name);
     window._edrone.product_images = encodeURI(this.relativeToAbsolute(product.imageFull));
     window._edrone.product_urls = encodeURI(this.relativeToAbsolute(product.link));
     window._edrone.product_category_ids = product.categories.map(category => category.id).join('~');
