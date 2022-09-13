@@ -14456,9 +14456,7 @@ const common = createStore({
   social: [],
   reviewers: [],
   footerLinks: [],
-  translations: {},
-  language: {},
-  currency: {}
+  translations: {}
 });
 
 const developmentWarningCss = "ks-development-warning{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;padding:20px 15px;font-family:var(--font-emphasis);font-size:17px;font-weight:700;line-height:15px;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;background-color:rgb(255, 196, 0);color:rgb(0, 0, 0)}ks-development-warning>span{margin-right:8px}@media only screen and (max-width: 959px){ks-development-warning{font-size:14px;line-height:14px}}@media only screen and (max-width: 480px){ks-development-warning{font-size:13px;line-height:13px}}";
@@ -23577,13 +23575,15 @@ class Navbar {
       hAsync("nav", null, hAsync("div", { class: "logo" }, hAsync("div", null, hAsync("a", { href: "/" }, hAsync("ks-img", { contained: true, sync: true, src: common.get("logo"), width: 217, height: 35, alt: "kuchniasklep.pl" })), common.get("promo") ? common.get("promoLink") && !this.mobile ?
         hAsync("a", { class: "promo", href: common.get("promoLink") }, common.get("promo")) :
         hAsync("span", { class: "promo" }, common.get("promo"))
-        : null)), hAsync("div", { class: "search" }, hAsync("ks-navbar-search", null)), hAsync("div", { class: ["buttons", loaded].join(' '), id: "ks-navbar-menu-buttons" }, hAsync("ks-navbar-language-button", { name: "J\u0119zyk", onClick: () => this.root.querySelector("ks-navbar-language-panel").show() }), hAsync("ks-navbar-button", { id: "navbar-button-contact", name: "Kontakt", icon: "phone", onClick: () => this.root.querySelector("ks-navbar-contact-panel").Toggle() }), commonDynamic.get('loggedIn') && !commonDynamic.get('guest') ?
+        : null)), hAsync("div", { class: "search" }, hAsync("ks-navbar-search", null)), hAsync("div", { class: ["buttons", loaded].join(' '), id: "ks-navbar-menu-buttons" }, commonDynamic.get('languages').length > 1 ?
+        hAsync("ks-navbar-language-button", { name: "J\u0119zyk", onClick: () => this.root.querySelector("ks-navbar-language-panel").show() })
+        : null, hAsync("ks-navbar-button", { id: "navbar-button-contact", name: "Kontakt", icon: "phone", onClick: () => this.root.querySelector("ks-navbar-contact-panel").Toggle() }), commonDynamic.get('loggedIn') && !commonDynamic.get('guest') ?
         hAsync("ks-navbar-button", { id: "navbar-button-account", name: "Twoje konto", link: common.get('accountLink'), icon: "user" })
         : null, hAsync("ks-navbar-button", { id: "navbar-button-fav", name: "Schowek", link: common.get('heartLink'), icon: "star", count: heartCount }), hAsync("ks-navbar-button", { id: "navbar-button-cart", name: "Koszyk", link: common.get('cartLink'), icon: "shopping-bag", count: cartCount }), !commonDynamic.get('loggedIn') ?
         hAsync("ks-navbar-button", { id: "navbar-button-login", name: "Zaloguj", link: common.get('loginLink'), icon: "user" })
         : null, commonDynamic.get('loggedIn') || commonDynamic.get('guest') ?
         hAsync("ks-navbar-button", { id: "navbar-button-logout", name: "Wyloguj", link: common.get('logoutLink'), icon: "log-out" })
-        : null, hAsync("ks-navbar-button", { id: "navbar-button-menu", name: "Menu", icon: "menu", onClick: () => this.root.querySelector("ks-navbar-sidebar").show() })), hAsync("ks-navbar-contact-panel", null), hAsync("ks-navbar-language-panel", null)),
+        : null, hAsync("ks-navbar-button", { id: "navbar-button-menu", name: "Menu", icon: "menu", onClick: () => this.root.querySelector("ks-navbar-sidebar").show() })), hAsync("ks-navbar-contact-panel", null), commonDynamic.get('languages').length > 1 ? hAsync("ks-navbar-language-panel", null) : null),
       hAsync("ks-navbar-categories", null),
       hAsync("ks-navbar-sidebar", null),
       hAsync("ks-navbar-search", { mobile: true })
@@ -23875,13 +23875,13 @@ class NavbarLanguageButton {
     registerInstance(this, hostRef);
   }
   render() {
-    const language = common
+    const language = commonDynamic
       .get("languages")
-      .find(l => l.id == common.get('language'));
+      .find(l => l.id == commonDynamic.get('language'));
     const flag = language.flag;
-    const currency = common
+    const currency = commonDynamic
       .get("currencies")
-      .find(l => l.id == common.get('currency'));
+      .find(l => l.id == commonDynamic.get('currency'));
     const symbol = currency.symbol;
     const small = currency.symbol.length > 1 ? " small" : "";
     return [
@@ -23936,7 +23936,7 @@ class NavbarLanguagePanel {
     this.sidepanel.show();
   }
   languageChange(language) {
-    if (common.get('languageDomainChange')) {
+    if (commonDynamic.get('languageDomainChange')) {
       var url = new URL(document.location.href);
       url.port = "";
       url.hostname = language.domain;
@@ -23955,10 +23955,10 @@ class NavbarLanguagePanel {
       .then(() => document.location.reload());
   }
   render() {
-    const languages = common.get('languages');
-    const activeLanguage = common.get('language');
-    const currencies = common.get('currencies');
-    const activeCurrency = common.get('currency');
+    const languages = commonDynamic.get('languages');
+    const activeLanguage = commonDynamic.get('language');
+    const currencies = commonDynamic.get('currencies');
+    const activeCurrency = commonDynamic.get('currency');
     return hAsync("ks-sidepanel", null, hAsync("div", { class: "title" }, "Language"), languages.map(language => hAsync("div", { class: language.id == activeLanguage ? "language active" : "language", onClick: () => this.languageChange(language) }, hAsync("div", { class: "name" }, language.name), hAsync("div", { class: "flag" }, hAsync("ks-img2", { src: language.flag })))), hAsync("div", { class: "title" }, "Currency"), currencies.map(currency => hAsync("div", { class: currency.id == activeCurrency ? "currency active" : "currency", onClick: () => this.currencyChange(currency) }, hAsync("div", { class: "name" }, currency.name), hAsync("div", { class: "tag" }, hAsync("div", { class: "code" }, currency.code), hAsync("div", { class: "symbol" }, currency.symbol)))));
   }
   get root() { return getElement(this); }
