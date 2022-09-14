@@ -13977,7 +13977,7 @@ class CartShippingMessage$1 {
   }
   render() {
     return (this.creditagricoleParameters && store.get("activePayment") == this.creditagricoleId) ?
-      hAsync("ks-product-calculator-ca", { price: store.get("totalValue").toString(), parameters: this.creditagricoleParameters }, hAsync("ks-button", { round: true, name: "Oblicz raty" }))
+      hAsync("ks-product-calculator-ca", { price: store.get("totalValue"), parameters: this.creditagricoleParameters }, hAsync("ks-button", { round: true, name: "Oblicz raty" }))
       : null;
   }
   static get style() { return cartPaymentCalculatorsCss; }
@@ -23575,7 +23575,7 @@ class Navbar {
       hAsync("nav", null, hAsync("div", { class: "logo" }, hAsync("div", null, hAsync("a", { href: "/" }, hAsync("ks-img", { contained: true, sync: true, src: common.get("logo"), width: 217, height: 35, alt: "kuchniasklep.pl" })), common.get("promo") ? common.get("promoLink") && !this.mobile ?
         hAsync("a", { class: "promo", href: common.get("promoLink") }, common.get("promo")) :
         hAsync("span", { class: "promo" }, common.get("promo"))
-        : null)), hAsync("div", { class: "search" }, hAsync("ks-navbar-search", null)), hAsync("div", { class: ["buttons", loaded].join(' '), id: "ks-navbar-menu-buttons" }, commonDynamic.get('languages').length > 1 ?
+        : null)), hAsync("div", { class: "search" }, hAsync("ks-navbar-search", null)), hAsync("div", { class: ["buttons", loaded].join(' '), id: "ks-navbar-menu-buttons" }, common.get('languages').length > 1 ?
         hAsync("ks-navbar-language-button", { name: "J\u0119zyk", onClick: () => this.root.querySelector("ks-navbar-language-panel").show() })
         : null, hAsync("ks-navbar-button", { id: "navbar-button-contact", name: "Kontakt", icon: "phone", onClick: () => this.root.querySelector("ks-navbar-contact-panel").Toggle() }), commonDynamic.get('loggedIn') && !commonDynamic.get('guest') ?
         hAsync("ks-navbar-button", { id: "navbar-button-account", name: "Twoje konto", link: common.get('accountLink'), icon: "user" })
@@ -23583,7 +23583,7 @@ class Navbar {
         hAsync("ks-navbar-button", { id: "navbar-button-login", name: "Zaloguj", link: common.get('loginLink'), icon: "user" })
         : null, commonDynamic.get('loggedIn') || commonDynamic.get('guest') ?
         hAsync("ks-navbar-button", { id: "navbar-button-logout", name: "Wyloguj", link: common.get('logoutLink'), icon: "log-out" })
-        : null, hAsync("ks-navbar-button", { id: "navbar-button-menu", name: "Menu", icon: "menu", onClick: () => this.root.querySelector("ks-navbar-sidebar").show() })), hAsync("ks-navbar-contact-panel", null), commonDynamic.get('languages').length > 1 ? hAsync("ks-navbar-language-panel", null) : null),
+        : null, hAsync("ks-navbar-button", { id: "navbar-button-menu", name: "Menu", icon: "menu", onClick: () => this.root.querySelector("ks-navbar-sidebar").show() })), hAsync("ks-navbar-contact-panel", null), common.get('languages').length > 1 ? hAsync("ks-navbar-language-panel", null) : null),
       hAsync("ks-navbar-categories", null),
       hAsync("ks-navbar-sidebar", null),
       hAsync("ks-navbar-search", { mobile: true })
@@ -23875,13 +23875,9 @@ class NavbarLanguageButton {
     registerInstance(this, hostRef);
   }
   render() {
-    const language = commonDynamic
-      .get("languages")
-      .find(l => l.id == commonDynamic.get('language'));
+    const language = common.get("language");
     const flag = language.flag;
-    const currency = commonDynamic
-      .get("currencies")
-      .find(l => l.id == commonDynamic.get('currency'));
+    const currency = common.get("currency");
     const symbol = currency.symbol;
     const small = currency.symbol.length > 1 ? " small" : "";
     return [
@@ -23936,7 +23932,7 @@ class NavbarLanguagePanel {
     this.sidepanel.show();
   }
   languageChange(language) {
-    if (commonDynamic.get('languageDomainChange')) {
+    if (common.get('languageDomainChange')) {
       var url = new URL(document.location.href);
       url.port = "";
       url.hostname = language.domain;
@@ -23955,10 +23951,10 @@ class NavbarLanguagePanel {
       .then(() => document.location.reload());
   }
   render() {
-    const languages = commonDynamic.get('languages');
-    const activeLanguage = commonDynamic.get('language');
-    const currencies = commonDynamic.get('currencies');
-    const activeCurrency = commonDynamic.get('currency');
+    const languages = common.get('languages');
+    const activeLanguage = common.get('language').id;
+    const currencies = common.get('currencies');
+    const activeCurrency = common.get('currency').id;
     return hAsync("ks-sidepanel", null, hAsync("div", { class: "title" }, "Language"), languages.map(language => hAsync("div", { class: language.id == activeLanguage ? "language active" : "language", onClick: () => this.languageChange(language) }, hAsync("div", { class: "name" }, language.name), hAsync("div", { class: "flag" }, hAsync("ks-img2", { src: language.flag })))), hAsync("div", { class: "title" }, "Currency"), currencies.map(currency => hAsync("div", { class: currency.id == activeCurrency ? "currency active" : "currency", onClick: () => this.currencyChange(currency) }, hAsync("div", { class: "name" }, currency.name), hAsync("div", { class: "tag" }, hAsync("div", { class: "code" }, currency.code), hAsync("div", { class: "symbol" }, currency.symbol)))));
   }
   get root() { return getElement(this); }
@@ -26313,9 +26309,9 @@ const product = createStore({
   description: "",
   attributes: [],
   currency: "",
-  previousPrice: "",
-  currentPrice: "",
-  shippingPrice: "",
+  previousPrice: null,
+  currentPrice: null,
+  shippingPrice: null,
   shippingTime: "",
   shippingMessage: "",
   availability: 0,
@@ -26920,7 +26916,6 @@ class ProductButton {
 class ProductCalculatorCA {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.price = "";
     this.parameters = "";
     this.width = 820;
     this.height = 680;
@@ -26948,7 +26943,7 @@ class ProductCalculatorCA {
     "$flags$": 4,
     "$tagName$": "ks-product-calculator-ca",
     "$members$": {
-      "price": [1],
+      "price": [2],
       "parameters": [1],
       "width": [2],
       "height": [2]
@@ -26962,7 +26957,6 @@ class ProductCalculatorCA {
 class ProductCalculatorPayU {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.price = "";
     this.posId = "";
     this.apiKey = "";
     this.enabled = false;
@@ -27002,7 +26996,7 @@ class ProductCalculatorPayU {
     "$flags$": 4,
     "$tagName$": "ks-product-calculator-payu",
     "$members$": {
-      "price": [1],
+      "price": [2],
       "posId": [1, "pos-id"],
       "apiKey": [1, "api-key"],
       "enabled": [32]
@@ -27050,6 +27044,19 @@ function OpenSuggestions(id, name) {
   suggestions.show(id, name);
 }
 
+function priceFormat(value) {
+  if (!value)
+    return '';
+  const currency = common.get('currency');
+  return priceFormatNoCurrency(value) + ` ${currency.symbol}`;
+}
+function priceFormatNoCurrency(value) {
+  if (!value)
+    return '';
+  const currency = common.get('currency');
+  return value.toFixed(2).replace('.', currency.separator);
+}
+
 const productCardCss = "ks-product-card{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:justify;justify-content:space-between;width:100%;text-align:center;background:var(--card-background);color:var(--card-text-color);-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow)}@media (min-width: 360px){ks-product-card{width:calc(50% - 15px)}}@media (min-width: 640px){ks-product-card{width:228px}}ks-product-card .top{display:block;padding:15px;min-height:200px;color:inherit !important;text-decoration:none !important;font-size:14px}ks-product-card ks-img2{height:auto;margin-bottom:10px;max-width:100%}ks-product-card .price>*{display:block;font-family:var(--font-emphasis)}ks-product-card .price .previous{color:#888888;font-size:15px}ks-product-card .price .current{color:var(--color-secondary);font-weight:bold;font-size:17px}ks-product-card .bottom{display:-ms-flexbox;display:flex;margin-top:10px}ks-product-card .bottom .unavailable,ks-product-card .bottom .link{display:block;width:100%;padding:10px 10px;font-size:.875rem;text-align:center;text-decoration:none;text-transform:none;color:white;background-color:var(--color-secondary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-product-card .bottom .unavailable{color:#252525;background-color:#f1f1f1}ks-product-card .bottom .link:hover{background-color:var(--color-secondary-hover)}ks-product-card .bottom .link:active{background-color:var(--color-secondary-active)}ks-product-card[unavailable] .top,ks-product-card[unavailable] .price{opacity:0.6}ks-product-card[unavailable] .price .current{color:#252525}@media (max-width: 420px){ks-product-card .top{font-size:13px;padding:8px}ks-product-card .price{line-height:18px}}ks-product-card .cart{position:relative;display:block;width:100%;height:100%;min-height:42px;min-width:44px;padding:1px 10px;font-size:.875rem;line-height:40px;text-align:center;text-decoration:none;text-transform:none;font-family:var(--font-regular);outline:none;border:none;border-radius:0px;color:white;background-color:var(--product-card-primary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-product-card .cart:hover{background-color:var(--product-card-primary-hover)}ks-product-card .cart:active{background-color:var(--product-card-primary-active)}ks-product-card .fav{position:relative;display:block;height:100%;min-height:42px;min-width:44px;padding:1px 10px;font-size:.875rem;line-height:40px;text-align:center;text-decoration:none;text-transform:none;outline:none;border:none;border-radius:0px;color:white;background-color:var(--product-card-secondary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-product-card .fav:hover{background-color:var(--product-card-secondary-hover)}ks-product-card .fav:active{background-color:var(--product-card-secondary-active)}ks-product-card .fav .success{display:-ms-flexbox;display:flex;position:absolute;top:0;left:0;width:100%;height:100%;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;background-color:var(--product-card-secondary);-webkit-animation:fade-in 0.2s 1;animation:fade-in 0.2s 1}";
 
 class ProductCard$1 {
@@ -27072,7 +27079,7 @@ class ProductCard$1 {
       link: this.link,
       image: this.img,
       imageFull: this.imgFull,
-      currentPrice: parseFloat(this.currentPrice),
+      currentPrice: this.currentPrice,
       quantity: 1,
       currency: this.currency,
       categories: categories
@@ -27099,11 +27106,13 @@ class ProductCard$1 {
   }
   render() {
     const translations = common.get('translations');
+    const currentPrice = priceFormat(this.currentPrice);
+    const previousPrice = priceFormat(this.previousPrice);
     return [
       hAsync("a", { href: this.link, "aria-label": this.name, class: "top" }, hAsync("ks-img2", { fill: true, limit: true, center: true, src: this.img, webp: this.webp, width: 280, height: 280, alt: this.name }), hAsync("span", null, this.name)),
       hAsync("div", { class: "price" }, this.previousPrice ?
-        hAsync("s", { class: "previous" }, this.previousPrice, " z\u0142")
-        : null, hAsync("span", { class: "current" }, this.currentPrice, " z\u0142")),
+        hAsync("s", { class: "previous" }, previousPrice)
+        : null, hAsync("span", { class: "current" }, currentPrice)),
       hAsync("div", { class: "bottom" }, this.unavailable ? hAsync("a", { href: this.link, class: "unavailable" }, translations.unavailable)
         : this.linkOnly ? hAsync("a", { href: this.link, class: "link" }, translations.seeMore)
           : [
@@ -27130,8 +27139,8 @@ class ProductCard$1 {
       "imgFull": [1, "img-full"],
       "webp": [1],
       "link": [1],
-      "currentPrice": [1, "current-price"],
-      "previousPrice": [1, "previous-price"],
+      "currentPrice": [2, "current-price"],
+      "previousPrice": [2, "previous-price"],
       "currency": [1],
       "categories": [1],
       "cartLoading": [32],
@@ -27166,7 +27175,7 @@ class ProductCard {
       link: this.link,
       image: this.img,
       imageFull: this.imgFull,
-      currentPrice: parseFloat(this.currentPrice),
+      currentPrice: this.currentPrice,
       quantity: 1,
       currency: this.currency,
       categories: categories
@@ -27184,8 +27193,10 @@ class ProductCard {
   }
   render() {
     const translations = common.get('translations');
+    const currentPrice = priceFormat(this.currentPrice);
+    const previousPrice = priceFormat(this.previousPrice);
     return [
-      hAsync("a", { href: this.link, "aria-label": this.name }, hAsync("div", { class: "image" }, hAsync("ks-img2", { fill: true, limit: true, center: true, src: this.img, webp: this.webp, width: 280, height: 280, alt: this.name })), hAsync("div", { class: "info" }, hAsync("h3", null, this.name), hAsync("div", { class: "price" }, hAsync("span", { class: "current" }, this.currentPrice, " z\u0142"), this.previousPrice ? hAsync("s", { class: "previous" }, this.previousPrice, " z\u0142") : null), this.summary ? hAsync("p", null, this.summary) : null)),
+      hAsync("a", { href: this.link, "aria-label": this.name }, hAsync("div", { class: "image" }, hAsync("ks-img2", { fill: true, limit: true, center: true, src: this.img, webp: this.webp, width: 280, height: 280, alt: this.name })), hAsync("div", { class: "info" }, hAsync("h3", null, this.name), hAsync("div", { class: "price" }, hAsync("span", { class: "current" }, currentPrice), this.previousPrice ? hAsync("s", { class: "previous" }, previousPrice) : null), this.summary ? hAsync("p", null, this.summary) : null)),
       hAsync("div", { class: "buttons" }, hAsync("button", { class: "fav", onClick: () => this.favourites() }, this.favLoading ? hAsync("ks-loader", null) : hAsync("ks-icon", { name: "x" })), hAsync("button", { disabled: this.unavailable, class: "cart", onClick: () => this.cart() }, this.cartLoading ? hAsync("ks-loader", null) : [
         hAsync("ks-icon", { name: "shopping-bag" }),
         hAsync("span", null, this.unavailable ? translations.unavailable : translations.addToCart)
@@ -27207,8 +27218,8 @@ class ProductCard {
       "imgFull": [1, "img-full"],
       "webp": [1],
       "link": [1],
-      "currentPrice": [1, "current-price"],
-      "previousPrice": [1, "previous-price"],
+      "currentPrice": [2, "current-price"],
+      "previousPrice": [2, "previous-price"],
       "currency": [1],
       "categories": [1],
       "cartLoading": [32],
@@ -27536,7 +27547,7 @@ class ProductInfo$1 {
       link: product.get("link"),
       image: product.get("images")[0].preview.url,
       imageFull: product.get("images")[0].full.url,
-      currentPrice: parseFloat(product.get("currentPrice")),
+      currentPrice: product.get("currentPrice"),
       quantity: product.get("count"),
       currency: product.get("currency"),
       categories: product.get('categories')
@@ -27647,8 +27658,8 @@ class ProductNegotiate {
     const target = event.target;
     const data = new FormData(target);
     data.append("productUrl", document.location.href);
-    data.append("productPrice", product.get('currentPrice'));
-    data.append("productOldPrice", product.get('previousPrice'));
+    data.append("productPrice", product.get('currentPrice').toString());
+    data.append("productOldPrice", product.get('previousPrice').toString());
     data.append("productName", product.get('name'));
     await fetch(commonDynamic.get('api').negotiatePrice, { body: data, method: "post" })
       .then(async (response) => {
@@ -27849,18 +27860,19 @@ class ProductPoints {
   }; }
 }
 
-const productPriceCss = "ks-product-price{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;margin:10px 0 20px;font-family:var(--product-price-font);font-weight:700}ks-product-price .previous{display:inline-block;color:var(--color-faded);font-size:var(--product-price-size);line-height:var(--product-price-size);position:relative;margin-left:15px}ks-product-price .previous::after{background-color:var(--color-faded);content:\"\";height:0.1em;left:-3px;right:-3px;position:absolute;top:46%}ks-product-price .current{color:var(--color-secondary);font-size:var(--product-price-size-emphasis);line-height:var(--product-price-size)}@media only screen and (max-width: 560px){ks-product-price .price{display:block;width:100%;margin-bottom:20px;margin-right:0px;text-align:center}}ks-product-price .currency{width:15px;height:15px;padding:5px;line-height:13px;margin:1px 0 0 10px;border-radius:30px;background-color:var(--color-secondary);color:white;font-family:var(--product-price-font);text-align:center;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none}";
+const productPriceCss = "ks-product-price{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;margin:10px 0 20px;font-family:var(--product-price-font);font-weight:700}ks-product-price .previous{display:inline-block;color:var(--color-faded);font-size:var(--product-price-size);line-height:var(--product-price-size);position:relative;margin-left:15px}ks-product-price .previous::after{background-color:var(--color-faded);content:\"\";height:0.1em;left:-3px;right:-3px;position:absolute;top:46%}ks-product-price .current{color:var(--color-secondary);font-size:var(--product-price-size-emphasis);line-height:var(--product-price-size)}@media only screen and (max-width: 560px){ks-product-price .price{display:block;width:100%;margin-bottom:20px;margin-right:0px;text-align:center}}ks-product-price .currency{width:26px;height:26px;margin:0 0 0 10px;border-radius:30px;background-color:var(--color-secondary);color:white;font-family:var(--product-price-font);-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:baseline;align-items:baseline}";
 
 class ProductPrice {
   constructor(hostRef) {
     registerInstance(this, hostRef);
   }
   render() {
-    const previousPrice = product.get("previousPrice").replace('.', ',');
-    const currentPrice = product.get("currentPrice").replace('.', ',');
+    const symbol = common.get('currency').symbol;
+    const currentPrice = priceFormatNoCurrency(product.get("currentPrice"));
+    const previousPrice = priceFormatNoCurrency(product.get("previousPrice"));
     return [
       hAsync("div", { class: "current" }, currentPrice),
-      hAsync("div", { class: "currency" }, "z\u0142"),
+      hAsync("div", { class: "currency" }, symbol),
       previousPrice ? hAsync("div", { class: "previous" }, previousPrice) : null
     ];
   }
@@ -27954,11 +27966,11 @@ class ProductShipping {
     const available = product.get('availability') > 0;
     const time = available ? product.get("shippingTime") : "Niedostępny w magazynie";
     const timeIcon = available ? "clock" : "alert-circle";
-    const freeShipping = parseFloat(product.get("shippingPrice")) == 0;
+    const freeShipping = !product.get("shippingPrice");
     const knownShipping = time.search("godzin") != -1 || time.search("dni") != -1;
     const instantShipping = time.search("24 godziny") != -1;
     let timeprefix = knownShipping ? "Wysyłka w" : "";
-    let price = freeShipping ? "Darmowa dostawa" : product.get("shippingPrice").replace(".", ",") + " zł";
+    let price = freeShipping ? "Darmowa dostawa" : priceFormat(product.get("shippingPrice"));
     const priceprefix = freeShipping ? "" : "Dostawa od";
     const message = product.get("shippingMessage");
     return [
@@ -27987,12 +27999,8 @@ class ProductSimple {
     this.root.style.display = "block";
   }
   render() {
-    let currentPrice;
-    if (this.currentPrice)
-      currentPrice = this.currentPrice.replace(".", ",") + " zł";
-    let previousPrice;
-    if (this.previousPrice)
-      previousPrice = this.previousPrice.replace(".", ",") + " zł";
+    const currentPrice = priceFormat(this.currentPrice);
+    const previousPrice = priceFormat(this.previousPrice);
     return (hAsync("div", null, hAsync("div", { class: "uk-text-xsmall uk-text-center uk-link-reset uk-position-relative uk-margin-small-bottom" }, hAsync("a", { href: this.link }, hAsync("div", { class: "uk-margin-small-bottom" }, hAsync("ks-image", { src: this.img, width: "280", height: "280", contain: true, alt: "zdj\u0119cie produktu" })), this.name)), hAsync("div", { class: "uk-text-xsmall uk-text-center uk-position-relative", style: { pointerEvents: "none" } }, this.previousPrice ? [
       hAsync("span", { class: "uk-text-muted" }, hAsync("s", null, previousPrice)),
       hAsync("br", null)
@@ -28006,8 +28014,8 @@ class ProductSimple {
       "name": [1],
       "img": [1],
       "link": [1],
-      "currentPrice": [1, "current-price"],
-      "previousPrice": [1, "previous-price"]
+      "currentPrice": [2, "current-price"],
+      "previousPrice": [2, "previous-price"]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
@@ -28073,7 +28081,7 @@ class ProductSuggestions {
     }
   }
   render() {
-    return hAsync("ks-overlay", null, hAsync("div", { class: "content" }, hAsync("div", { class: "top" }, hAsync("div", { class: "heading" }, "Dodano do koszyka"), hAsync("div", { class: "name" }, this.name), hAsync("div", { class: "buttons" }, hAsync("ks-button", { secondary: true, name: "Przejd\u017A do koszyka", onClick: () => this.toCart() }), hAsync("ks-button", { name: "Przegl\u0105daj dalej", onClick: () => this.hide() }))), hAsync("div", { class: "bottom" }, this.loading ? null : hAsync("h3", { class: "suggestion-heading" }, this.suggestionHeading), this.loading ? hAsync("ks-loader", { dark: true, large: true }) : null, hAsync("div", { class: "swiper-container product-suggestions", style: { display: this.loading ? "none" : "block" } }, hAsync("div", { class: "swiper-wrapper" }, this.products.map((product) => hAsync("div", { class: "swiper-slide" }, hAsync("ks-product-card", { "link-only": true, name: product.name, img: product.image, webp: product.webp, link: product.link, currentPrice: product.currentPrice, previousPrice: product.previousPrice != "0.00" ? product.previousPrice : null }))))), hAsync("div", { class: "fade-left" }), hAsync("div", { class: "fade-right" }))));
+    return hAsync("ks-overlay", null, hAsync("div", { class: "content" }, hAsync("div", { class: "top" }, hAsync("div", { class: "heading" }, "Dodano do koszyka"), hAsync("div", { class: "name" }, this.name), hAsync("div", { class: "buttons" }, hAsync("ks-button", { secondary: true, name: "Przejd\u017A do koszyka", onClick: () => this.toCart() }), hAsync("ks-button", { name: "Przegl\u0105daj dalej", onClick: () => this.hide() }))), hAsync("div", { class: "bottom" }, this.loading ? null : hAsync("h3", { class: "suggestion-heading" }, this.suggestionHeading), this.loading ? hAsync("ks-loader", { dark: true, large: true }) : null, hAsync("div", { class: "swiper-container product-suggestions", style: { display: this.loading ? "none" : "block" } }, hAsync("div", { class: "swiper-wrapper" }, this.products.map((product) => hAsync("div", { class: "swiper-slide" }, hAsync("ks-product-card", { "link-only": true, name: product.name, img: product.image, webp: product.webp, link: product.link, currentPrice: product.currentPrice, previousPrice: product.previousPrice }))))), hAsync("div", { class: "fade-left" }), hAsync("div", { class: "fade-right" }))));
   }
   get root() { return getElement(this); }
   static get style() { return productSuggestionsCss; }
