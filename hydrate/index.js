@@ -28827,13 +28827,13 @@ class PageArticle {
   renderDescription(content) {
     return content.map(entry => {
       switch (entry.type) {
-        case "description-text":
+        case "ComponentContentText":
           return hAsync("ks-description-text", { text: entry.text });
-        case "description-image":
+        case "ComponentContentImage":
           return hAsync("ks-description-image", { image: entry.image, width: entry.width });
-        case "description-text-image":
+        case "ComponentContentTextAndImage":
           return hAsync("ks-description-text-image", { text: entry.text, image: entry.image, width: entry.width, alignment: entry.alignment, position: entry.position });
-        case "description-products":
+        case "ComponentContentProducts":
           return hAsync("ks-description-products", { products: entry.products });
         default:
           return null;
