@@ -14386,7 +14386,7 @@ class DescriptionImage {
     registerInstance(this, hostRef);
   }
   render() {
-    return hAsync("ks-product-container", null, this.products.map(product => hAsync("ks-product-simple", { name: product.name, img: product.image, currentPrice: product.currentPrice, previousPrice: product.previousPrice })));
+    return hAsync("ks-product-container", null, this.products.map(product => hAsync("ks-product-simple", { name: product.name, img: product.image, link: product.link, currentPrice: product.currentPrice, previousPrice: product.previousPrice })));
   }
   static get style() { return descriptionProductsCss; }
   static get cmpMeta() { return {
@@ -28811,7 +28811,7 @@ class Overlay {
 
 const article = createStore({});
 
-const articleCss = "ks-page-article{display:block}ks-page-article .article-container{background:#fff;color:#373737;-webkit-box-shadow:0 2px 8px rgb(0 0 0 / 15%);box-shadow:0 2px 8px rgb(0 0 0 / 15%);margin-bottom:0;padding:40px}";
+const articleCss = "ks-page-article{display:block}ks-page-article .article-container{background:#fff;color:#373737;-webkit-box-shadow:0 2px 8px rgb(0 0 0 / 15%);box-shadow:0 2px 8px rgb(0 0 0 / 15%);margin-bottom:0;padding:40px}ks-page-article h1{font-size:26px;font-weight:700}ks-page-article h2{font-size:20px;font-weight:700}ks-page-article h3{font-size:18px;font-weight:700}";
 
 class PageArticle {
   constructor(hostRef) {
