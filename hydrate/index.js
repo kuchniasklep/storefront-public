@@ -25823,12 +25823,6 @@ class EdroneTracker {
   relativeToAbsolute(url) {
     return url.includes('http') ? url : document.baseURI + url;
   }
-  encode(value) {
-    return encodeURI(value.replace('&', '&amp;'));
-  }
-  replaceAmp(value) {
-    return value.replace('&', '&amp;');
-  }
   pageview(commonDynamic, _eventID) {
     if (!commonDynamic.loggedIn || !commonDynamic.customer)
       return;
@@ -25847,13 +25841,13 @@ class EdroneTracker {
     window._edrone = window._edrone || {};
     window._edrone.product_skus = product.model;
     window._edrone.product_ids = product.id;
-    window._edrone.product_titles = this.encode(product.name);
+    window._edrone.product_titles = encodeURIComponent(product.name);
     if ((product === null || product === void 0 ? void 0 : product.images.length) > 0)
-      window._edrone.product_images = encodeURI(this.relativeToAbsolute(product.images[0].full.url));
-    window._edrone.product_urls = encodeURI(this.relativeToAbsolute(document.location.href));
+      window._edrone.product_images = encodeURIComponent(this.relativeToAbsolute(product.images[0].full.url));
+    window._edrone.product_urls = encodeURIComponent(this.relativeToAbsolute(document.location.href));
     window._edrone.product_availability = product.availability;
     window._edrone.product_category_ids = product.categories.map(crumb => crumb.id).join('~');
-    window._edrone.product_category_names = product.categories.map(crumb => this.replaceAmp(crumb.name)).join('~');
+    window._edrone.product_category_names = product.categories.map(crumb => encodeURIComponent(crumb.name)).join('~');
     window._edrone.action_type = 'product_view';
     this.init();
   }
@@ -25861,7 +25855,7 @@ class EdroneTracker {
     window._edrone = window._edrone || {};
     const categories = listing.breadcrumbs.filter(category => category.id != "0");
     window._edrone.product_category_ids = categories.map(category => category.id).join('~');
-    window._edrone.product_category_names = categories.map(category => this.replaceAmp(category.name)).join('~');
+    window._edrone.product_category_names = categories.map(category => encodeURIComponent(category.name)).join('~');
     window._edrone.action_type = 'category_view';
     this.init();
   }
@@ -25869,11 +25863,11 @@ class EdroneTracker {
     window._edrone = window._edrone || {};
     window._edrone.product_ids = product.id;
     window._edrone.product_skus = product.sku;
-    window._edrone.product_titles = this.encode(product.name);
-    window._edrone.product_images = encodeURI(this.relativeToAbsolute(product.imageFull));
-    window._edrone.product_urls = encodeURI(this.relativeToAbsolute(product.link));
+    window._edrone.product_titles = encodeURIComponent(product.name);
+    window._edrone.product_images = encodeURIComponent(this.relativeToAbsolute(product.imageFull));
+    window._edrone.product_urls = encodeURIComponent(this.relativeToAbsolute(product.link));
     window._edrone.product_category_ids = product.categories.map(category => category.id).join('~');
-    window._edrone.product_category_names = product.categories.map(category => this.replaceAmp(category.name)).join('~');
+    window._edrone.product_category_names = product.categories.map(category => encodeURIComponent(category.name)).join('~');
     window._edrone.action_type = "add_to_cart";
     this.init();
   }
@@ -25906,12 +25900,12 @@ class EdroneTracker {
     window._edrone.subscriber_status = customer.subscriber ? 1 : 0;
     window._edrone.product_skus = products.map(product => product.sku).join('|');
     window._edrone.product_ids = products.map(product => product.id).join('|');
-    window._edrone.product_titles = products.map(product => this.encode(product.id)).join('|');
-    window._edrone.product_images = products.map(product => encodeURI(this.relativeToAbsolute(product.image))).join('|');
-    window._edrone.product_urls = products.map(product => encodeURI(this.relativeToAbsolute(product.link))).join('|');
+    window._edrone.product_titles = products.map(product => encodeURIComponent(product.id)).join('|');
+    window._edrone.product_images = products.map(product => encodeURIComponent(this.relativeToAbsolute(product.image))).join('|');
+    window._edrone.product_urls = products.map(product => encodeURIComponent(this.relativeToAbsolute(product.link))).join('|');
     window._edrone.product_counts = products.map(product => product.quantity).join('|');
     window._edrone.product_category_ids = products.map(product => product.categories.map(category => category.id).join('~')).join('|');
-    window._edrone.product_category_names = products.map(product => product.categories.map(category => this.replaceAmp(category.name)).join('~')).join('|');
+    window._edrone.product_category_names = products.map(product => product.categories.map(category => encodeURIComponent(category.name)).join('~')).join('|');
     window._edrone.order_id = order.id;
     window._edrone.country = customer.countryISO2;
     window._edrone.city = customer.city;
