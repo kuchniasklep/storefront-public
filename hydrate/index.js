@@ -24280,6 +24280,34 @@ class NewsletterPopupEdrone {
   }; }
 }
 
+const newsletterSideButtonCss = "ks-newsletter-side-button{position:fixed;right:0;top:200px;z-index:10000;-webkit-writing-mode:vertical-rl;-ms-writing-mode:tb-rl;writing-mode:vertical-rl;-webkit-text-orientation:mixed;text-orientation:mixed;display:-ms-flexbox;display:flex;color:white;font-size:18px;font-family:var(--font-emphasis);padding:20px 8px;border-radius:20px 0px 0px 20px;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;background-color:#000000;-webkit-transition:background-color 0.2s ease;transition:background-color 0.2s ease}@media (max-width: 640px) or (max-height: 540px){ks-newsletter-side-button{display:none}}ks-newsletter-side-button:hover{background-color:#1f1f1f}ks-newsletter-side-button:active{background-color:#2c2c2c}ks-newsletter-side-button .label{font-size:20px;line-height:20px}ks-newsletter-side-button ks-icon{-webkit-transform:rotateZ(45deg);transform:rotateZ(45deg);margin:15px 0px}ks-newsletter-side-button .benefit{text-transform:uppercase;font-weight:700}";
+
+class NewsletterSideButton {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+  }
+  clickHandler() {
+    var _a;
+    (_a = document.querySelector('ks-newsletter-popup-edrone')) === null || _a === void 0 ? void 0 : _a.Show();
+  }
+  render() {
+    return [
+      hAsync("div", { class: "label" }, "Newsletter"),
+      hAsync("ks-icon", { name: 'mail' }),
+      hAsync("div", { class: "benefit" }, "Kupon 10 z\u0142")
+    ];
+  }
+  static get style() { return newsletterSideButtonCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-newsletter-side-button",
+    "$members$": undefined,
+    "$listeners$": [[0, "click", "clickHandler"]],
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
 const nocontentCss = "ks-nocontent{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;padding:50px 30px 70px 30px;text-align:center}ks-nocontent .content{max-width:800px;margin:15px 0}ks-nocontent .content h1{font-size:1.275rem;font-family:var(--font-emphasis);font-weight:700}ks-nocontent .content h1{font-size:1.275rem}ks-nocontent .buttons{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-nocontent .buttons>*{margin:5px}@media (max-width: 640px){ks-nocontent{padding:30px 15px 50px 15px}}";
 
 class NotFound$1 {
@@ -25966,7 +25994,7 @@ class PageBase {
     });
   }
   render() {
-    return hAsync(Host, null, !this.skipbase && hAsync("ks-page-header", null), hAsync("slot", null), !this.skipbase && hAsync("ks-page-footer", null), hAsync("ks-newsletter-popup-edrone", { displayOnLoad: common.get('newsletterPopup') }), hAsync("ks-product-suggestions", { api: common.get('suggestionApi') }), hAsync("ks-error-popup", null), hAsync("ks-message-popup", null), hAsync("ks-cookie-popup", { message: common.get('cookieMessage'), button: common.get('cookieButton'), delay: common.get('cookieDelay') }));
+    return hAsync(Host, null, !this.skipbase && hAsync("ks-page-header", null), hAsync("slot", null), !this.skipbase && hAsync("ks-page-footer", null), hAsync("ks-newsletter-popup-edrone", { displayOnLoad: common.get('newsletterPopup') }), common.get('newsletterSideButton') ? hAsync("ks-newsletter-side-button", null) : null, hAsync("ks-product-suggestions", { api: common.get('suggestionApi') }), hAsync("ks-error-popup", null), hAsync("ks-message-popup", null), hAsync("ks-cookie-popup", { message: common.get('cookieMessage'), button: common.get('cookieButton'), delay: common.get('cookieDelay') }));
   }
   static get style() { return baseCss; }
   static get cmpMeta() { return {
@@ -29259,6 +29287,7 @@ registerComponents([
   NavbarSidebar,
   NewsletterPopup,
   NewsletterPopupEdrone,
+  NewsletterSideButton,
   NotFound$1,
   NotFound,
   OrderAddressField,
