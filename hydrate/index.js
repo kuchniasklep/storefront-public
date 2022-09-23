@@ -28889,7 +28889,7 @@ class PageArticle {
 
 const articles = createStore({});
 
-const articlesCss = "ks-page-articles h1{margin:20px 0 10px 0;text-align:center;font-size:28px;font-weight:700}ks-page-articles ks-listing-navigation{margin-bottom:30px}@media screen and (max-width: 600px){ks-page-articles h1{margin:15px 0 0 0;font-size:22px}ks-page-articles ks-listing-navigation{margin-bottom:20px;margin-top:5px}}";
+const articlesCss = "ks-page-articles h1{margin:20px 0 10px 0;text-align:center;font-size:28px;font-weight:700}ks-page-articles ks-listing-navigation{margin:20px 0}ks-page-articles ks-listing-navigation:first-of-type{margin-top:5px}@media screen and (max-width: 600px){ks-page-articles h1{margin:15px 0 0 0;font-size:22px}ks-page-articles ks-listing-navigation{margin-bottom:20px;margin-top:5px}}";
 
 class PageArticles {
   constructor(hostRef) {
