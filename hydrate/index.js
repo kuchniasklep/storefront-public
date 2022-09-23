@@ -28889,7 +28889,7 @@ class PageArticle {
 
 const articles = createStore({});
 
-const articlesCss = "ks-page-articles h1{margin:20px 0 0 0;text-align:center;font-size:28px}ks-page-articles ks-listing-navigation{margin-bottom:30px}@media screen and (max-width: 600px){ks-page-articles h1{margin:15px 0 0 0;font-size:22px}ks-page-articles ks-listing-navigation{margin-bottom:20px;margin-top:5px}}";
+const articlesCss = "ks-page-articles h1{margin:20px 0 10px 0;text-align:center;font-size:28px;font-weight:700}ks-page-articles ks-listing-navigation{margin-bottom:30px}@media screen and (max-width: 600px){ks-page-articles h1{margin:15px 0 0 0;font-size:22px}ks-page-articles ks-listing-navigation{margin-bottom:20px;margin-top:5px}}";
 
 class PageArticles {
   constructor(hostRef) {
@@ -28905,7 +28905,7 @@ class PageArticles {
   render() {
     const navigation = articles.get('navigation');
     const cards = articles.get('articles');
-    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("h1", null, articles.get('heading')), navigation && (cards === null || cards === void 0 ? void 0 : cards.length) > 0 ?
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("h1", null, articles.get('heading')), navigation && navigation.count > 1 ?
       hAsync("ks-listing-navigation", null, hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.paginationBase, pattern: navigation.pattern }))
       : null, (cards === null || cards === void 0 ? void 0 : cards.length) > 0 ?
       hAsync("ks-article-container", null, cards.map(card => hAsync("ks-article-card", { link: card.link, heading: card.heading, image: card.image, webp: card.webp, date: card.date, views: card.views }, hAsync("p", null, card.description))))
