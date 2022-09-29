@@ -28885,7 +28885,7 @@ class PageArticle {
           return hAsync("ks-description-text-image", { text: entry.text, image: entry.image, width: entry.width, alignment: entry.alignment, position: entry.position });
         case "ComponentContentProducts":
           return hAsync("ks-description-products", { products: entry.products });
-        case "ComponentContentHTML":
+        case "ComponentContentHtml":
           return hAsync("ks-description-html", { html: entry.html });
         default:
           return null;
