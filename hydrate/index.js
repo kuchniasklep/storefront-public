@@ -26428,7 +26428,7 @@ class ListingHeader {
         hAsync("ks-breadcrumbs", { class: "breadcrumbs" }, this.breadcrumbs.map(crumb => hAsync("a", { href: crumb.link }, crumb.name)))
         : null,
       this.description || ((_c = this.categories) === null || _c === void 0 ? void 0 : _c.length) > 0 ? hAsync("hr", null) : null,
-      this.description ? hAsync("div", { class: "description", innerHTML: this.description }) : null,
+      this.description ? hAsync("p", { class: "description", innerHTML: this.description }) : null,
       ((_d = this.categories) === null || _d === void 0 ? void 0 : _d.length) > 0 ?
         hAsync("div", { class: "categories" }, this.categories.map(category => hAsync("a", { href: category.link }, category.name)))
         : null,
