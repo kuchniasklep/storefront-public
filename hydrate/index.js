@@ -14363,7 +14363,7 @@ class DescriptionHTML {
     registerInstance(this, hostRef);
   }
   render() {
-    return hAsync(Host, { innerHTML: this.html });
+    return hAsync("div", { innerHTML: this.html });
   }
   static get style() { return descriptionHtmlCss; }
   static get cmpMeta() { return {
