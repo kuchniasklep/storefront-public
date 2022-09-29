@@ -14356,6 +14356,28 @@ class CookiePopup {
   }; }
 }
 
+const descriptionHtmlCss = "ks-description-html{display:block}";
+
+class DescriptionHTML {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+  }
+  render() {
+    return hAsync(Host, { innerHtml: this.html });
+  }
+  static get style() { return descriptionHtmlCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-description-html",
+    "$members$": {
+      "html": [1]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
 const descriptionImageCss = "ks-description-image{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center}ks-description-image .image{max-width:100%}";
 
 class DescriptionImage$1 {
@@ -28863,6 +28885,8 @@ class PageArticle {
           return hAsync("ks-description-text-image", { text: entry.text, image: entry.image, width: entry.width, alignment: entry.alignment, position: entry.position });
         case "ComponentContentProducts":
           return hAsync("ks-description-products", { products: entry.products });
+        case "ComponentContentHTML":
+          return hAsync("ks-description-html", { html: entry.html });
         default:
           return null;
       }
@@ -32530,6 +32554,7 @@ registerComponents([
   Container$1,
   Container,
   CookiePopup,
+  DescriptionHTML,
   DescriptionImage$1,
   DescriptionImage,
   DescriptionText,
