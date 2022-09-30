@@ -12326,7 +12326,7 @@ class CartButtons {
   render() {
     return (hAsync("button", { class: "confirm uk-button uk-button-danger ks-text-decorated", onClick: () => this.clickHandler() }, this.loadingDelayed && cart.get("loading") ?
       hAsync("div", { class: "uk-animation-fade", "uk-spinner": true }) :
-      hAsync("span", null, "DO KASY")));
+      hAsync("span", null, cart.get("strings").submitButton)));
   }
   get root() { return getElement(this); }
   static get style() { return cartButtonsCss; }
@@ -12374,6 +12374,38 @@ class CartCountrySelect {
   }; }
 }
 
+const common = createStore({
+  logo: "",
+  categoryUrl: "",
+  cartLink: "",
+  heartLink: "",
+  accountLink: "",
+  loginLink: "",
+  logoutLink: "",
+  registerLink: "",
+  softwareLink: "",
+  promo: "",
+  promoLink: "",
+  email: "",
+  phone: "",
+  workingHours: "",
+  company: "",
+  address: "",
+  nip: "",
+  newsletterPopup: false,
+  newsletterApi: "",
+  suggestionApi: "",
+  autocompleteApi: "",
+  cookieMessage: "",
+  cookieButton: "",
+  cookieDelay: 1000,
+  categories: [],
+  social: [],
+  reviewers: [],
+  footerLinks: [],
+  translations: {}
+});
+
 const dealCss = "ks-cart-deal{display:-ms-flexbox;display:flex;overflow:hidden;-ms-flex-pack:space-evenly;justify-content:space-evenly;-ms-flex-align:center;align-items:center;background-color:#252525;padding:0 30px;-webkit-box-sizing:border-box;box-sizing:border-box;margin:0 0 30px 0}ks-cart-deal .image{position:relative;-webkit-box-sizing:border-box;box-sizing:border-box;width:180px;height:180px;-webkit-transform:translateX(-20px);transform:translateX(-20px)}ks-cart-deal .circle{position:absolute;-webkit-box-sizing:border-box;box-sizing:border-box;overflow:hidden;width:145px;height:145px;padding:10px;border-radius:100%;background-color:white}ks-cart-deal .fx{position:absolute;width:250px;height:250px;max-width:initial;-webkit-animation-name:rotate;animation-name:rotate;-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite;-webkit-animation-timing-function:linear;animation-timing-function:linear}ks-cart-deal .fx1{-webkit-animation-duration:50s;animation-duration:50s}ks-cart-deal .fx2{-webkit-animation-duration:40s;animation-duration:40s;animation-direction:reverse}ks-cart-deal .fx3{-webkit-animation-duration:40s;animation-duration:40s}ks-cart-deal .fx4{-webkit-animation-duration:50s;animation-duration:50s;animation-direction:reverse}@-webkit-keyframes rotate{from{-webkit-transform:translate(-50%, -50%) rotate(0deg);transform:translate(-50%, -50%) rotate(0deg)}to{-webkit-transform:translate(-50%, -50%) rotate(360deg);transform:translate(-50%, -50%) rotate(360deg)}}@keyframes rotate{from{-webkit-transform:translate(-50%, -50%) rotate(0deg);transform:translate(-50%, -50%) rotate(0deg)}to{-webkit-transform:translate(-50%, -50%) rotate(360deg);transform:translate(-50%, -50%) rotate(360deg)}}ks-cart-deal .center{top:50%;left:50%;-webkit-transform:translate(-50%, -50%);transform:translate(-50%, -50%)}ks-cart-deal .text{color:white;font-size:18px;text-align:center}ks-cart-deal .top>a{color:white;text-decoration:none}ks-cart-deal .text>.bottom{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;font-size:34px;font-weight:700}ks-cart-deal button{margin-left:20px;padding:8px 30px 10px 30px;border-radius:50px;border-style:none;outline-style:none;font-weight:700;font-size:18px;width:260px;background-color:#ff3838;color:white;-webkit-transition:background-color 0.3s;transition:background-color 0.3s}ks-cart-deal button:hover{background-color:#e62c2c}ks-cart-deal button:active{background-color:#d41e1e;-webkit-transition:background-color 0.1s;transition:background-color 0.1s}@media only screen and (max-width: 760px){ks-cart-deal{display:block;padding:20px}ks-cart-deal .image{-webkit-transform:translateX(0px);transform:translateX(0px);margin:10px auto 30px auto}}@media only screen and (max-width: 460px){ks-cart-deal .text>.bottom{-ms-flex-direction:column;flex-direction:column;font-size:34px}ks-cart-deal button{margin:5px 0 0 0}}ks-cart-deal .large{display:none}@media only screen and (min-width: 1100px){ks-cart-deal{-ms-flex-pack:distribute;justify-content:space-around}ks-cart-deal .large{display:block}ks-cart-deal .small{display:none}ks-cart-deal .text{text-align:left;min-width:400px}ks-cart-deal .text>.bottom{display:block;font-size:34px;line-height:34px}ks-cart-deal button{margin-left:0;padding:15px 30px 17px 30px;border-radius:50px;border-style:none;outline-style:none;font-weight:700;font-size:18px;background-color:#ff3838;color:white}}";
 
 class CartDeal {
@@ -12386,10 +12418,11 @@ class CartDeal {
     this.addDeal.emit(this.ikey);
   }
   render() {
+    const translations = common.get('translations');
     return [
       hAsync("a", { href: this.link }, hAsync("div", { class: "image" }, hAsync("div", { class: "circle center" }, hAsync("ks-img", { src: this.img, alt: this.name, vertical: true, center: true })), hAsync("svg", { class: "fx fx1 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "80", fill: "transparent", stroke: "white", "stroke-width": "3", "stroke-dasharray": "50, 32" })), hAsync("svg", { class: "fx fx2 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "88", fill: "transparent", stroke: "white", "stroke-width": "3", "stroke-dasharray": "50,59" })), hAsync("svg", { class: "fx fx3 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "96", fill: "transparent", stroke: "white", "stroke-width": "3", "stroke-dasharray": "30,30" })), hAsync("svg", { class: "fx fx4 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "106", fill: "transparent", stroke: "white", "stroke-width": "3", "stroke-dasharray": "70,60" })))),
-      hAsync("div", { class: "text ks-text-decorated" }, hAsync("div", { class: "top" }, hAsync("a", { href: this.link }, this.name)), hAsync("div", { class: "bottom" }, this.price, hAsync("button", { class: "ks-text-decorated small", onClick: () => this.Add() }, cart.get('loadingDeals') ? hAsync("div", { "uk-spinner": "ratio: 0.8" }) : hAsync("span", null, "DODAJ DO KOSZYKA")))),
-      hAsync("button", { class: "ks-text-decorated large", onClick: () => this.Add() }, cart.get('loadingDeals') ? hAsync("div", { "uk-spinner": "ratio: 0.8" }) : hAsync("span", null, "DODAJ DO KOSZYKA"))
+      hAsync("div", { class: "text ks-text-decorated" }, hAsync("div", { class: "top" }, hAsync("a", { href: this.link }, this.name)), hAsync("div", { class: "bottom" }, this.price, hAsync("button", { class: "ks-text-decorated small", onClick: () => this.Add() }, cart.get('loadingDeals') ? hAsync("div", { "uk-spinner": "ratio: 0.8" }) : hAsync("span", null, translations.addToCart)))),
+      hAsync("button", { class: "ks-text-decorated large", onClick: () => this.Add() }, cart.get('loadingDeals') ? hAsync("div", { "uk-spinner": "ratio: 0.8" }) : hAsync("span", null, translations.addToCart))
     ];
   }
   static get style() { return dealCss; }
@@ -12449,10 +12482,12 @@ class CartDealGroup {
     this.addDeal.emit(this.currentDeal.id);
   }
   render() {
+    const translations = common.get('translations');
+    const strings = cart.get('strings');
     return [
       hAsync("a", { href: this.currentDeal.link }, hAsync("div", { class: "image" }, hAsync("div", { class: "circle center" }, hAsync("ks-img", { src: this.currentDeal.img, alt: this.name, vertical: true, center: true })), hAsync("svg", { class: "fx fx1 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "80", fill: "transparent", stroke: "white", "stroke-width": "3", "stroke-dasharray": "50, 32" })), hAsync("svg", { class: "fx fx2 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "88", fill: "transparent", stroke: "white", "stroke-width": "3", "stroke-dasharray": "50,59" })), hAsync("svg", { class: "fx fx3 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "96", fill: "transparent", stroke: "white", "stroke-width": "3", "stroke-dasharray": "30,30" })), hAsync("svg", { class: "fx fx4 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "106", fill: "transparent", stroke: "white", "stroke-width": "3", "stroke-dasharray": "70,60" })))),
-      hAsync("div", { class: "text ks-text-decorated" }, hAsync("div", { class: "top" }, hAsync("a", { href: this.currentDeal.link }, this.name), hAsync("div", { class: "variants" }, hAsync("label", null, "Wybierz kolor:"), hAsync("select", { class: "ks-text-decorated", onChange: event => this.change(event.target) }, this.deals.map(deal => hAsync("option", null, deal.name))))), hAsync("div", { class: "bottom" }, this.currentDeal.price, hAsync("button", { class: "ks-text-decorated small", onClick: () => this.Add() }, cart.get('loadingDeals') ? hAsync("div", { "uk-spinner": "ratio: 0.8" }) : hAsync("span", null, "DODAJ DO KOSZYKA")))),
-      hAsync("button", { class: "ks-text-decorated large", onClick: () => this.Add() }, cart.get('loadingDeals') ? hAsync("div", { "uk-spinner": "ratio: 0.8" }) : hAsync("span", null, "DODAJ DO KOSZYKA"))
+      hAsync("div", { class: "text ks-text-decorated" }, hAsync("div", { class: "top" }, hAsync("a", { href: this.currentDeal.link }, this.name), hAsync("div", { class: "variants" }, hAsync("label", null, strings.selectColor), hAsync("select", { class: "ks-text-decorated", onChange: event => this.change(event.target) }, this.deals.map(deal => hAsync("option", null, deal.name))))), hAsync("div", { class: "bottom" }, this.currentDeal.price, hAsync("button", { class: "ks-text-decorated small", onClick: () => this.Add() }, cart.get('loadingDeals') ? hAsync("div", { "uk-spinner": "ratio: 0.8" }) : hAsync("span", null, translations.addToCart)))),
+      hAsync("button", { class: "ks-text-decorated large", onClick: () => this.Add() }, cart.get('loadingDeals') ? hAsync("div", { "uk-spinner": "ratio: 0.8" }) : hAsync("span", null, translations.addToCart))
     ];
   }
   static get style() { return dealGroupCss; }
@@ -12500,8 +12535,9 @@ class CartDiscountCode {
     this.loading = false;
   }
   render() {
+    const strings = cart.get("strings");
     return [
-      hAsync("form", { onSubmit: (e) => this.discountCodeAddHandler(e) }, hAsync("ks-input-text", { emphasis: true, center: true, placeholder: this.placeholder, name: "discountCode" }), hAsync("button", { type: "submit", class: "uk-button uk-button-secondary" }, this.loading ? hAsync("div", { "uk-spinner": true }) : hAsync("span", null, "Aktywuj"))),
+      hAsync("form", { onSubmit: (e) => this.discountCodeAddHandler(e) }, hAsync("ks-input-text", { emphasis: true, center: true, placeholder: this.placeholder, name: "discountCode" }), hAsync("button", { type: "submit", class: "uk-button uk-button-secondary" }, this.loading ? hAsync("div", { "uk-spinner": true }) : hAsync("span", null, strings.discountCodeActivate))),
       hAsync("div", { class: "message", onClick: () => { var _a; return (_a = document.querySelector('ks-newsletter-popup-edrone')) === null || _a === void 0 ? void 0 : _a.Show(); } }, hAsync("ks-img", { vertical: true, center: true, src: this.image }))
     ];
   }
@@ -12559,9 +12595,10 @@ class CartDiscountContainer {
     const thresholdMessage = this.thresholdMessage
       .replace("{threshold}", points.threshold.toFixed(2))
       .replace("{points}", pointsForOrder.toFixed(0));
+    const strings = cart.get("strings");
     return [
-      hAsync("div", { class: `uk-animation-fade ${!this.disablePoints ? "flex" : ""}` }, hAsync("div", null, hAsync("ks-cart-heading", null, "KOD RABATOWY"), hAsync("ks-cart-discount-code", { placeholder: this.codePlaceholder, image: this.codeBanner })), !this.disablePoints ?
-        hAsync("div", null, hAsync("ks-cart-heading", null, "PUNKTY"), this.loggedIn ? (points.available > 0 ?
+      hAsync("div", { class: `uk-animation-fade ${!this.disablePoints ? "flex" : ""}` }, hAsync("div", null, hAsync("ks-cart-heading", null, strings.discountCodeHeading), hAsync("ks-cart-discount-code", { placeholder: this.codePlaceholder, image: this.codeBanner })), !this.disablePoints ?
+        hAsync("div", null, hAsync("ks-cart-heading", null, strings.discountPointsHeading), this.loggedIn ? (points.available > 0 ?
           productValue >= points.threshold || points.threshold == 0 ?
             hAsync("ks-cart-discount-points", { placeholder: this.pointsPlaceholder, message: pointsMessage, points: points.available, orderPoints: pointsForOrder })
             :
@@ -12632,8 +12669,9 @@ class CartDiscountPoints {
     this.loading = false;
   }
   render() {
+    const strings = cart.get("strings");
     return [
-      hAsync("form", { onSubmit: (e) => this.discountPointsAddHandler(e), novalidate: true }, hAsync("ks-input-number", { emphasis: true, center: true, placeholder: this.placeholder, min: 1, max: this.points, step: 10, name: "pointCount" }), hAsync("button", { type: "submit", class: "uk-button uk-button-secondary" }, this.loading ? hAsync("div", { "uk-spinner": true }) : hAsync("span", null, "Aktywuj"))),
+      hAsync("form", { onSubmit: (e) => this.discountPointsAddHandler(e), novalidate: true }, hAsync("ks-input-number", { emphasis: true, center: true, placeholder: this.placeholder, min: 1, max: this.points, step: 10, name: "pointCount" }), hAsync("button", { type: "submit", class: "uk-button uk-button-secondary" }, this.loading ? hAsync("div", { "uk-spinner": true }) : hAsync("span", null, strings.discountPointsActivate))),
       hAsync("div", { class: "messsage" }, hAsync("div", { class: "points ks-text-decorated" }, hAsync("div", { class: "top" }, this.points), hAsync("div", { class: "bottom" }, hAsync("span", null, "+", this.orderPoints))), hAsync("div", { class: "bottom" }, this.message))
     ];
   }
@@ -12666,7 +12704,7 @@ class CartDiscountPointsLogin {
   }
   render() {
     return [
-      hAsync("div", null, hAsync("a", { href: this.loginUrl, class: "uk-button uk-button-secondary ks-text-decorated" }, "Zaloguj si\u0119")),
+      hAsync("div", null, hAsync("a", { href: this.loginUrl, class: "uk-button uk-button-secondary ks-text-decorated" }, cart.get("strings").discountPointsLogin)),
       hAsync("div", { class: "messsage" }, hAsync("div", { class: "points ks-text-decorated" }, hAsync("span", null, "+", this.points)), hAsync("div", { class: "info" }, this.message))
     ];
   }
@@ -13101,13 +13139,14 @@ class CartEasyprotectDialog {
     }
   }
   render() {
+    const strings = cart.get('strings');
     const enabled = this.eligible.length > 0;
     const products = this.eligible.length > 1 && this.step < 1 ? "" : "hidden";
     const productsHide = this.step == 1 ? "hide" : "";
     const warranty = this.eligible.length == 1 || this.step >= 2 ? "" : "hidden";
     const warrantyHide = this.step == 1 ? "hide" : "";
     return [
-      hAsync("ks-button", { tall: true, name: "Dodaj gwarancj\u0119", onClick: () => this.show(), class: enabled ? null : "hidden" }),
+      hAsync("ks-button", { tall: true, name: strings.addWarranty, onClick: () => this.show(), class: enabled ? null : "hidden" }),
       hAsync("ks-overlay", null, hAsync("div", { class: `content ${products} ${productsHide}` }, this.products()), hAsync("div", { class: `content ${warranty} ${warrantyHide}` }, this.warranty()))
     ];
   }
@@ -13115,10 +13154,11 @@ class CartEasyprotectDialog {
     return hAsync("div", { class: "products" }, hAsync("slot", { name: "products" }), hAsync("div", { class: "items" }, this.eligible.map(item => hAsync("ks-cart-easyprotect-product", { image: item.img, name: item.name, warranty: item.warranty, onClick: () => this.toggle(item.id), active: this.active.includes(item.id) }))), hAsync("ks-button", { tall: true, name: "Przejd\u017A dalej", onClick: () => this.addProducts(), disabled: this.active.length <= 0 }), hAsync("div", { class: "close", onClick: () => this.hide() }, hAsync("ks-icon", { name: "x", size: 1.2 })));
   }
   warranty() {
+    const strings = cart.get('strings');
     const chosen = Object.keys(cart.get("easyprotect"))
       .filter(id => this.active.includes(id));
     return [
-      hAsync("div", { class: "warranty" }, hAsync("slot", { name: "warranty" }), hAsync("div", { class: "items" }, chosen.map(id => hAsync("ks-cart-easyprotect-warranty", { "product-id": id }))), hAsync("ks-button", { tall: true, name: "Dodaj gwarancj\u0119", onClick: () => this.addWarranty(), disabled: this.active.length <= 0 }), hAsync("div", { class: "close", onClick: () => this.hide() }, hAsync("ks-icon", { name: "x", size: 1.2 })), this.eligible.length > 1 ?
+      hAsync("div", { class: "warranty" }, hAsync("slot", { name: "warranty" }), hAsync("div", { class: "items" }, chosen.map(id => hAsync("ks-cart-easyprotect-warranty", { "product-id": id }))), hAsync("ks-button", { tall: true, name: strings.addWarranty, onClick: () => this.addWarranty(), disabled: this.active.length <= 0 }), hAsync("div", { class: "close", onClick: () => this.hide() }, hAsync("ks-icon", { name: "x", size: 1.2 })), this.eligible.length > 1 ?
         hAsync("div", { class: "back", onClick: () => this.back() }, hAsync("ks-icon", { name: "chevron-left", size: 1.2 }))
         : null),
       this.step == 3 ?
@@ -13234,6 +13274,19 @@ class CartEasyprotectProduct {
   }; }
 }
 
+function priceFormat(value) {
+  if (!value)
+    return '';
+  const currency = common.get('currency');
+  return priceFormatNoCurrency(value) + ` ${currency.symbol}`;
+}
+function priceFormatNoCurrency(value) {
+  if (!value)
+    return '';
+  const currency = common.get('currency');
+  return value.toFixed(2).replace('.', currency.separator);
+}
+
 const cartEasyprotectWarrantyCss = "ks-cart-easyprotect-warranty{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:justify;justify-content:space-between;background-color:#f2f2f2;margin-bottom:10px}ks-cart-easyprotect-warranty .name{position:relative;margin:8px 15px;max-height:50px;-webkit-box-sizing:border-box;box-sizing:border-box;overflow:hidden;font-family:var(--font-emphasis)}ks-cart-easyprotect-warranty .name:after{content:\"\";position:absolute;top:30px;right:0;width:30%;height:20px;background:-webkit-gradient(linear, left top, right top, from(rgba(255, 255, 255, 0)), color-stop(90%, rgb(242, 242, 242)));background:linear-gradient(to right, rgba(255, 255, 255, 0), rgb(242, 242, 242) 90%)}ks-cart-easyprotect-warranty .control{display:-ms-flexbox;display:flex}ks-cart-easyprotect-warranty .info{min-width:135px;font-family:var(--font-emphasis);font-weight:700;background-color:var(--easyprotect-color)}ks-cart-easyprotect-warranty .price{height:40px;min-width:80px;line-height:40px;text-align:center;background-color:#64419c !important;color:#ffffff}ks-cart-easyprotect-warranty .select{position:relative}ks-cart-easyprotect-warranty .select ks-icon{position:absolute;top:8px;right:5px;color:white;pointer-events:none}ks-cart-easyprotect-warranty ks-input-select div{margin-bottom:0 !important;margin-right:3px}ks-cart-easyprotect-warranty ks-input-select select{background-image:none !important;border:none !important;padding-right:30px !important;margin:0 !important;background-color:transparent !important;color:white !important}ks-cart-easyprotect-warranty:not([product-id]) .select{color:white !important;padding:7px 20px}ks-cart-easyprotect-warranty .close{-ms-flex-item-align:stretch;-ms-grid-row-align:stretch;align-self:stretch;min-width:40px;border-style:none;outline-style:none;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease;background-color:var(--easyprotect-color);color:#ffffff;border-left:#64419c 1px solid}ks-cart-easyprotect-warranty .close ks-icon{line-height:unset !important}ks-cart-easyprotect-warranty .close:hover{background-color:var(--easyprotect-color-hover)}ks-cart-easyprotect-warranty .close:active{background-color:var(--easyprotect-color-active)}@media (min-width: 860px){ks-cart-easyprotect-warranty[insured] .info,ks-cart-easyprotect-warranty:not([product-id]) .info{display:-ms-flexbox;display:flex;min-width:200px}ks-cart-easyprotect-warranty .name{text-overflow:ellipsis;white-space:nowrap;width:100%}ks-cart-easyprotect-warranty .control{-ms-flex:1 0 auto;flex:1 0 auto}}@media (max-width: 420px){ks-cart-easyprotect-warranty{display:inline-block}ks-cart-easyprotect-warranty .info{display:-ms-flexbox;display:flex;width:100%}ks-cart-easyprotect-warranty .select{width:100%}ks-cart-easyprotect-warranty .name{margin:12px 15px}ks-cart-easyprotect-warranty .price{width:50%}}";
 
 class CartEasyprotectWarranty {
@@ -13263,13 +13316,14 @@ class CartEasyprotectWarranty {
     this.price = this.options[this.active];
   }
   render() {
+    const price = priceFormat(this.price);
     return [
       hAsync("div", { class: "name", innerHTML: this.name.replace("<br>", " "), title: this.name.replace("<br>", " ").replace(/(<([^>]+)>)/gi, "") }),
       hAsync("div", { class: "control" }, hAsync("div", { class: "info" }, hAsync("div", { class: "select" }, this.productId ? [
         hAsync("ks-input-select", { onChange: () => this.change() }, this.entries.map(([months, _]) => hAsync("option", { value: months, selected: this.active == months }, this.months(parseInt(months))))),
         hAsync("ks-icon", { name: "chevron-down" })
       ] :
-        this.months(this.time)), hAsync("div", { class: "price" }, this.price, " z\u0142")), this.productId && this.insured ?
+        this.months(this.time)), hAsync("div", { class: "price" }, price)), this.productId && this.insured ?
         hAsync("button", { class: "close", onClick: () => this.remove() }, hAsync("ks-icon", { name: "x" }))
         : null),
     ];
@@ -13420,20 +13474,21 @@ class CartProduct {
     this.resizeHandler();
   }
   render() {
-    const price = this.price.toFixed(2).replace(".", ",") + " zł";
+    const price = priceFormat(this.price);
+    const strings = cart.get('strings');
     const inlineBlockOnMobile = { display: this.removable || this.shippingTime ? "block" : "inline-block" };
     return [
       hAsync("div", { class: "ks-text-decorated", "uk-grid": true }, hAsync("a", { class: "product-image", href: this.link }, hAsync("ks-img2", { center: true, src: this.img, width: 150, height: 150, alt: "zdj\u0119cie produktu" })), hAsync("div", { class: "description" }, hAsync("a", { href: this.link, innerHTML: this.name }), this.mobile >= 1 ?
         hAsync("div", { class: "numbers" }, hAsync("div", { style: inlineBlockOnMobile }, hAsync("span", { class: "price" }, price), hAsync("span", { class: "shipping" }, this.shippingTime)), hAsync("div", { style: inlineBlockOnMobile }, this.removable ?
           hAsync("ks-cart-spinner", { onChanged: (e) => this.onCountHandler(e.detail), "initial-value": this.amount, max: this.maxAmount }) :
-          hAsync("div", { class: "amount" }, this.amount, " szt.")))
+          hAsync("div", { class: "amount" }, this.amount, " ", strings.countUnit)))
         : this.shippingTime != "" ?
           hAsync("div", { class: "numbers" }, this.shippingTime)
           : null), this.mobile == 0 ? [
         hAsync("div", { class: "price" }, price),
         hAsync("div", { class: "amount" }, this.removable ?
           hAsync("ks-cart-spinner", { onChanged: (e) => this.onCountHandler(e.detail), "initial-value": this.amount, max: this.maxAmount }) :
-          hAsync("span", null, this.amount, " szt."))
+          hAsync("span", null, this.amount, " ", strings.countUnit))
       ] : null, this.removable ?
         this.mobile == 2 ?
           this.loading ?
@@ -13503,9 +13558,10 @@ class CartProductHeading {
     this.root.style.display = "block";
   }
   render() {
+    const string = cart.get('strings');
     return [
-      hAsync("div", { class: "uk-flex uk-flex-middle ks-text-decorated", "uk-grid": true, style: { fontSize: "18px" } }, hAsync("div", { class: "uk-width-expand uk-text-bold", style: { fontSize: "22px" } }, "PRODUKTY"), hAsync("div", { style: { width: "100px" }, class: "uk-text-center uk-visible@m" }, "CENA"), hAsync("div", { style: { width: "100px" }, class: "uk-text-center uk-visible@m" }, "ILO\u015A\u0106"), this.removable ?
-        hAsync("div", { style: { width: "50px" }, class: "uk-text-center" }, "USU\u0143")
+      hAsync("div", { class: "uk-flex uk-flex-middle ks-text-decorated", "uk-grid": true, style: { fontSize: "18px" } }, hAsync("div", { class: "uk-width-expand uk-text-bold", style: { fontSize: "22px" } }, string.productTableNames), hAsync("div", { style: { width: "100px" }, class: "uk-text-center uk-visible@m" }, string.productTablePrices), hAsync("div", { style: { width: "100px" }, class: "uk-text-center uk-visible@m" }, string.productTableCount), this.removable ?
+        hAsync("div", { style: { width: "50px" }, class: "uk-text-center" }, string.productTableRemove)
         : null),
       hAsync("hr", null)
     ];
@@ -13549,7 +13605,7 @@ class CartProductPrice {
     this.LoadingWatcher();
   }
   render() {
-    const price = this.price.toFixed(2).replace(".", ",") + " zł";
+    const price = priceFormat(this.price);
     let produkty = "produkt";
     const lastDigit = parseInt(this.amount.toString().split('').pop());
     if (this.amount == 1)
@@ -13627,18 +13683,17 @@ class CartProgressBar {
     const data = this.shippingProgress;
     if (!data)
       return null;
-    const threshold = (Number.isInteger(data.threshold) ?
-      data.threshold.toString() :
-      data.threshold.toFixed(2)).replace(".", ",");
-    const current = productValue.toFixed(2).replace(".", ",");
+    const threshold = priceFormat(data.threshold);
+    const current = priceFormat(productValue);
     const barWidth = Math.min(productValue / data.threshold * 100, 100);
     const thresholdAchieved = productValue >= data.threshold;
+    const strings = cart.get('strings');
     return [
-      hAsync("div", { class: "heading ks-text-decorated" }, hAsync("div", null, data.heading), hAsync("div", null, "od ", threshold, " z\u0142")),
+      hAsync("div", { class: "heading ks-text-decorated" }, hAsync("div", null, data.heading), hAsync("div", null, strings.thresholdPrefix, " ", threshold)),
       hAsync("div", { class: "progress", style: { backgroundColor: thresholdAchieved ? "transparent" : "" } }, hAsync("div", { class: "progress-fill", style: { width: `${barWidth}%` } }, this.numberPlacement ?
-        hAsync("div", { class: "progress-number" }, thresholdAchieved ? hAsync("span", { "uk-icon": "icon: check; ratio: 1.5" }) : `${current} zł`)
+        hAsync("div", { class: "progress-number" }, thresholdAchieved ? hAsync("span", { "uk-icon": "icon: check; ratio: 1.5" }) : current)
         : null), !this.numberPlacement ?
-        hAsync("div", { class: "progress-number outside" }, thresholdAchieved ? hAsync("span", { "uk-icon": "icon: check; ratio: 1.5" }) : `${current} zł`)
+        hAsync("div", { class: "progress-number outside" }, thresholdAchieved ? hAsync("span", { "uk-icon": "icon: check; ratio: 1.5" }) : current)
         : null)
     ];
   }
@@ -13787,12 +13842,13 @@ class CartSelectPayment {
     const activeItem = cart.get("payment").find((value) => {
       return value.id == this.active;
     });
+    const strings = cart.get("strings");
     return [
       hAsync("div", { class: "select animation", onClick: () => {
           if (!this.loading)
             this.toggled = !this.toggled;
         } }, hAsync("div", { class: "selectSlot" }, this.active == -1 ?
-        hAsync("ks-cart-select-item", { name: "Wybierz metod\u0119 p\u0142atno\u015Bci" }) :
+        hAsync("ks-cart-select-item", { name: strings.paymentSelect }) :
         hAsync("ks-cart-select-item", { logo: activeItem.logo, name: activeItem.name, price: activeItem.price })), hAsync("div", { class: "selectIcon" }, hAsync("span", { "uk-icon": "icon: triangle-down; ratio: 1.3" }))),
       hAsync("div", { class: "items", hidden: !this.toggled }, cart.get("payment").map((item) => hAsync("ks-cart-select-item", { key: item.id, logo: item.logo, name: item.name, price: item.price, color: item.color, onClick: () => this.ActivateItem(item.id) })))
     ];
@@ -13871,12 +13927,13 @@ class CartSelectShipping {
     const activeItem = cart.get("shipping").find((value) => {
       return value.id == this.active;
     });
+    const strings = cart.get("strings");
     return [
       hAsync("div", { class: "select animation", onClick: () => {
           if (!this.loading)
             this.toggled = !this.toggled;
         } }, hAsync("div", { class: "selectSlot" }, this.active == -1 ?
-        hAsync("ks-cart-select-item", { name: "Wybierz metod\u0119 wysy\u0142ki" }) :
+        hAsync("ks-cart-select-item", { name: strings.shippingSelect }) :
         hAsync("ks-cart-select-item", { logo: activeItem.logo, name: activeItem.name, price: activeItem.price })), hAsync("div", { class: "selectIcon" }, hAsync("span", { "uk-icon": "icon: triangle-down; ratio: 1.3" }))),
       hAsync("div", { class: "items", hidden: !this.toggled }, cart.get("shipping").map((item) => hAsync("ks-cart-select-item", { key: item.id, logo: item.logo, name: item.name, price: item.price, color: item.color, onClick: () => this.ActivateItem(item.id) })))
     ];
@@ -13911,7 +13968,7 @@ class CartShippingMessage$1 {
   }
   render() {
     return (this.creditagricoleParameters && cart.get("activePayment") == this.creditagricoleId) ?
-      hAsync("ks-product-calculator-ca", { price: cart.get("totalValue"), parameters: this.creditagricoleParameters }, hAsync("ks-button", { round: true, name: "Oblicz raty" }))
+      hAsync("ks-product-calculator-ca", { price: cart.get("totalValue"), parameters: this.creditagricoleParameters }, hAsync("ks-button", { round: true, name: cart.get("strings").installmentsButton }))
       : null;
   }
   static get style() { return cartPaymentCalculatorsCss; }
@@ -14066,10 +14123,11 @@ class CartSummaryContainer {
   render() {
     const productValue = cart.get("productValue").toFixed(2);
     const totalValue = cart.get("totalValue").toFixed(2);
+    const strings = cart.get("strings");
     return [
-      hAsync("ks-cart-summary", { text: "Warto\u015B\u0107 produkt\u00F3w:", price: productValue }),
+      hAsync("ks-cart-summary", { text: strings.summaryProductValue, price: productValue }),
       cart.get("otherValues").map(item => hAsync("ks-cart-summary", { text: item.name, price: item.value.toFixed(2), emphasis: item.value < 0 })),
-      hAsync("ks-cart-summary", { large: true, text: "Razem:", price: totalValue })
+      hAsync("ks-cart-summary", { large: true, text: strings.summaryTotalValue, price: totalValue })
     ];
   }
   get root() { return getElement(this); }
@@ -17500,38 +17558,6 @@ class DescriptionTextImage {
     "$attrsToReflect$": [["alignment", "alignment"], ["position", "position"]]
   }; }
 }
-
-const common = createStore({
-  logo: "",
-  categoryUrl: "",
-  cartLink: "",
-  heartLink: "",
-  accountLink: "",
-  loginLink: "",
-  logoutLink: "",
-  registerLink: "",
-  softwareLink: "",
-  promo: "",
-  promoLink: "",
-  email: "",
-  phone: "",
-  workingHours: "",
-  company: "",
-  address: "",
-  nip: "",
-  newsletterPopup: false,
-  newsletterApi: "",
-  suggestionApi: "",
-  autocompleteApi: "",
-  cookieMessage: "",
-  cookieButton: "",
-  cookieDelay: 1000,
-  categories: [],
-  social: [],
-  reviewers: [],
-  footerLinks: [],
-  translations: {}
-});
 
 const developmentWarningCss = "ks-development-warning{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;padding:20px 15px;font-family:var(--font-emphasis);font-size:17px;font-weight:700;line-height:15px;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;background-color:rgb(255, 196, 0);color:rgb(0, 0, 0)}ks-development-warning>span{margin-right:8px}@media only screen and (max-width: 959px){ks-development-warning{font-size:14px;line-height:14px}}@media only screen and (max-width: 480px){ks-development-warning{font-size:13px;line-height:13px}}";
 
@@ -29309,6 +29335,7 @@ class PageCart {
   }
   ;
   render() {
+    const strings = cart.get('strings');
     const discountStrings = cart.get('discountStrings');
     const easyprotectStrings = cart.get('easyprotectStrings');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, Object.keys(cart === null || cart === void 0 ? void 0 : cart.get('products')).length > 0 ? hAsync("div", { class: "card" }, hAsync("ks-order-progress", { current: 0 }), (cart === null || cart === void 0 ? void 0 : cart.get('progressBar')) ? [
@@ -29316,7 +29343,7 @@ class PageCart {
       hAsync("br", null)
     ] : null, hAsync("div", { class: "uk-padding@m uk-padding-small" }, hAsync("ks-cart-product-container", null)), hAsync("ks-cart-deal-container", null), easyprotectStrings ?
       hAsync("ks-cart-easyprotect", { image: easyprotectStrings.image, width: easyprotectStrings.width, height: easyprotectStrings.height }, hAsync("h2", null, easyprotectStrings.heading), hAsync("p", null, easyprotectStrings.description, hAsync("a", { href: easyprotectStrings.pdf, target: "_blank" }, easyprotectStrings.seeMore)), hAsync("ks-cart-easyprotect-dialog", { slot: "bottom" }, hAsync("h2", { slot: "products" }, easyprotectStrings.productsHeading), hAsync("p", { slot: "products" }, easyprotectStrings.productsMessage), hAsync("h2", { slot: "warranty" }, easyprotectStrings.warrantyHeading), hAsync("p", { slot: "warranty" }, easyprotectStrings.warrantyMessage)))
-      : null, hAsync("ks-cart-recycle", { id: "recycle" }, hAsync("h2", null, "Odbi\u00F3r zu\u017Cytego sprz\u0119tu"), hAsync("p", null, "Us\u0142uga darmowa, nie oferuje demonta\u017Cu. Odda\u0107 mo\u017Cna sprz\u0119t tego samego rodzaju i pe\u0142ni\u0105cy t\u0105 sam\u0105 funkcj\u0119 - w takiej ilo\u015Bci jak zamawiana.")), hAsync("div", { class: "uk-padding@m uk-padding-small" }, hAsync("ks-cart-country-select", { heading: "WYSY\u0141KA I P\u0141ATNO\u015A\u0106" }), hAsync("ks-cart-select-shipping", { name: "Wysylka" }), hAsync("br", null), hAsync("ks-cart-select-payment", { name: "Platnosc" }), hAsync("br", null), hAsync("ks-cart-shipping-message", null), hAsync("div", { class: "paypo-message" }, hAsync("ks-img2", { src: "/images/paypo-message.svg", width: 287, height: 72 })), hAsync("ks-cart-discount-container", { "info-message": discountStrings.infoMessage, "code-banner": discountStrings.codeBanner, "code-placeholder": discountStrings.codePlaceholder, "points-placeholder": discountStrings.pointsPlaceholder, "points-message": discountStrings.pointsMessage, "login-message": discountStrings.pointsLoggedInMessage, "no-points-heading": discountStrings.noPointsHeading, "no-points-message": discountStrings.noPointsMessage, "threshold-heading": discountStrings.thresholdHeading, "threshold-message": discountStrings.thresholdMessage, "login-url": common.get('loginLink'), "logged-in": commonDynamic.get('loggedIn'), "disable-points": !cart.get('points') }), hAsync("br", null)), hAsync("div", { class: "uk-padding@m uk-padding-small" }, hAsync("ks-cart-summary-container", null)), hAsync("ks-cart-buttons", { href: cart.get('api').order }))
+      : null, hAsync("ks-cart-recycle", { id: "recycle" }, hAsync("h2", null, strings.recycleHeading), hAsync("p", null, strings.recycleParagraph)), hAsync("div", { class: "uk-padding@m uk-padding-small" }, hAsync("ks-cart-country-select", { heading: strings.countrySelectHeading }), hAsync("ks-cart-select-shipping", { name: strings.shippingName }), hAsync("br", null), hAsync("ks-cart-select-payment", { name: strings.paymentName }), hAsync("br", null), hAsync("ks-cart-shipping-message", null), hAsync("div", { class: "paypo-message" }, hAsync("ks-img2", { src: "/images/paypo-message.svg", width: 287, height: 72 })), hAsync("ks-cart-discount-container", { "info-message": discountStrings.infoMessage, "code-banner": discountStrings.codeBanner, "code-placeholder": discountStrings.codePlaceholder, "points-placeholder": discountStrings.pointsPlaceholder, "points-message": discountStrings.pointsMessage, "login-message": discountStrings.pointsLoggedInMessage, "no-points-heading": discountStrings.noPointsHeading, "no-points-message": discountStrings.noPointsMessage, "threshold-heading": discountStrings.thresholdHeading, "threshold-message": discountStrings.thresholdMessage, "login-url": common.get('loginLink'), "logged-in": commonDynamic.get('loggedIn'), "disable-points": !cart.get('points') }), hAsync("br", null)), hAsync("div", { class: "uk-padding@m uk-padding-small" }, hAsync("ks-cart-summary-container", null)), hAsync("ks-cart-buttons", { href: cart.get('api').order }))
       :
         hAsync("ks-nocontent", null, hAsync("h1", null, cart.get('noContentHeading')), hAsync("p", null, cart.get('noContentMessage'))));
   }
@@ -30290,19 +30317,6 @@ async function addToCart(product, place = 1) {
 function OpenSuggestions(id, name) {
   const suggestions = document.querySelector("ks-product-suggestions");
   suggestions.show(id, name);
-}
-
-function priceFormat(value) {
-  if (!value)
-    return '';
-  const currency = common.get('currency');
-  return priceFormatNoCurrency(value) + ` ${currency.symbol}`;
-}
-function priceFormatNoCurrency(value) {
-  if (!value)
-    return '';
-  const currency = common.get('currency');
-  return value.toFixed(2).replace('.', currency.separator);
 }
 
 const productCardCss = "ks-product-card{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:justify;justify-content:space-between;width:100%;text-align:center;background:var(--card-background);color:var(--card-text-color);-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow)}@media (min-width: 360px){ks-product-card{width:calc(50% - 15px)}}@media (min-width: 640px){ks-product-card{width:228px}}ks-product-card .top{display:block;padding:15px;min-height:200px;color:inherit !important;text-decoration:none !important;font-size:14px}ks-product-card ks-img2{height:auto;margin-bottom:10px;max-width:100%}ks-product-card .price>*{display:block;font-family:var(--font-emphasis)}ks-product-card .price .previous{color:#888888;font-size:15px}ks-product-card .price .current{color:var(--color-secondary);font-weight:bold;font-size:17px}ks-product-card .bottom{display:-ms-flexbox;display:flex;margin-top:10px}ks-product-card .bottom .unavailable,ks-product-card .bottom .link{display:block;width:100%;padding:10px 10px;font-size:.875rem;text-align:center;text-decoration:none;text-transform:none;color:white;background-color:var(--color-secondary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-product-card .bottom .unavailable{color:#252525;background-color:#f1f1f1}ks-product-card .bottom .link:hover{background-color:var(--color-secondary-hover)}ks-product-card .bottom .link:active{background-color:var(--color-secondary-active)}ks-product-card[unavailable] .top,ks-product-card[unavailable] .price{opacity:0.6}ks-product-card[unavailable] .price .current{color:#252525}@media (max-width: 420px){ks-product-card .top{font-size:13px;padding:8px}ks-product-card .price{line-height:18px}}ks-product-card .cart{position:relative;display:block;width:100%;height:100%;min-height:42px;min-width:44px;padding:1px 10px;font-size:.875rem;line-height:40px;text-align:center;text-decoration:none;text-transform:none;font-family:var(--font-regular);outline:none;border:none;border-radius:0px;color:white;background-color:var(--product-card-primary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-product-card .cart:hover{background-color:var(--product-card-primary-hover)}ks-product-card .cart:active{background-color:var(--product-card-primary-active)}ks-product-card .fav{position:relative;display:block;height:100%;min-height:42px;min-width:44px;padding:1px 10px;font-size:.875rem;line-height:40px;text-align:center;text-decoration:none;text-transform:none;outline:none;border:none;border-radius:0px;color:white;background-color:var(--product-card-secondary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-product-card .fav:hover{background-color:var(--product-card-secondary-hover)}ks-product-card .fav:active{background-color:var(--product-card-secondary-active)}ks-product-card .fav .success{display:-ms-flexbox;display:flex;position:absolute;top:0;left:0;width:100%;height:100%;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;background-color:var(--product-card-secondary);-webkit-animation:fade-in 0.2s 1;animation:fade-in 0.2s 1}";
