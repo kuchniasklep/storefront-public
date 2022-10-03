@@ -14085,7 +14085,7 @@ class CartSummary {
     this.root.style.display = "block";
   }
   render() {
-    const price = this.price.replace(".", ",") + " zł";
+    const price = priceFormat(this.price);
     const leaderOptions = "media: 500; fill: .";
     if (this.large) {
       const largeStyle = {
@@ -14109,7 +14109,7 @@ class CartSummary {
     "$tagName$": "ks-cart-summary",
     "$members$": {
       "text": [513],
-      "price": [1],
+      "price": [2],
       "large": [4],
       "emphasis": [4]
     },
@@ -14124,13 +14124,11 @@ class CartSummaryContainer {
     registerInstance(this, hostRef);
   }
   render() {
-    const productValue = cart.get("productValue").toFixed(2);
-    const totalValue = cart.get("totalValue").toFixed(2);
     const strings = cart.get("strings");
     return [
-      hAsync("ks-cart-summary", { text: strings.summaryProductValue, price: productValue }),
-      cart.get("otherValues").map(item => hAsync("ks-cart-summary", { text: item.name, price: item.value.toFixed(2), emphasis: item.value < 0 })),
-      hAsync("ks-cart-summary", { large: true, text: strings.summaryTotalValue, price: totalValue })
+      hAsync("ks-cart-summary", { text: strings.summaryProductValue, price: cart.get("productValue") }),
+      cart.get("otherValues").map(item => hAsync("ks-cart-summary", { text: item.name, price: item.value, emphasis: item.value < 0 })),
+      hAsync("ks-cart-summary", { large: true, text: strings.summaryTotalValue, price: cart.get("totalValue") })
     ];
   }
   get root() { return getElement(this); }
