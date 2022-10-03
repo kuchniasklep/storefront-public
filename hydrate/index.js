@@ -12557,6 +12557,19 @@ class CartDiscountCode {
   }; }
 }
 
+function priceFormat(value) {
+  if (!value)
+    return '';
+  const currency = common.get('currency');
+  return priceFormatNoCurrency(value) + ` ${currency.symbol}`;
+}
+function priceFormatNoCurrency(value) {
+  if (!value)
+    return '';
+  const currency = common.get('currency');
+  return value.toFixed(2).replace('.', currency.separator);
+}
+
 const cartDiscountContainerCss = "ks-cart-discount-container{display:block;min-height:123px}ks-cart-discount-container>.flex{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between}ks-cart-discount-container>.flex>*{width:calc(50% - 4px)}@media only screen and (max-width: 1100px){ks-cart-discount-container>.flex{display:block}ks-cart-discount-container>.flex>*{width:100%;margin-bottom:30px}}";
 
 class CartDiscountContainer {
@@ -12586,14 +12599,14 @@ class CartDiscountContainer {
     }
     const pointsMessage = this.pointsMessage
       .replace("{available}", points.available.toString())
-      .replace("{value}", points.value.toFixed(2))
+      .replace("{value}", priceFormat(points.value))
       .replace("{points}", pointsForOrder.toFixed(0));
     const loginMessage = this.loginMessage
       .replace("{points}", pointsForOrder.toFixed(0));
     const noPointsMessage = this.noPointsMessage
       .replace("{points}", pointsForOrder.toFixed(0));
     const thresholdMessage = this.thresholdMessage
-      .replace("{threshold}", points.threshold.toFixed(2))
+      .replace("{threshold}", priceFormat(points.threshold))
       .replace("{points}", pointsForOrder.toFixed(0));
     const strings = cart.get("strings");
     return [
@@ -12793,6 +12806,9 @@ class CartDiscountTicket {
     this.discountRemove.emit();
   }
   render() {
+    const parsed = parseFloat(this.value);
+    if (!isNaN(parsed))
+      this.value = priceFormat(parsed);
     return [
       hAsync("div", { class: "content ks-text-decorated" }, hAsync("div", { class: "name" }, this.name), hAsync("div", { class: "value" }, this.value)),
       hAsync("div", { class: "remove", onClick: () => this.discountRemoveHandler() }, this.loading ?
@@ -13274,19 +13290,6 @@ class CartEasyprotectProduct {
   }; }
 }
 
-function priceFormat(value) {
-  if (!value)
-    return '';
-  const currency = common.get('currency');
-  return priceFormatNoCurrency(value) + ` ${currency.symbol}`;
-}
-function priceFormatNoCurrency(value) {
-  if (!value)
-    return '';
-  const currency = common.get('currency');
-  return value.toFixed(2).replace('.', currency.separator);
-}
-
 const cartEasyprotectWarrantyCss = "ks-cart-easyprotect-warranty{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:justify;justify-content:space-between;background-color:#f2f2f2;margin-bottom:10px}ks-cart-easyprotect-warranty .name{position:relative;margin:8px 15px;max-height:50px;-webkit-box-sizing:border-box;box-sizing:border-box;overflow:hidden;font-family:var(--font-emphasis)}ks-cart-easyprotect-warranty .name:after{content:\"\";position:absolute;top:30px;right:0;width:30%;height:20px;background:-webkit-gradient(linear, left top, right top, from(rgba(255, 255, 255, 0)), color-stop(90%, rgb(242, 242, 242)));background:linear-gradient(to right, rgba(255, 255, 255, 0), rgb(242, 242, 242) 90%)}ks-cart-easyprotect-warranty .control{display:-ms-flexbox;display:flex}ks-cart-easyprotect-warranty .info{min-width:135px;font-family:var(--font-emphasis);font-weight:700;background-color:var(--easyprotect-color)}ks-cart-easyprotect-warranty .price{height:40px;min-width:80px;line-height:40px;text-align:center;background-color:#64419c !important;color:#ffffff}ks-cart-easyprotect-warranty .select{position:relative}ks-cart-easyprotect-warranty .select ks-icon{position:absolute;top:8px;right:5px;color:white;pointer-events:none}ks-cart-easyprotect-warranty ks-input-select div{margin-bottom:0 !important;margin-right:3px}ks-cart-easyprotect-warranty ks-input-select select{background-image:none !important;border:none !important;padding-right:30px !important;margin:0 !important;background-color:transparent !important;color:white !important}ks-cart-easyprotect-warranty:not([product-id]) .select{color:white !important;padding:7px 20px}ks-cart-easyprotect-warranty .close{-ms-flex-item-align:stretch;-ms-grid-row-align:stretch;align-self:stretch;min-width:40px;border-style:none;outline-style:none;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease;background-color:var(--easyprotect-color);color:#ffffff;border-left:#64419c 1px solid}ks-cart-easyprotect-warranty .close ks-icon{line-height:unset !important}ks-cart-easyprotect-warranty .close:hover{background-color:var(--easyprotect-color-hover)}ks-cart-easyprotect-warranty .close:active{background-color:var(--easyprotect-color-active)}@media (min-width: 860px){ks-cart-easyprotect-warranty[insured] .info,ks-cart-easyprotect-warranty:not([product-id]) .info{display:-ms-flexbox;display:flex;min-width:200px}ks-cart-easyprotect-warranty .name{text-overflow:ellipsis;white-space:nowrap;width:100%}ks-cart-easyprotect-warranty .control{-ms-flex:1 0 auto;flex:1 0 auto}}@media (max-width: 420px){ks-cart-easyprotect-warranty{display:inline-block}ks-cart-easyprotect-warranty .info{display:-ms-flexbox;display:flex;width:100%}ks-cart-easyprotect-warranty .select{width:100%}ks-cart-easyprotect-warranty .name{margin:12px 15px}ks-cart-easyprotect-warranty .price{width:50%}}";
 
 class CartEasyprotectWarranty {
@@ -13762,7 +13765,7 @@ class CartSelectItem {
     registerInstance(this, hostRef);
     this.logo = "";
     this.name = "";
-    this.price = "";
+    this.price = 0;
     this.color = "";
   }
   render() {
@@ -13770,8 +13773,8 @@ class CartSelectItem {
       this.logo ?
         hAsync("div", { class: "logo", style: { backgroundColor: this.color } }, hAsync("ks-img", { vertical: true, center: true, src: this.logo, target: "ks-cart-select-shipping, ks-cart-select-payment" })) : null,
       hAsync("div", { class: "name" }, this.name),
-      (this.price != "" && this.price != "0") ?
-        hAsync("div", { class: "price" }, this.price.replace(".", ",") + " ZŁ")
+      this.price ?
+        hAsync("div", { class: "price" }, priceFormat(this.price))
         : null
     ];
   }
@@ -13783,7 +13786,7 @@ class CartSelectItem {
     "$members$": {
       "logo": [513],
       "name": [513],
-      "price": [513],
+      "price": [514],
       "color": [1]
     },
     "$listeners$": undefined,
