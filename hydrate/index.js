@@ -13605,22 +13605,11 @@ class CartProductPrice {
   }
   render() {
     const price = priceFormat(this.price);
-    let produkty = "produkt";
-    const lastDigit = parseInt(this.amount.toString().split('').pop());
-    if (this.amount == 1)
-      produkty = "produkt";
-    else if (this.amount > 1 && this.amount < 5)
-      produkty = "produkty";
-    else if (this.amount >= 5 && this.amount <= 21)
-      produkty = "produktów";
-    else if (lastDigit <= 1 || lastDigit >= 5)
-      produkty = "produktów";
-    else
-      produkty = "produkty";
+    const strings = cart.get('strings');
     return [
       hAsync("div", null, hAsync("div", { class: "sentence ks-text-decorated" }, this.loadingDelayed && this.loading ?
         hAsync("div", { class: "uk-animation-fade", "uk-spinner": "ratio: 0.7" }) : [
-        hAsync("span", null, "Razem ", this.amount, " ", produkty, " za ", hAsync("span", { class: "price" }, price)),
+        hAsync("span", null, strings.productTableTotal, " ", hAsync("span", { class: "price" }, price)),
         this.shippingTime != "" ? hAsync("span", { class: "shipping" }, this.shippingTime) : null
       ]), this.editLink ?
         hAsync("div", { class: "edit" }, hAsync("a", { href: this.editLink, class: "uk-button uk-button-default uk-width-1-1" }, "Wr\u00F3\u0107 do koszyka"))
@@ -28558,6 +28547,9 @@ class OrderPocztapunkt {
 class OrderProgress {
   constructor(hostRef) {
     registerInstance(this, hostRef);
+    this.cart = 'Koszyk';
+    this.shipping = 'Dane do wysłki';
+    this.confirmation = 'Potwierdzenie';
     this.mobile = false;
   }
   componentDidLoad() {
@@ -28588,11 +28580,11 @@ class OrderProgress {
   render() {
     return [
       hAsync("div", { class: "uk-text-center uk-flex uk-flex-evenly ks-text-decorated " + (this.mobile ? "uk-child-width-1-1" : "uk-child-width-1-3"), style: { fontSize: "16px", backgroundColor: "#252525" } }, !this.mobile || this.current == 0 ?
-        hAsync("div", { style: this.StepStyle(0) }, hAsync("span", { "uk-icon": "icon: cart; ratio: 1.2", style: { marginRight: "5px", transform: "translateY(-3px)" } }), " Koszyk")
+        hAsync("div", { style: this.StepStyle(0) }, hAsync("span", { "uk-icon": "icon: cart; ratio: 1.2", style: { marginRight: "5px", transform: "translateY(-3px)" } }), " ", this.cart)
         : null, !this.mobile || this.current == 1 ?
-        hAsync("div", { style: this.StepStyle(1) }, hAsync("span", { "uk-icon": "icon: user; ratio: 1.2", style: { marginRight: "5px", transform: "translateY(-2px)" } }), " Dane do wys\u0142ki")
+        hAsync("div", { style: this.StepStyle(1) }, hAsync("span", { "uk-icon": "icon: user; ratio: 1.2", style: { marginRight: "5px", transform: "translateY(-2px)" } }), " ", this.shipping)
         : null, !this.mobile || this.current == 2 ?
-        hAsync("div", { style: this.StepStyle(2) }, hAsync("span", { "uk-icon": "icon: check; ratio: 1.2", style: { marginRight: "5px", transform: "translateY(-1px)" } }), " Potwierdzenie")
+        hAsync("div", { style: this.StepStyle(2) }, hAsync("span", { "uk-icon": "icon: check; ratio: 1.2", style: { marginRight: "5px", transform: "translateY(-1px)" } }), " ", this.confirmation)
         : null)
     ];
   }
@@ -28602,6 +28594,9 @@ class OrderProgress {
     "$tagName$": "ks-order-progress",
     "$members$": {
       "current": [2],
+      "cart": [1],
+      "shipping": [1],
+      "confirmation": [1],
       "mobile": [32]
     },
     "$listeners$": [[9, "resize", "resizeHandler"]],
@@ -29335,7 +29330,7 @@ class PageCart {
     const strings = cart.get('strings');
     const discountStrings = cart.get('discountStrings');
     const easyprotectStrings = cart.get('easyprotectStrings');
-    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, Object.keys(cart === null || cart === void 0 ? void 0 : cart.get('products')).length > 0 ? hAsync("div", { class: "card" }, hAsync("ks-order-progress", { current: 0 }), (cart === null || cart === void 0 ? void 0 : cart.get('progressBar')) ? [
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, Object.keys(cart === null || cart === void 0 ? void 0 : cart.get('products')).length > 0 ? hAsync("div", { class: "card" }, hAsync("ks-order-progress", { current: 0, cart: strings.orderProgressCart, shipping: strings.orderProgressShipping, confirmation: strings.orderProgressConfirmation }), (cart === null || cart === void 0 ? void 0 : cart.get('progressBar')) ? [
       hAsync("ks-cart-progress-bar", null),
       hAsync("br", null)
     ] : null, hAsync("div", { class: "uk-padding@m uk-padding-small" }, hAsync("ks-cart-product-container", null)), hAsync("ks-cart-deal-container", null), easyprotectStrings ?
