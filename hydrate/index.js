@@ -26637,19 +26637,20 @@ class Navbar {
     const heartCount = commonDynamic.get("heartCount");
     const cartCount = commonDynamic.get("cartCount");
     const loaded = commonDynamic.get("loaded") ? "loaded" : null;
+    const strings = common.get("translations");
     return [
       hAsync("nav", null, hAsync("div", { class: "logo" }, hAsync("div", null, hAsync("a", { href: "/" }, hAsync("ks-img", { contained: true, sync: true, src: common.get("logo"), width: 217, height: 35, alt: "kuchniasklep.pl" })), common.get("promo") ? common.get("promoLink") && !this.mobile ?
         hAsync("a", { class: "promo", href: common.get("promoLink") }, common.get("promo")) :
         hAsync("span", { class: "promo" }, common.get("promo"))
         : null)), hAsync("div", { class: "search" }, hAsync("ks-navbar-search", null)), hAsync("div", { class: ["buttons", loaded].join(' '), id: "ks-navbar-menu-buttons" }, common.get('languages').length > 1 ?
-        hAsync("ks-navbar-language-button", { name: "J\u0119zyk", onClick: () => this.root.querySelector("ks-navbar-language-panel").show() })
-        : null, hAsync("ks-navbar-button", { id: "navbar-button-contact", name: "Kontakt", icon: "phone", onClick: () => this.root.querySelector("ks-navbar-contact-panel").Toggle() }), commonDynamic.get('loggedIn') && !commonDynamic.get('guest') ?
-        hAsync("ks-navbar-button", { id: "navbar-button-account", name: "Twoje konto", link: common.get('accountLink'), icon: "user" })
-        : null, hAsync("ks-navbar-button", { id: "navbar-button-fav", name: "Schowek", link: common.get('heartLink'), icon: "star", count: heartCount }), hAsync("ks-navbar-button", { id: "navbar-button-cart", name: "Koszyk", link: common.get('cartLink'), icon: "shopping-bag", count: cartCount }), !commonDynamic.get('loggedIn') ?
-        hAsync("ks-navbar-button", { id: "navbar-button-login", name: "Zaloguj", link: common.get('loginLink'), icon: "user" })
+        hAsync("ks-navbar-language-button", { name: strings.navbarButtonLanguage, onClick: () => this.root.querySelector("ks-navbar-language-panel").show() })
+        : null, hAsync("ks-navbar-button", { id: "navbar-button-contact", name: strings.navbarButtonContact, icon: "phone", onClick: () => this.root.querySelector("ks-navbar-contact-panel").Toggle() }), commonDynamic.get('loggedIn') && !commonDynamic.get('guest') ?
+        hAsync("ks-navbar-button", { id: "navbar-button-account", name: strings.navbarButtonAccount, link: common.get('accountLink'), icon: "user" })
+        : null, hAsync("ks-navbar-button", { id: "navbar-button-fav", name: strings.navbarButtonFav, link: common.get('heartLink'), icon: "star", count: heartCount }), hAsync("ks-navbar-button", { id: "navbar-button-cart", name: strings.navbarButtonCart, link: common.get('cartLink'), icon: "shopping-bag", count: cartCount }), !commonDynamic.get('loggedIn') ?
+        hAsync("ks-navbar-button", { id: "navbar-button-login", name: strings.navbarButtonLogin, link: common.get('loginLink'), icon: "user" })
         : null, commonDynamic.get('loggedIn') || commonDynamic.get('guest') ?
-        hAsync("ks-navbar-button", { id: "navbar-button-logout", name: "Wyloguj", link: common.get('logoutLink'), icon: "log-out" })
-        : null, hAsync("ks-navbar-button", { id: "navbar-button-menu", name: "Menu", icon: "menu", onClick: () => this.root.querySelector("ks-navbar-sidebar").show() })), hAsync("ks-navbar-contact-panel", null), common.get('languages').length > 1 ? hAsync("ks-navbar-language-panel", null) : null),
+        hAsync("ks-navbar-button", { id: "navbar-button-logout", name: strings.navbarButtonLogout, link: common.get('logoutLink'), icon: "log-out" })
+        : null, hAsync("ks-navbar-button", { id: "navbar-button-menu", name: strings.navbarButtonMenu, icon: "menu", onClick: () => this.root.querySelector("ks-navbar-sidebar").show() })), hAsync("ks-navbar-contact-panel", null), common.get('languages').length > 1 ? hAsync("ks-navbar-language-panel", null) : null),
       hAsync("ks-navbar-categories", null),
       hAsync("ks-navbar-sidebar", null),
       hAsync("ks-navbar-search", { mobile: true })
@@ -27000,11 +27001,12 @@ class NavbarLanguagePanel {
       .then(() => document.location.reload());
   }
   render() {
+    const strings = common.get('translations');
     const languages = common.get('languages');
     const activeLanguage = common.get('language').id;
     const currencies = common.get('currencies');
     const activeCurrency = common.get('currency').id;
-    return hAsync("ks-sidepanel", null, hAsync("div", { class: "title" }, "Language"), languages.map(language => hAsync("div", { class: language.id == activeLanguage ? "language active" : "language", onClick: () => this.languageChange(language) }, hAsync("div", { class: "name" }, language.name), hAsync("div", { class: "flag" }, hAsync("ks-img2", { src: language.flag })))), hAsync("div", { class: "title" }, "Currency"), currencies.map(currency => hAsync("div", { class: currency.id == activeCurrency ? "currency active" : "currency", onClick: () => this.currencyChange(currency) }, hAsync("div", { class: "name" }, currency.name), hAsync("div", { class: "tag" }, hAsync("div", { class: "code" }, currency.code), hAsync("div", { class: "symbol" }, currency.symbol)))));
+    return hAsync("ks-sidepanel", null, hAsync("div", { class: "title" }, strings.panelLanguage), languages.map(language => hAsync("div", { class: language.id == activeLanguage ? "language active" : "language", onClick: () => this.languageChange(language) }, hAsync("div", { class: "name" }, language.name), hAsync("div", { class: "flag" }, hAsync("ks-img2", { src: language.flag })))), hAsync("div", { class: "title" }, strings.panelCurrency), currencies.map(currency => hAsync("div", { class: currency.id == activeCurrency ? "currency active" : "currency", onClick: () => this.currencyChange(currency) }, hAsync("div", { class: "name" }, currency.name), hAsync("div", { class: "tag" }, hAsync("div", { class: "code" }, currency.code), hAsync("div", { class: "symbol" }, currency.symbol)))));
   }
   get root() { return getElement(this); }
   static get style() { return navbarLanguagePanelCss; }
@@ -27177,15 +27179,16 @@ class NavbarSidebar {
   }
   render() {
     const favouritesCount = commonDynamic.get("heartCount");
-    return hAsync("ks-sidepanel", null, hAsync("ul", null, hAsync("li", { class: "header" }, "MENU"), hAsync("li", { class: "divider" }), !commonDynamic.get("loggedIn") ?
-      hAsync("li", null, hAsync("a", { href: common.get("loginLink") }, "Zaloguj si\u0119 ", hAsync("ks-icon", { name: "log-in" })))
-      : null, hAsync("li", { class: "small" }, hAsync("a", { href: common.get("heartLink") }, "Schowek", favouritesCount && favouritesCount != 0 ?
+    const strings = common.get("translations");
+    return hAsync("ks-sidepanel", null, hAsync("ul", null, hAsync("li", { class: "header" }, strings.navbarButtonMenu.toUpperCase()), hAsync("li", { class: "divider" }), !commonDynamic.get("loggedIn") ?
+      hAsync("li", null, hAsync("a", { href: common.get("loginLink") }, strings.navbarButtonLogin, " ", hAsync("ks-icon", { name: "log-in" })))
+      : null, hAsync("li", { class: "small" }, hAsync("a", { href: common.get("heartLink") }, strings.navbarButtonFav, favouritesCount && favouritesCount != 0 ?
       hAsync("span", { class: "badge" }, favouritesCount) :
       hAsync("ks-icon", { name: "star" }))), commonDynamic.get("loggedIn") ?
-      hAsync("li", null, hAsync("a", { href: common.get("accountLink") }, "Panel Klienta ", hAsync("ks-icon", { name: "user" })))
+      hAsync("li", null, hAsync("a", { href: common.get("accountLink") }, strings.navbarButtonAccount, " ", hAsync("ks-icon", { name: "user" })))
       : null, commonDynamic.get("loggedIn") ?
-      hAsync("li", null, hAsync("a", { href: common.get("logoutLink") }, "Wyloguj si\u0119 ", hAsync("ks-icon", { name: "log-out" })))
-      : null, hAsync("li", { class: "header" }, "KATEGORIE"), hAsync("li", { class: "divider" })), hAsync("ks-category-sidebar", null));
+      hAsync("li", null, hAsync("a", { href: common.get("logoutLink") }, strings.navbarButtonLogout, " ", hAsync("ks-icon", { name: "log-out" })))
+      : null, hAsync("li", { class: "header" }, strings.navbarCategories), hAsync("li", { class: "divider" })), hAsync("ks-category-sidebar", null));
   }
   get root() { return getElement(this); }
   static get style() { return navbarSidebarCss; }
@@ -27445,10 +27448,11 @@ class NewsletterSideButton {
     (_a = document.querySelector('ks-newsletter-popup-edrone')) === null || _a === void 0 ? void 0 : _a.Show();
   }
   render() {
+    const strings = common.get('translations');
     return [
-      hAsync("div", { class: "label" }, "Newsletter"),
+      hAsync("div", { class: "label" }, strings.newsletterSideLeft),
       hAsync("ks-icon", { name: 'mail' }),
-      hAsync("div", { class: "benefit" }, "Kupon 10 z\u0142")
+      hAsync("div", { class: "benefit" }, strings.newsletterSideRight)
     ];
   }
   static get style() { return newsletterSideButtonCss; }
@@ -29368,10 +29372,11 @@ class PageFooter {
     const company = common.get('company');
     const address = common.get('address');
     const softwareLink = common.get('softwareLink');
+    const strings = common.get('translations');
     return [
-      hAsync("div", { class: "about" }, hAsync("div", { class: "links" }, common.get('footerLinks').map(section => hAsync("ks-footer-links", { heading: section.name }, section.items.map(item => hAsync("li", null, hAsync("a", { href: item.link }, item.name))))), hAsync("div", { class: "contact" }, hAsync("span", null, "Kontakt"), hAsync("a", { style: { "display": "none" } }), hAsync("a", { href: `tel:${phone}` }, hAsync("ks-icon", { name: "phone" }), hAsync("span", null, phone)), hAsync("a", { href: `mailto:${email}` }, hAsync("ks-icon", { name: "mail" }), hAsync("span", null, email)), hAsync("span", null, hAsync("ks-icon", { name: "clock", size: 0.9 }), " ", time), hAsync("span", null, hAsync("ks-icon", { name: "home", size: 0.9 }), " ", company), hAsync("span", null, hAsync("ks-icon", { name: "map-pin", size: 0.9 }), " ", address))), hAsync("div", { class: "newsletter" }, hAsync("div", null, "Zapisz si\u0119 do naszego newslettera i zyskaj"), hAsync("div", null, "KUPON 10Z\u0141"), hAsync("ks-button", { light: true, border: true, name: "ZAPISZ SI\u0118", onClick: () => { var _a; return (_a = document.querySelector('ks-newsletter-popup-edrone')) === null || _a === void 0 ? void 0 : _a.Show(); } }))),
+      hAsync("div", { class: "about" }, hAsync("div", { class: "links" }, common.get('footerLinks').map(section => hAsync("ks-footer-links", { heading: section.name }, section.items.map(item => hAsync("li", null, hAsync("a", { href: item.link }, item.name))))), hAsync("div", { class: "contact" }, hAsync("span", null, strings.footerContact), hAsync("a", { style: { "display": "none" } }), hAsync("a", { href: `tel:${phone}` }, hAsync("ks-icon", { name: "phone" }), hAsync("span", null, phone)), hAsync("a", { href: `mailto:${email}` }, hAsync("ks-icon", { name: "mail" }), hAsync("span", null, email)), hAsync("span", null, hAsync("ks-icon", { name: "clock", size: 0.9 }), " ", time), hAsync("span", null, hAsync("ks-icon", { name: "home", size: 0.9 }), " ", company), hAsync("span", null, hAsync("ks-icon", { name: "map-pin", size: 0.9 }), " ", address))), hAsync("div", { class: "newsletter" }, hAsync("div", null, strings.footerNewsletterSmall), hAsync("div", null, strings.footerNewsletterLarge), hAsync("ks-button", { light: true, border: true, name: strings.footerNewsletterSubmit, onClick: () => { var _a; return (_a = document.querySelector('ks-newsletter-popup-edrone')) === null || _a === void 0 ? void 0 : _a.Show(); } }))),
       hAsync("div", { class: "portals" }, hAsync("div", null, common.get('social').map(social => hAsync("ks-footer-button", { width: social.width, height: social.height, href: social.link, image: social.image }))), hAsync("div", null, common.get('reviewers').map(reviewer => hAsync("ks-footer-button", { width: reviewer.width, height: reviewer.height, href: reviewer.link, image: reviewer.image })))),
-      hAsync("div", { class: "software" }, hAsync("a", { href: softwareLink, rel: "nofollow" }, "Oprogramowanie sklepu ShopGold"))
+      hAsync("div", { class: "software" }, hAsync("a", { href: softwareLink, rel: "nofollow" }, strings.footerSoftware))
     ];
   }
   static get style() { return footerCss; }
