@@ -27573,7 +27573,7 @@ class OrderAddressSection {
   render() {
     const heading = hAsync("span", { class: "uk-text-bold ks-text-decorated", style: { fontSize: "22px", textTransform: "uppercase" } }, this.heading);
     if (this.mobile && this.hideOnMobile)
-      return (hAsync("ul", { "uk-accordion": true }, hAsync("li", null, hAsync("a", { class: "uk-accordion-title", href: "#" }, heading), hAsync("div", { class: "uk-accordion-content" }, hAsync("slot", null), hAsync("ks-order-button", { mobile: true, wide: true, href: this.link }, hAsync("span", null, "Edytuj dane"))))));
+      return (hAsync("ul", { "uk-accordion": true }, hAsync("li", null, hAsync("a", { class: "uk-accordion-title", href: "#" }, heading), hAsync("div", { class: "uk-accordion-content" }, hAsync("slot", null), hAsync("ks-order-button", { mobile: true, wide: true, href: this.link }, hAsync("span", null, this.editString))))));
     return [
       hAsync("ks-order-heading", { heading: this.heading, link: this.link }),
       hAsync("slot", null)
@@ -27586,6 +27586,7 @@ class OrderAddressSection {
     "$members$": {
       "heading": [1],
       "link": [1],
+      "editString": [1, "edit-string"],
       "hideOnMobile": [4, "hide-on-mobile"],
       "mobile": [32]
     },
@@ -27900,8 +27901,8 @@ class OrderDocumentSelect {
   }
   render() {
     return [
-      hAsync("span", null, "Wybierz dokument sprzeda\u017Cy:"),
-      hAsync("div", { class: "uk-position-relative uk-margin-small-top" }, hAsync("div", { class: "uk-child-width-1-2 uk-flex" }, hAsync("ks-order-toggle", { active: true, text: "PARAGON", name: this.name, value: "0" }), hAsync("ks-order-toggle", { text: "FAKTURA", name: this.name, value: "1" })), this.loading ?
+      hAsync("span", null, this.chooseSaleDocument),
+      hAsync("div", { class: "uk-position-relative uk-margin-small-top" }, hAsync("div", { class: "uk-child-width-1-2 uk-flex" }, hAsync("ks-order-toggle", { active: true, text: this.receipt, name: this.name, value: "0" }), hAsync("ks-order-toggle", { text: this.invoice, name: this.name, value: "1" })), this.loading ?
         hAsync("div", { class: "uk-overlay uk-overlay-default uk-padding-remove uk-position-cover uk-animation-fade", style: { animationDuration: "0.3s", animationDelay: "0.5s" } }, hAsync("div", { "uk-spinner": true, class: "uk-position-center" }))
         : null)
     ];
@@ -27913,6 +27914,9 @@ class OrderDocumentSelect {
     "$members$": {
       "name": [1],
       "api": [1],
+      "chooseSaleDocument": [1, "choose-sale-document"],
+      "receipt": [1],
+      "invoice": [1],
       "loading": [32],
       "Validate": [64],
       "IsValid": [64]
@@ -27961,7 +27965,7 @@ class OrderForm$1 {
     this.loading = false;
   }
   render() {
-    return (hAsync("form", { action: this.action, method: this.method, onSubmit: (event) => this.Submit(event) }, hAsync("slot", null), hAsync("div", { class: "uk-position-relative" }, hAsync("button", { type: "submit", formnovalidate: true, class: "uk-button uk-button-danger uk-width-1-1 uk-width-expand@m ks-text-decorated", style: { fontSize: "28px", fontWeight: "700", padding: "20px" } }, "ZAMAWIAM I P\u0141AC\u0118"), this.loading ?
+    return (hAsync("form", { action: this.action, method: this.method, onSubmit: (event) => this.Submit(event) }, hAsync("slot", null), hAsync("div", { class: "uk-position-relative" }, hAsync("button", { type: "submit", formnovalidate: true, class: "uk-button uk-button-danger uk-width-1-1 uk-width-expand@m ks-text-decorated", style: { fontSize: "28px", fontWeight: "700", padding: "20px" } }, this.submitString), this.loading ?
       hAsync("div", { class: "uk-overlay uk-light uk-padding-remove uk-position-cover uk-animation-fade", style: { animationDuration: "0.3s", backgroundColor: "#e21334" } }, hAsync("div", { "uk-spinner": "ratio: 1.5", class: "uk-position-center" }))
       : null), hAsync("ks-order-form-modal", null)));
   }
@@ -28009,6 +28013,7 @@ class OrderForm$1 {
     "$members$": {
       "action": [1],
       "method": [1],
+      "submitString": [1, "submit-string"],
       "loading": [32]
     },
     "$listeners$": undefined,
@@ -28197,6 +28202,7 @@ class OrderInpost {
     registerInstance(this, hostRef);
     this.search = "Wrocław, Polska";
     this.api = "";
+    this.button = "";
     this.description = "";
     this.address = "";
     this.code = "";
@@ -28268,7 +28274,7 @@ class OrderInpost {
       hAsync("script", { async: true, src: "https://geowidget.easypack24.net/js/sdk-for-javascript.js" }),
       hAsync("style", { innerHTML: "\n                @keyframes ks-fade {\n                    from {opacity: 1.0;}\n                    to {opacity: 0.4;}\n                }\n\n                #easypack-map #listvillages {\n                    left: 0 !important;\n                    right: 0 !important;\n                    top: initial !important;\n                }\n\n                #easypack-map .input-group {\n                    padding: 0 !important;\n                    width: calc(100% - 60px) !important;\n                    height: 60px !important;\n                }\n\n                #easypack-map input {\n                    height: 60px;\n                }\n                #easypack-map button {\n                    height: 60px;\n                }\n            " }),
       hAsync("p", { innerHTML: this.description }),
-      hAsync("button", { class: "uk-button uk-width-1-1 uk-margin-top " + (this.valid ? "uk-button-secondary" : "uk-button-danger"), style: { animation: this.valid ? "" : "ks-fade 0.5s cubic-bezier(.86,.01,.67,1) infinite alternate" }, onClick: (e) => this.Show(e) }, "Wybierz punkt dostawy"),
+      hAsync("button", { class: "uk-button uk-width-1-1 uk-margin-top " + (this.valid ? "uk-button-secondary" : "uk-button-danger"), style: { animation: this.valid ? "" : "ks-fade 0.5s cubic-bezier(.86,.01,.67,1) infinite alternate" }, onClick: (e) => this.Show(e) }, this.button),
       hAsync("input", { type: "hidden", name: "lokalizacjaRuch", value: this.address }),
       hAsync("input", { type: "hidden", name: "ShippingDestinationCode", value: this.code }),
       hAsync("div", { id: "ks-order-inpost", class: "uk-modal-full", "uk-modal": true }, hAsync("div", { class: "uk-modal-dialog" }, hAsync("div", { class: "uk-background-cover uk-flex uk-flex-between uk-flex-column", "uk-height-viewport": true }, hAsync("div", { id: "easypack-map", style: { height: "100vh", width: "100vw" } }), hAsync("button", { class: "uk-button uk-button-secondary uk-position-top-right", style: { width: "60px", height: "60px" }, onClick: () => this.Hide() }, hAsync("span", { "uk-icon": "close" })))))
@@ -28281,6 +28287,7 @@ class OrderInpost {
     "$members$": {
       "search": [1],
       "api": [1],
+      "button": [1],
       "description": [32],
       "address": [32],
       "code": [32],
@@ -28508,6 +28515,7 @@ class OrderPocztapunkt {
     registerInstance(this, hostRef);
     this.search = "Wrocław, Polska";
     this.api = "";
+    this.button = "";
     this.description = "";
     this.address = "";
     this.code = "";
@@ -28556,7 +28564,7 @@ class OrderPocztapunkt {
     return [
       hAsync("style", { innerHTML: "\n                #overlay {\n                    position: fixed !important;\n                    display: flex !important;\n                    width: 100%;\n                    height: 100vh;\n                    justify-content: center;\n                    align-items: center;\n\n                    top: 0 !important;\n                }\n\n                @keyframes ks-fade {\n                    from {opacity: 1.0;}\n                    to {opacity: 0.4;}\n                }\n            " }),
       hAsync("p", { innerHTML: this.address }),
-      hAsync("button", { class: "uk-button uk-width-1-1 uk-margin-top " + (this.valid ? "uk-button-secondary" : "uk-button-danger"), style: { animation: this.valid ? "" : "ks-fade 0.5s cubic-bezier(.86,.01,.67,1) infinite alternate" }, onClick: (e) => this.Show(e) }, "Wybierz punkt dostawy"),
+      hAsync("button", { class: "uk-button uk-width-1-1 uk-margin-top " + (this.valid ? "uk-button-secondary" : "uk-button-danger"), style: { animation: this.valid ? "" : "ks-fade 0.5s cubic-bezier(.86,.01,.67,1) infinite alternate" }, onClick: (e) => this.Show(e) }, this.button),
       hAsync("input", { type: "hidden", name: "lokalizacjaRuch", value: this.address }),
       hAsync("input", { type: "hidden", name: "ShippingDestinationCode", value: this.code }),
       hAsync("input", { type: "hidden", name: "OpisPunktuOdbioru", value: this.description })
@@ -28569,6 +28577,7 @@ class OrderPocztapunkt {
     "$members$": {
       "search": [1025],
       "api": [1],
+      "button": [1],
       "description": [32],
       "address": [32],
       "code": [32],
