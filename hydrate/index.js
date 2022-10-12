@@ -28019,9 +28019,9 @@ class OrderForm {
     this.loading = false;
   }
   render() {
-    return (hAsync("form", { action: this.action, method: this.method, enctype: "application/x-www-form-urlencoded", onSubmit: (event) => this.Submit(event) }, hAsync("slot", null), hAsync("div", { class: "uk-position-relative uk-margin-medium-top" }, hAsync("button", { type: "submit", formnovalidate: true, class: "uk-button uk-button-danger uk-width-1-1 ks-text-decorated", style: { padding: "20px", fontSize: "28px", fontWeight: "700" } }, hAsync("span", null, "KONTYNUUJ")), this.loading ?
+    return (hAsync("form", { action: this.action, method: this.method, enctype: "application/x-www-form-urlencoded", onSubmit: (event) => this.Submit(event) }, hAsync("slot", null), hAsync("div", { class: "uk-position-relative uk-margin-medium-top" }, hAsync("button", { type: "submit", formnovalidate: true, class: "uk-button uk-button-danger uk-width-1-1 ks-text-decorated", style: { padding: "20px", fontSize: "28px", fontWeight: "700" } }, hAsync("span", null, this.button)), this.loading ?
       hAsync("div", { class: "uk-overlay uk-light uk-padding-remove uk-position-cover uk-animation-fade", style: { animationDuration: "0.3s", backgroundColor: "#e21334" } }, hAsync("div", { "uk-spinner": "ratio: 1.5", class: "uk-position-center" }))
-      : null), hAsync("ks-order-form-modal", null)));
+      : null), hAsync("ks-order-form-modal", { back: this.back })));
   }
   async Submit(event) {
     event.preventDefault();
@@ -28126,6 +28126,8 @@ class OrderForm {
       "action": [1],
       "method": [1],
       "destination": [1],
+      "button": [1],
+      "back": [1],
       "loading": [32]
     },
     "$listeners$": undefined,
@@ -28137,20 +28139,23 @@ class OrderForm {
 class OrderGuest {
   constructor(hostRef) {
     registerInstance(this, hostRef);
+    this.orderWithoutLogin = "";
   }
   componentDidLoad() {
     this.root.style.display = "block";
   }
   render() {
     return [
-      hAsync("div", { class: "uk-padding" }, hAsync("div", { class: "uk-text-center", style: { maxWidth: "500px", margin: "auto" } }, hAsync("p", { class: "ks-text-decorated uk-text-bold", style: { fontSize: "28px" } }, "ZAM\u00D3W BEZ LOGOWANIA"), hAsync("slot", null)))
+      hAsync("div", { class: "uk-padding" }, hAsync("div", { class: "uk-text-center", style: { maxWidth: "500px", margin: "auto" } }, hAsync("p", { class: "ks-text-decorated uk-text-bold", style: { fontSize: "28px" } }, this.orderWithoutLogin), hAsync("slot", null)))
     ];
   }
   get root() { return getElement(this); }
   static get cmpMeta() { return {
     "$flags$": 4,
     "$tagName$": "ks-order-guest",
-    "$members$": undefined,
+    "$members$": {
+      "orderWithoutLogin": [1, "order-without-login"]
+    },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": []
@@ -28292,13 +28297,20 @@ class OrderLogin {
     this.action = "";
     this.passwordMessage = "";
     this.passwordRecovery = "";
+    this.heading = "";
+    this.login = "";
+    this.passwordRecoveryString = "";
+    this.cartProductsMessage = "";
+    this.promptHeading = "";
+    this.promptToCart = "";
+    this.promptToConfirmation = "";
   }
   componentDidLoad() {
     this.root.style.display = "block";
   }
   render() {
     return [
-      hAsync("div", { class: "uk-padding", style: { backgroundColor: "#f2f2f5" } }, hAsync("div", { class: "uk-text-center", style: { maxWidth: "500px", margin: "auto" } }, hAsync("p", { class: "ks-text-decorated uk-text-bold", style: { fontSize: "28px" } }, "POSIADASZ KONTO?"), hAsync("form", { onSubmit: (event) => this.Submit(event) }, hAsync("slot", null), hAsync("button", { type: "submit", class: "uk-button uk-button-secondary ks-text-decorated uk-text-bold uk-width-1-1 uk-margin-bottom", style: { fontSize: "20px", padding: "6px" } }, "ZALOGUJ SI\u0118")), hAsync("a", { href: this.passwordRecovery }, "Nie pami\u0119tam has\u0142a")))
+      hAsync("div", { class: "uk-padding", style: { backgroundColor: "#f2f2f5" } }, hAsync("div", { class: "uk-text-center", style: { maxWidth: "500px", margin: "auto" } }, hAsync("p", { class: "ks-text-decorated uk-text-bold", style: { fontSize: "28px" } }, this.heading), hAsync("form", { onSubmit: (event) => this.Submit(event) }, hAsync("slot", null), hAsync("button", { type: "submit", class: "uk-button uk-button-secondary ks-text-decorated uk-text-bold uk-width-1-1 uk-margin-bottom", style: { fontSize: "20px", padding: "6px" } }, this.login)), hAsync("a", { href: this.passwordRecovery }, this.passwordRecoveryString)))
     ];
   }
   async Submit(event) {
@@ -28339,8 +28351,11 @@ class OrderLogin {
       credentials: "same-origin"
     }).then(response => response.text());
     const prompt = document.createElement("ks-order-login-prompt");
+    prompt.setAttribute("heading", this.promptHeading);
+    prompt.setAttribute("toCart", this.promptToCart);
+    prompt.setAttribute("toConfirmation", this.promptToConfirmation);
     if (response.search("koszyk.html") != -1) {
-      prompt.setAttribute("message", "Do koszyka zostały dodane wcześniej zapisane produkty.");
+      prompt.setAttribute("message", this.cartProductsMessage);
     }
     document.body.appendChild(prompt);
   }
@@ -28352,7 +28367,14 @@ class OrderLogin {
       "api": [1],
       "action": [1],
       "passwordMessage": [1, "password-message"],
-      "passwordRecovery": [1, "password-recovery"]
+      "passwordRecovery": [1, "password-recovery"],
+      "heading": [1],
+      "login": [1],
+      "passwordRecoveryString": [1, "password-recovery-string"],
+      "cartProductsMessage": [1, "cart-products-message"],
+      "promptHeading": [1, "prompt-heading"],
+      "promptToCart": [1, "prompt-to-cart"],
+      "promptToConfirmation": [1, "prompt-to-confirmation"]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
@@ -28364,6 +28386,7 @@ class OrderLoginPrompt$1 {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.message = "";
+    this.back = "";
   }
   async Show() {
     const element = document.querySelector("#ks-order-form-modal");
@@ -28374,7 +28397,7 @@ class OrderLoginPrompt$1 {
     UIkit.modal(element).hide();
   }
   render() {
-    return (hAsync("div", { id: "ks-order-form-modal", class: "uk-modal-full", "uk-modal": true }, hAsync("div", { class: "uk-modal-dialog" }, hAsync("div", { class: "uk-background-cover uk-flex uk-flex-between uk-flex-column", "uk-height-viewport": true }, hAsync("div", { class: "uk-padding-small uk-flex-auto uk-flex uk-flex-center uk-flex-middle uk-flex-column" }, hAsync("div", { class: "uk-text-center" }, hAsync("p", { class: "ks-text-decorated uk-h1 uk-text-bold" }, this.message), hAsync("button", { onClick: () => this.Hide(), class: "uk-button uk-button-danger uk-margin-small-top", style: { padding: "5px 20px", fontSize: "16px" } }, "WR\u00D3\u0106")))))));
+    return (hAsync("div", { id: "ks-order-form-modal", class: "uk-modal-full", "uk-modal": true }, hAsync("div", { class: "uk-modal-dialog" }, hAsync("div", { class: "uk-background-cover uk-flex uk-flex-between uk-flex-column", "uk-height-viewport": true }, hAsync("div", { class: "uk-padding-small uk-flex-auto uk-flex uk-flex-center uk-flex-middle uk-flex-column" }, hAsync("div", { class: "uk-text-center" }, hAsync("p", { class: "ks-text-decorated uk-h1 uk-text-bold" }, this.message), hAsync("button", { onClick: () => this.Hide(), class: "uk-button uk-button-danger uk-margin-small-top", style: { padding: "5px 20px", fontSize: "16px" } }, this.back)))))));
   }
   get root() { return getElement(this); }
   static get cmpMeta() { return {
@@ -28382,6 +28405,7 @@ class OrderLoginPrompt$1 {
     "$tagName$": "ks-order-form-modal",
     "$members$": {
       "message": [1],
+      "back": [1],
       "Show": [64],
       "Hide": [64]
     },
@@ -28395,6 +28419,9 @@ class OrderLoginPrompt {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.message = "";
+    this.heading = "";
+    this.toCart = "";
+    this.toConfirmation = "";
   }
   async componentDidLoad() {
     const element = document.querySelector("#ks-order-login-prompt");
@@ -28407,14 +28434,17 @@ class OrderLoginPrompt {
     window.location.href = 'zamowienie-potwierdzenie.html';
   }
   render() {
-    return (hAsync("div", { id: "ks-order-login-prompt", class: "uk-modal-full", "uk-modal": true }, hAsync("div", { class: "uk-modal-dialog" }, hAsync("div", { class: "uk-background-cover uk-flex uk-flex-between uk-flex-column", "uk-height-viewport": true }, hAsync("div", { class: "uk-padding-small uk-flex-auto uk-flex uk-flex-center uk-flex-middle uk-flex-column" }, hAsync("div", { class: "uk-text-center" }, hAsync("span", { class: "ks-text-decorated uk-h1 uk-text-bold" }, "Zosta\u0142e\u015B pomy\u015Blnie zalogowany"), hAsync("br", null), hAsync("p", null, this.message)), hAsync("div", { class: "uk-margin-top" }, hAsync("button", { onClick: () => this.ToCart(), class: "uk-button uk-button-secondary", style: { padding: "5px 15px" } }, "Wr\u00F3\u0107 do koszyka"), hAsync("button", { onClick: () => this.ToConfirmation(), class: "uk-button uk-button-danger", style: { padding: "5px 15px" } }, "Do potwierdzenia")))))));
+    return (hAsync("div", { id: "ks-order-login-prompt", class: "uk-modal-full", "uk-modal": true }, hAsync("div", { class: "uk-modal-dialog" }, hAsync("div", { class: "uk-background-cover uk-flex uk-flex-between uk-flex-column", "uk-height-viewport": true }, hAsync("div", { class: "uk-padding-small uk-flex-auto uk-flex uk-flex-center uk-flex-middle uk-flex-column" }, hAsync("div", { class: "uk-text-center" }, hAsync("span", { class: "ks-text-decorated uk-h1 uk-text-bold" }, this.heading), hAsync("br", null), hAsync("p", null, this.message)), hAsync("div", { class: "uk-margin-top" }, hAsync("button", { onClick: () => this.ToCart(), class: "uk-button uk-button-secondary", style: { padding: "5px 15px" } }, this.toCart), hAsync("button", { onClick: () => this.ToConfirmation(), class: "uk-button uk-button-danger", style: { padding: "5px 15px" } }, this.toConfirmation)))))));
   }
   get root() { return getElement(this); }
   static get cmpMeta() { return {
     "$flags$": 0,
     "$tagName$": "ks-order-login-prompt",
     "$members$": {
-      "message": [1]
+      "message": [1],
+      "heading": [1],
+      "toCart": [1, "to-cart"],
+      "toConfirmation": [1, "to-confirmation"]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
