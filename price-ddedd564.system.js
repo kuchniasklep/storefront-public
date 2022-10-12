@@ -1,1 +1,0 @@
-System.register(["./common-0ccf6d0a.system.js"],(function(e){"use strict";var t;return{setters:[function(e){t=e.c}],execute:function(){e({a:c,p:r});function r(e){var r=t.get("currency");return c(e)+" ".concat(r.symbol)}function c(e){var r=t.get("currency");return e.toFixed(2).replace(".",r.separator)}}}}));

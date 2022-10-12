@@ -12559,10 +12559,14 @@ class CartDiscountCode {
 
 function priceFormat(value) {
   const currency = common.get('currency');
+  if (!currency)
+    return value;
   return priceFormatNoCurrency(value) + ` ${currency.symbol}`;
 }
 function priceFormatNoCurrency(value) {
   const currency = common.get('currency');
+  if (!currency)
+    return value;
   return value.toFixed(2).replace('.', currency.separator);
 }
 
