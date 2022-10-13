@@ -13454,6 +13454,7 @@ class CartProduct {
     this.removeProduct = createEvent(this, "removeProduct", 7);
     this.productCount = createEvent(this, "productCount", 7);
     this.shippingTime = "";
+    this.countUnit = "";
     this.amount = 1;
     this.removable = false;
     this.loading = false;
@@ -13481,20 +13482,19 @@ class CartProduct {
   }
   render() {
     const price = priceFormat(this.price);
-    const strings = common.get('translations');
     const inlineBlockOnMobile = { display: this.removable || this.shippingTime ? "block" : "inline-block" };
     return [
       hAsync("div", { class: "ks-text-decorated", "uk-grid": true }, hAsync("a", { class: "product-image", href: this.link }, hAsync("ks-img2", { center: true, src: this.img, width: 150, height: 150, alt: "zdj\u0119cie produktu" })), hAsync("div", { class: "description" }, hAsync("a", { href: this.link, innerHTML: this.name }), this.mobile >= 1 ?
         hAsync("div", { class: "numbers" }, hAsync("div", { style: inlineBlockOnMobile }, hAsync("span", { class: "price" }, price), hAsync("span", { class: "shipping" }, this.shippingTime)), hAsync("div", { style: inlineBlockOnMobile }, this.removable ?
           hAsync("ks-cart-spinner", { onChanged: (e) => this.onCountHandler(e.detail), "initial-value": this.amount, max: this.maxAmount }) :
-          hAsync("div", { class: "amount" }, this.amount, " ", strings.countUnit)))
+          hAsync("div", { class: "amount" }, this.amount, " ", this.countUnit)))
         : this.shippingTime != "" ?
           hAsync("div", { class: "numbers" }, this.shippingTime)
           : null), this.mobile == 0 ? [
         hAsync("div", { class: "price" }, price),
         hAsync("div", { class: "amount" }, this.removable ?
           hAsync("ks-cart-spinner", { onChanged: (e) => this.onCountHandler(e.detail), "initial-value": this.amount, max: this.maxAmount }) :
-          hAsync("span", null, this.amount, " ", strings.countUnit))
+          hAsync("span", null, this.amount, " ", this.countUnit))
       ] : null, this.removable ?
         this.mobile == 2 ?
           this.loading ?
@@ -13520,6 +13520,7 @@ class CartProduct {
       "small": [516],
       "price": [2],
       "shippingTime": [1, "shipping-time"],
+      "countUnit": [1, "count-unit"],
       "amount": [514],
       "maxAmount": [2, "max-amount"],
       "removable": [4],
@@ -13539,10 +13540,11 @@ class CartProductContainer {
   }
   render() {
     const products = Object.entries(cart.get("products"));
+    const string = cart.get('strings');
     return [
-      hAsync("ks-cart-product-heading", { removable: true }),
-      products.map(([id, product]) => hAsync("ks-cart-product", { removable: true, key: id, "product-id": id, name: product.name, link: product.link, img: product.img, price: product.price, amount: product.amount, "max-amount": product.maxAmount, "shipping-time": product.shippingTime })),
-      hAsync("ks-cart-product-price", { amount: cart.get("productAmount"), price: cart.get("productValue"), loading: cart.get("loadingProducts"), "shipping-time": cart.get("totalShippingTime") })
+      hAsync("ks-cart-product-heading", { removable: true, productTableNames: string.productTableNames, productTablePrices: string.productTablePrices, productTableCount: string.productTableCount, productTableRemove: string.productTableRemove }),
+      products.map(([id, product]) => hAsync("ks-cart-product", { removable: true, key: id, "product-id": id, name: product.name, link: product.link, img: product.img, price: product.price, amount: product.amount, "max-amount": product.maxAmount, "shipping-time": product.shippingTime, "count-unit": string.countUnit })),
+      hAsync("ks-cart-product-price", { amount: cart.get("productAmount"), price: cart.get("productValue"), loading: cart.get("loadingProducts"), "shipping-time": cart.get("totalShippingTime"), productTableTotal: cart.get('productTableTotal') })
     ];
   }
   get root() { return getElement(this); }
@@ -13559,15 +13561,18 @@ class CartProductContainer {
 class CartProductHeading {
   constructor(hostRef) {
     registerInstance(this, hostRef);
+    this.productTableNames = "";
+    this.productTablePrices = "";
+    this.productTableCount = "";
+    this.productTableRemove = "";
   }
   componentDidLoad() {
     this.root.style.display = "block";
   }
   render() {
-    const string = cart.get('strings');
     return [
-      hAsync("div", { class: "uk-flex uk-flex-middle ks-text-decorated", "uk-grid": true, style: { fontSize: "18px" } }, hAsync("div", { class: "uk-width-expand uk-text-bold", style: { fontSize: "22px" } }, string.productTableNames), hAsync("div", { style: { width: "100px" }, class: "uk-text-center uk-visible@m" }, string.productTablePrices), hAsync("div", { style: { width: "100px" }, class: "uk-text-center uk-visible@m" }, string.productTableCount), this.removable ?
-        hAsync("div", { style: { width: "50px" }, class: "uk-text-center" }, string.productTableRemove)
+      hAsync("div", { class: "uk-flex uk-flex-middle ks-text-decorated", "uk-grid": true, style: { fontSize: "18px" } }, hAsync("div", { class: "uk-width-expand uk-text-bold", style: { fontSize: "22px" } }, this.productTableNames), hAsync("div", { style: { width: "100px" }, class: "uk-text-center uk-visible@m" }, this.productTablePrices), hAsync("div", { style: { width: "100px" }, class: "uk-text-center uk-visible@m" }, this.productTableCount), this.removable ?
+        hAsync("div", { style: { width: "50px" }, class: "uk-text-center" }, this.productTableRemove)
         : null),
       hAsync("hr", null)
     ];
@@ -13577,7 +13582,11 @@ class CartProductHeading {
     "$flags$": 0,
     "$tagName$": "ks-cart-product-heading",
     "$members$": {
-      "removable": [4]
+      "removable": [4],
+      "productTableNames": [1, "product-table-names"],
+      "productTablePrices": [1, "product-table-prices"],
+      "productTableCount": [1, "product-table-count"],
+      "productTableRemove": [1, "product-table-remove"]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
@@ -13592,6 +13601,8 @@ class CartProductPrice {
     registerInstance(this, hostRef);
     this.shippingTime = "";
     this.editLink = "";
+    this.productTableTotal = "";
+    this.backToCart = "Wróć do koszyka";
     this.loading = 0;
     this.loadingDelayed = false;
   }
@@ -13612,14 +13623,13 @@ class CartProductPrice {
   }
   render() {
     const price = priceFormat(this.price);
-    const strings = cart.get('strings');
     return [
       hAsync("div", null, hAsync("div", { class: "sentence ks-text-decorated" }, this.loadingDelayed && this.loading ?
         hAsync("div", { class: "uk-animation-fade", "uk-spinner": "ratio: 0.7" }) : [
-        hAsync("span", null, strings.productTableTotal, " ", hAsync("span", { class: "price" }, price)),
+        hAsync("span", null, this.productTableTotal, " ", hAsync("span", { class: "price" }, price)),
         this.shippingTime != "" ? hAsync("span", { class: "shipping" }, this.shippingTime) : null
       ]), this.editLink ?
-        hAsync("div", { class: "edit" }, hAsync("a", { href: this.editLink, class: "uk-button uk-button-default uk-width-1-1" }, "Wr\u00F3\u0107 do koszyka"))
+        hAsync("div", { class: "edit" }, hAsync("a", { href: this.editLink, class: "uk-button uk-button-default uk-width-1-1" }, this.backToCart))
         : null),
       hAsync("hr", null)
     ];
@@ -13637,6 +13647,8 @@ class CartProductPrice {
       "amount": [2],
       "shippingTime": [1, "shipping-time"],
       "editLink": [1, "edit-link"],
+      "productTableTotal": [1, "product-table-total"],
+      "backToCart": [1, "back-to-cart"],
       "loading": [2],
       "loadingDelayed": [32]
     },
