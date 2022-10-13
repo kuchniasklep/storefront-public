@@ -13481,7 +13481,7 @@ class CartProduct {
   }
   render() {
     const price = priceFormat(this.price);
-    const strings = cart.get('strings');
+    const strings = common.get('translations');
     const inlineBlockOnMobile = { display: this.removable || this.shippingTime ? "block" : "inline-block" };
     return [
       hAsync("div", { class: "ks-text-decorated", "uk-grid": true }, hAsync("a", { class: "product-image", href: this.link }, hAsync("ks-img2", { center: true, src: this.img, width: 150, height: 150, alt: "zdj\u0119cie produktu" })), hAsync("div", { class: "description" }, hAsync("a", { href: this.link, innerHTML: this.name }), this.mobile >= 1 ?
