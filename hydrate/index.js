@@ -5526,6 +5526,11 @@ const cmpModules = new Map, getModule = e => {
  };
  return o.$onInstancePromise$ = new Promise((e => o.$onInstanceResolve$ = e)), o.$onReadyPromise$ = new Promise((e => o.$onReadyResolve$ = e)), 
  e["s-p"] = [], e["s-rc"] = [], addHostEventListeners(e, o, t.$listeners$), hostRefs.set(e, o);
+}, Build = {
+ isDev: !1,
+ isBrowser: !1,
+ isServer: !0,
+ isTesting: !1
 }, styles$1 = new Map;
 
 class Alert$1 {
@@ -14336,7 +14341,9 @@ class CookiePopup {
       }, this.delay);
   }
   render() {
-    return hAsync(Host, null);
+    if (!Build.isBrowser || document.cookie.indexOf('akceptCookie=tak') !== -1)
+      return hAsync(Host, null);
+    return hAsync(Host, null, hAsync("p", null, this.message), hAsync("ks-button", { round: true, border: true, light: true, name: this.button, onClick: () => this.hidepanel() }));
   }
   get root() { return getElement(this); }
   static get style() { return cookiePopupCss; }
@@ -14752,7 +14759,7 @@ function commonjsRequire () {
 	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
 }
 
-createCommonjsModule(function (module, exports) {
+var nouislider = createCommonjsModule(function (module, exports) {
 /*! nouislider - 12.1.0 - 10/25/2018 */
 (function(factory) {
     {
@@ -17075,7 +17082,36 @@ class FilterSlider {
     this.valueArray = this.values.split(", ").map(value => parseFloat(value));
   }
   componentDidLoad() {
-    return;
+    if (!Build.isBrowser)
+      return;
+    const slider = this.root.firstElementChild;
+    const steps = this.steps.split(", ").map(value => parseInt(value));
+    const range = this.range(this.valueArray, steps);
+    const step = steps[0] ? steps[0] : this.step;
+    const asint = this.step || this.steps;
+    nouislider.create(slider, {
+      start: [range["min"], range["max"]],
+      snap: this.snap,
+      step: step,
+      tooltips: true,
+      connect: true,
+      range: range,
+      format: {
+        to: function (value) {
+          return asint ? Math.round(value) : value;
+        },
+        from: function (value) {
+          return asint ? Math.round(value) : value;
+        }
+      }
+    });
+    const sliderInstance = slider;
+    sliderInstance.noUiSlider.on("set", () => {
+      const range = sliderInstance.noUiSlider.get();
+      this.from = parseFloat(range[0]);
+      this.to = parseFloat(range[1]);
+    });
+    sliderInstance.noUiSlider.set([this.from, this.to]);
   }
   range(values, steps) {
     return values.reduce((o, value, index) => {
@@ -25966,32 +26002,49 @@ class EdroneTracker {
   }
 }
 
+function loadCommonData(commonDataId, commonDynamicId, Build) {
+  const commonDataElement = document.getElementById(commonDataId);
+  const commonData = JSON.parse(commonDataElement.innerHTML);
+  Object.keys(commonData).map(key => {
+    common.set(key, commonData[key]);
+  });
+  if (Build.isBrowser) {
+    const commonDynamicDataElement = document.getElementById(commonDynamicId);
+    const commonDynamicData = JSON.parse(commonDynamicDataElement.innerHTML);
+    Object.keys(commonDynamicData).map(key => {
+      commonDynamic.set(key, commonDynamicData[key]);
+    });
+    setTimeout(() => {
+      commonDynamic.set("loaded", true);
+    }, 100);
+    trackBase();
+  }
+}
+function trackBase() {
+  tracker.get("loaded").then(() => {
+    const tracking = commonDynamic.get("tracking");
+    const append = (obj) => tracker.set("trackers", [...tracker.get('trackers'), obj]);
+    if (tracking.tiktok)
+      append(new TikTokTracker());
+    if (tracking.facebook)
+      append(new FacebookTracker(tracking.facebook));
+    if (tracking.edrone)
+      append(new EdroneTracker());
+    eachTracker(item => item === null || item === void 0 ? void 0 : item.pageview(commonDynamic.state, tracking.pageview));
+    resolve();
+  });
+}
+
 const baseCss = "ks-page-base{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;min-height:100vh}";
 
 class PageBase {
   constructor(hostRef) {
     registerInstance(this, hostRef);
+    this.loadCommon = true;
   }
   componentWillLoad() {
-    const commonDataElement = document.getElementById(this.commonData);
-    const commonData = JSON.parse(commonDataElement.innerHTML);
-    Object.keys(commonData).map(key => {
-      common.set(key, commonData[key]);
-    });
-  }
-  track() {
-    tracker.get("loaded").then(() => {
-      const tracking = commonDynamic.get("tracking");
-      const append = (obj) => tracker.set("trackers", [...tracker.get('trackers'), obj]);
-      if (tracking.tiktok)
-        append(new TikTokTracker());
-      if (tracking.facebook)
-        append(new FacebookTracker(tracking.facebook));
-      if (tracking.edrone)
-        append(new EdroneTracker());
-      eachTracker(item => item === null || item === void 0 ? void 0 : item.pageview(commonDynamic.state, tracking.pageview));
-      resolve();
-    });
+    if (this.loadCommon)
+      loadCommonData(this.commonData, this.commonDynamicData, Build);
   }
   render() {
     return hAsync(Host, null, !this.skipbase && hAsync("ks-page-header", null), hAsync("slot", null), !this.skipbase && hAsync("ks-page-footer", null), hAsync("ks-newsletter-popup-edrone", { displayOnLoad: common.get('newsletterPopup') }), common.get('newsletterSideButton') ? hAsync("ks-newsletter-side-button", null) : null, hAsync("ks-product-suggestions", { api: common.get('suggestionApi') }), hAsync("ks-error-popup", null), hAsync("ks-message-popup", null), hAsync("ks-cookie-popup", { message: common.get('cookieMessage'), button: common.get('cookieButton'), delay: common.get('cookieDelay') }));
@@ -26002,6 +26055,7 @@ class PageBase {
     "$tagName$": "ks-page-base",
     "$members$": {
       "skipbase": [4],
+      "loadCommon": [4, "load-common"],
       "commonData": [1, "common-data"],
       "commonDynamicData": [1, "common-dynamic-data"]
     },
@@ -26087,6 +26141,7 @@ class PageHome {
     Object.keys(homeData).map(key => {
       home.set(key, homeData[key]);
     });
+    loadCommonData(this.commonData, this.commonDynamicData, Build);
   }
   render() {
     const banners = home.get('banners');
@@ -26100,7 +26155,10 @@ class PageHome {
     const articlesHeading = home.get('articlesHeading');
     const articlesMore = home.get('articlesMore');
     const seeMore = home.get('seeMore');
-    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, banners ? hAsync("ks-banner-container", null, banners.map((banner, index) => hAsync("ks-banner", { sync: index == 0, active: index == 0, name: banner.name, color: banner.color, link: banner.link, image: banner.image, webp: banner.webp, width: banner.width, height: banner.height, theme: banner.theme }))) : null, info ? hAsync("ks-homepage-info", null, hAsync("h1", { slot: "mainHeading" }, info.mainHeading), hAsync("p", { slot: "mainContent" }, info.mainParagraph), hAsync("h2", { slot: "firstHeading" }, info.firstHeading), hAsync("p", { slot: "firstContent" }, info.firstParagraph), hAsync("h2", { slot: "secondHeading" }, info.secondHeading), hAsync("p", { slot: "secondContent" }, info.secondParagraph), hAsync("h2", { slot: "thirdHeading" }, info.thirdHeading), hAsync("p", { slot: "thirdContent" }, info.thirdParagraph)) : null, hAsync("ks-zaufane", { home: true, token: "sf15070062863a73c5990", customer: "150700" }), products ? hAsync("ks-homepage-products", null, products.map(products => hAsync("ks-product-container", null, products.products.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, sku: card.sku, name: card.name, img: card.image, imgFull: card.imageFull, webp: card.webp, currentPrice: card.currentPrice, previousPrice: card.previousPrice, unavailable: card.unavailable, currency: card.currency, categories: card.categories }))))) : null, featured ? hAsync("ks-featured-container", null, featured.map(banner => hAsync("ks-featured", { slot: banner.side, name: banner.name, image: banner.image, webp: banner.webp, link: banner.link, width: banner.width, height: banner.height }))) : null, recipes ? [
+    const review = home.get('reviewAverage');
+    return hAsync("ks-page-base", { loadCommon: false, skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, banners ? hAsync("ks-banner-container", null, banners.map((banner, index) => hAsync("ks-banner", { sync: index == 0, active: index == 0, name: banner.name, color: banner.color, link: banner.link, image: banner.image, webp: banner.webp, width: banner.width, height: banner.height, theme: banner.theme }))) : null, info ? hAsync("ks-homepage-info", null, hAsync("h1", { slot: "mainHeading" }, info.mainHeading), hAsync("p", { slot: "mainContent" }, info.mainParagraph), hAsync("h2", { slot: "firstHeading" }, info.firstHeading), hAsync("p", { slot: "firstContent" }, info.firstParagraph), hAsync("h2", { slot: "secondHeading" }, info.secondHeading), hAsync("p", { slot: "secondContent" }, info.secondParagraph), hAsync("h2", { slot: "thirdHeading" }, info.thirdHeading), hAsync("p", { slot: "thirdContent" }, info.thirdParagraph)) : null, review ?
+      hAsync("ks-review-average", { href: review.href, message: review.message, reviews: review.reviews, months: review.months, totalReviews: review.totalReviews, average: review.average, example: review.example })
+      : null, products ? hAsync("ks-homepage-products", null, products.map(products => hAsync("ks-product-container", null, products.products.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, sku: card.sku, name: card.name, img: card.image, imgFull: card.imageFull, webp: card.webp, currentPrice: card.currentPrice, previousPrice: card.previousPrice, unavailable: card.unavailable, currency: card.currency, categories: card.categories }))))) : null, featured ? hAsync("ks-featured-container", null, featured.map(banner => hAsync("ks-featured", { slot: banner.side, name: banner.name, image: banner.image, webp: banner.webp, link: banner.link, width: banner.width, height: banner.height }))) : null, recipes ? [
       hAsync("h3", null, recipesHeading),
       hAsync("ks-article-container", null, recipes.map(recipe => hAsync("ks-recipe-card", { heading: recipe.heading, cuisine: recipe.cuisine, category: recipe.category, link: recipe.link, image: recipe.image, webp: recipe.webp, width: recipe.width, height: recipe.height, "cuisine-link": recipe.cuisineLink, "category-link": recipe.categoryLink }))),
       hAsync("ks-see-more", { href: recipesMore, text: seeMore })
@@ -26171,6 +26229,7 @@ class PageListing {
     const filters = listing.get('filters');
     const products = listing.get('products');
     const query = listing.get('query');
+    const review = listing.get('reviewAverage');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, infoBanner ?
       hAsync("ks-info-banner", { image: infoBanner.image, color: infoBanner.color, width: infoBanner.width, height: infoBanner.height, name: infoBanner.name, link: infoBanner.link, theme: infoBanner.theme })
       : null, hAsync("ks-listing-header", { heading: listing.get('title'), breadcrumbs: listing.get('breadcrumbs'), description: listing.get('description'), categories: listing.get('categories'), query: query, autocorrect: listing.get('autocorrect') }), navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 ?
@@ -26203,10 +26262,12 @@ class PageListing {
       : null, bottomDescription || (tags === null || tags === void 0 ? void 0 : tags.length) > 0 ?
       hAsync("ks-listing-footer", { description: bottomDescription }, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 ?
         hAsync("div", { slot: "tags" }, tags.map(crumb => hAsync("a", { href: crumb.link }, crumb.name)))
+        : null, !query && navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 && review ?
+        hAsync("ks-review-average", { slot: "comments", grey: true, href: review.href, message: review.message, reviews: review.reviews, months: review.months, totalReviews: review.totalReviews, average: review.average, example: review.example })
         : null)
-      : null, !query && navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 ?
-      hAsync("ks-zaufane", { listing: true, nobg: !(bottomDescription || (tags === null || tags === void 0 ? void 0 : tags.length) > 0), token: "sf15070062863a8f629c0", customer: "150700" })
-      : null);
+      : !query && navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 && review ?
+        hAsync("ks-review-average", { href: review.href, message: review.message, reviews: review.reviews, months: review.months, totalReviews: review.totalReviews, average: review.average, example: review.example })
+        : null);
   }
   static get style() { return listingCss; }
   static get cmpMeta() { return {
@@ -26282,6 +26343,17 @@ class PageProduct {
       product.set(key, productData[key]);
     });
     this.setDefaultTrait();
+    if (Build.isBrowser) {
+      const productDynamicDataElement = document.getElementById(this.productDynamicData);
+      const productDynamicData = JSON.parse(productDynamicDataElement.innerHTML);
+      Object.keys(productDynamicData).map(key => {
+        productDynamic.set(key, productDynamicData[key]);
+      });
+      setTimeout(() => {
+        productDynamic.set("loaded", true);
+      }, 100);
+      this.track();
+    }
   }
   setDefaultTrait() {
     if (!(product === null || product === void 0 ? void 0 : product.get("traits")))
@@ -26309,6 +26381,7 @@ class PageProduct {
     });
   }
   render() {
+    var _a;
     if (!(product === null || product === void 0 ? void 0 : product.get('name')))
       return false;
     const infoBanner = product.get("infoBanner");
@@ -26324,6 +26397,7 @@ class PageProduct {
     const accessories = product.get('accessories');
     const model = product.get('model') || product.get('catalog');
     const ean = product.get('ean');
+    const review = product.get('reviewAverage');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, infoBanner ?
       hAsync("ks-info-banner", { image: infoBanner.image, color: infoBanner.color, width: infoBanner.width, height: infoBanner.height, name: infoBanner.name, link: infoBanner.link, theme: infoBanner.theme })
       : null, hAsync("ks-container", null, hAsync("ks-product-notify-edrone", null), hAsync("ks-product-admin", null), hAsync("ks-product-info", null, product.get('traits') ?
@@ -26356,11 +26430,13 @@ class PageProduct {
         : null)
       : null, (tabs === null || tabs === void 0 ? void 0 : tabs.length) > 0 ?
       hAsync("ks-container", null, hAsync("ks-product-tabs", { names: tabs.map(tab => tab.name).join(", ") }, tabs.map((tab, index) => hAsync("ks-product-tab", { name: tab.name, open: index == 0, main: index == 0, content: tab.content }))))
+      : null, ((_a = product.get('reviewProducts')) === null || _a === void 0 ? void 0 : _a.length) > 0 ?
+      hAsync("ks-container", null, hAsync("ks-review-product", null))
       : null, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 && (variants === null || variants === void 0 ? void 0 : variants.length) > 0 ?
       hAsync("ks-container", { padding: true }, hAsync("ks-product-tags", null))
       : null, youtube ?
       hAsync("ks-container", null, youtube.map(id => hAsync("ks-product-youtube", { "video-id": id })))
-      : null, hAsync("ks-zaufane-product", { product: product.get('id'), token: "sf15070062a0416b2b0c3", customer: "150700" }), (similar === null || similar === void 0 ? void 0 : similar.length) > 0 ? [
+      : null, (similar === null || similar === void 0 ? void 0 : similar.length) > 0 ? [
       hAsync("h3", null, product.get('similarHeading')),
       hAsync("ks-product-container", null, similar.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice, unavailable: card.unavailable })))
     ]
@@ -26368,7 +26444,9 @@ class PageProduct {
       hAsync("h3", null, product.get('accessoriesHeading')),
       hAsync("ks-product-container", null, accessories.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice, unavailable: card.unavailable })))
     ]
-      : null, hAsync("ks-zaufane", { listing: true, nobg: true, token: "sf15070062863aac5f8ea", customer: "150700" }));
+      : null, review ?
+      hAsync("ks-review-average", { href: review.href, message: review.message, reviews: review.reviews, months: review.months, totalReviews: review.totalReviews, average: review.average, example: review.example })
+      : null);
   }
   static get style() { return productCss; }
   static get cmpMeta() { return {
@@ -27157,7 +27235,7 @@ class ProductCard {
   }; }
 }
 
-const homepageProductsCss = "ks-homepage-products{display:block;margin-top:20px}ks-homepage-products .buttons{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;margin-bottom:20px}ks-homepage-products .buttons>*{max-width:200px;margin:0px 2px}ks-homepage-products .buttons>*>*{border:none !important}ks-homepage-products .content{position:relative;margin:20px auto 30px auto}ks-homepage-products .content>*{position:relative;top:0px;left:0px;right:0px;-webkit-animation:homepage-products-swipe-in 0.6s;animation:homepage-products-swipe-in 0.6s;z-index:2;opacity:1}ks-homepage-products:not([active='0']) .content>*:nth-child(1),ks-homepage-products:not([active='1']) .content>*:nth-child(2),ks-homepage-products:not([active='2']) .content>*:nth-child(3){-webkit-animation:fade-out 0.3s;animation:fade-out 0.3s;opacity:0;top:15px;z-index:1;position:absolute}@media (max-width: 640px){ks-homepage-products .buttons>*{max-width:150px}ks-homepage-products .buttons>*>*{font-size:14px;padding:10px 15px}}@-webkit-keyframes homepage-products-swipe-in{0%{-webkit-transform:translateY(-15px);transform:translateY(-15px);opacity:0}50%{-webkit-transform:translateY(-15px);transform:translateY(-15px);opacity:0}100%{-webkit-transform:translateY(0px);transform:translateY(0px);opacity:1}}@keyframes homepage-products-swipe-in{0%{-webkit-transform:translateY(-15px);transform:translateY(-15px);opacity:0}50%{-webkit-transform:translateY(-15px);transform:translateY(-15px);opacity:0}100%{-webkit-transform:translateY(0px);transform:translateY(0px);opacity:1}}";
+const homepageProductsCss = "ks-homepage-products{display:block}ks-homepage-products .buttons{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;margin-bottom:20px}ks-homepage-products .buttons>*{max-width:200px;margin:0px 2px}ks-homepage-products .buttons>*>*{border:none !important}ks-homepage-products .content{position:relative;margin:20px auto 30px auto}ks-homepage-products .content>*{position:relative;top:0px;left:0px;right:0px;-webkit-animation:homepage-products-swipe-in 0.6s;animation:homepage-products-swipe-in 0.6s;z-index:2;opacity:1}ks-homepage-products:not([active='0']) .content>*:nth-child(1),ks-homepage-products:not([active='1']) .content>*:nth-child(2),ks-homepage-products:not([active='2']) .content>*:nth-child(3){-webkit-animation:fade-out 0.3s;animation:fade-out 0.3s;opacity:0;top:15px;z-index:1;position:absolute}@media (max-width: 640px){ks-homepage-products .buttons>*{max-width:150px}ks-homepage-products .buttons>*>*{font-size:14px;padding:10px 15px}}@-webkit-keyframes homepage-products-swipe-in{0%{-webkit-transform:translateY(-15px);transform:translateY(-15px);opacity:0}50%{-webkit-transform:translateY(-15px);transform:translateY(-15px);opacity:0}100%{-webkit-transform:translateY(0px);transform:translateY(0px);opacity:1}}@keyframes homepage-products-swipe-in{0%{-webkit-transform:translateY(-15px);transform:translateY(-15px);opacity:0}50%{-webkit-transform:translateY(-15px);transform:translateY(-15px);opacity:0}100%{-webkit-transform:translateY(0px);transform:translateY(0px);opacity:1}}";
 
 class ProductContainer {
   constructor(hostRef) {
@@ -27337,6 +27415,8 @@ class ProductImages {
     if (this.rendered)
       return;
     this.rendered = true;
+    if (Build.isBrowser)
+      this.initialize();
   }
   initialize() {
     const thumbs_enabled = product.get("images").length > 1;
@@ -28721,6 +28801,75 @@ class RecipeProcedure {
   }; }
 }
 
+const reviewAverageCss = "ks-review-average{display:block;max-width:1220px !important;width:100%;margin:20px auto 20px auto;padding:0 10px !important;-webkit-box-sizing:border-box;box-sizing:border-box}ks-review-average>a{display:-ms-flexbox;display:flex;border-radius:20px;overflow:hidden}ks-review-average blockquote{background-color:white;color:black !important;margin:0;padding:20px 30px;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;text-align:center}ks-review-average[grey] blockquote{background-color:#f1f1f1}ks-review-average blockquote span{color:rgb(255 195 0);font-size:36px;font-weight:500;line-height:16px;vertical-align:bottom;margin:0 3px}ks-review-average .rating{background-color:rgb(255 195 0);color:white;font-family:var(--font-emphasis);font-weight:700;padding:15px;max-width:210px;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;text-align:center}ks-review-average .percentage{font-size:56px;line-height:56px}ks-review-average .message{font-size:14px}ks-review-average .stars{display:-ms-flexbox;display:flex;max-width:150px;margin-bottom:10px}ks-review-average .stars .off{opacity:0.5}@media (max-width: 600px){ks-review-average>a{-ms-flex-direction:column;flex-direction:column}ks-review-average .rating{max-width:100%}}";
+
+class ReviewAverage {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+  }
+  render() {
+    const percentage = ((this.average / 5) * 100).toFixed(0);
+    const message = this.message
+      .replace("{reviews}", this.reviews.toString())
+      .replace("{months}", this.months.toString())
+      .replace("{totalReviews}", this.totalReviews.toString());
+    return hAsync("a", { href: this.href, target: "_blank" }, hAsync("div", { class: "rating" }, hAsync("div", { class: "percentage" }, percentage, "%"), hAsync("div", { class: "stars" }, this.star(Math.round(this.average) >= 1), this.star(Math.round(this.average) >= 2), this.star(Math.round(this.average) >= 3), this.star(Math.round(this.average) >= 4), this.star(Math.round(this.average) >= 5)), hAsync("div", { class: "message" }, message)), hAsync("blockquote", null, hAsync("div", null, hAsync("span", null, "\u201C"), this.example, hAsync("span", null, "\u201D"))));
+  }
+  star(on) {
+    return hAsync("svg", { class: on ? "" : "off", width: "100%", height: "100%", viewBox: "0 0 50 50", version: "1.1", xmlns: "http://www.w3.org/2000/svg", xmlSpace: "preserve", style: { fillRule: "evenodd", clipRule: "evenodd", strokeLinejoin: "round", strokeMiterlimit: "2" } }, hAsync("g", { transform: "matrix(1,0,0,1,0,2.38729)" }, hAsync("path", { d: "M25,0L30.613,17.275L48.776,17.275L34.082,27.951L39.695,45.225L25,34.549L10.305,45.225L15.918,27.951L1.224,17.275L19.387,17.275L25,0Z", style: { fill: "white" } })));
+  }
+  static get style() { return reviewAverageCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-review-average",
+    "$members$": {
+      "grey": [516],
+      "href": [1],
+      "message": [1],
+      "reviews": [2],
+      "months": [2],
+      "totalReviews": [2, "total-reviews"],
+      "average": [2],
+      "example": [1]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": [["grey", "grey"]]
+  }; }
+}
+
+const reviewProductCss = "ks-review-product{display:block;position:relative;-webkit-box-sizing:border-box;box-sizing:border-box;padding:0;background:var(--card-background);color:var(--card-text-color);-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow);font-family:var(--font-emphasis)}ks-review-product .summary{display:-ms-flexbox;display:flex}ks-review-product .summary>*{width:70%;padding:20px;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}ks-review-product .summary>*:not(:last-child){border-right:#dddddd solid 1px}ks-review-product .summary .positivity{width:100%}ks-review-product .summary .message{font-size:16px}ks-review-product .summary .content{font-size:32px;font-weight:700}ks-review-product .summary .bar{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;width:100%;max-width:300px}ks-review-product .summary .right{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;width:60%}ks-review-product .summary .bar .progress{height:10px;position:relative;background:#f2f2f2;border-radius:5px;margin-left:5px;width:100%;overflow:hidden}ks-review-product .summary .bar .progress>span{display:block;height:100%;background-color:rgb(255 195 0);position:relative;overflow:hidden}ks-review-product .reviews{border-top:#dddddd solid 1px}ks-review-product .review{padding:13px 18px}ks-review-product .review:not(:last-child){border-bottom:#dddddd solid 1px}ks-review-product .review .top{display:-ms-flexbox;display:flex}ks-review-product .review .top .date{margin-left:10px}ks-review-product .stars{display:-ms-flexbox;display:flex;max-width:120px;margin-bottom:10px}ks-review-product .stars .off{opacity:0.3}@media (max-width: 600px){ks-review-product .summary{-ms-flex-wrap:wrap;flex-wrap:wrap}ks-review-product .summary .count,ks-review-product .summary .average{width:50%;-webkit-box-sizing:border-box;box-sizing:border-box;border-bottom:#dddddd solid 1px}ks-review-product .summary .positivity{width:100%}}";
+
+class ReviewProduct {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+  }
+  render() {
+    const reviews = product.get('reviewProducts');
+    const count = reviews.length;
+    const average = reviews.reduce((previous, current) => previous + current.rating, 0) / count;
+    const positive = reviews.filter((review) => review.rating >= 4).length / count * 100;
+    const neutral = reviews.filter((review) => review.rating < 4 && review.rating > 2).length / count * 100;
+    const negative = reviews.filter((review) => review.rating <= 2).length / count * 100;
+    return hAsync(Host, null, hAsync("div", { class: "summary" }, hAsync("div", { class: "count" }, hAsync("div", { class: "message" }, "Liczba opinii:"), hAsync("div", { class: "content" }, count)), hAsync("div", { class: "average" }, hAsync("div", { class: "message" }, "\u015Arednia opinia:"), hAsync("div", { class: "content" }, average, "/5")), hAsync("div", { class: "positivity" }, hAsync("div", { class: "bar" }, hAsync("span", null, "Pozytywne:"), hAsync("div", { class: "right" }, hAsync("span", null, positive, "%"), hAsync("div", { class: "progress" }, hAsync("span", { style: { "width": `${positive}%` } })))), hAsync("div", { class: "bar" }, hAsync("span", null, "Neutralne:"), hAsync("div", { class: "right" }, hAsync("span", null, neutral, "%"), hAsync("div", { class: "progress" }, hAsync("span", { style: { "width": `${neutral}%` } })))), hAsync("div", { class: "bar" }, hAsync("span", null, "Negatywne:"), hAsync("div", { class: "right" }, hAsync("span", null, negative, "%"), hAsync("div", { class: "progress" }, hAsync("span", { style: { "width": `${negative}%` } })))))), hAsync("div", { class: "reviews" }, reviews.map(review => hAsync("div", { class: "review" }, hAsync("div", { class: "top" }, hAsync("div", { class: "stars" }, this.stars(review.rating)), hAsync("div", { class: "date" }, review.date)), hAsync("div", { class: "content" }, review.review)))));
+  }
+  stars(rating) {
+    return [...Array(5).keys()].map(index => this.star(Math.round(rating) >= index + 1));
+  }
+  star(on) {
+    return hAsync("svg", { class: on ? "" : "off", width: "100%", height: "100%", viewBox: "0 0 50 50", version: "1.1", xmlns: "http://www.w3.org/2000/svg", xmlSpace: "preserve", style: { fillRule: "evenodd", clipRule: "evenodd", strokeLinejoin: "round", strokeMiterlimit: "2" } }, hAsync("g", { transform: "matrix(1,0,0,1,0,2.38729)" }, hAsync("path", { d: "M25,0L30.613,17.275L48.776,17.275L34.082,27.951L39.695,45.225L25,34.549L10.305,45.225L15.918,27.951L1.224,17.275L19.387,17.275L25,0Z", style: { fill: "rgb(255 195 0)" } })));
+  }
+  static get style() { return reviewProductCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-review-product",
+    "$members$": undefined,
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
 class Section {
   constructor(hostRef) {
     registerInstance(this, hostRef);
@@ -28992,6 +29141,12 @@ class Zaufane {
     this.nobg = false;
   }
   componentDidLoad() {
+    if (Build.isBrowser) {
+      var k = document.getElementsByClassName("ekomi-widget-" + this.token);
+      for (var x = 0; x < k.length; x++) {
+        this.registerWidget(window, this.token);
+      }
+    }
   }
   registerWidget(w, token) {
     w['_ekomiWidgetsServerUrl'] = 'https://widgets.ekomi.com';
@@ -29050,6 +29205,12 @@ class ZaufaneProduct {
     registerInstance(this, hostRef);
   }
   componentDidLoad() {
+    if (Build.isBrowser) {
+      var k = document.getElementsByClassName("ekomi-widget-" + this.token);
+      for (var x = 0; x < k.length; x++) {
+        this.registerWidget(window, this.token);
+      }
+    }
   }
   registerWidget(w, token) {
     w['_ekomiWidgetsServerUrl'] = 'https://widgets.ekomi.com';
@@ -29368,6 +29529,8 @@ registerComponents([
   RecipeIngredient,
   RecipeNutrition,
   RecipeProcedure,
+  ReviewAverage,
+  ReviewProduct,
   Section,
   SectionHeading,
   SeeMore,
