@@ -1,0 +1,1 @@
+import{c as e}from"./index-0418a9fc.js";const r=e({banners:[],info:{},products:[],featured:[],recipes:[],recipesHeading:"",recipesMore:"",articles:[],articlesHeading:"",articlesMore:"",seeMore:"",logoBanners:[]});export{r as h}
