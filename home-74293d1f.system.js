@@ -1,0 +1,1 @@
+System.register(["./index-4afdae1e.system.js"],(function(e){"use strict";var r;return{setters:[function(e){r=e.c}],execute:function(){var s=e("h",r({banners:[],info:{},products:[],featured:[],recipes:[],recipesHeading:"",recipesMore:"",articles:[],articlesHeading:"",articlesMore:"",seeMore:"",logoBanners:[]}))}}}));

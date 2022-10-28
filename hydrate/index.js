@@ -27288,10 +27288,9 @@ function eachTracker(callable) {
 }
 function loadtracker() {
   return new Promise(resolve => {
-    resolve();
-    /*window.addEventListener("load", function() {
-        resolve();
-    });*/
+    window.addEventListener("load", function () {
+      resolve();
+    });
   });
 }
 
@@ -30636,8 +30635,9 @@ class ProductContainer {
     this.Button = ({ index, name }) => hAsync("ks-button", { round: true, name: name, border: this.active != index, transitionless: this.active == index, onClick: () => this.active = index });
   }
   render() {
+    const products = home.get("products");
     return [
-      hAsync("div", { class: "buttons" }, hAsync(this.Button, { index: 0, name: "Promocje" }), hAsync(this.Button, { index: 1, name: "Popularne" }), hAsync(this.Button, { index: 2, name: "Nowo\u015Bci" })),
+      hAsync("div", { class: "buttons" }, products.map((entry, index) => hAsync(this.Button, { index: index, name: entry.name }))),
       hAsync("div", { class: "content" }, hAsync("slot", null))
     ];
   }
