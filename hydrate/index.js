@@ -24112,10 +24112,9 @@ function eachTracker(callable) {
 }
 function loadtracker() {
   return new Promise(resolve => {
-    resolve();
-    /*window.addEventListener("load", function() {
-        resolve();
-    });*/
+    window.addEventListener("load", function () {
+      resolve();
+    });
   });
 }
 
