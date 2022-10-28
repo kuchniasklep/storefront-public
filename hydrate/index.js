@@ -29804,11 +29804,12 @@ class PageProduct {
     const model = product.get('model') || product.get('catalog');
     const ean = product.get('ean');
     const review = product.get('reviewAverage');
+    const strings = product.get('strings');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, infoBanner ?
       hAsync("ks-info-banner", { image: infoBanner.image, color: infoBanner.color, width: infoBanner.width, height: infoBanner.height, name: infoBanner.name, link: infoBanner.link, theme: infoBanner.theme })
       : null, hAsync("ks-container", null, hAsync("ks-product-notify-edrone", null), hAsync("ks-product-admin", null), hAsync("ks-product-info", null, product.get('traits') ?
       hAsync("ks-product-traits", null)
-      : null, hAsync("ks-product-purchase", null), hAsync("ks-product-shipping", null), product.get('warranty') ?
+      : null, hAsync("ks-product-purchase", { cartText: common.get('translations').addToCart, availabilityText: strings.notifyAvailability }), hAsync("ks-product-shipping", null), product.get('warranty') ?
       hAsync("ks-product-attribute", { style: { marginTop: "15px" }, icon: "tool", href: product.get('warrantyLink') }, product.get('warranty'))
       : null, points ?
       hAsync("ks-product-tooltip", { message: points.message }, hAsync("ks-product-attribute", { icon: "gift" }, points.shortMessage))
@@ -29817,7 +29818,7 @@ class PageProduct {
       : null, (installments === null || installments === void 0 ? void 0 : installments.attributeMessage) ?
       hAsync("ks-product-attribute", { icon: "dollar-sign" }, installments === null || installments === void 0 ? void 0 : installments.attributeMessage)
       : null, model || ean ?
-      hAsync("ks-product-attribute", { style: { marginTop: "15px" }, icon: "file", faded: true }, hAsync("span", { style: { marginRight: "15px" } }, model ? hAsync("span", { style: { marginRight: "7px" } }, "Model: ", model, " ") : null, ean ? hAsync("span", null, "EAN: ", ean) : null))
+      hAsync("ks-product-attribute", { style: { marginTop: "15px" }, icon: "file", faded: true }, hAsync("span", { style: { marginRight: "15px" } }, model ? hAsync("span", { style: { marginRight: "7px" } }, strings.model, " ", model, " ") : null, ean ? hAsync("span", null, strings.ean, " ", ean) : null))
       : null, hAsync("ks-product-history", { name: product.get('history'), productId: product.get('id'), api: commonDynamic.get('api').productHistory }), hAsync("div", { class: "buttons" }, product.get('negotiateEnabled') ?
       hAsync("ks-product-negotiate", null, hAsync("ks-product-button", null, product.get('negotiate').heading))
       : null, (installments.payuId && installments.payuKey) || installments.caParameters ?
@@ -29843,11 +29844,11 @@ class PageProduct {
       : null, youtube ?
       hAsync("ks-container", null, youtube.map(id => hAsync("ks-product-youtube", { "video-id": id })))
       : null, (similar === null || similar === void 0 ? void 0 : similar.length) > 0 ? [
-      hAsync("h3", null, product.get('similarHeading')),
+      hAsync("h3", null, strings.similarHeading),
       hAsync("ks-product-container", null, similar.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice, unavailable: card.unavailable })))
     ]
       : null, (accessories === null || accessories === void 0 ? void 0 : accessories.length) > 0 ? [
-      hAsync("h3", null, product.get('accessoriesHeading')),
+      hAsync("h3", null, strings.accessoriesHeading),
       hAsync("ks-product-container", null, accessories.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice, unavailable: card.unavailable })))
     ]
       : null, review ?
@@ -31041,13 +31042,9 @@ const productNegotiateCss = "ks-product-negotiate{display:block;position:relativ
 class ProductNegotiate {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.agreement = "Wyrażam zgodę na przetwarzanie przez Sprzedawcę moich danych osobowych zawartych w formularzu w celu udzielenia odpowiedzi na zadane poprzez formularz pytania.";
-    this.successHeading = "PROPOZYCJA WYSŁANA";
-    this.successMessage = "Postaramy się odpowiedzieć jak najszybciej. Jeżeli nie odpowiemy w ciągu 2 dni roboczych prosimy o kontakt telefoniczny.";
-    this.faliureHeading = "BŁĄD WYSYŁANIA PROPOZYCJI";
-    this.faliureMessage = "Jeżeli problem się powtarza prosimy o kontakt mailowy lub telefoniczny.";
   }
   async requestHandler(event) {
+    const negotiate = product.get('negotiate');
     event.preventDefault();
     if (!await ValidateInput(this.root.querySelector('form')))
       return;
@@ -31062,17 +31059,17 @@ class ProductNegotiate {
       .then(async (response) => {
       const result = await response.text();
       if (result == "success")
-        this.dialog.showSuccess(this.successHeading, this.successMessage);
+        this.dialog.showSuccess(negotiate.successHeading, negotiate.successMessage);
       else
-        this.dialog.showFailure(this.faliureHeading, this.faliureMessage);
+        this.dialog.showFailure(negotiate.faliureHeading, negotiate.faliureMessage);
     })
       .catch(async (error) => {
       let message = "";
       if (!window.navigator.onLine)
-        message = "Brak internetu.";
+        message = negotiate.noInternet;
       if (error.message)
         message = error.message;
-      this.dialog.showFailure(this.faliureHeading, message);
+      this.dialog.showFailure(negotiate.faliureHeading, message);
     });
   }
   componentDidRender() {
@@ -31083,9 +31080,10 @@ class ProductNegotiate {
     });
   }
   render() {
+    const negotiate = product.get('negotiate');
     return [
       hAsync("slot", null),
-      hAsync("ks-dialog", null, hAsync("form", { onSubmit: e => this.requestHandler(e) }, hAsync("fieldset", null, hAsync("div", { class: "info" }, hAsync("h3", null, this.heading), hAsync("p", null, this.paragraph)), hAsync("ks-input-text", { name: "name", required: true, nomessage: true, placeholder: "Imi\u0119 i nazwisko", icon: "user" }), hAsync("ks-input-text", { email: true, name: "email", required: true, nomessage: true, placeholder: "E-mail", icon: "mail" }), hAsync("ks-input-text", { url: true, name: "url", required: true, nomessage: true, placeholder: "Link do konkurencyjnej oferty", icon: "link" }), hAsync("ks-input-textarea", { rows: 4, name: "comment", placeholder: "Komentarz", noresize: true }), hAsync("ks-input-check", { name: "zgoda", required: true, nomessage: true, label: this.agreement }), hAsync("ks-button", { submit: true, name: "WY\u015ALIJ ZAPYTANIE" }))))
+      hAsync("ks-dialog", null, hAsync("form", { onSubmit: e => this.requestHandler(e) }, hAsync("fieldset", null, hAsync("div", { class: "info" }, hAsync("h3", null, negotiate.heading), hAsync("p", null, negotiate.paragraph)), hAsync("ks-input-text", { name: "name", required: true, nomessage: true, placeholder: negotiate.name, icon: "user" }), hAsync("ks-input-text", { email: true, name: "email", required: true, nomessage: true, placeholder: negotiate.email, icon: "mail" }), hAsync("ks-input-text", { url: true, name: "url", required: true, nomessage: true, placeholder: negotiate.link, icon: "link" }), hAsync("ks-input-textarea", { rows: 4, name: "comment", placeholder: negotiate.comment, noresize: true }), hAsync("ks-input-check", { name: "zgoda", required: true, nomessage: true, label: negotiate.agreement }), hAsync("ks-button", { submit: true, name: negotiate.submit }))))
     ];
   }
   get root() { return getElement(this); }
@@ -31093,15 +31091,7 @@ class ProductNegotiate {
   static get cmpMeta() { return {
     "$flags$": 4,
     "$tagName$": "ks-product-negotiate",
-    "$members$": {
-      "agreement": [1],
-      "heading": [1],
-      "paragraph": [1],
-      "successHeading": [1, "success-heading"],
-      "successMessage": [1, "success-message"],
-      "faliureHeading": [1, "faliure-heading"],
-      "faliureMessage": [1, "faliure-message"]
-    },
+    "$members$": undefined,
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": []
@@ -31360,15 +31350,16 @@ class ProductShipping {
     registerInstance(this, hostRef);
   }
   render() {
+    const strings = product.get("strings");
     const available = product.get('availability') > 0;
-    const time = available ? product.get("shippingTime") : "Niedostępny w magazynie";
+    const time = available ? product.get("shippingTime") : strings.unavailable;
     const timeIcon = available ? "clock" : "alert-circle";
     const freeShipping = !product.get("shippingPrice");
-    const knownShipping = time.search("godzin") != -1 || time.search("dni") != -1;
-    const instantShipping = time.search("24 godziny") != -1;
-    let timeprefix = knownShipping ? "Wysyłka w" : "";
-    let price = freeShipping ? "Darmowa dostawa" : priceFormat(product.get("shippingPrice"));
-    const priceprefix = freeShipping ? "" : "Dostawa od";
+    const knownShipping = /\d/.test(time);
+    const instantShipping = /24/.test(time);
+    let timeprefix = knownShipping ? strings.shippingIn : "";
+    let price = freeShipping ? strings.freeShipping : priceFormat(product.get("shippingPrice"));
+    const priceprefix = freeShipping ? "" : strings.shippingFrom;
     const message = product.get("shippingMessage");
     return [
       message ? hAsync("div", { class: "message" }, message)
