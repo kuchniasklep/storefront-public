@@ -27426,10 +27426,6 @@ class NewsletterPopupEdrone {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.displayOnLoad = false;
-    this.agreement = "Wyrażam zgodę na przetwarzanie danych osobowych do celów marketingowych, w celu zbadania opinii o sklepie oraz na otrzymywanie informacji handlowych na wskazany przeze mnie adres e-mail.";
-    this.infoMessage = "Kupon rabatowy zostaje przyznany tylko raz na adres email. Minimalna wartość zamówienia wynosi: 100,00 zł";
-    this.successHeading = "ZAPISANO DO NEWSLETTERA";
-    this.successMessage = "Dziękujemy za dołączenie do grona subskrybentów. Niedługo otrzymasz wiadomość potwierdzającą.";
     this.success = false;
   }
   componentDidLoad() {
@@ -27448,7 +27444,8 @@ class NewsletterPopupEdrone {
     const target = event.target;
     const data = new FormData(target);
     this.track(data.get('email'), data.get('name'));
-    this.dialog.showSuccess(this.successHeading, this.successMessage);
+    const strings = common.get('translations');
+    this.dialog.showSuccess(strings.newsletterPopupSuccessHeading, strings.newsletterPopupSuccessMessage);
     this.success = true;
   }
   track(email, name) {
@@ -27475,8 +27472,9 @@ class NewsletterPopupEdrone {
     }
   }
   render() {
+    const strings = common.get('translations');
     return [
-      hAsync("ks-dialog", { dark: true, smallmobile: true, nopadding: true, onClosed: () => this.SetCookie() }, hAsync("form", { onSubmit: e => this.requestHandler(e) }, hAsync("div", { class: "info" }, hAsync("svg", { class: "top", viewBox: "0 0 303 15", width: 909, height: 45 }, hAsync("text", { x: "0", y: "12" }, "Zapisz si\u0119 do naszego Newslettera i zyskaj")), hAsync("svg", { class: "heading", viewBox: "0 0 96 12", width: 960, height: 130 }, hAsync("text", { x: "-1", y: "12" }, "KUPON 10Z\u0141")), hAsync("p", null, this.infoMessage)), hAsync("div", { class: "inputs" }, hAsync("ks-input-text", { email: true, center: true, required: true, placeholder: "Adres email", name: "email" }), hAsync("ks-input-text", { center: true, required: true, placeholder: "Twoje imi\u0119", name: "name" })), hAsync("ks-input-check", { large: true, required: true, nomessage: true, name: "zgoda", label: this.agreement }), hAsync("div", { class: "button" }, hAsync("ks-button", { submit: true, round: true, name: "ZAPISZ SI\u0118" }))))
+      hAsync("ks-dialog", { dark: true, smallmobile: true, nopadding: true, onClosed: () => this.SetCookie() }, hAsync("form", { onSubmit: e => this.requestHandler(e) }, hAsync("div", { class: "info" }, hAsync("svg", { class: "top", viewBox: "0 0 303 15", width: 909, height: 45 }, hAsync("text", { x: "0", y: "12" }, strings.newsletterPopupHeadingTop)), hAsync("svg", { class: "heading", viewBox: "0 0 96 12", width: 960, height: 130 }, hAsync("text", { x: "-1", y: "12" }, strings.newsletterPopupHeadingBottom)), hAsync("p", null, strings.newsletterPopupMessage)), hAsync("div", { class: "inputs" }, hAsync("ks-input-text", { email: true, center: true, required: true, placeholder: strings.newsletterPopupEmail, name: "email" }), hAsync("ks-input-text", { center: true, required: true, placeholder: strings.newsletterPopupName, name: "name" })), hAsync("ks-input-check", { large: true, required: true, nomessage: true, name: "zgoda", label: strings.newsletterPopupAgreement }), hAsync("div", { class: "button" }, hAsync("ks-button", { submit: true, round: true, name: strings.newsletterPopupSubmit }))))
     ];
   }
   get root() { return getElement(this); }
@@ -27486,10 +27484,6 @@ class NewsletterPopupEdrone {
     "$tagName$": "ks-newsletter-popup-edrone",
     "$members$": {
       "displayOnLoad": [4, "display-on-load"],
-      "agreement": [1],
-      "infoMessage": [1, "info-message"],
-      "successHeading": [1, "success-heading"],
-      "successMessage": [1, "success-message"],
       "Show": [64]
     },
     "$listeners$": undefined,
