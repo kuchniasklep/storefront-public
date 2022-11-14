@@ -28847,10 +28847,10 @@ class ReviewProduct {
   render() {
     const reviews = product.get('reviewProducts');
     const count = reviews.length;
-    const average = (reviews.reduce((previous, current) => previous + current.rating, 0) / count).toFixed(2);
-    const positive = (reviews.filter((review) => review.rating >= 4).length / count * 100).toFixed(2);
-    const neutral = (reviews.filter((review) => review.rating < 4 && review.rating > 2).length / count * 100).toFixed(2);
-    const negative = (reviews.filter((review) => review.rating <= 2).length / count * 100).toFixed(2);
+    const average = parseFloat((reviews.reduce((previous, current) => previous + current.rating, 0) / count).toFixed(2));
+    const positive = parseFloat((reviews.filter((review) => review.rating >= 4).length / count * 100).toFixed(2));
+    const neutral = parseFloat((reviews.filter((review) => review.rating < 4 && review.rating > 2).length / count * 100).toFixed(2));
+    const negative = parseFloat((reviews.filter((review) => review.rating <= 2).length / count * 100).toFixed(2));
     return hAsync(Host, null, hAsync("div", { class: "summary" }, hAsync("div", { class: "count" }, hAsync("div", { class: "message" }, "Liczba opinii:"), hAsync("div", { class: "content" }, count)), hAsync("div", { class: "average" }, hAsync("div", { class: "message" }, "\u015Arednia opinia:"), hAsync("div", { class: "content" }, average, "/5")), hAsync("div", { class: "positivity" }, hAsync("div", { class: "bar" }, hAsync("span", null, "Pozytywne:"), hAsync("div", { class: "right" }, hAsync("span", null, positive, "%"), hAsync("div", { class: "progress" }, hAsync("span", { style: { "width": `${positive}%` } })))), hAsync("div", { class: "bar" }, hAsync("span", null, "Neutralne:"), hAsync("div", { class: "right" }, hAsync("span", null, neutral, "%"), hAsync("div", { class: "progress" }, hAsync("span", { style: { "width": `${neutral}%` } })))), hAsync("div", { class: "bar" }, hAsync("span", null, "Negatywne:"), hAsync("div", { class: "right" }, hAsync("span", null, negative, "%"), hAsync("div", { class: "progress" }, hAsync("span", { style: { "width": `${negative}%` } })))))), hAsync("div", { class: "reviews" }, reviews.map(review => hAsync("div", { class: "review" }, hAsync("div", { class: "top" }, hAsync("div", { class: "stars" }, this.stars(review.rating)), hAsync("div", { class: "date" }, review.date)), hAsync("div", { class: "content" }, review.review)))));
   }
   stars(rating) {
