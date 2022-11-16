@@ -26284,6 +26284,67 @@ class PageListing {
   }; }
 }
 
+const orderSuccess = createStore({
+  eventId: "",
+  heading: "",
+  message: "",
+  homepage: "",
+});
+
+const orderEndCss = "ks-page-order-end .card{display:block;padding:0px;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:800px;width:100%;margin:auto;padding:50px 20px;color:var(--card-text-color);text-align:center}ks-page-order-end .card ks-icon{margin-right:10px}ks-page-order-end .card h1{font-size:22px;font-weight:700}ks-page-order-end .card .payment{margin-top:20px;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-page-order-end .card .buttons{margin-top:10px;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-page-order-end .card .buttons ks-button{margin:5px}ks-page-order-end .card h2{margin:20px auto 5px auto;font-weight:700}";
+
+class PageOrderEnd {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+  }
+  componentWillLoad() {
+    const orderDataElement = document.getElementById(this.orderData);
+    const orderData = JSON.parse(orderDataElement.innerHTML);
+    Object.keys(orderData).map(key => {
+      orderSuccess.set(key, orderData[key]);
+    });
+    this.track();
+  }
+  track() {
+    /*if(!orderSuccess.get('error'))
+        window.dataLayer?.push({
+            currency: 'PLN',
+            transaction_id: orderSuccess.get('orderID'),
+            value: orderSuccess.get('orderValue'),
+            items: Object.entries(orderSuccess.get('products')).map( ([id, product]) => { return {
+                item_id: id,
+                item_name: product.name,
+                currency: 'PLN',
+                price: product.price,
+                quantity: product.amount
+            }}),
+        });
+    */
+  }
+  render() {
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("div", { class: "card" }, hAsync("h1", { class: "heading" }, orderSuccess.get('heading')), hAsync("section", { class: "content" }, hAsync("div", { class: "message" }, orderSuccess.get('message')), orderSuccess.get('error') ? [
+      hAsync("h2", null, orderSuccess.get('errorHeading')),
+      hAsync("div", null, orderSuccess.get('errorMessage'))
+    ] : null, hAsync("div", { class: "payment" }, hAsync("slot", null)), hAsync("div", { class: "buttons" }, orderSuccess.get('orderString') ?
+      hAsync("ks-button", { round: true, link: orderSuccess.get('orderLink'), name: orderSuccess.get('orderString') })
+      : null, hAsync("ks-button", { round: true, link: "/", name: orderSuccess.get('homepage') })))));
+  }
+  static get style() { return orderEndCss; }
+  static get cmpMeta() { return {
+    "$flags$": 4,
+    "$tagName$": "ks-page-order-end",
+    "$members$": {
+      "skipbase": [4],
+      "commonData": [1, "common-data"],
+      "commonDynamicData": [1, "common-dynamic-data"],
+      "orderData": [1, "order-data"]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
 const product = createStore({
   id: "",
   name: "",
@@ -29482,6 +29543,7 @@ registerComponents([
   PageHeader,
   PageHome,
   PageListing,
+  PageOrderEnd,
   PageProduct,
   PageRecipe$1,
   PageRecipe,
