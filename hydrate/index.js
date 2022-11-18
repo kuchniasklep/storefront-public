@@ -26291,11 +26291,30 @@ const orderSuccess = createStore({
   homepage: "",
 });
 
-const orderEndCss = "ks-page-order-end .card{display:block;padding:0px;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:800px;width:100%;margin:auto;padding:50px 20px;color:var(--card-text-color);text-align:center}ks-page-order-end .card ks-icon{margin-right:10px}ks-page-order-end .card h1{font-size:22px;font-weight:700}ks-page-order-end .card .payment{margin-top:20px;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-page-order-end .card .buttons{margin-top:10px;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-page-order-end .card .buttons ks-button{margin:5px}ks-page-order-end .card h2{margin:20px auto 5px auto;font-weight:700}";
+async function Fetch(url, body = null) {
+  const headers = new Headers();
+  headers.append('pragma', 'no-cache');
+  headers.append('cache-control', 'no-cache');
+  return fetch(url, {
+    method: 'POST',
+    body: body,
+    headers: headers,
+    credentials: "same-origin"
+  })
+    .then(response => {
+    if (!response.ok)
+      throw { name: response.status, message: response.statusText };
+    return response;
+  });
+}
+
+const orderEndCss = "ks-page-order-end .card{display:block;padding:0px;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:800px;width:100%;margin:auto;padding:50px 20px;color:var(--card-text-color);text-align:center}ks-page-order-end .card ks-icon{margin-right:10px}ks-page-order-end .card h1{font-size:22px;font-weight:700}ks-page-order-end .card .payment{margin-top:20px;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;opacity:1;-webkit-transition:opacity ease 0.3s;transition:opacity ease 0.3s}ks-page-order-end .card .loader{position:relative;height:40px;margin-top:20px}ks-page-order-end .card .buttons{margin-top:10px;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-page-order-end .card .buttons ks-button{margin:5px}ks-page-order-end .card h2{margin:20px auto 5px auto;font-weight:700}";
 
 class PageOrderEnd {
   constructor(hostRef) {
     registerInstance(this, hostRef);
+    this.displayPayment = true;
+    this.paymentOpacity = true;
   }
   componentWillLoad() {
     const orderDataElement = document.getElementById(this.orderData);
@@ -26304,6 +26323,35 @@ class PageOrderEnd {
       orderSuccess.set(key, orderData[key]);
     });
     this.track();
+    const verify = orderSuccess.get('verify');
+    const order = orderSuccess.get('orderId');
+    if (verify) {
+      this.displayPayment = false;
+      this.paymentOpacity = false;
+      this.verify(verify, order);
+      setTimeout(() => {
+        this.displayPayment = true;
+      }, 3000);
+      setTimeout(() => {
+        this.paymentOpacity = true;
+      }, 3100);
+    }
+  }
+  verify(verify, order) {
+    setTimeout(() => {
+      Fetch(verify + `&order=${order}`)
+        .then(response => {
+        response.text()
+          .then(text => {
+          if (text == "OK")
+            document.location.reload();
+          else
+            this.verify(verify, order);
+        })
+          .catch(() => this.verify(verify, order));
+      })
+        .catch(() => this.verify(verify, order));
+    }, 2000);
   }
   track() {
     /*if(!orderSuccess.get('error'))
@@ -26325,7 +26373,9 @@ class PageOrderEnd {
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("div", { class: "card" }, hAsync("h1", { class: "heading" }, orderSuccess.get('heading')), hAsync("section", { class: "content" }, hAsync("div", { class: "message" }, orderSuccess.get('message')), orderSuccess.get('error') ? [
       hAsync("h2", null, orderSuccess.get('errorHeading')),
       hAsync("div", null, orderSuccess.get('errorMessage'))
-    ] : null, hAsync("div", { class: "payment" }, hAsync("slot", null)), hAsync("div", { class: "buttons" }, orderSuccess.get('orderString') ?
+    ] : null, orderSuccess.get('verify') ?
+      hAsync("div", { class: "loader" }, hAsync("ks-loader", { dark: true }))
+      : null, hAsync("div", { class: "payment", style: { display: this.displayPayment ? null : "none", opacity: this.paymentOpacity ? null : "0" } }, hAsync("slot", null)), hAsync("div", { class: "buttons" }, orderSuccess.get('orderString') ?
       hAsync("ks-button", { round: true, link: orderSuccess.get('orderLink'), name: orderSuccess.get('orderString') })
       : null, hAsync("ks-button", { round: true, link: "/", name: orderSuccess.get('homepage') })))));
   }
@@ -26337,7 +26387,9 @@ class PageOrderEnd {
       "skipbase": [4],
       "commonData": [1, "common-data"],
       "commonDynamicData": [1, "common-dynamic-data"],
-      "orderData": [1, "order-data"]
+      "orderData": [1, "order-data"],
+      "displayPayment": [32],
+      "paymentOpacity": [32]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
@@ -26526,23 +26578,6 @@ class PageProduct {
 }
 
 const favourites = createStore({});
-
-async function Fetch(url, body = null) {
-  const headers = new Headers();
-  headers.append('pragma', 'no-cache');
-  headers.append('cache-control', 'no-cache');
-  return fetch(url, {
-    method: 'POST',
-    body: body,
-    headers: headers,
-    credentials: "same-origin"
-  })
-    .then(response => {
-    if (!response.ok)
-      throw { name: response.status, message: response.statusText };
-    return response;
-  });
-}
 
 async function addToFavourites(id) {
   const errorpopup = document.querySelector('ks-error-popup');
