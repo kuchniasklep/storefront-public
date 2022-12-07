@@ -14404,7 +14404,7 @@ class CookiePopup {
     let consent = commonDynamic.get('consent');
     const consentCookie = this.getCookie(consent.cookie);
     consent.items = consent.items.map(item => {
-      item.checked = !!consentCookie.find(value => value == item.inputname);
+      item.checked = !!(consentCookie.find(value => value == item.inputname));
       return item;
     });
     commonDynamic.set("consent", consent);
