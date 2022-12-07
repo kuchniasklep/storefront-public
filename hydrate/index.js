@@ -4730,6 +4730,12 @@ function hydrateFactory($stencilWindow, $stencilHydrateOpts, $stencilHydrateResu
 const NAMESPACE = 'ks-components';
 const BUILD = /* ks-components */ { allRenderFn: false, appendChildSlotFix: false, asyncLoading: true, attachStyles: true, cloneNodeFix: false, cmpDidLoad: true, cmpDidRender: true, cmpDidUnload: false, cmpDidUpdate: true, cmpShouldUpdate: false, cmpWillLoad: true, cmpWillRender: true, cmpWillUpdate: true, connectedCallback: false, constructableCSS: false, cssAnnotations: true, cssVarShim: false, devTools: false, disconnectedCallback: false, dynamicImportShim: false, element: false, event: true, hasRenderFn: true, hostListener: true, hostListenerTarget: true, hostListenerTargetBody: false, hostListenerTargetDocument: true, hostListenerTargetParent: false, hostListenerTargetWindow: true, hotModuleReplacement: false, hydrateClientSide: true, hydrateServerSide: true, hydratedAttribute: false, hydratedClass: true, isDebug: false, isDev: false, isTesting: false, lazyLoad: true, lifecycle: true, lifecycleDOMEvents: false, member: true, method: true, mode: false, observeAttribute: true, profile: false, prop: true, propBoolean: true, propMutable: true, propNumber: true, propString: true, reflect: true, safari10: false, scoped: false, scriptDataOpts: false, shadowDelegatesFocus: false, shadowDom: false, shadowDomShim: true, slot: true, slotChildNodesFix: false, slotRelocation: true, state: true, style: true, svg: true, taskQueue: true, updatable: true, vdomAttribute: true, vdomClass: true, vdomFunctional: true, vdomKey: true, vdomListener: true, vdomPropOrAttr: true, vdomRef: false, vdomRender: true, vdomStyle: true, vdomText: true, vdomXlink: false, watchCallback: true };
 
+window.googleConsentListeners = [];
+window.addConsentListener = (callback) => {
+  window.googleConsentListeners.push(callback);
+};
+window.googleConsentListeners.push((data => console.log(data)));
+
 function componentOnReady() {
  return getHostRef(this).$onReadyPromise$;
 }
@@ -11995,7 +12001,7 @@ class Breadcrumbs {
   }; }
 }
 
-const buttonCss = "ks-button{display:block}ks-button>*{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;text-align:center;-webkit-box-sizing:border-box;box-sizing:border-box;font-size:var(--product-button-size);width:100%;padding:12px 20px;outline-style:none;border-style:none;text-decoration:none !important;cursor:pointer;border-radius:0px;font-family:var(--font-regular);font-size:15px;border:1px solid var(--color-dark);background-color:var(--color-dark);color:var(--text-color-dark) !important;-webkit-transition:var(--transition-background-color),\n                var(--transition-border-color);transition:var(--transition-background-color),\n                var(--transition-border-color)}ks-button:not([transitionless])>*:hover{background-color:var(--color-dark-hover)}ks-button:not([transitionless])>*:active{background-color:var(--color-dark-active)}ks-button[round]>*{border-radius:100px}ks-button[narrow]>*{padding:9px 20px}ks-button[narrower]>*{padding:6px 18px}ks-button[tall]>*{padding:18px 20px}ks-button:not([name])>*{padding:12px}ks-button:not([name])[narrow]>*{padding:9px}ks-button:not([name])[narrower]>*{padding:6px}ks-button:not([name])[tall]>*{padding:18px}ks-button[primary]>*{color:var(--text-color-primary) !important;background-color:var(--color-primary) !important;border:1px solid var(--color-primary) !important}ks-button[primary]:not([transitionless])>*:hover{background-color:var(--color-primary-hover)}ks-button[primary]:not([transitionless])>*:active{background-color:var(--color-primary-active)}ks-button[secondary]>*{color:var(--text-color-secondary) !important;background-color:var(--color-secondary) !important;border:1px solid var(--color-secondary) !important}ks-button[secondary]:not([transitionless])>*:hover{background-color:var(--color-secondary-hover)}ks-button[secondary]:not([transitionless])>*:active{background-color:var(--color-secondary-active)}ks-button[border]>*{border:1px solid var(--color-dark);color:var(--color-dark) !important;background-color:rgba(0, 0, 0, 0)}ks-button[border]:not([transitionless])>*:hover{background-color:rgba(0, 0, 0, 0.096)}ks-button[border]:not([transitionless])>*:active{background-color:rgba(0, 0, 0, 0.336)}ks-button[border][light]>*{border:1px solid #ffffff;color:var(--text-color-dark) !important;background-color:rgba(255, 255, 255, 0)}ks-button[border][light]:not([transitionless])>*:hover{background-color:rgba(255, 255, 255, 0.096)}ks-button[border][light]:not([transitionless])>*:active{background-color:rgba(255, 255, 255, 0.336)}ks-button[disabled]>*{background-color:#e2e2e2 !important}ks-button[border][muted]>*{border:1px solid #e5e5e5}ks-button[border][muted]:not([transitionless])>*:hover{border-color:#bebebe;background-color:rgba(255, 255, 255, 0)}ks-button[border][muted]:not([transitionless])>*:active{border-color:#8d8d8d;background-color:rgba(255, 255, 255, 0)}ks-button[name] ks-icon{margin-left:10px}ks-button[left][name] ks-icon{margin-right:10px;margin-left:0}ks-button[transparent]>*{border:none;color:var(--color-dark) !important;background-color:rgba(0, 0, 0, 0)}ks-button[transparent]:not([transitionless])>*:hover{background-color:rgba(0, 0, 0, 0.096)}ks-button[transparent]:not([transitionless])>*:active{background-color:rgba(0, 0, 0, 0.336)}ks-button[icon][name] ks-icon{margin:0 4px}";
+const buttonCss = "ks-button{display:block}ks-button>*{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;text-align:center;-webkit-box-sizing:border-box;box-sizing:border-box;font-size:var(--product-button-size);width:100%;padding:12px 20px;outline-style:none;border-style:none;text-decoration:none !important;cursor:pointer;border-radius:0px;font-family:var(--font-regular);font-size:15px;border:1px solid var(--color-dark);background-color:var(--color-dark);color:var(--text-color-dark) !important;-webkit-transition:var(--transition-background-color),\n                var(--transition-border-color);transition:var(--transition-background-color),\n                var(--transition-border-color)}ks-button:not([transitionless])>*:hover{background-color:var(--color-dark-hover)}ks-button:not([transitionless])>*:active{background-color:var(--color-dark-active)}ks-button[round]>*{border-radius:100px}ks-button[narrow]>*{padding:9px 20px}ks-button[narrower]>*{padding:6px 18px}ks-button[tall]>*{padding:18px 20px}ks-button:not([name])>*{padding:12px}ks-button:not([name])[narrow]>*{padding:9px}ks-button:not([name])[narrower]>*{padding:6px}ks-button:not([name])[tall]>*{padding:18px}ks-button[primary]>*{color:var(--text-color-primary) !important;background-color:var(--color-primary) !important;border:1px solid var(--color-primary) !important}ks-button[primary]:not([transitionless])>*:hover{background-color:var(--color-primary-hover)}ks-button[primary]:not([transitionless])>*:active{background-color:var(--color-primary-active)}ks-button[secondary]>*{color:var(--text-color-secondary) !important;background-color:var(--color-secondary) !important;border:1px solid var(--color-secondary) !important}ks-button[secondary]:not([transitionless])>*:hover{background-color:var(--color-secondary-hover)}ks-button[secondary]:not([transitionless])>*:active{background-color:var(--color-secondary-active)}ks-button[border]>*{border:1px solid var(--color-dark);color:var(--color-dark) !important;background-color:rgba(0, 0, 0, 0)}ks-button[border]:not([transitionless])>*:hover{background-color:rgba(0, 0, 0, 0.096)}ks-button[border]:not([transitionless])>*:active{background-color:rgba(0, 0, 0, 0.336)}ks-button[border][light]>*{border:1px solid #ffffff;color:var(--text-color-dark) !important;background-color:rgba(255, 255, 255, 0)}ks-button[border][light]:not([transitionless])>*:hover{background-color:rgba(255, 255, 255, 0.096)}ks-button[border][light]:not([transitionless])>*:active{background-color:rgba(255, 255, 255, 0.336)}ks-button[disabled]>*{background-color:#e2e2e2 !important}ks-button[border][muted]>*{border:1px solid #e5e5e5}ks-button[border][muted]:not([transitionless])>*:hover{border-color:#bebebe;background-color:rgba(255, 255, 255, 0)}ks-button[border][muted]:not([transitionless])>*:active{border-color:#8d8d8d;background-color:rgba(255, 255, 255, 0)}ks-button[name] ks-icon{margin-left:10px}ks-button[left][name] ks-icon{margin-right:10px;margin-left:0}ks-button[transparent]>*{border:none;color:var(--color-dark) !important;background-color:rgba(0, 0, 0, 0)}ks-button[transparent]:not([transitionless])>*:hover{background-color:rgba(0, 0, 0, 0.096)}ks-button[transparent]:not([transitionless])>*:active{background-color:rgba(0, 0, 0, 0.336)}ks-button[icon][name] ks-icon{margin:0 4px}ks-button[light]:not([border])>*{color:black !important;background-color:rgba(255, 255, 255, 1);border:1px solid #ffffff}ks-button[light]:not([border])>*:hover{background-color:rgba(255, 255, 255, 0.692)}ks-button[light]:not([border])>*:active{background-color:rgba(255, 255, 255, 0.452)}";
 
 class Button {
   constructor(hostRef) {
@@ -14310,40 +14316,132 @@ class Container {
   }; }
 }
 
-const cookiePopupCss = "ks-cookie-popup{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;position:fixed;overflow:hidden;padding:15px;bottom:0px;left:0px;right:0px;z-index:1000;background-color:var(--overlay-dark-background);-webkit-backdrop-filter:var(--overlay-dark-filter);backdrop-filter:var(--overlay-dark-filter);border-top:solid 1px #000000;color:white;text-align:center;font-size:15px;line-height:17px}ks-cookie-popup:not([hide]){-webkit-animation:cookie-popup-swipe-in 0.4s ease-out;animation:cookie-popup-swipe-in 0.4s ease-out}ks-cookie-popup[hide]{-webkit-animation:cookie-popup-swipe-out 0.4s ease-out;animation:cookie-popup-swipe-out 0.4s ease-out}ks-cookie-popup:not([show]){display:none}ks-cookie-popup p{margin:0;max-width:100%}ks-cookie-popup ks-button{margin:0 0 0 20px}@media (max-width: 1400px){ks-cookie-popup{-ms-flex-direction:column;flex-direction:column}ks-cookie-popup p{margin:0 0 8px 0}ks-cookie-popup ks-button{margin:0}}@-webkit-keyframes cookie-popup-swipe-in{0%{-webkit-transform:translateY(180px);transform:translateY(180px)}100%{-webkit-transform:translateY(0px);transform:translateY(0px)}}@keyframes cookie-popup-swipe-in{0%{-webkit-transform:translateY(180px);transform:translateY(180px)}100%{-webkit-transform:translateY(0px);transform:translateY(0px)}}@-webkit-keyframes cookie-popup-swipe-out{0%{-webkit-transform:translateY(0px);transform:translateY(0px)}100%{-webkit-transform:translateY(180px);transform:translateY(180px)}}@keyframes cookie-popup-swipe-out{0%{-webkit-transform:translateY(0px);transform:translateY(0px)}100%{-webkit-transform:translateY(180px);transform:translateY(180px)}}";
+const common = createStore({
+  logo: "",
+  categoryUrl: "",
+  cartLink: "",
+  heartLink: "",
+  accountLink: "",
+  loginLink: "",
+  logoutLink: "",
+  registerLink: "",
+  softwareLink: "",
+  promo: "",
+  promoLink: "",
+  email: "",
+  phone: "",
+  workingHours: "",
+  company: "",
+  address: "",
+  nip: "",
+  newsletterPopup: false,
+  newsletterApi: "",
+  suggestionApi: "",
+  autocompleteApi: "",
+  cookieMessage: "",
+  cookieButton: "",
+  cookieDelay: 1000,
+  categories: [],
+  social: [],
+  reviewers: [],
+  footerLinks: [],
+  translations: {}
+});
+
+const commonDynamic = createStore({
+  loaded: false,
+  loggedIn: false,
+  customer: {},
+  cartCount: 0,
+  heartCount: 0,
+  api: {},
+  tracking: {},
+  consent: {}
+});
+
+const cookiePopupCss = "ks-cookie-popup{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;position:fixed;overflow:hidden;font-family:var(--font-emphasis);bottom:0px;left:0px;right:0px;z-index:10000;background-color:var(--overlay-dark-background);-webkit-backdrop-filter:var(--overlay-dark-filter);backdrop-filter:var(--overlay-dark-filter);border-top:solid 1px #000000;color:white;transition:-webkit-transform 0.4s ease;-webkit-transition:-webkit-transform 0.4s ease;transition:transform 0.4s ease;transition:transform 0.4s ease, -webkit-transform 0.4s ease}ks-cookie-popup .message{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;height:80px;padding:15px;-webkit-box-sizing:border-box;box-sizing:border-box;text-align:center;font-size:15px;line-height:17px}ks-cookie-popup .message p{margin:0}ks-cookie-popup .settings{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-direction:column;flex-direction:column;height:400px;padding:0px 15px 15px 15px;-webkit-box-sizing:border-box;box-sizing:border-box;font-size:14px;line-height:14px}ks-cookie-popup .settings ks-button{margin-top:10px}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(400px);transform:translateY(400px)}ks-cookie-popup:not([hide])[extend]{-webkit-transform:translateY(0px);transform:translateY(0px)}ks-cookie-popup[hide]{-webkit-transform:translateY(520px);transform:translateY(520px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(520px);transform:translateY(520px);display:none}ks-cookie-popup p{margin:0;max-width:100%}ks-cookie-popup .buttons{display:-ms-flexbox;display:flex;margin:0 0 0 20px}ks-cookie-popup .buttons>*{width:-webkit-max-content;width:-moz-max-content;width:max-content}ks-cookie-popup .buttons>*:first-child{margin-right:5px}ks-cookie-popup .settings{max-width:800px}ks-cookie-popup .type{margin-bottom:10px}ks-cookie-popup .name{font-size:18px;font-weight:700}ks-cookie-popup .heading{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-align:center;align-items:center;margin-bottom:10px}ks-cookie-popup .check{position:relative;display:inline-block;width:50px;height:26px}ks-cookie-popup .check input{opacity:0;width:0;height:0}ks-cookie-popup .check .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;border-radius:34px;background-color:#ccc;-webkit-transition:.4s;transition:.4s}ks-cookie-popup .check .slider:before{position:absolute;content:\"\";height:20px;width:20px;left:4px;bottom:3px;border-radius:50%;background-color:#242424;-webkit-transition:.4s;transition:.4s}ks-cookie-popup .check input:disabled+.slider:before{background-color:#8d8d8d}ks-cookie-popup .check input:checked+.slider:before{-webkit-transform:translateX(22px);transform:translateX(22px)}@media (max-width: 700px){ks-cookie-popup .message{-ms-flex-direction:column;flex-direction:column;height:160px;font-size:14px}ks-cookie-popup .message p{margin:0 0 14px 0}ks-cookie-popup .settings{overflow-y:auto;-ms-flex-pack:start;justify-content:flex-start}ks-cookie-popup[hide]{-webkit-transform:translateY(600px);transform:translateY(600px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(600px);transform:translateY(600px)}}@media (max-width: 700px) and (min-height: 700px){ks-cookie-popup .settings{height:500px}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(500px);transform:translateY(500px)}ks-cookie-popup[hide]{-webkit-transform:translateY(700px);transform:translateY(700px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(700px);transform:translateY(700px)}}";
 
 class CookiePopup {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.delay = 2000;
     this.hide = false;
     this.show = false;
+    this.extend = false;
   }
-  hidepanel() {
+  hidepanel(all) {
     this.hide = true;
-    this.cookie();
+    const consent = this.consent(all);
+    this.cookie(consent);
+    this.registerGTMCallback(consent);
     setTimeout(() => {
       this.show = false;
       this.hide = false;
     }, 400);
   }
-  cookie() {
+  extendpanel() {
+    this.extend = !this.extend;
+  }
+  cookie(consent) {
     var expiration = "";
     var expirationDate = new Date();
     expirationDate.setMonth(expirationDate.getMonth() + 12 * 2);
     expiration = "expires=" + expirationDate.toUTCString() + "; ";
     document.cookie = "akceptCookie=tak; " + expiration + "path=/";
+    const cookieName = commonDynamic.get('consent').cookie;
+    document.cookie = `${cookieName}=${JSON.stringify(consent)};${expiration}path=/`;
   }
-  componentDidLoad() {
+  getCookie(cookieName) {
+    let cookie = {};
+    document.cookie.split(';').forEach(function (el) {
+      let [key, value] = el.split('=');
+      cookie[key.trim()] = value;
+    });
+    if (cookie[cookieName])
+      return JSON.parse(cookie[cookieName]);
+    return false;
+  }
+  setStateFromCookie() {
+    let consent = commonDynamic.get('consent');
+    const consentCookie = this.getCookie(consent.cookie);
+    consent.items = consent.items.map(item => {
+      item.checked = !!consentCookie.find(value => value == item.inputname);
+      return item;
+    });
+    commonDynamic.set("consent", consent);
+  }
+  componentWillLoad() {
+    this.setStateFromCookie();
     if (document.cookie.indexOf('akceptCookie=tak') == -1)
-      setTimeout(() => {
-        this.show = true;
-      }, this.delay);
+      this.showpanel(true);
+  }
+  async showpanel(init = false) {
+    this.show = true;
+    this.hide = true;
+    setTimeout(() => {
+      this.hide = false;
+    }, init ? common.get('cookieDelay') : 100);
+  }
+  registerGTMCallback(consent) {
+    window.googleConsentListeners.forEach((callback) => {
+      callback(consent);
+    });
+  }
+  consent(all = false) {
+    if (all)
+      return ['required', 'functional', 'analytic', 'marketing'];
+    const inputs = document.querySelectorAll("ks-cookie-popup input[type=checkbox]");
+    return Array.from(inputs)
+      .map(input => input.checked ? input.name : null)
+      .filter(value => value);
   }
   render() {
-    if (!Build.isBrowser || document.cookie.indexOf('akceptCookie=tak') !== -1)
+    if (!Build.isBrowser)
       return hAsync(Host, null);
-    return hAsync(Host, null, hAsync("p", null, this.message), hAsync("ks-button", { round: true, border: true, light: true, name: this.button, onClick: () => this.hidepanel() }));
+    const consent = commonDynamic.get('consent');
+    return hAsync(Host, null, hAsync("div", { class: "message" }, hAsync("p", null, common.get('cookieMessage')), hAsync("div", { class: "buttons" }, hAsync("ks-button", { round: true, light: true, name: "Akceptuj wszystkie", onClick: () => this.hidepanel(true) }), hAsync("ks-button", { round: true, border: true, light: true, name: "Ustawienia", onClick: () => this.extendpanel() }))), hAsync("div", { class: "settings" }, consent.items.map(item => this.type(item)), hAsync("ks-button", { round: true, border: true, light: true, name: "Zapisz ustawienia", onClick: () => this.hidepanel(false) })));
+  }
+  type(item) {
+    return hAsync("div", { class: "type" }, hAsync("div", { class: "heading" }, hAsync("div", { class: "name" }, item.name), hAsync("label", { class: "check" }, hAsync("input", { type: "checkbox", checked: item.checked, disabled: item.disabled, name: item.inputname }), hAsync("span", { class: "slider" }))), hAsync("div", null, item.description));
   }
   get root() { return getElement(this); }
   static get style() { return cookiePopupCss; }
@@ -14351,15 +14449,14 @@ class CookiePopup {
     "$flags$": 0,
     "$tagName$": "ks-cookie-popup",
     "$members$": {
-      "message": [1],
-      "button": [1],
-      "delay": [2],
       "hide": [1540],
-      "show": [1540]
+      "show": [1540],
+      "extend": [1540],
+      "showpanel": [64]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["hide", "hide"], ["show", "show"]]
+    "$attrsToReflect$": [["hide", "hide"], ["show", "show"], ["extend", "extend"]]
   }; }
 }
 
@@ -14433,38 +14530,6 @@ class DescriptionTextImage {
     "$attrsToReflect$": [["align", "align"], ["size", "size"]]
   }; }
 }
-
-const common = createStore({
-  logo: "",
-  categoryUrl: "",
-  cartLink: "",
-  heartLink: "",
-  accountLink: "",
-  loginLink: "",
-  logoutLink: "",
-  registerLink: "",
-  softwareLink: "",
-  promo: "",
-  promoLink: "",
-  email: "",
-  phone: "",
-  workingHours: "",
-  company: "",
-  address: "",
-  nip: "",
-  newsletterPopup: false,
-  newsletterApi: "",
-  suggestionApi: "",
-  autocompleteApi: "",
-  cookieMessage: "",
-  cookieButton: "",
-  cookieDelay: 1000,
-  categories: [],
-  social: [],
-  reviewers: [],
-  footerLinks: [],
-  translations: {}
-});
 
 const developmentWarningCss = "ks-development-warning{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;padding:20px 15px;font-family:var(--font-emphasis);font-size:17px;font-weight:700;line-height:15px;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;background-color:rgb(255, 196, 0);color:rgb(0, 0, 0)}ks-development-warning>span{margin-right:8px}@media only screen and (max-width: 959px){ks-development-warning{font-size:14px;line-height:14px}}@media only screen and (max-width: 480px){ks-development-warning{font-size:13px;line-height:13px}}";
 
@@ -23557,16 +23622,6 @@ class MiniCart {
   }; }
 }
 
-const commonDynamic = createStore({
-  loaded: false,
-  loggedIn: false,
-  customer: {},
-  cartCount: 0,
-  heartCount: 0,
-  api: {},
-  tracking: {}
-});
-
 const navbarCss = "ks-navbar{display:block;min-height:104px;background-color:var(--navbar-color);-webkit-transition:background-color 0.2s ease;transition:background-color 0.2s ease}ks-navbar>nav{display:-ms-flexbox;display:flex;position:relative;color:var(--navbar-text-color)}ks-navbar>nav>.logo{display:-ms-flexbox;display:flex;-ms-flex:1;flex:1;-ms-flex-align:center;align-items:center}ks-navbar>nav>.search{display:-ms-flexbox;display:flex;-ms-flex:unset;flex:unset;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}ks-navbar>nav>.buttons{display:-ms-flexbox;display:flex;-ms-flex:unset;flex:unset;-ms-flex-pack:end;justify-content:flex-end;-ms-flex-align:center;align-items:center;opacity:0;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-navbar>nav>.buttons.loaded{opacity:1}ks-navbar>nav>.logo>div{margin-right:auto;margin-left:15px;max-width:217px;width:100%;-ms-flex-pack:start;justify-content:flex-start}ks-navbar>nav>.logo>div ks-img{max-width:217px;margin-right:15px}ks-navbar>nav>.logo>div .promo{display:block;font-size:11px;font-weight:700;text-decoration:none;color:var(--navbar-text-color);white-space:nowrap}@media only screen and (min-width: 640px){ks-navbar>nav>.logo{-ms-flex:1;flex:1}ks-navbar>nav>.buttons{-ms-flex:1;flex:1}}@media only screen and (min-width: 1400px){ks-navbar>nav>.search{-ms-flex:1;flex:1}ks-navbar>nav>.logo>div ks-img{width:217px}ks-navbar>nav>.logo>div{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;max-width:unset;width:unset}ks-navbar>nav>.logo>div .promo{margin-left:15px;display:block;padding:8px 20px 5px 20px;border-radius:50px;background-color:var(--navbar-text-color);color:var(--navbar-color);font-size:13px;font-weight:700}ks-navbar>nav>.logo>div a.promo{-webkit-box-shadow:0 0 0px rgba(255, 255, 255, 0.529);box-shadow:0 0 0px rgba(255, 255, 255, 0.529);-webkit-transition:-webkit-box-shadow 0.2s ease;transition:-webkit-box-shadow 0.2s ease;transition:box-shadow 0.2s ease;transition:box-shadow 0.2s ease, -webkit-box-shadow 0.2s ease}ks-navbar>nav>.logo>div a.promo:hover{-webkit-box-shadow:0 0 15px rgba(255, 255, 255, 0.529);box-shadow:0 0 15px rgba(255, 255, 255, 0.529)}ks-navbar>nav>.logo>div a.promo:active{-webkit-box-shadow:0 0 8px rgba(255, 255, 255, 0.529);box-shadow:0 0 8px rgba(255, 255, 255, 0.529)}}#ks-navbar-menu-buttons{-webkit-box-sizing:border-box;box-sizing:border-box;min-height:70px;padding:0 15px;text-decoration:none}@media only screen and (max-width: 639px){ks-navbar #navbar-button-fav,ks-navbar #navbar-button-contact{display:none}}@media only screen and (max-width: 959px){ks-navbar #navbar-button-logout,ks-navbar #navbar-button-login,ks-navbar #navbar-button-account{display:none}}@media only screen and (min-width: 960px){ks-navbar #navbar-button-menu{display:none}}";
 
 class Navbar {
@@ -24118,6 +24173,187 @@ function loadtracker() {
   });
 }
 
+var DataLayer;
+(function (DataLayer) {
+  async function pageview(commonDynamic, eventID) {
+    var _a;
+    const customer = commonDynamic.customer;
+    const customerDataAvaliable = commonDynamic.loggedIn && customer;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
+      type: 'pageview',
+      facebookEventId: eventID,
+      customerDataAvailable: customerDataAvaliable,
+      customerEmail: customerDataAvaliable ? customer.email : undefined,
+      customerFirstName: customerDataAvaliable ? customer.firstName : undefined,
+      customerLastName: customerDataAvaliable ? customer.lastName : undefined,
+      customerSubscriberStatus: customerDataAvaliable ? (customer.subscriber ? 1 : 0) : undefined,
+      customerCountryISO2: customerDataAvaliable ? customer.countryISO2 : undefined,
+      customerCity: customerDataAvaliable ? customer.city : undefined,
+      customerPhone: customerDataAvaliable ? customer.phone : undefined,
+      customerCurrency: customerDataAvaliable ? customer.currency : undefined,
+    });
+  }
+  DataLayer.pageview = pageview;
+  async function product(product, eventID = "") {
+    var _a, _b;
+    const categories = product.breadcrumbs;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
+      type: 'product',
+      facebookEventId: eventID,
+      productId: product.id,
+      productName: product.name,
+      productPrice: product.currentPrice,
+      productCurrency: product.currency,
+      productImage: (product === null || product === void 0 ? void 0 : product.images.length) > 0 ? relativeToAbsolute(product.images[0].full.url) : undefined,
+      productURL: relativeToAbsolute(document.location.href),
+      productSKU: product.model,
+      productBrand: product.brand.name,
+      productCategory: categories[categories.length - 1].name,
+      productAvailability: product.shippingTime,
+      productQuantity: product.availability,
+      productCategories: product.categories,
+      ecommerce: {
+        items: enchancedEcommerceItems(product)
+      }
+    });
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push({
+      ecomm_prodid: product.id,
+      ecomm_pagetype: 'product',
+      ecomm_totalvalue: product.currentPrice
+    });
+  }
+  DataLayer.product = product;
+  async function listing(listing) {
+    var _a;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
+      type: 'listing',
+      categories: listing.breadcrumbs.filter(category => category.id != "0"),
+      ecommerce: {
+        items: enchancedEcommerceItems(...listing.products)
+      }
+    });
+  }
+  DataLayer.listing = listing;
+  async function addToCart(product, eventID) {
+    var _a;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
+      type: 'addToCart',
+      facebookEventId: eventID,
+      productId: product.id,
+      productName: product.name,
+      productPrice: product.currentPrice,
+      productCurrency: product.currency,
+      productQuantity: product.quantity,
+      productImage: relativeToAbsolute(product.imageFull),
+      productURL: relativeToAbsolute(product.link),
+      productSKU: product.sku,
+      productCategories: product.categories,
+      ecommerce: {
+        items: enchancedEcommerceItems(product)
+      }
+    });
+  }
+  DataLayer.addToCart = addToCart;
+  async function removeFromCart(product) {
+    var _a;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
+      type: 'removeFromCart',
+      productId: product.id,
+      productName: product.name,
+      productPrice: product.currentPrice,
+      productCurrency: product.currency,
+      productQuantity: product.quantity,
+      productImage: relativeToAbsolute(product.imageFull),
+      productURL: relativeToAbsolute(product.link),
+      productSKU: product.sku,
+      productCategories: product.categories,
+      ecommerce: {
+        items: enchancedEcommerceItems(product)
+      }
+    });
+  }
+  DataLayer.removeFromCart = removeFromCart;
+  async function order_checkout(order, eventID) {
+    var _a;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
+      type: 'checkout',
+      facebookEventId: eventID,
+      orderProducts: order.products,
+      orderProductValue: order.productValue,
+      orderCurrency: order.currency,
+      ecommerce: {
+        items: enchancedEcommerceItems(...order.products)
+      }
+    });
+  }
+  DataLayer.order_checkout = order_checkout;
+  async function order_form(order, eventID) {
+    var _a;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
+      type: 'orderForm',
+      facebookEventId: eventID,
+      orderProducts: order.products,
+      orderProductValue: order.productValue,
+      orderCurrency: order.currency,
+      ecommerce: {
+        items: enchancedEcommerceItems(...order.products)
+      }
+    });
+  }
+  DataLayer.order_form = order_form;
+  async function order_placed(order, eventID) {
+    var _a;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
+      type: 'order',
+      facebookEventId: eventID,
+      orderProducts: order.products,
+      orderId: order.id,
+      orderCurrency: order.currency,
+      orderProductValue: order.productValue,
+      ecommerce: {
+        transaction_id: order.id,
+        value: order.productValue,
+        currency: order.currency,
+        items: this.enchancedEcommerceItems(...order.products)
+      }
+    });
+  }
+  DataLayer.order_placed = order_placed;
+  async function search(query) {
+    var _a;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
+      type: 'search',
+      searchQuery: query
+    });
+  }
+  DataLayer.search = search;
+  async function subscribe(subscription) {
+    var _a;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
+      type: 'subscribe',
+      subscriptionPlace: subscription.place,
+      subscriptionEmail: subscription.email,
+      subscriptionName: subscription === null || subscription === void 0 ? void 0 : subscription.name,
+      subscriptionStatus: subscription.subscriber ? 1 : 0
+    });
+  }
+  DataLayer.subscribe = subscribe;
+  function relativeToAbsolute(url) {
+    return url.includes('http') ? url : document.baseURI + url;
+  }
+  function enchancedEcommerceItems(...products) {
+    products.map((product, index) => {
+      return {
+        item_id: product.id,
+        item_name: product.name,
+        currency: product.currency,
+        index: index,
+        price: product.currentPrice
+      };
+    });
+  }
+})(DataLayer || (DataLayer = {}));
+
 const newsletterPopupCss = "ks-newsletter-popup{display:block}ks-newsletter-popup form{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:justify;justify-content:space-between;height:100%;width:100%;max-width:720px}ks-newsletter-popup .info{padding:60px 60px 20px 60px;fill:#252525;-ms-flex:1 0 auto;flex:1 0 auto;min-height:10px}ks-newsletter-popup .info .top{width:100%;margin-bottom:10px;font-size:initial;max-height:30px}ks-newsletter-popup .info .heading{width:100%;font-family:var(--font-emphasis);font-size:initial;max-height:80px;margin-bottom:10px}ks-newsletter-popup .info p{text-align:center;margin-top:10px}ks-newsletter-popup .buttons{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;min-height:10px;margin-top:30px}ks-newsletter-popup .buttons>*{-ms-flex:1;flex:1}ks-newsletter-popup .close{color:black !important}ks-newsletter-popup ks-input-check{margin:20px;font-size:13px;line-height:18px}ks-newsletter-popup .email-form{display:-ms-flexbox;display:flex}ks-newsletter-popup .email-form>*{margin-bottom:0px}ks-newsletter-popup .email-form>* input{height:60px}ks-newsletter-popup .email-form>ks-button{width:30%}ks-newsletter-popup .email-form>ks-input-text{width:100%}ks-newsletter-popup .email{-ms-flex:1 0 0px;flex:1 0 0;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;background-color:#e5e5e5;color:black;font-size:18px;min-height:50px}@media (max-width: 720px){ks-newsletter-popup .info .heading{max-height:50px}ks-newsletter-popup .email{font-size:16px}}@media (max-width: 540px){ks-newsletter-popup .info{padding:70px 25px 20px 25px;min-height:180px}ks-newsletter-popup .info .top{display:none}ks-newsletter-popup .info p{font-size:13px}ks-newsletter-popup ks-input-check{font-size:11px;line-height:16px}ks-newsletter-popup .email-form{display:block}ks-newsletter-popup .email-form>ks-button{width:100%}ks-newsletter-popup .buttons{display:block;margin-top:0px}ks-newsletter-popup .buttons>*:first-child{border-bottom:1px solid #3a3a3a}ks-newsletter-popup ks-input-check{margin:15px}ks-newsletter-popup .info .heading{width:100%;max-height:40px}}";
 
 class NewsletterPopup {
@@ -24179,6 +24415,7 @@ class NewsletterPopup {
       subscriber: !this.subscribed,
       place: "Zapis do newslettera | Popup"
     };
+    DataLayer.subscribe(data);
     eachTracker(item => item === null || item === void 0 ? void 0 : item.subscribe(commonDynamic.state, data));
   }
   setSubscription() {
@@ -24275,7 +24512,7 @@ class NewsletterPopupEdrone {
       subscriber: true,
       place: "Zapis do newslettera | Popup"
     };
-    console.log(data);
+    DataLayer.subscribe(data);
     eachTracker(item => item === null || item === void 0 ? void 0 : item.subscribe(commonDynamic.state, data));
   }
   async Show() {
@@ -24988,6 +25225,7 @@ class OrderForm {
       subscriber: true,
       place: "Zapis do newslettera | Rejestracja Zamówienie"
     };
+    DataLayer.subscribe(data);
     eachTracker(item => item === null || item === void 0 ? void 0 : item.subscribe(commonDynamic.state, data));
   }
   ShowPrompt(message) {
@@ -26029,6 +26267,7 @@ function trackBase() {
       append(new FacebookTracker(tracking.facebook));
     if (tracking.edrone)
       append(new EdroneTracker());
+    DataLayer.pageview(commonDynamic.state, tracking.pageview);
     eachTracker(item => item === null || item === void 0 ? void 0 : item.pageview(commonDynamic.state, tracking.pageview));
     resolve();
   });
@@ -26046,7 +26285,7 @@ class PageBase {
       loadCommonData(this.commonData, this.commonDynamicData, Build);
   }
   render() {
-    return hAsync(Host, null, !this.skipbase && hAsync("ks-page-header", null), hAsync("slot", null), !this.skipbase && hAsync("ks-page-footer", null), hAsync("ks-newsletter-popup-edrone", { displayOnLoad: common.get('newsletterPopup') }), common.get('newsletterSideButton') ? hAsync("ks-newsletter-side-button", null) : null, hAsync("ks-product-suggestions", { api: common.get('suggestionApi') }), hAsync("ks-error-popup", null), hAsync("ks-message-popup", null), hAsync("ks-cookie-popup", { message: common.get('cookieMessage'), button: common.get('cookieButton'), delay: common.get('cookieDelay') }));
+    return hAsync(Host, null, !this.skipbase && hAsync("ks-page-header", null), hAsync("slot", null), !this.skipbase && hAsync("ks-page-footer", null), hAsync("ks-newsletter-popup-edrone", { displayOnLoad: common.get('newsletterPopup') }), common.get('newsletterSideButton') ? hAsync("ks-newsletter-side-button", null) : null, hAsync("ks-product-suggestions", { api: common.get('suggestionApi') }), hAsync("ks-error-popup", null), hAsync("ks-message-popup", null), hAsync("ks-cookie-popup", null));
   }
   static get style() { return baseCss; }
   static get cmpMeta() { return {
@@ -26215,8 +26454,10 @@ class PageListing {
     this.track();
   }
   track() {
-    if (!listing.get('query'))
+    if (!listing.get('query')) {
+      DataLayer.listing(listing.state);
       eachTracker(item => item === null || item === void 0 ? void 0 : item.listing(listing.state, null));
+    }
   }
   render() {
     if (!(listing === null || listing === void 0 ? void 0 : listing.get('title')))
@@ -26476,21 +26717,8 @@ class PageProduct {
     product.set("traitIDs", traits);
   }
   track() {
-    var _a, _b;
+    DataLayer.product(product.state, productDynamic.get("eventId"));
     eachTracker(item => item === null || item === void 0 ? void 0 : item.product(product.state, productDynamic.get("eventId")));
-    const categories = product.get('breadcrumbs');
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
-      'ecomm_prodid': product.get("id"),
-      'ecomm_pagetype': 'product',
-      'ecomm_totalvalue': product.get('currentPrice')
-    });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push({
-      'type': 'product',
-      'name': product.get('currentPrice'),
-      'brand': product.get('brand').name,
-      'category': categories[categories.length - 1].name,
-      'availability': product.get('shippingTime')
-    });
   }
   render() {
     var _a;
@@ -27147,8 +27375,10 @@ async function addToCart(product, place = 1) {
     }
     navbar.IncrementCart(product.quantity.toString());
     OpenSuggestions(product.id, product.name);
-    if (data.event)
+    if (data.event) {
+      DataLayer.addToCart(product, data.event);
       eachTracker(item => item === null || item === void 0 ? void 0 : item.addToCart(product, data.event));
+    }
   })
     .catch(error => {
     errorpopup.show(error);
@@ -29181,6 +29411,12 @@ class TrackerOrder {
   componentWillLoad() {
     const dataElement = document.getElementById(this.dataId);
     const data = JSON.parse(dataElement.innerHTML);
+    if (this.checkout)
+      DataLayer.order_checkout(data, this.eventId);
+    else if (this.form)
+      DataLayer.order_form(data, this.eventId);
+    else if (this.placed)
+      DataLayer.order_placed(data, this.eventId);
     eachTracker(item => {
       if (this.checkout)
         item === null || item === void 0 ? void 0 : item.order_checkout(commonDynamic.state, data, this.eventId);
@@ -29212,6 +29448,7 @@ class TrackerProduct {
     this.eventId = "";
   }
   componentWillLoad() {
+    DataLayer.search(this.query);
     eachTracker(item => item === null || item === void 0 ? void 0 : item.search(this.eventId, this.query));
   }
   static get cmpMeta() { return {
