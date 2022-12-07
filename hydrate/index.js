@@ -14411,7 +14411,7 @@ class CookiePopup {
   }
   componentWillLoad() {
     this.setStateFromCookie();
-    if (document.cookie.indexOf('akceptCookie=tak') == -1)
+    if (document.cookie.indexOf('akceptCookie=tak') == -1 || document.cookie.indexOf(commonDynamic.get('consent').cookie) == -1)
       this.showpanel(true);
   }
   async showpanel(init = false) {
