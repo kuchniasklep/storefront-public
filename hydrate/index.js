@@ -14405,6 +14405,8 @@ class CookiePopup {
     const consentCookie = this.getCookie(consent.cookie);
     consent.items = consent.items.map(item => {
       var _a;
+      if (item.disabled)
+        return item;
       item.checked = !!((_a = consentCookie.find) === null || _a === void 0 ? void 0 : _a.call(consentCookie, value => value == item.inputname));
       return item;
     });
