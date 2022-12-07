@@ -24183,7 +24183,7 @@ var DataLayer;
     const customer = commonDynamic.customer;
     const customerDataAvaliable = commonDynamic.loggedIn && customer;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
-      type: 'pageview',
+      event: 'ks.pageview',
       facebookEventId: eventID,
       customerDataAvailable: customerDataAvaliable,
       customerEmail: customerDataAvaliable ? customer.email : undefined,
@@ -24201,7 +24201,7 @@ var DataLayer;
     var _a, _b;
     const categories = product.breadcrumbs;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
-      type: 'product',
+      event: 'ks.product',
       facebookEventId: eventID,
       productId: product.id,
       productName: product.name,
@@ -24229,7 +24229,7 @@ var DataLayer;
   async function listing(listing) {
     var _a;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
-      type: 'listing',
+      event: 'ks.listing',
       categories: listing.breadcrumbs.filter(category => category.id != "0"),
       ecommerce: {
         items: enchancedEcommerceItems(...listing.products)
@@ -24240,7 +24240,7 @@ var DataLayer;
   async function addToCart(product, eventID) {
     var _a;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
-      type: 'addToCart',
+      event: 'ks.addToCart',
       facebookEventId: eventID,
       productId: product.id,
       productName: product.name,
@@ -24260,7 +24260,7 @@ var DataLayer;
   async function removeFromCart(product) {
     var _a;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
-      type: 'removeFromCart',
+      event: 'ks.removeFromCart',
       productId: product.id,
       productName: product.name,
       productPrice: product.currentPrice,
@@ -24279,7 +24279,7 @@ var DataLayer;
   async function order_checkout(order, eventID) {
     var _a;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
-      type: 'checkout',
+      event: 'ks.checkout',
       facebookEventId: eventID,
       orderProducts: order.products,
       orderProductValue: order.productValue,
@@ -24293,7 +24293,7 @@ var DataLayer;
   async function order_form(order, eventID) {
     var _a;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
-      type: 'orderForm',
+      event: 'ks.orderForm',
       facebookEventId: eventID,
       orderProducts: order.products,
       orderProductValue: order.productValue,
@@ -24307,7 +24307,7 @@ var DataLayer;
   async function order_placed(order, eventID) {
     var _a;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
-      type: 'order',
+      event: 'ks.order',
       facebookEventId: eventID,
       orderProducts: order.products,
       orderId: order.id,
@@ -24325,7 +24325,7 @@ var DataLayer;
   async function search(query) {
     var _a;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
-      type: 'search',
+      event: 'ks.search',
       searchQuery: query
     });
   }
@@ -24333,7 +24333,7 @@ var DataLayer;
   async function subscribe(subscription) {
     var _a;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
-      type: 'subscribe',
+      event: 'ks.subscribe',
       subscriptionPlace: subscription.place,
       subscriptionEmail: subscription.email,
       subscriptionName: subscription === null || subscription === void 0 ? void 0 : subscription.name,
@@ -24341,6 +24341,16 @@ var DataLayer;
     });
   }
   DataLayer.subscribe = subscribe;
+  async function recipe(recipe) {
+    var _a;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
+      event: 'ks.recipe',
+      name: recipe.title,
+      category: recipe.category,
+      cuisine: recipe.cuisine
+    });
+  }
+  DataLayer.recipe = recipe;
   function relativeToAbsolute(url) {
     return url.includes('http') ? url : document.baseURI + url;
   }
@@ -26901,12 +26911,7 @@ class PageRecipe {
     this.track();
   }
   track() {
-    window.dataLayer.push({
-      'type': 'recipe',
-      'name': recipe.get('title'),
-      'category': recipe.get('category'),
-      'cuisine': recipe.get('cuisine'),
-    });
+    DataLayer.recipe(recipe.state);
   }
   render() {
     var _a, _b, _c, _d;
