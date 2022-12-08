@@ -24228,9 +24228,16 @@ var DataLayer;
   DataLayer.product = product;
   async function listing(listing) {
     var _a;
+    const type = listing.type == "category" ? "category" :
+      listing.type == "manufacturer" ? "manufacturer" :
+        listing.type == "search" ? "search" :
+          null;
+    if (!type)
+      return;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
-      event: 'ks.listing',
-      categories: listing.breadcrumbs.filter(category => category.id != "0"),
+      event: `ks.listing`,
+      type: type,
+      listingCategories: type == "category" ? listing.breadcrumbs.filter(category => category.id != "0") : undefined,
       ecommerce: {
         items: enchancedEcommerceItems(...listing.products)
       }
@@ -24345,9 +24352,9 @@ var DataLayer;
     var _a;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
       event: 'ks.recipe',
-      name: recipe.title,
-      category: recipe.category,
-      cuisine: recipe.cuisine
+      recipeName: recipe.title,
+      recipeCategory: recipe.category,
+      recipeCuisine: recipe.cuisine
     });
   }
   DataLayer.recipe = recipe;
@@ -26436,6 +26443,7 @@ class PageHome {
 }
 
 const listing = createStore({
+  type: "",
   title: "",
   autocorrect: "",
   query: "",
