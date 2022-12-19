@@ -1,1 +1,0 @@
-async function e(e,n=null){const a=new Headers;return a.append("pragma","no-cache"),a.append("cache-control","no-cache"),fetch(e,{method:"POST",body:n,headers:a,credentials:"same-origin"}).then((e=>{if(!e.ok)throw{name:e.status,message:e.statusText};return e}))}export{e as F}

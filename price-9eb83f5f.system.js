@@ -1,0 +1,1 @@
+System.register(["./common-e9ca903a.system.js"],(function(t){"use strict";var r;return{setters:[function(t){r=t.c}],execute:function(){t("p",e);function e(t){var e=r.get("currency");if(!e)return t.toString();return n(t)+" ".concat(e.symbol)}function n(t){var e=r.get("currency");if(!e)return t.toString();return t.toFixed(2).replace(".",e.separator)}}}}));
