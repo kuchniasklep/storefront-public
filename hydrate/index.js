@@ -24356,7 +24356,7 @@ var DataLayer;
     return url.includes('http') ? url : document.baseURI + url;
   }
   function enchancedEcommerceItems(products) {
-    products.map((product, index) => {
+    return products.map((product, index) => {
       const categories = product.categories.map(category => {
       }).reverse();
       return {
