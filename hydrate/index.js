@@ -24357,7 +24357,7 @@ var DataLayer;
   }
   function enchancedEcommerceItems(products) {
     return products.map((product, index) => {
-      const categories = product.categories.map(category => category.name).reverse();
+      const categories = product.breadcrumbs.map(category => category.name).reverse();
       return {
         item_id: product.id,
         item_name: product.name,
@@ -26492,7 +26492,7 @@ class PageHome {
     const review = home.get('reviewAverage');
     return hAsync("ks-page-base", { loadCommon: false, skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, banners ? hAsync("ks-banner-container", null, banners.map((banner, index) => hAsync("ks-banner", { sync: index == 0, active: index == 0, name: banner.name, color: banner.color, link: banner.link, image: banner.image, webp: banner.webp, width: banner.width, height: banner.height, theme: banner.theme }))) : null, info ? hAsync("ks-homepage-info", null, hAsync("h1", { slot: "mainHeading" }, info.mainHeading), hAsync("p", { slot: "mainContent" }, info.mainParagraph), hAsync("h2", { slot: "firstHeading" }, info.firstHeading), hAsync("p", { slot: "firstContent" }, info.firstParagraph), hAsync("h2", { slot: "secondHeading" }, info.secondHeading), hAsync("p", { slot: "secondContent" }, info.secondParagraph), hAsync("h2", { slot: "thirdHeading" }, info.thirdHeading), hAsync("p", { slot: "thirdContent" }, info.thirdParagraph)) : null, review ?
       hAsync("ks-review-average", { href: review.href, message: review.message, reviews: review.reviews, months: review.months, totalReviews: review.totalReviews, average: review.average, example: review.example })
-      : null, products ? hAsync("ks-homepage-products", null, products.map(products => hAsync("ks-product-container", null, products.products.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, sku: card.sku, name: card.name, img: card.image, imgFull: card.imageFull, webp: card.webp, currentPrice: card.currentPrice, previousPrice: card.previousPrice, unavailable: card.unavailable, currency: card.currency, categories: card.categories }))))) : null, featured ? hAsync("ks-featured-container", null, featured.map(banner => hAsync("ks-featured", { slot: banner.side, name: banner.name, image: banner.image, webp: banner.webp, link: banner.link, width: banner.width, height: banner.height }))) : null, recipes ? [
+      : null, products ? hAsync("ks-homepage-products", null, products.map(products => hAsync("ks-product-container", null, products.products.map(card => hAsync("ks-product-card", { product: card }))))) : null, featured ? hAsync("ks-featured-container", null, featured.map(banner => hAsync("ks-featured", { slot: banner.side, name: banner.name, image: banner.image, webp: banner.webp, link: banner.link, width: banner.width, height: banner.height }))) : null, recipes ? [
       hAsync("h3", null, recipesHeading),
       hAsync("ks-article-container", null, recipes.map(recipe => hAsync("ks-recipe-card", { heading: recipe.heading, cuisine: recipe.cuisine, category: recipe.category, link: recipe.link, image: recipe.image, webp: recipe.webp, width: recipe.width, height: recipe.height, "cuisine-link": recipe.cuisineLink, "category-link": recipe.categoryLink }))),
       hAsync("ks-see-more", { href: recipesMore, text: seeMore })
@@ -26592,7 +26592,7 @@ class PageListing {
           : null))
         : null, hAsync("ks-sorting", { post: navigation.paginationBase }), hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.paginationBase, pattern: navigation.pattern }))
       : null, (products === null || products === void 0 ? void 0 : products.length) > 0 ?
-      hAsync("ks-product-container", null, products.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, sku: card.sku, name: card.name, img: card.image, imgFull: card.imageFull, webp: card.webp, currentPrice: card.currentPrice, previousPrice: card.previousPrice, unavailable: card.unavailable, currency: card.currency, categories: card.categories })))
+      hAsync("ks-product-container", null, products.map(card => hAsync("ks-product-card", { product: card })))
       :
         hAsync("ks-nocontent", null, hAsync("h1", null, listing.get('noContentHeading')), hAsync("p", null, listing.get('noContentMessage'))), navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 ?
       hAsync("ks-listing-navigation", { products: navigation.products }, hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.paginationBase, pattern: navigation.pattern }))
@@ -26858,11 +26858,11 @@ class PageProduct {
       hAsync("ks-container", null, youtube.map(id => hAsync("ks-product-youtube", { "video-id": id })))
       : null, (similar === null || similar === void 0 ? void 0 : similar.length) > 0 ? [
       hAsync("h3", null, product.get('similarHeading')),
-      hAsync("ks-product-container", null, similar.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice, unavailable: card.unavailable })))
+      hAsync("ks-product-container", null, similar.map(card => hAsync("ks-product-card", { product: card })))
     ]
       : null, (accessories === null || accessories === void 0 ? void 0 : accessories.length) > 0 ? [
       hAsync("h3", null, product.get('accessoriesHeading')),
-      hAsync("ks-product-container", null, accessories.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, name: card.name, img: card.image, webp: card.webp, "current-price": card.currentPrice, "previous-price": card.previousPrice, unavailable: card.unavailable })))
+      hAsync("ks-product-container", null, accessories.map(card => hAsync("ks-product-card", { product: card })))
     ]
       : null, review ?
       hAsync("ks-review-average", { href: review.href, message: review.message, reviews: review.reviews, months: review.months, totalReviews: review.totalReviews, average: review.average, example: review.example })
@@ -26940,7 +26940,7 @@ class PageRecipe$1 {
     const products = favourites.get('products');
     const descriptions = favourites.get('descriptions');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("ks-container", null, (products === null || products === void 0 ? void 0 : products.length) > 0 ?
-      hAsync("div", { class: "favourites-container" }, hAsync("div", { class: "favourites-header" }, hAsync("span", { class: "valueString" }, favourites.get('valueString')), hAsync("span", { class: "value" }, favourites.get('value')), hAsync("div", { class: "removeAll" }, hAsync("button", { class: "fav", onClick: () => this.removeAll() }, this.removeAllLoading ? hAsync("ks-loader", null) : favourites.get('removeAllString')))), hAsync("hr", null), hAsync("div", { class: "product-container" }, products === null || products === void 0 ? void 0 : products.map(card => hAsync("ks-product-fav-card", { "product-id": card.id, link: card.link, sku: card.sku, name: card.name, summary: descriptions[card.id], img: card.image, imgFull: card.imageFull, webp: card.webp, currentPrice: card.currentPrice, previousPrice: card.previousPrice, unavailable: card.unavailable, currency: card.currency, categories: card.categories }))))
+      hAsync("div", { class: "favourites-container" }, hAsync("div", { class: "favourites-header" }, hAsync("span", { class: "valueString" }, favourites.get('valueString')), hAsync("span", { class: "value" }, favourites.get('value')), hAsync("div", { class: "removeAll" }, hAsync("button", { class: "fav", onClick: () => this.removeAll() }, this.removeAllLoading ? hAsync("ks-loader", null) : favourites.get('removeAllString')))), hAsync("hr", null), hAsync("div", { class: "product-container" }, products === null || products === void 0 ? void 0 : products.map(card => hAsync("ks-product-fav-card", { summary: descriptions[card.id], product: card }))))
       :
         hAsync("div", { class: "empty" }, hAsync("h1", null, favourites.get('emptyHeading')), hAsync("ks-button", { round: true, border: true, name: favourites.get('emptyButton'), link: "/" }))));
   }
@@ -26993,7 +26993,7 @@ class PageRecipe {
         ];
       })))), ((_c = recipe === null || recipe === void 0 ? void 0 : recipe.get('suggestions')) === null || _c === void 0 ? void 0 : _c.length) > 0 ? [
       hAsync("h3", { class: "suggested-heading" }, "Produkty Polecane"),
-      hAsync("ks-product-container", null, (_d = recipe === null || recipe === void 0 ? void 0 : recipe.get('suggestions')) === null || _d === void 0 ? void 0 : _d.map(card => hAsync("ks-product-card", { "product-id": card.id, link: card.link, sku: card.sku, name: card.name, img: card.image, imgFull: card.imageFull, webp: card.webp, currentPrice: card.currentPrice, previousPrice: card.previousPrice, unavailable: card.unavailable, currency: card.currency, categories: card.categories })))
+      hAsync("ks-product-container", null, (_d = recipe === null || recipe === void 0 ? void 0 : recipe.get('suggestions')) === null || _d === void 0 ? void 0 : _d.map(card => hAsync("ks-product-card", { product: card })))
     ] : null);
   }
   static get style() { return recipeCss; }
@@ -27477,20 +27477,20 @@ class ProductCard$1 {
   }
   cart() {
     this.cartLoading = true;
-    const categories = JSON.parse(this.categories);
     const product = {
-      id: this.productId,
+      id: this.product.id,
       traitIDs: "",
-      sku: this.sku,
-      name: this.name,
-      link: this.link,
-      image: this.img,
-      imageFull: this.imgFull,
-      currentPrice: parseFloat(this.currentPrice),
+      sku: this.product.sku,
+      name: this.product.name,
+      link: this.product.link,
+      image: this.product.image,
+      imageFull: this.product.imageFull,
+      currentPrice: parseFloat(this.product.currentPrice),
       quantity: 1,
-      currency: this.currency,
-      categories: categories,
-      brandName: this.brand
+      currency: this.product.currency,
+      categories: this.product.categories,
+      breadcrumbs: this.product.breadcrumbs,
+      brandName: this.product.brandName
     };
     addToCart(product, 1)
       .then(() => this.cartLoading = false);
@@ -27501,12 +27501,12 @@ class ProductCard$1 {
     this.favLoading = true;
     if (this.favSuccess) {
       this.favSuccess = false;
-      removeFromFavourites(this.productId).then(() => {
+      removeFromFavourites(this.product.id).then(() => {
         this.favLoading = false;
       });
     }
     else {
-      addToFavourites(this.productId).then(() => {
+      addToFavourites(this.product.id).then(() => {
         this.favSuccess = true;
         setTimeout(() => this.favLoading = false, 200);
       });
@@ -27515,12 +27515,12 @@ class ProductCard$1 {
   render() {
     const translations = common.get('translations');
     return [
-      hAsync("a", { href: this.link, "aria-label": this.name, class: "top" }, hAsync("ks-img2", { fill: true, limit: true, center: true, src: this.img, webp: this.webp, width: 280, height: 280, alt: this.name }), hAsync("span", null, this.name)),
-      hAsync("div", { class: "price" }, this.previousPrice ?
-        hAsync("s", { class: "previous" }, this.previousPrice, " z\u0142")
-        : null, hAsync("span", { class: "current" }, this.currentPrice, " z\u0142")),
-      hAsync("div", { class: "bottom" }, this.unavailable ? hAsync("a", { href: this.link, class: "unavailable" }, translations.unavailable)
-        : this.linkOnly ? hAsync("a", { href: this.link, class: "link" }, translations.seeMore)
+      hAsync("a", { href: this.product.link, "aria-label": this.product.name, class: "top" }, hAsync("ks-img2", { fill: true, limit: true, center: true, src: this.product.image, webp: this.product.webp, width: 280, height: 280, alt: this.product.name }), hAsync("span", null, this.product.name)),
+      hAsync("div", { class: "price" }, this.product.previousPrice ?
+        hAsync("s", { class: "previous" }, this.product.previousPrice, " z\u0142")
+        : null, hAsync("span", { class: "current" }, this.product.currentPrice, " z\u0142")),
+      hAsync("div", { class: "bottom" }, this.unavailable ? hAsync("a", { href: this.product.link, class: "unavailable" }, translations.unavailable)
+        : this.linkOnly ? hAsync("a", { href: this.product.link, class: "link" }, translations.seeMore)
           : [
             hAsync("button", { class: "fav", onClick: () => this.favourites() }, this.favLoading ? hAsync("ks-loader", null) : hAsync("ks-icon", { name: "star" }), this.favSuccess ?
               hAsync("div", { class: "success" }, hAsync("ks-icon", { name: "check" }))
@@ -27538,18 +27538,7 @@ class ProductCard$1 {
     "$members$": {
       "unavailable": [516],
       "linkOnly": [4, "link-only"],
-      "productId": [1, "product-id"],
-      "name": [1],
-      "brand": [1],
-      "sku": [1],
-      "img": [1],
-      "imgFull": [1, "img-full"],
-      "webp": [1],
-      "link": [1],
-      "currentPrice": [1, "current-price"],
-      "previousPrice": [1, "previous-price"],
-      "currency": [1],
-      "categories": [1],
+      "product": [16],
       "cartLoading": [32],
       "favLoading": [32],
       "favSuccess": [32]
@@ -27573,20 +27562,20 @@ class ProductCard {
   }
   cart() {
     this.cartLoading = true;
-    const categories = JSON.parse(this.categories);
     const product = {
-      id: this.productId,
+      id: this.product.id,
       traitIDs: "",
-      sku: this.sku,
-      brandName: this.brand,
-      name: this.name,
-      link: this.link,
-      image: this.img,
-      imageFull: this.imgFull,
-      currentPrice: parseFloat(this.currentPrice),
+      sku: this.product.sku,
+      brandName: this.product.brandName,
+      name: this.product.name,
+      link: this.product.link,
+      image: this.product.image,
+      imageFull: this.product.imageFull,
+      currentPrice: parseFloat(this.product.currentPrice),
       quantity: 1,
-      currency: this.currency,
-      categories: categories
+      currency: this.product.currency,
+      categories: this.product.categories,
+      breadcrumbs: this.product.breadcrumbs
     };
     addToCart(product, 1)
       .then(() => this.cartLoading = false);
@@ -27595,14 +27584,14 @@ class ProductCard {
     if (this.favLoading)
       return;
     this.favLoading = true;
-    removeFromFavourites(this.productId).then(() => {
+    removeFromFavourites(this.product.id).then(() => {
       location.reload();
     });
   }
   render() {
     const translations = common.get('translations');
     return [
-      hAsync("a", { href: this.link, "aria-label": this.name }, hAsync("div", { class: "image" }, hAsync("ks-img2", { fill: true, limit: true, center: true, src: this.img, webp: this.webp, width: 280, height: 280, alt: this.name })), hAsync("div", { class: "info" }, hAsync("h3", null, this.name), hAsync("div", { class: "price" }, hAsync("span", { class: "current" }, this.currentPrice, " z\u0142"), this.previousPrice ? hAsync("s", { class: "previous" }, this.previousPrice, " z\u0142") : null), this.summary ? hAsync("p", null, this.summary) : null)),
+      hAsync("a", { href: this.product.link, "aria-label": this.product.name }, hAsync("div", { class: "image" }, hAsync("ks-img2", { fill: true, limit: true, center: true, src: this.product.image, webp: this.product.webp, width: 280, height: 280, alt: this.product.name })), hAsync("div", { class: "info" }, hAsync("h3", null, this.product.name), hAsync("div", { class: "price" }, hAsync("span", { class: "current" }, this.product.currentPrice, " z\u0142"), this.product.previousPrice ? hAsync("s", { class: "previous" }, this.product.previousPrice, " z\u0142") : null), this.summary ? hAsync("p", null, this.summary) : null)),
       hAsync("div", { class: "buttons" }, hAsync("button", { class: "fav", onClick: () => this.favourites() }, this.favLoading ? hAsync("ks-loader", null) : hAsync("ks-icon", { name: "x" })), hAsync("button", { disabled: this.unavailable, class: "cart", onClick: () => this.cart() }, this.cartLoading ? hAsync("ks-loader", null) : [
         hAsync("ks-icon", { name: "shopping-bag" }),
         hAsync("span", null, this.unavailable ? translations.unavailable : translations.addToCart)
@@ -27616,19 +27605,8 @@ class ProductCard {
     "$members$": {
       "unavailable": [516],
       "linkOnly": [4, "link-only"],
-      "productId": [1, "product-id"],
-      "name": [1],
       "summary": [1],
-      "brand": [1],
-      "sku": [1],
-      "img": [1],
-      "imgFull": [1, "img-full"],
-      "webp": [1],
-      "link": [1],
-      "currentPrice": [1, "current-price"],
-      "previousPrice": [1, "previous-price"],
-      "currency": [1],
-      "categories": [1],
+      "product": [16],
       "cartLoading": [32],
       "favLoading": [32],
       "favSuccess": [32]
@@ -27961,7 +27939,8 @@ class ProductInfo$1 {
       currentPrice: parseFloat(product.get("currentPrice")),
       quantity: product.get("count"),
       currency: product.get("currency"),
-      categories: product.get('categories')
+      categories: product.get('categories'),
+      breadcrumbs: product.get('breadcrumbs')
     };
     await addToCart(productData, 0);
     product.set("cartLoading", false);
@@ -28495,7 +28474,7 @@ class ProductSuggestions {
     }
   }
   render() {
-    return hAsync("ks-overlay", null, hAsync("div", { class: "content" }, hAsync("div", { class: "top" }, hAsync("div", { class: "heading" }, "Dodano do koszyka"), hAsync("div", { class: "name" }, this.name), hAsync("div", { class: "buttons" }, hAsync("ks-button", { secondary: true, name: "Przejd\u017A do koszyka", onClick: () => this.toCart() }), hAsync("ks-button", { name: "Przegl\u0105daj dalej", onClick: () => this.hide() }))), hAsync("div", { class: "bottom" }, this.loading ? null : hAsync("h3", { class: "suggestion-heading" }, this.suggestionHeading), this.loading ? hAsync("ks-loader", { dark: true, large: true }) : null, hAsync("div", { class: "swiper-container product-suggestions", style: { display: this.loading ? "none" : "block" } }, hAsync("div", { class: "swiper-wrapper" }, this.products.map((product) => hAsync("div", { class: "swiper-slide" }, hAsync("ks-product-card", { "link-only": true, name: product.name, img: product.image, webp: product.webp, link: product.link, currentPrice: product.currentPrice, previousPrice: product.previousPrice != "0.00" ? product.previousPrice : null }))))), hAsync("div", { class: "fade-left" }), hAsync("div", { class: "fade-right" }))));
+    return hAsync("ks-overlay", null, hAsync("div", { class: "content" }, hAsync("div", { class: "top" }, hAsync("div", { class: "heading" }, "Dodano do koszyka"), hAsync("div", { class: "name" }, this.name), hAsync("div", { class: "buttons" }, hAsync("ks-button", { secondary: true, name: "Przejd\u017A do koszyka", onClick: () => this.toCart() }), hAsync("ks-button", { name: "Przegl\u0105daj dalej", onClick: () => this.hide() }))), hAsync("div", { class: "bottom" }, this.loading ? null : hAsync("h3", { class: "suggestion-heading" }, this.suggestionHeading), this.loading ? hAsync("ks-loader", { dark: true, large: true }) : null, hAsync("div", { class: "swiper-container product-suggestions", style: { display: this.loading ? "none" : "block" } }, hAsync("div", { class: "swiper-wrapper" }, this.products.map((product) => hAsync("div", { class: "swiper-slide" }, hAsync("ks-product-card", { "link-only": true, product: product }))))), hAsync("div", { class: "fade-left" }), hAsync("div", { class: "fade-right" }))));
   }
   get root() { return getElement(this); }
   static get style() { return productSuggestionsCss; }
