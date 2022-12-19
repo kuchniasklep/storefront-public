@@ -24357,8 +24357,7 @@ var DataLayer;
   }
   function enchancedEcommerceItems(products) {
     return products.map((product, index) => {
-      const categories = product.categories.map(category => {
-      }).reverse();
+      const categories = product.categories.map(category => category.name).reverse();
       return {
         item_id: product.id,
         item_name: product.name,
