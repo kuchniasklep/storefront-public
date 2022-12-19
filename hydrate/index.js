@@ -24158,7 +24158,7 @@ var DataLayer;
       productQuantity: 1,
       productCategories: product.categories,
       ecommerce: {
-        items: enchancedEcommerceItems(product)
+        items: enchancedEcommerceItems([product])
       }
     });
   }
@@ -24178,7 +24178,7 @@ var DataLayer;
       listingCategories: type == "category" ? listing.breadcrumbs.filter(category => category.id != "0") : undefined,
       listingProducts: listing.products,
       ecommerce: {
-        items: enchancedEcommerceItems(...listing.products)
+        items: enchancedEcommerceItems(listing.products)
       }
     });
   }
@@ -24199,7 +24199,7 @@ var DataLayer;
       productSKU: product.sku,
       productCategories: product.categories,
       ecommerce: {
-        items: enchancedEcommerceItems(product)
+        items: enchancedEcommerceItems([product])
       }
     });
   }
@@ -24219,7 +24219,7 @@ var DataLayer;
       productSKU: product.sku,
       productCategories: product.categories,
       ecommerce: {
-        items: enchancedEcommerceItems(product)
+        items: enchancedEcommerceItems([product])
       }
     });
   }
@@ -24239,7 +24239,7 @@ var DataLayer;
       productSKU: product.sku,
       productCategories: product.categories,
       ecommerce: {
-        items: enchancedEcommerceItems(product),
+        items: enchancedEcommerceItems([product]),
         value: product.currentPrice,
         currency: product.currency
       }
@@ -24256,7 +24256,7 @@ var DataLayer;
       cartValue: cart.totalValue,
       cartProducts: cart.products,
       ecommerce: {
-        items: enchancedEcommerceItems(...Object.values(cart.products)),
+        items: enchancedEcommerceItems(Object.values(cart.products)),
         value: cart.productValue,
         currency: cart.currency
       }
@@ -24276,7 +24276,7 @@ var DataLayer;
       orderShipping: 0,
       orderCoupon: "",
       ecommerce: {
-        items: enchancedEcommerceItems(...order.products)
+        items: enchancedEcommerceItems(order.products)
       }
     });
   }
@@ -24294,7 +24294,7 @@ var DataLayer;
       orderShipping: 0,
       orderCoupon: "",
       ecommerce: {
-        items: enchancedEcommerceItems(...order.products)
+        items: enchancedEcommerceItems(order.products)
       }
     });
   }
@@ -24318,7 +24318,7 @@ var DataLayer;
         currency: order.currency,
         shipping: 0,
         coupon: "",
-        items: this.enchancedEcommerceItems(...order.products)
+        items: this.enchancedEcommerceItems(order.products)
       }
     });
   }
@@ -24355,7 +24355,7 @@ var DataLayer;
   function relativeToAbsolute(url) {
     return url.includes('http') ? url : document.baseURI + url;
   }
-  function enchancedEcommerceItems(...products) {
+  function enchancedEcommerceItems(products) {
     products.map((product, index) => {
       const categories = product.categories.map(category => {
       }).reverse();
