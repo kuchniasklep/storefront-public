@@ -24256,7 +24256,7 @@ var DataLayer;
       cartValue: cart.totalValue,
       cartProducts: cart.products,
       ecommerce: {
-        items: enchancedEcommerceItems(...cart.products),
+        items: enchancedEcommerceItems(...Object.values(cart.products)),
         value: cart.productValue,
         currency: cart.currency
       }
