@@ -24318,7 +24318,7 @@ var DataLayer;
         currency: order.currency,
         shipping: 0,
         coupon: "",
-        items: this.enchancedEcommerceItems(order.products)
+        items: enchancedEcommerceItems(order.products)
       }
     });
   }
