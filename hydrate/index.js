@@ -24273,8 +24273,8 @@ var DataLayer;
       orderValue: order.totalValue,
       orderProductValue: order.productValue,
       orderCurrency: order.currency,
-      orderShipping: 0,
-      orderCoupon: "",
+      orderShipping: order.shippingValue,
+      orderCoupon: order.coupon,
       ecommerce: {
         items: enchancedEcommerceItems(order.products)
       }
@@ -24291,8 +24291,8 @@ var DataLayer;
       orderValue: order.totalValue,
       orderProductValue: order.productValue,
       orderCurrency: order.currency,
-      orderShipping: 0,
-      orderCoupon: "",
+      orderShipping: order.shippingValue,
+      orderCoupon: order.coupon,
       ecommerce: {
         items: enchancedEcommerceItems(order.products)
       }
@@ -24310,8 +24310,8 @@ var DataLayer;
       orderValue: order.totalValue,
       orderProductValue: order.productValue,
       orderCurrency: order.currency,
-      orderShipping: 0,
-      orderCoupon: "",
+      orderShipping: order.shippingValue,
+      orderCoupon: order.coupon,
       ecommerce: {
         transaction_id: order.id,
         value: order.productValue,
