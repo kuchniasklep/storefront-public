@@ -26887,14 +26887,17 @@ class PageProduct {
 
 const favourites = createStore({});
 
-async function addToFavourites(id) {
+async function addToFavourites(product) {
   const errorpopup = document.querySelector('ks-error-popup');
   const navbar = document.querySelector('ks-navbar');
   let cartBody = new FormData();
-  cartBody.append("id", id);
+  cartBody.append("id", product.id);
   const api = commonDynamic.get('api').addToFavourites;
   return Fetch(api, cartBody)
-    .then(() => navbar.IncrementHeart())
+    .then(() => {
+    navbar.IncrementHeart();
+    DataLayer.addToFavourites(product);
+  })
     .catch(error => errorpopup.show(error));
 }
 async function removeFromFavourites(id) {
@@ -27450,10 +27453,7 @@ async function addToCart(product, place = 1) {
     }
     navbar.IncrementCart(product.quantity.toString());
     OpenSuggestions(product.id, product.name);
-    if (data.event) {
-      DataLayer.addToCart(product, data.event);
-      eachTracker(item => item === null || item === void 0 ? void 0 : item.addToCart(product, data.event));
-    }
+    DataLayer.addToCart(product, data.event);
   })
     .catch(error => {
     errorpopup.show(error);
@@ -27475,9 +27475,8 @@ class ProductCard$1 {
     this.favLoading = false;
     this.favSuccess = false;
   }
-  cart() {
-    this.cartLoading = true;
-    const product = {
+  componentWillLoad() {
+    this.productShortData = {
       id: this.product.id,
       traitIDs: "",
       sku: this.product.sku,
@@ -27492,7 +27491,10 @@ class ProductCard$1 {
       breadcrumbs: this.product.breadcrumbs,
       brandName: this.product.brandName
     };
-    addToCart(product, 1)
+  }
+  cart() {
+    this.cartLoading = true;
+    addToCart(this.productShortData, 1)
       .then(() => this.cartLoading = false);
   }
   favourites() {
@@ -27506,7 +27508,7 @@ class ProductCard$1 {
       });
     }
     else {
-      addToFavourites(this.product.id).then(() => {
+      addToFavourites(this.productShortData).then(() => {
         this.favSuccess = true;
         setTimeout(() => this.favLoading = false, 200);
       });
@@ -27925,9 +27927,8 @@ class ProductInfo$1 {
       .catch(error => this.errorPopup.show(error));
     product.set("cartLoading", false);
   }
-  async AddToCart() {
-    product.set("cartLoading", true);
-    const productData = {
+  productShortData() {
+    return {
       id: product.get("id"),
       traitIDs: product.get("traitIDs"),
       sku: product.get("model"),
@@ -27942,18 +27943,18 @@ class ProductInfo$1 {
       categories: product.get('categories'),
       breadcrumbs: product.get('breadcrumbs')
     };
-    await addToCart(productData, 0);
+  }
+  async AddToCart() {
+    product.set("cartLoading", true);
+    await addToCart(this.productShortData(), 0);
     product.set("cartLoading", false);
   }
   async AddToFavourites() {
     product.set("favouritesLoading", true);
-    let body = new FormData();
-    body.append("id", product.get("id"));
-    await this.fetch(commonDynamic.get("api").addToFavourites, body)
-      .then(() => this.navbar.IncrementHeart())
-      .catch(error => this.errorPopup.show(error));
-    product.set("favouritesCompleted", true);
-    product.set("favouritesLoading", false);
+    addToFavourites(this.productShortData()).then(() => {
+      product.set("favouritesCompleted", true);
+      product.set("favouritesLoading", false);
+    });
   }
   async fetch(url, body) {
     const headers = new Headers();
