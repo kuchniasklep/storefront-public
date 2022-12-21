@@ -24316,8 +24316,8 @@ var DataLayer;
         transaction_id: order.id,
         value: order.productValue,
         currency: order.currency,
-        shipping: 0,
-        coupon: "",
+        shipping: order.shippingValue,
+        coupon: order.coupon,
         items: enchancedEcommerceItems(order.products)
       }
     });
