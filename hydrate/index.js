@@ -26343,6 +26343,10 @@ class PageCart {
     DataLayer.view_cart(cartData);
   }
   async RemoveProduct(event) {
+    var _a;
+    const productData = (_a = cart.get("products")) === null || _a === void 0 ? void 0 : _a[event.detail];
+    if (productData)
+      DataLayer.removeFromCart(productData);
     removeProduct(event.detail);
   }
   async ProductCount(event) {
