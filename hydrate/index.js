@@ -14297,7 +14297,7 @@ const commonDynamic = createStore({
   consent: {}
 });
 
-const cookiePopupCss = "ks-cookie-popup{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;position:fixed;overflow:hidden;font-family:var(--font-emphasis);bottom:0px;left:0px;right:0px;z-index:10000;background-color:var(--overlay-dark-background);-webkit-backdrop-filter:var(--overlay-dark-filter);backdrop-filter:var(--overlay-dark-filter);border-top:solid 1px #000000;color:white;transition:-webkit-transform 0.4s ease;-webkit-transition:-webkit-transform 0.4s ease;transition:transform 0.4s ease;transition:transform 0.4s ease, -webkit-transform 0.4s ease}ks-cookie-popup .message{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;height:80px;padding:15px;-webkit-box-sizing:border-box;box-sizing:border-box;text-align:center;font-size:15px;line-height:17px}ks-cookie-popup .message p{margin:0}ks-cookie-popup .settings{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-direction:column;flex-direction:column;height:400px;padding:0px 15px 15px 15px;-webkit-box-sizing:border-box;box-sizing:border-box;font-size:14px;line-height:14px}ks-cookie-popup .settings ks-button{margin-top:10px}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(400px);transform:translateY(400px)}ks-cookie-popup:not([hide])[extend]{-webkit-transform:translateY(0px);transform:translateY(0px)}ks-cookie-popup[hide]{-webkit-transform:translateY(520px);transform:translateY(520px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(520px);transform:translateY(520px);display:none}ks-cookie-popup p{margin:0;max-width:100%}ks-cookie-popup .buttons{display:-ms-flexbox;display:flex;margin:0 0 0 20px}ks-cookie-popup .buttons>*{width:-webkit-max-content;width:-moz-max-content;width:max-content}ks-cookie-popup .buttons>*:first-child{margin-right:5px}ks-cookie-popup .settings{max-width:800px}ks-cookie-popup .type{margin-bottom:10px}ks-cookie-popup .name{font-size:18px;font-weight:700}ks-cookie-popup .heading{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-align:center;align-items:center;margin-bottom:10px}ks-cookie-popup .check{position:relative;display:inline-block;width:50px;height:26px}ks-cookie-popup .check input{opacity:0;width:0;height:0}ks-cookie-popup .check .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;border-radius:34px;background-color:#ccc;-webkit-transition:.4s;transition:.4s}ks-cookie-popup .check .slider:before{position:absolute;content:\"\";height:20px;width:20px;left:4px;bottom:3px;border-radius:50%;background-color:#242424;-webkit-transition:.4s;transition:.4s}ks-cookie-popup .check input:disabled+.slider:before{background-color:#8d8d8d}ks-cookie-popup .check input:checked+.slider:before{-webkit-transform:translateX(22px);transform:translateX(22px)}@media (max-width: 700px){ks-cookie-popup .message{-ms-flex-direction:column;flex-direction:column;height:160px;font-size:14px}ks-cookie-popup .message p{margin:0 0 14px 0}ks-cookie-popup .settings{overflow-y:auto;-ms-flex-pack:start;justify-content:flex-start}ks-cookie-popup[hide]{-webkit-transform:translateY(600px);transform:translateY(600px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(600px);transform:translateY(600px)}}@media (max-width: 700px) and (min-height: 700px){ks-cookie-popup .settings{height:500px}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(500px);transform:translateY(500px)}ks-cookie-popup[hide]{-webkit-transform:translateY(700px);transform:translateY(700px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(700px);transform:translateY(700px)}}";
+const cookiePopupCss = "ks-cookie-popup{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;position:fixed;overflow:hidden;font-family:var(--font-emphasis);bottom:0px;left:0px;right:0px;z-index:10000000;background-color:var(--overlay-dark-background);-webkit-backdrop-filter:var(--overlay-dark-filter);backdrop-filter:var(--overlay-dark-filter);border-top:solid 1px #000000;color:white;transition:-webkit-transform 0.4s ease;-webkit-transition:-webkit-transform 0.4s ease;transition:transform 0.4s ease;transition:transform 0.4s ease, -webkit-transform 0.4s ease}ks-cookie-popup .message{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;height:80px;padding:15px;-webkit-box-sizing:border-box;box-sizing:border-box;text-align:center;font-size:15px;line-height:17px}ks-cookie-popup .message p{margin:0}ks-cookie-popup[requirement] .message p{background-color:#ff4242;border-radius:50px;padding:10px 15px}ks-cookie-popup .settings{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-direction:column;flex-direction:column;overflow-y:auto;height:500px;padding:0px 15px 15px 15px;-webkit-box-sizing:border-box;box-sizing:border-box;font-size:14px;line-height:14px}ks-cookie-popup .settings ks-button{margin-top:10px}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(500px);transform:translateY(500px)}ks-cookie-popup:not([hide])[extend]{-webkit-transform:translateY(0px);transform:translateY(0px)}ks-cookie-popup[hide]{-webkit-transform:translateY(620px);transform:translateY(620px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(620px);transform:translateY(620px);display:none}ks-cookie-popup p{margin:0;max-width:100%}ks-cookie-popup .buttons{display:-ms-flexbox;display:flex}ks-cookie-popup .buttons>*{width:-webkit-max-content;width:-moz-max-content;width:max-content}ks-cookie-popup .buttons>*:first-child{margin-right:5px}ks-cookie-popup .message .buttons{margin:0 0 0 20px}ks-cookie-popup .settings{max-width:800px}ks-cookie-popup .type{margin-bottom:10px}ks-cookie-popup .name{font-size:18px;font-weight:700}ks-cookie-popup .heading{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-align:center;align-items:center;margin-bottom:10px}ks-cookie-popup .check{position:relative;display:inline-block;width:50px;height:26px}ks-cookie-popup .check input{opacity:0;width:0;height:0}ks-cookie-popup .check .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;border-radius:34px;background-color:#ccc;-webkit-transition:.4s;transition:.4s}ks-cookie-popup .check .slider:before{position:absolute;content:\"\";height:20px;width:20px;left:4px;bottom:3px;border-radius:50%;background-color:#242424;-webkit-transition:.4s;transition:.4s}ks-cookie-popup .check input:disabled+.slider:before{background-color:#8d8d8d}ks-cookie-popup .check input:checked+.slider:before{-webkit-transform:translateX(22px);transform:translateX(22px)}ks-cookie-popup[requirement] .type.highlight .check .slider{background-color:#ff6f6f}ks-cookie-popup[requirement] .type.highlight .check .slider:before{background-color:#8d1515}ks-cookie-popup[requirement] .type.highlight .check input:checked+.slider{background-color:#87ff6f}ks-cookie-popup[requirement] .type.highlight .check input:checked+.slider:before{background-color:#198d15}@media (max-width: 700px){ks-cookie-popup .message{-ms-flex-direction:column;flex-direction:column;height:160px;font-size:14px}ks-cookie-popup .message p{margin:0 0 14px 0}ks-cookie-popup .settings{-ms-flex-pack:start;justify-content:flex-start}ks-cookie-popup[hide]{-webkit-transform:translateY(600px);transform:translateY(600px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(600px);transform:translateY(600px)}ks-cookie-popup[requirement] .message{height:120px}ks-cookie-popup[requirement][hide]{-webkit-transform:translateY(560px);transform:translateY(560px)}ks-cookie-popup[requirement]:not([show]){-webkit-transform:translateY(560px);transform:translateY(560px)}}@media (max-height: 700px){ks-cookie-popup .settings{height:400px}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(400px);transform:translateY(400px)}ks-cookie-popup[hide]{-webkit-transform:translateY(520px);transform:translateY(520px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(520px);transform:translateY(520px);display:none}}@media (max-height: 600px){ks-cookie-popup .settings{height:300px}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(300px);transform:translateY(300px)}ks-cookie-popup[hide]{-webkit-transform:translateY(420px);transform:translateY(420px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(420px);transform:translateY(420px)}}";
 
 class CookiePopup {
   constructor(hostRef) {
@@ -14305,16 +14305,7 @@ class CookiePopup {
     this.hide = false;
     this.show = false;
     this.extend = false;
-  }
-  hidepanel(all) {
-    this.hide = true;
-    const consent = this.consent(all);
-    this.cookie(consent);
-    this.registerGTMCallback(consent);
-    setTimeout(() => {
-      this.show = false;
-      this.hide = false;
-    }, 400);
+    this.requirement = false;
   }
   extendpanel() {
     this.extend = !this.extend;
@@ -14357,11 +14348,56 @@ class CookiePopup {
       this.showpanel(true);
   }
   async showpanel(init = false) {
+    this.setStateFromCookie();
     this.show = true;
     this.hide = true;
     setTimeout(() => {
       this.hide = false;
     }, init ? common.get('cookieDelay') : 100);
+  }
+  async requireconsent(requirementName) {
+    this.checkconsentpromise = undefined;
+    if (this.checkconsent(requirementName))
+      return true;
+    let consent = commonDynamic.get("consent");
+    const requirement = consent.requirements.find(entry => entry.name = requirementName);
+    consent.items.forEach((entry, index) => {
+      const consentRequired = requirement.consents.includes(entry.inputname);
+      consent.items[index].highlighted = consentRequired;
+    });
+    this.requirement = true;
+    this.extend = true;
+    this.requirementMessage = requirement.message;
+    commonDynamic.set("consent", consent);
+    return new Promise((resolve) => {
+      this.showpanel();
+      this.checkconsentpromise = () => resolve(this.checkconsent(requirementName));
+    });
+  }
+  checkconsent(requirementName) {
+    let requirementsMet = true;
+    let consent = commonDynamic.get("consent");
+    const requirement = consent.requirements.find(entry => entry.name = requirementName);
+    consent.items.forEach((entry, index) => {
+      const consentRequired = requirement.consents.includes(entry.inputname);
+      if (consentRequired && !consent.items[index].checked)
+        requirementsMet = false;
+    });
+    return requirementsMet;
+  }
+  hidepanel(all) {
+    var _a;
+    this.hide = true;
+    const consent = this.consent(all);
+    this.cookie(consent);
+    this.setStateFromCookie();
+    (_a = this.checkconsentpromise) === null || _a === void 0 ? void 0 : _a.call(this);
+    this.registerGTMCallback(consent);
+    setTimeout(() => {
+      this.show = false;
+      this.hide = false;
+      this.requirement = false;
+    }, 400);
   }
   registerGTMCallback(consent) {
     window.googleConsentListeners.forEach((callback) => {
@@ -14370,7 +14406,7 @@ class CookiePopup {
   }
   consent(all = false) {
     if (all)
-      return ['required', 'functional', 'analytic', 'marketing'];
+      return commonDynamic.get("consent").items.map(entry => entry.inputname);
     const inputs = document.querySelectorAll("ks-cookie-popup input[type=checkbox]");
     return Array.from(inputs)
       .map(input => input.checked ? input.name : null)
@@ -14381,11 +14417,11 @@ class CookiePopup {
     if (!Build.isBrowser)
       return hAsync(Host, null);
     const consent = commonDynamic.get('consent');
-    return hAsync(Host, null, hAsync("div", { class: "message" }, hAsync("p", null, common.get('cookieMessage')), hAsync("div", { class: "buttons" }, hAsync("ks-button", { round: true, light: true, name: "Akceptuj wszystkie", onClick: () => this.hidepanel(true) }), hAsync("ks-button", { round: true, border: true, light: true, name: "Ustawienia", onClick: () => this.extendpanel() }))), hAsync("div", { class: "settings" }, (_b = (_a = consent === null || consent === void 0 ? void 0 : consent.items) === null || _a === void 0 ? void 0 : _a.map) === null || _b === void 0 ? void 0 :
-      _b.call(_a, item => this.type(item)), hAsync("ks-button", { round: true, border: true, light: true, name: "Zapisz ustawienia", onClick: () => this.hidepanel(false) })));
+    return hAsync(Host, { "aria-hidden": this.show ? "false" : "true" }, hAsync("div", { class: "message" }, hAsync("p", null, this.requirement ? this.requirementMessage : common.get('cookieMessage')), this.requirement ? null : hAsync("div", { class: "buttons" }, hAsync("ks-button", { round: true, light: true, name: "Akceptuj wszystkie", onClick: () => this.hidepanel(true) }), hAsync("ks-button", { round: true, border: true, light: true, name: "Ustawienia", onClick: () => this.extendpanel() }))), hAsync("div", { class: "settings" }, (_b = (_a = consent === null || consent === void 0 ? void 0 : consent.items) === null || _a === void 0 ? void 0 : _a.map) === null || _b === void 0 ? void 0 :
+      _b.call(_a, item => this.type(item)), hAsync("div", { class: "buttons" }, this.requirement ? hAsync("ks-button", { round: true, light: true, name: "Akceptuj wszystkie", onClick: () => this.hidepanel(true) }) : null, hAsync("ks-button", { round: true, border: true, light: true, name: "Zapisz ustawienia", onClick: () => this.hidepanel(false) }))));
   }
   type(item) {
-    return hAsync("div", { class: "type" }, hAsync("div", { class: "heading" }, hAsync("div", { class: "name" }, item.name), hAsync("label", { class: "check" }, hAsync("input", { type: "checkbox", checked: item.checked, disabled: item.disabled, name: item.inputname }), hAsync("span", { class: "slider" }))), hAsync("div", null, item.description));
+    return hAsync("div", { class: "type" + (item.highlighted ? " highlight" : "") }, hAsync("div", { class: "heading" }, hAsync("div", { class: "name" }, item.name), hAsync("label", { class: "check" }, hAsync("input", { type: "checkbox", checked: item.checked, disabled: item.disabled, name: item.inputname }), hAsync("span", { class: "slider" }))), hAsync("div", null, item.description));
   }
   get root() { return getElement(this); }
   static get style() { return cookiePopupCss; }
@@ -14396,11 +14432,14 @@ class CookiePopup {
       "hide": [1540],
       "show": [1540],
       "extend": [1540],
-      "showpanel": [64]
+      "requirement": [1540],
+      "requirementMessage": [32],
+      "showpanel": [64],
+      "requireconsent": [64]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["hide", "hide"], ["show", "show"], ["extend", "extend"]]
+    "$attrsToReflect$": [["hide", "hide"], ["show", "show"], ["extend", "extend"], ["requirement", "requirement"]]
   }; }
 }
 
@@ -24505,6 +24544,8 @@ class NewsletterPopupEdrone {
     this.infoMessage = "Kupon rabatowy zostaje przyznany tylko raz na adres email. Minimalna wartość zamówienia wynosi: 100,00 zł";
     this.successHeading = "ZAPISANO DO NEWSLETTERA";
     this.successMessage = "Dziękujemy za dołączenie do grona subskrybentów. Niedługo otrzymasz wiadomość potwierdzającą.";
+    this.faliureHeading = "BŁĄD ZAPISU";
+    this.faliureMessage = "Zapis do newslettera nie powiódł się z powodu braku udzielenia zgody na przechowywanie wymaganych ciasteczek.";
     this.success = false;
   }
   componentDidLoad() {
@@ -24520,11 +24561,17 @@ class NewsletterPopupEdrone {
     if (!await ValidateInput(this.root.querySelector('form')))
       return;
     this.dialog.showLoading();
-    const target = event.target;
-    const data = new FormData(target);
-    this.track(data.get('email'), data.get('name'));
-    this.dialog.showSuccess(this.successHeading, this.successMessage);
-    this.success = true;
+    document.querySelector('ks-cookie-popup').requireconsent('newsletter').then(consentGranted => {
+      if (!consentGranted) {
+        this.dialog.showFailure(this.faliureHeading, this.faliureMessage);
+        return;
+      }
+      const target = event.target;
+      const data = new FormData(target);
+      this.track(data.get('email'), data.get('name'));
+      this.dialog.showSuccess(this.successHeading, this.successMessage);
+      this.success = true;
+    });
   }
   track(email, name) {
     const data = {
@@ -24565,6 +24612,8 @@ class NewsletterPopupEdrone {
       "infoMessage": [1, "info-message"],
       "successHeading": [1, "success-heading"],
       "successMessage": [1, "success-message"],
+      "faliureHeading": [1, "faliure-heading"],
+      "faliureMessage": [1, "faliure-message"],
       "Show": [64]
     },
     "$listeners$": undefined,
