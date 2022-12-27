@@ -26243,9 +26243,9 @@ function loadCommonData(commonDataId, commonDynamicId, Build) {
   }
 }
 function trackBase() {
-  const tracking = commonDynamic.get("tracking");
-  DataLayer.pageview(tracking.pageview);
   tracker.get("loaded").then(() => {
+    const tracking = commonDynamic.get("tracking");
+    DataLayer.pageview(tracking.pageview);
     const append = (obj) => tracker.set("trackers", [...tracker.get('trackers'), obj]);
     if (tracking.tiktok)
       append(new TikTokTracker());
