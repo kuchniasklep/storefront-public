@@ -24192,10 +24192,10 @@ var DataLayer;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
     (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.product', facebookEventId: eventID }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productImage: (product === null || product === void 0 ? void 0 : product.images.length) > 0 ? relativeToAbsolute(product.images[0].full.url) : undefined, productURL: relativeToAbsolute(document.location.href), productSKU: product.model, productBrand: product.brand.name, productCategory: categories[categories.length - 1].name, productAvailability: product.shippingTime, productQuantity: 1, productCategories: product.categories, ecomm_prodid: product.id, ecomm_pagetype: 'product', ecomm_totalvalue: product.currentPrice, ecommerce: {
         items: enchancedEcommerceItems([product])
-      }, uaecommerce: {
-        currencyCode: product.currency,
-        impressions: UAenchancedEcommerceItems([product])
-      } }));
+      }, uaecommerce: { ecommerce: {
+          currencyCode: product.currency,
+          impressions: UAenchancedEcommerceItems([product])
+        } } }));
   }
   DataLayer.product = product;
   async function listing(listing) {
@@ -24210,10 +24210,10 @@ var DataLayer;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
     (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: `ks.listing` }, customerData()), { type: type, listingCategories: type == "category" ? listing.breadcrumbs.filter(category => category.id != "0") : undefined, listingProducts: listing.products, ecommerce: {
         items: enchancedEcommerceItems(listing.products)
-      }, uaecommerce: {
-        currencyCode: (_d = (_c = listing.products) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.currency,
-        impressions: UAenchancedEcommerceItems(listing.products)
-      } }));
+      }, uaecommerce: { ecommerce: {
+          currencyCode: (_d = (_c = listing.products) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.currency,
+          impressions: UAenchancedEcommerceItems(listing.products)
+        } } }));
   }
   DataLayer.listing = listing;
   async function addToCart(product, eventID) {
@@ -24222,12 +24222,12 @@ var DataLayer;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
     (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.addToCart', facebookEventId: eventID }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
         items: enchancedEcommerceItems([product])
-      }, uaecommerce: {
-        currencyCode: product.currency,
-        add: {
-          products: UAenchancedEcommerceItems([product])
-        }
-      } }));
+      }, uaecommerce: { ecommerce: {
+          currencyCode: product.currency,
+          add: {
+            products: UAenchancedEcommerceItems([product])
+          }
+        } } }));
   }
   DataLayer.addToCart = addToCart;
   async function removeFromCart(product) {
@@ -24236,12 +24236,12 @@ var DataLayer;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
     (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.removeFromCart' }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
         items: enchancedEcommerceItems([product])
-      }, uaecommerce: {
-        currencyCode: product.currency,
-        remove: {
-          products: UAenchancedEcommerceItems([product])
-        }
-      } }));
+      }, uaecommerce: { ecommerce: {
+          currencyCode: product.currency,
+          remove: {
+            products: UAenchancedEcommerceItems([product])
+          }
+        } } }));
   }
   DataLayer.removeFromCart = removeFromCart;
   async function addToFavourites(product) {
@@ -24263,7 +24263,12 @@ var DataLayer;
         items: enchancedEcommerceItems(Object.values(cart.products)),
         value: cart.productValue,
         currency: cart.currency
-      } }));
+      }, uaecommerce: { ecommerce: {
+          checkout: {
+            actionField: { step: 1 },
+            products: UAenchancedEcommerceItems(Object.values(cart.products))
+          }
+        } } }));
   }
   DataLayer.view_cart = view_cart;
   async function order_checkout(order, eventID) {
@@ -24272,12 +24277,12 @@ var DataLayer;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
     (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.checkout', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderCoupon: order.coupon, ecommerce: {
         items: enchancedEcommerceItems(order.products)
-      }, uaecommerce: {
-        checkout: {
-          actionField: { step: 1 },
-          products: UAenchancedEcommerceItems(order.products)
-        }
-      } }));
+      }, uaecommerce: { ecommerce: {
+          checkout: {
+            actionField: { step: 3 },
+            products: UAenchancedEcommerceItems(order.products)
+          }
+        } } }));
   }
   DataLayer.order_checkout = order_checkout;
   async function order_form(order, eventID) {
@@ -24286,7 +24291,12 @@ var DataLayer;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
     (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.orderForm', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderCoupon: order.coupon, ecommerce: {
         items: enchancedEcommerceItems(order.products)
-      } }));
+      }, uaecommerce: { ecommerce: {
+          checkout: {
+            actionField: { step: 2 },
+            products: UAenchancedEcommerceItems(order.products)
+          }
+        } } }));
   }
   DataLayer.order_form = order_form;
   async function order_placed(order, eventID) {
@@ -24300,17 +24310,17 @@ var DataLayer;
         shipping: order.shippingValue,
         coupon: order.coupon,
         items: enchancedEcommerceItems(order.products)
-      }, uaecommerce: {
-        purchase: {
-          actionField: {
-            id: order.id,
-            revenue: order.totalValue,
-            shipping: order.shippingValue,
-            coupon: order.coupon
-          },
-          products: UAenchancedEcommerceItems(order.products)
-        }
-      } }));
+      }, uaecommerce: { ecommerce: {
+          purchase: {
+            actionField: {
+              id: order.id,
+              revenue: order.totalValue,
+              shipping: order.shippingValue,
+              coupon: order.coupon
+            },
+            products: UAenchancedEcommerceItems(order.products)
+          }
+        } } }));
   }
   DataLayer.order_placed = order_placed;
   async function search(query) {
