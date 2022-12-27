@@ -24266,6 +24266,7 @@ var DataLayer;
       }, uaecommerce: { ecommerce: {
           checkout: {
             actionField: { step: 1 },
+            currencyCode: cart.currency,
             products: UAenchancedEcommerceItems(Object.values(cart.products))
           }
         } } }));
@@ -24280,6 +24281,7 @@ var DataLayer;
       }, uaecommerce: { ecommerce: {
           checkout: {
             actionField: { step: 3 },
+            currencyCode: order.currency,
             products: UAenchancedEcommerceItems(order.products)
           }
         } } }));
@@ -24294,6 +24296,7 @@ var DataLayer;
       }, uaecommerce: { ecommerce: {
           checkout: {
             actionField: { step: 2 },
+            currencyCode: order.currency,
             products: UAenchancedEcommerceItems(order.products)
           }
         } } }));
@@ -24312,6 +24315,7 @@ var DataLayer;
         items: enchancedEcommerceItems(order.products)
       }, uaecommerce: { ecommerce: {
           purchase: {
+            currencyCode: order.currency,
             actionField: {
               id: order.id,
               revenue: order.totalValue,
