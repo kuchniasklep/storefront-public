@@ -24158,6 +24158,12 @@ function loadtracker() {
 
 var DataLayer;
 (function (DataLayer) {
+  var resolvepageview;
+  var pageviewed = new Promise(resolve => {
+    resolvepageview = () => {
+      resolve();
+    };
+  });
   function customerData() {
     const customer = commonDynamic.get('customer');
     const customerDataAvaliable = commonDynamic.get('loggedIn') && customer;
@@ -24176,10 +24182,12 @@ var DataLayer;
   async function pageview(eventID) {
     var _a;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(Object.assign({ event: 'ks.pageview', facebookEventId: eventID }, customerData()));
+    resolvepageview();
   }
   DataLayer.pageview = pageview;
   async function product(product, eventID = "") {
     var _a, _b;
+    await pageviewed;
     const categories = product.breadcrumbs;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
     (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.product', facebookEventId: eventID }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productImage: (product === null || product === void 0 ? void 0 : product.images.length) > 0 ? relativeToAbsolute(product.images[0].full.url) : undefined, productURL: relativeToAbsolute(document.location.href), productSKU: product.model, productBrand: product.brand.name, productCategory: categories[categories.length - 1].name, productAvailability: product.shippingTime, productQuantity: 1, productCategories: product.categories, ecommerce: {
@@ -24189,6 +24197,7 @@ var DataLayer;
   DataLayer.product = product;
   async function listing(listing) {
     var _a, _b;
+    await pageviewed;
     const type = listing.type == "category" ? "category" :
       listing.type == "manufacturer" ? "manufacturer" :
         listing.type == "search" ? "search" :
@@ -24203,6 +24212,7 @@ var DataLayer;
   DataLayer.listing = listing;
   async function addToCart(product, eventID) {
     var _a, _b;
+    await pageviewed;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
     (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.addToCart', facebookEventId: eventID }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
         items: enchancedEcommerceItems([product])
@@ -24211,6 +24221,7 @@ var DataLayer;
   DataLayer.addToCart = addToCart;
   async function removeFromCart(product) {
     var _a, _b;
+    await pageviewed;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
     (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.removeFromCart' }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
         items: enchancedEcommerceItems([product])
@@ -24219,6 +24230,7 @@ var DataLayer;
   DataLayer.removeFromCart = removeFromCart;
   async function addToFavourites(product) {
     var _a, _b;
+    await pageviewed;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
     (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.addToFavourites' }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
         items: enchancedEcommerceItems([product]),
@@ -24229,6 +24241,7 @@ var DataLayer;
   DataLayer.addToFavourites = addToFavourites;
   async function view_cart(cart) {
     var _a, _b;
+    await pageviewed;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
     (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.viewCart' }, customerData()), { cartCurrency: cart.currency, cartProductValue: cart.productValue, cartValue: cart.totalValue, cartProducts: cart.products, ecommerce: {
         items: enchancedEcommerceItems(Object.values(cart.products)),
@@ -24239,6 +24252,7 @@ var DataLayer;
   DataLayer.view_cart = view_cart;
   async function order_checkout(order, eventID) {
     var _a, _b;
+    await pageviewed;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
     (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.checkout', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderCoupon: order.coupon, ecommerce: {
         items: enchancedEcommerceItems(order.products)
@@ -24247,6 +24261,7 @@ var DataLayer;
   DataLayer.order_checkout = order_checkout;
   async function order_form(order, eventID) {
     var _a, _b;
+    await pageviewed;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
     (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.orderForm', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderCoupon: order.coupon, ecommerce: {
         items: enchancedEcommerceItems(order.products)
@@ -24255,6 +24270,7 @@ var DataLayer;
   DataLayer.order_form = order_form;
   async function order_placed(order, eventID) {
     var _a, _b;
+    await pageviewed;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
     (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.order', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderId: order.id, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderCoupon: order.coupon, ecommerce: {
         transaction_id: order.id,
@@ -24268,16 +24284,19 @@ var DataLayer;
   DataLayer.order_placed = order_placed;
   async function search(query) {
     var _a;
+    await pageviewed;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(Object.assign({ event: 'ks.search', searchQuery: query }, customerData()));
   }
   DataLayer.search = search;
   async function subscribe(subscription) {
     var _a;
+    await pageviewed;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(Object.assign(Object.assign({ event: 'ks.subscribe' }, customerData()), { subscriptionPlace: subscription.place, subscriptionEmail: subscription.email, subscriptionName: subscription === null || subscription === void 0 ? void 0 : subscription.name, subscriptionStatus: subscription.subscriber ? 1 : 0 }));
   }
   DataLayer.subscribe = subscribe;
   async function recipe(recipe) {
     var _a;
+    await pageviewed;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(Object.assign(Object.assign({ event: 'ks.recipe' }, customerData()), { recipeName: recipe.title, recipeCategory: recipe.category, recipeCuisine: recipe.cuisine }));
   }
   DataLayer.recipe = recipe;
