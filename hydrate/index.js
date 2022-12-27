@@ -24359,7 +24359,7 @@ var DataLayer;
         name: product.name,
         id: product.id,
         price: product.currentPrice,
-        brand: product.brand.name,
+        brand: product.brandName,
         category: categories.join('/'),
         position: index + 1,
         quantity: product.quantity
