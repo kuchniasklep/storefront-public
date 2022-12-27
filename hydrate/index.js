@@ -24192,11 +24192,14 @@ var DataLayer;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
     (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.product', facebookEventId: eventID }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productImage: (product === null || product === void 0 ? void 0 : product.images.length) > 0 ? relativeToAbsolute(product.images[0].full.url) : undefined, productURL: relativeToAbsolute(document.location.href), productSKU: product.model, productBrand: product.brand.name, productCategory: categories[categories.length - 1].name, productAvailability: product.shippingTime, productQuantity: 1, productCategories: product.categories, ecomm_prodid: product.id, ecomm_pagetype: 'product', ecomm_totalvalue: product.currentPrice, ecommerce: {
         items: enchancedEcommerceItems([product])
+      }, uaecommerce: {
+        currencyCode: product.currency,
+        impressions: UAenchancedEcommerceItems([product])
       } }));
   }
   DataLayer.product = product;
   async function listing(listing) {
-    var _a, _b;
+    var _a, _b, _c, _d;
     await pageviewed;
     const type = listing.type == "category" ? "category" :
       listing.type == "manufacturer" ? "manufacturer" :
@@ -24207,6 +24210,9 @@ var DataLayer;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
     (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: `ks.listing` }, customerData()), { type: type, listingCategories: type == "category" ? listing.breadcrumbs.filter(category => category.id != "0") : undefined, listingProducts: listing.products, ecommerce: {
         items: enchancedEcommerceItems(listing.products)
+      }, uaecommerce: {
+        currencyCode: (_d = (_c = listing.products) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.currency,
+        impressions: UAenchancedEcommerceItems(listing.products)
       } }));
   }
   DataLayer.listing = listing;
@@ -24216,6 +24222,11 @@ var DataLayer;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
     (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.addToCart', facebookEventId: eventID }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
         items: enchancedEcommerceItems([product])
+      }, uaecommerce: {
+        currencyCode: product.currency,
+        add: {
+          products: UAenchancedEcommerceItems([product])
+        }
       } }));
   }
   DataLayer.addToCart = addToCart;
@@ -24225,6 +24236,11 @@ var DataLayer;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
     (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.removeFromCart' }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
         items: enchancedEcommerceItems([product])
+      }, uaecommerce: {
+        currencyCode: product.currency,
+        remove: {
+          products: UAenchancedEcommerceItems([product])
+        }
       } }));
   }
   DataLayer.removeFromCart = removeFromCart;
@@ -24256,6 +24272,11 @@ var DataLayer;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
     (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.checkout', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderCoupon: order.coupon, ecommerce: {
         items: enchancedEcommerceItems(order.products)
+      }, uaecommerce: {
+        checkout: {
+          actionField: { step: 1 },
+          products: UAenchancedEcommerceItems(order.products)
+        }
       } }));
   }
   DataLayer.order_checkout = order_checkout;
@@ -24274,11 +24295,21 @@ var DataLayer;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
     (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.order', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderId: order.id, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderCoupon: order.coupon, ecomm_prodid: JSON.stringify(Object.values(order.products).map(product => product.id)), ecomm_pagetype: 'purchase', ecomm_totalvalue: order.productValue, ecommerce: {
         transaction_id: order.id,
-        value: order.productValue,
+        value: order.totalValue,
         currency: order.currency,
         shipping: order.shippingValue,
         coupon: order.coupon,
         items: enchancedEcommerceItems(order.products)
+      }, uaecommerce: {
+        purchase: {
+          actionField: {
+            id: order.id,
+            revenue: order.totalValue,
+            shipping: order.shippingValue,
+            coupon: order.coupon
+          },
+          products: UAenchancedEcommerceItems(order.products)
+        }
       } }));
   }
   DataLayer.order_placed = order_placed;
@@ -24318,6 +24349,20 @@ var DataLayer;
         item_category3: categories === null || categories === void 0 ? void 0 : categories[2],
         item_category4: categories === null || categories === void 0 ? void 0 : categories[3],
         item_category5: categories === null || categories === void 0 ? void 0 : categories[4],
+      };
+    });
+  }
+  function UAenchancedEcommerceItems(products) {
+    return products.map((product, index) => {
+      const categories = product.breadcrumbs.map(category => category.name);
+      return {
+        name: product.name,
+        id: product.id,
+        price: product.currentPrice,
+        brand: product.brand.name,
+        category: categories.join('/'),
+        position: index + 1,
+        quantity: product.quantity
       };
     });
   }
