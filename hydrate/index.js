@@ -24336,7 +24336,7 @@ var DataLayer;
   }
   function enchancedEcommerceItems(products) {
     return products.map((product, index) => {
-      const categories = product.breadcrumbs.map(category => category.name).reverse();
+      const categories = product.breadcrumbs.filter(category => category.name != "Strona główna").map(category => category.name).reverse();
       return {
         item_id: product.id,
         item_name: product.name,
@@ -24354,7 +24354,7 @@ var DataLayer;
   }
   function UAenchancedEcommerceItems(products) {
     return products.map((product, index) => {
-      const categories = product.breadcrumbs.map(category => category.name);
+      const categories = product.breadcrumbs.filter(category => category.name != "Strona główna").map(category => category.name);
       return {
         name: product.name,
         id: product.id,
