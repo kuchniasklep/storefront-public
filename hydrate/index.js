@@ -27490,7 +27490,6 @@ const productCardCss = "ks-product-card{display:-ms-flexbox;display:flex;-ms-fle
 class ProductCard$1 {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.unavailable = false;
     this.linkOnly = false;
     this.cartLoading = false;
     this.favLoading = false;
@@ -27542,7 +27541,7 @@ class ProductCard$1 {
       hAsync("div", { class: "price" }, this.product.previousPrice ?
         hAsync("s", { class: "previous" }, this.product.previousPrice, " z\u0142")
         : null, hAsync("span", { class: "current" }, this.product.currentPrice, " z\u0142")),
-      hAsync("div", { class: "bottom" }, this.unavailable ? hAsync("a", { href: this.product.link, class: "unavailable" }, translations.unavailable)
+      hAsync("div", { class: "bottom" }, this.product.unavailable ? hAsync("a", { href: this.product.link, class: "unavailable" }, translations.unavailable)
         : this.linkOnly ? hAsync("a", { href: this.product.link, class: "link" }, translations.seeMore)
           : [
             hAsync("button", { class: "fav", onClick: () => this.favourites() }, this.favLoading ? hAsync("ks-loader", null) : hAsync("ks-icon", { name: "star" }), this.favSuccess ?
@@ -27559,7 +27558,6 @@ class ProductCard$1 {
     "$flags$": 0,
     "$tagName$": "ks-product-card",
     "$members$": {
-      "unavailable": [516],
       "linkOnly": [4, "link-only"],
       "product": [16],
       "cartLoading": [32],
@@ -27568,7 +27566,7 @@ class ProductCard$1 {
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["unavailable", "unavailable"]]
+    "$attrsToReflect$": []
   }; }
 }
 
