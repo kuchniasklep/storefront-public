@@ -14727,8 +14727,8 @@ class CookiePopup {
     if (!Build.isBrowser)
       return hAsync(Host, null);
     const consent = commonDynamic.get('consent');
-    return hAsync(Host, { "aria-hidden": this.show ? "false" : "true" }, hAsync("div", { class: "message" }, hAsync("p", null, this.requirement ? this.requirementMessage : common.get('cookieMessage')), this.requirement ? null : hAsync("div", { class: "buttons" }, hAsync("ks-button", { round: true, light: true, name: "Akceptuj wszystkie", onClick: () => this.hidepanel(true) }), hAsync("ks-button", { round: true, border: true, light: true, name: "Ustawienia", onClick: () => this.extendpanel() }))), hAsync("div", { class: "settings" }, (_b = (_a = consent === null || consent === void 0 ? void 0 : consent.items) === null || _a === void 0 ? void 0 : _a.map) === null || _b === void 0 ? void 0 :
-      _b.call(_a, item => this.type(item)), hAsync("div", { class: "buttons" }, this.requirement ? hAsync("ks-button", { round: true, light: true, name: "Akceptuj wszystkie", onClick: () => this.hidepanel(true) }) : null, hAsync("ks-button", { round: true, border: true, light: true, name: "Zapisz ustawienia", onClick: () => this.hidepanel(false) }))));
+    return hAsync(Host, { "aria-hidden": this.show ? "false" : "true" }, hAsync("div", { class: "message" }, hAsync("p", null, this.requirement ? this.requirementMessage : common.get('cookieMessage')), this.requirement ? null : hAsync("div", { class: "buttons" }, hAsync("ks-button", { round: true, border: true, light: true, name: "Ustawienia", onClick: () => this.extendpanel() }), hAsync("ks-button", { round: true, light: true, name: "Akceptuj wszystkie", onClick: () => this.hidepanel(true) }))), hAsync("div", { class: "settings" }, (_b = (_a = consent === null || consent === void 0 ? void 0 : consent.items) === null || _a === void 0 ? void 0 : _a.map) === null || _b === void 0 ? void 0 :
+      _b.call(_a, item => this.type(item)), hAsync("div", { class: "buttons" }, hAsync("ks-button", { round: true, border: true, light: true, name: "Zapisz ustawienia", onClick: () => this.hidepanel(false) }), this.requirement ? hAsync("ks-button", { round: true, light: true, name: "Akceptuj wszystkie", onClick: () => this.hidepanel(true) }) : null)));
   }
   type(item) {
     return hAsync("div", { class: "type" + (item.highlighted ? " highlight" : "") }, hAsync("div", { class: "heading" }, hAsync("div", { class: "name" }, item.name), hAsync("label", { class: "check" }, hAsync("input", { type: "checkbox", checked: item.checked, disabled: item.disabled, name: item.inputname }), hAsync("span", { class: "slider" }))), hAsync("div", null, item.description));
@@ -27831,13 +27831,16 @@ function loadtracker() {
 
 var DataLayer;
 (function (DataLayer) {
-  async function pageview(commonDynamic, eventID) {
-    var _a;
-    const customer = commonDynamic.customer;
-    const customerDataAvaliable = commonDynamic.loggedIn && customer;
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
-      event: 'ks.pageview',
-      facebookEventId: eventID,
+  var resolvepageview;
+  var pageviewed = new Promise(resolve => {
+    resolvepageview = () => {
+      resolve();
+    };
+  });
+  function customerData() {
+    const customer = commonDynamic.get('customer');
+    const customerDataAvaliable = commonDynamic.get('loggedIn') && customer;
+    return {
       customerDataAvailable: customerDataAvaliable,
       customerEmail: customerDataAvaliable ? customer.email : undefined,
       customerFirstName: customerDataAvaliable ? customer.firstName : undefined,
@@ -27847,36 +27850,30 @@ var DataLayer;
       customerCity: customerDataAvaliable ? customer.city : undefined,
       customerPhone: customerDataAvaliable ? customer.phone : undefined,
       customerCurrency: customerDataAvaliable ? customer.currency : undefined,
-    });
+    };
+  }
+  async function pageview(eventID) {
+    var _a;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(Object.assign({ event: 'ks.pageview', facebookEventId: eventID }, customerData()));
+    resolvepageview();
   }
   DataLayer.pageview = pageview;
   async function product(product, eventID = "") {
     var _a, _b;
+    await pageviewed;
     const categories = product.breadcrumbs;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push({
-      event: 'ks.product',
-      facebookEventId: eventID,
-      productId: product.id,
-      productName: product.name,
-      productPrice: product.currentPrice,
-      productCurrency: product.currency,
-      productImage: (product === null || product === void 0 ? void 0 : product.images.length) > 0 ? relativeToAbsolute(product.images[0].full.url) : undefined,
-      productURL: relativeToAbsolute(document.location.href),
-      productSKU: product.model,
-      productBrand: product.brand.name,
-      productCategory: categories[categories.length - 1].name,
-      productAvailability: product.shippingTime,
-      productQuantity: 1,
-      productCategories: product.categories,
-      ecommerce: {
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.product', facebookEventId: eventID }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productImage: (product === null || product === void 0 ? void 0 : product.images.length) > 0 ? relativeToAbsolute(product.images[0].full.url) : undefined, productURL: relativeToAbsolute(document.location.href), productSKU: product.model, productBrand: product.brand.name, productCategory: categories[categories.length - 1].name, productAvailability: product.shippingTime, productQuantity: 1, productCategories: product.categories, ecomm_prodid: product.id, ecomm_pagetype: 'product', ecomm_totalvalue: product.currentPrice, ecommerce: {
         items: enchancedEcommerceItems([product])
-      }
-    });
+      }, uaecommerce: { ecommerce: {
+          currencyCode: product.currency,
+          impressions: UAenchancedEcommerceItems([product])
+        } } }));
   }
   DataLayer.product = product;
   async function listing(listing) {
-    var _a, _b;
+    var _a, _b, _c, _d;
+    await pageviewed;
     const type = listing.type == "category" ? "category" :
       listing.type == "manufacturer" ? "manufacturer" :
         listing.type == "search" ? "search" :
@@ -27884,184 +27881,141 @@ var DataLayer;
     if (!type)
       return;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push({
-      event: `ks.listing`,
-      type: type,
-      listingCategories: type == "category" ? listing.breadcrumbs.filter(category => category.id != "0") : undefined,
-      listingProducts: listing.products,
-      ecommerce: {
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: `ks.listing` }, customerData()), { type: type, listingCategories: type == "category" ? listing.breadcrumbs.filter(category => category.id != "0") : undefined, listingProducts: listing.products, ecommerce: {
         items: enchancedEcommerceItems(listing.products)
-      }
-    });
+      }, uaecommerce: { ecommerce: {
+          currencyCode: (_d = (_c = listing.products) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.currency,
+          impressions: UAenchancedEcommerceItems(listing.products)
+        } } }));
   }
   DataLayer.listing = listing;
   async function addToCart(product, eventID) {
     var _a, _b;
+    await pageviewed;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push({
-      event: 'ks.addToCart',
-      facebookEventId: eventID,
-      productId: product.id,
-      productName: product.name,
-      productPrice: product.currentPrice,
-      productCurrency: product.currency,
-      productQuantity: product.quantity,
-      productImage: relativeToAbsolute(product.imageFull),
-      productURL: relativeToAbsolute(product.link),
-      productSKU: product.sku,
-      productCategories: product.categories,
-      ecommerce: {
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.addToCart', facebookEventId: eventID }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
         items: enchancedEcommerceItems([product])
-      }
-    });
+      }, uaecommerce: { ecommerce: {
+          currencyCode: product.currency,
+          add: {
+            products: UAenchancedEcommerceItems([product])
+          }
+        } } }));
   }
   DataLayer.addToCart = addToCart;
   async function removeFromCart(product) {
     var _a, _b;
+    await pageviewed;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push({
-      event: 'ks.removeFromCart',
-      productId: product.id,
-      productName: product.name,
-      productPrice: product.currentPrice,
-      productCurrency: product.currency,
-      productQuantity: product.quantity,
-      productImage: relativeToAbsolute(product.imageFull),
-      productURL: relativeToAbsolute(product.link),
-      productSKU: product.sku,
-      productCategories: product.categories,
-      ecommerce: {
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.removeFromCart' }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
         items: enchancedEcommerceItems([product])
-      }
-    });
+      }, uaecommerce: { ecommerce: {
+          currencyCode: product.currency,
+          remove: {
+            products: UAenchancedEcommerceItems([product])
+          }
+        } } }));
   }
   DataLayer.removeFromCart = removeFromCart;
   async function addToFavourites(product) {
     var _a, _b;
+    await pageviewed;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push({
-      event: 'ks.addToFavourites',
-      productId: product.id,
-      productName: product.name,
-      productPrice: product.currentPrice,
-      productCurrency: product.currency,
-      productQuantity: product.quantity,
-      productImage: relativeToAbsolute(product.imageFull),
-      productURL: relativeToAbsolute(product.link),
-      productSKU: product.sku,
-      productCategories: product.categories,
-      ecommerce: {
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.addToFavourites' }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
         items: enchancedEcommerceItems([product]),
         value: product.currentPrice,
         currency: product.currency
-      }
-    });
+      } }));
   }
   DataLayer.addToFavourites = addToFavourites;
   async function view_cart(cart) {
     var _a, _b;
+    await pageviewed;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push({
-      event: 'ks.viewCart',
-      cartCurrency: cart.currency,
-      cartProductValue: cart.productValue,
-      cartValue: cart.totalValue,
-      cartProducts: cart.products,
-      ecommerce: {
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.viewCart' }, customerData()), { cartCurrency: cart.currency, cartProductValue: cart.productValue, cartValue: cart.totalValue, cartProducts: cart.products, ecomm_prodid: JSON.stringify(Object.values(cart.products).map(product => product.id)), ecomm_pagetype: 'cart', ecomm_totalvalue: cart.productValue, ecommerce: {
         items: enchancedEcommerceItems(Object.values(cart.products)),
         value: cart.productValue,
         currency: cart.currency
-      }
-    });
+      }, uaecommerce: { ecommerce: {
+          checkout: {
+            actionField: { step: 1 },
+            currencyCode: cart.currency,
+            products: UAenchancedEcommerceItems(Object.values(cart.products))
+          }
+        } } }));
   }
   DataLayer.view_cart = view_cart;
   async function order_checkout(order, eventID) {
     var _a, _b;
+    await pageviewed;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push({
-      event: 'ks.checkout',
-      facebookEventId: eventID,
-      orderProducts: order.products,
-      orderValue: order.totalValue,
-      orderProductValue: order.productValue,
-      orderCurrency: order.currency,
-      orderShipping: order.shippingValue,
-      orderCoupon: order.coupon,
-      ecommerce: {
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.checkout', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderCoupon: order.coupon, ecommerce: {
         items: enchancedEcommerceItems(order.products)
-      }
-    });
+      }, uaecommerce: { ecommerce: {
+          checkout: {
+            actionField: { step: 3 },
+            currencyCode: order.currency,
+            products: UAenchancedEcommerceItems(order.products)
+          }
+        } } }));
   }
   DataLayer.order_checkout = order_checkout;
   async function order_form(order, eventID) {
     var _a, _b;
+    await pageviewed;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push({
-      event: 'ks.orderForm',
-      facebookEventId: eventID,
-      orderProducts: order.products,
-      orderValue: order.totalValue,
-      orderProductValue: order.productValue,
-      orderCurrency: order.currency,
-      orderShipping: order.shippingValue,
-      orderCoupon: order.coupon,
-      ecommerce: {
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.orderForm', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderCoupon: order.coupon, ecommerce: {
         items: enchancedEcommerceItems(order.products)
-      }
-    });
+      }, uaecommerce: { ecommerce: {
+          checkout: {
+            actionField: { step: 2 },
+            currencyCode: order.currency,
+            products: UAenchancedEcommerceItems(order.products)
+          }
+        } } }));
   }
   DataLayer.order_form = order_form;
   async function order_placed(order, eventID) {
     var _a, _b;
+    await pageviewed;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push({
-      event: 'ks.order',
-      facebookEventId: eventID,
-      orderProducts: order.products,
-      orderId: order.id,
-      orderValue: order.totalValue,
-      orderProductValue: order.productValue,
-      orderCurrency: order.currency,
-      orderShipping: order.shippingValue,
-      orderCoupon: order.coupon,
-      ecommerce: {
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.order', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderId: order.id, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderCoupon: order.coupon, ecomm_prodid: JSON.stringify(Object.values(order.products).map(product => product.id)), ecomm_pagetype: 'purchase', ecomm_totalvalue: order.productValue, ecommerce: {
         transaction_id: order.id,
-        value: order.productValue,
+        value: order.totalValue,
         currency: order.currency,
         shipping: order.shippingValue,
         coupon: order.coupon,
         items: enchancedEcommerceItems(order.products)
-      }
-    });
+      }, uaecommerce: { ecommerce: {
+          purchase: {
+            currencyCode: order.currency,
+            actionField: {
+              id: order.id,
+              revenue: order.totalValue,
+              shipping: order.shippingValue,
+              coupon: order.coupon
+            },
+            products: UAenchancedEcommerceItems(order.products)
+          }
+        } } }));
   }
   DataLayer.order_placed = order_placed;
   async function search(query) {
     var _a;
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
-      event: 'ks.search',
-      searchQuery: query
-    });
+    await pageviewed;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(Object.assign({ event: 'ks.search', searchQuery: query }, customerData()));
   }
   DataLayer.search = search;
   async function subscribe(subscription) {
     var _a;
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
-      event: 'ks.subscribe',
-      subscriptionPlace: subscription.place,
-      subscriptionEmail: subscription.email,
-      subscriptionName: subscription === null || subscription === void 0 ? void 0 : subscription.name,
-      subscriptionStatus: subscription.subscriber ? 1 : 0
-    });
+    await pageviewed;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(Object.assign(Object.assign({ event: 'ks.subscribe' }, customerData()), { subscriptionPlace: subscription.place, subscriptionEmail: subscription.email, subscriptionName: subscription === null || subscription === void 0 ? void 0 : subscription.name, subscriptionStatus: subscription.subscriber ? 1 : 0 }));
   }
   DataLayer.subscribe = subscribe;
   async function recipe(recipe) {
     var _a;
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({
-      event: 'ks.recipe',
-      recipeName: recipe.title,
-      recipeCategory: recipe.category,
-      recipeCuisine: recipe.cuisine
-    });
+    await pageviewed;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(Object.assign(Object.assign({ event: 'ks.recipe' }, customerData()), { recipeName: recipe.title, recipeCategory: recipe.category, recipeCuisine: recipe.cuisine }));
   }
   DataLayer.recipe = recipe;
   function relativeToAbsolute(url) {
@@ -28069,7 +28023,7 @@ var DataLayer;
   }
   function enchancedEcommerceItems(products) {
     return products.map((product, index) => {
-      const categories = product.breadcrumbs.map(category => category.name).reverse();
+      const categories = product.breadcrumbs.filter(category => category.name != "Strona główna").map(category => category.name).reverse();
       return {
         item_id: product.id,
         item_name: product.name,
@@ -28082,6 +28036,20 @@ var DataLayer;
         item_category3: categories === null || categories === void 0 ? void 0 : categories[2],
         item_category4: categories === null || categories === void 0 ? void 0 : categories[3],
         item_category5: categories === null || categories === void 0 ? void 0 : categories[4],
+      };
+    });
+  }
+  function UAenchancedEcommerceItems(products) {
+    return products.map((product, index) => {
+      const categories = product.breadcrumbs.filter(category => category.name != "Strona główna").map(category => category.name);
+      return {
+        name: product.name,
+        id: product.id,
+        price: product.currentPrice,
+        brand: product.brandName,
+        category: categories.join('/'),
+        position: index + 1,
+        quantity: product.quantity
       };
     });
   }
@@ -30184,6 +30152,7 @@ function loadCommonData(commonDataId, commonDynamicId, Build) {
 function trackBase() {
   tracker.get("loaded").then(() => {
     const tracking = commonDynamic.get("tracking");
+    DataLayer.pageview(tracking.pageview);
     const append = (obj) => tracker.set("trackers", [...tracker.get('trackers'), obj]);
     if (tracking.tiktok)
       append(new TikTokTracker());
@@ -30191,7 +30160,6 @@ function trackBase() {
       append(new FacebookTracker(tracking.facebook));
     if (tracking.edrone)
       append(new EdroneTracker());
-    DataLayer.pageview(commonDynamic.state, tracking.pageview);
     eachTracker(item => item === null || item === void 0 ? void 0 : item.pageview(commonDynamic.state, tracking.pageview));
     resolve();
   });
@@ -31412,7 +31380,6 @@ const productCardCss = "ks-product-card{display:-ms-flexbox;display:flex;-ms-fle
 class ProductCard$1 {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.unavailable = false;
     this.linkOnly = false;
     this.product = undefined;
     this.cartLoading = false;
@@ -31467,7 +31434,7 @@ class ProductCard$1 {
       hAsync("div", { class: "price" }, this.product.previousPrice ?
         hAsync("s", { class: "previous" }, previousPrice)
         : null, hAsync("span", { class: "current" }, currentPrice)),
-      hAsync("div", { class: "bottom" }, this.unavailable ? hAsync("a", { href: this.product.link, class: "unavailable" }, translations.unavailable)
+      hAsync("div", { class: "bottom" }, this.product.unavailable ? hAsync("a", { href: this.product.link, class: "unavailable" }, translations.unavailable)
         : this.linkOnly ? hAsync("a", { href: this.product.link, class: "link" }, translations.seeMore)
           : [
             hAsync("button", { class: "fav", onClick: () => this.favourites() }, this.favLoading ? hAsync("ks-loader", null) : hAsync("ks-icon", { name: "star" }), this.favSuccess ?
@@ -31484,7 +31451,6 @@ class ProductCard$1 {
     "$flags$": 0,
     "$tagName$": "ks-product-card",
     "$members$": {
-      "unavailable": [516],
       "linkOnly": [4, "link-only"],
       "product": [16],
       "cartLoading": [32],
@@ -31493,7 +31459,7 @@ class ProductCard$1 {
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["unavailable", "unavailable"]]
+    "$attrsToReflect$": []
   }; }
 }
 
