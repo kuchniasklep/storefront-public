@@ -20663,6 +20663,8 @@ class Filtering {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.baseUrl = undefined;
+    this.query = undefined;
+    this.filters = undefined;
   }
   submit(e) {
     e.preventDefault();
@@ -20684,18 +20686,40 @@ class Filtering {
     return false;
   }
   render() {
+    if (!Build.isBrowser)
+      return hAsync(Host, null);
     return [
       hAsync("ks-button", { narrow: true, muted: true, border: true, name: "Filtruj", left: true, icon: "filter", onClick: () => this.root.querySelector('ks-sidepanel').show() }),
-      hAsync("ks-sidepanel", { left: true }, hAsync("span", { class: "heading" }, "Filtrowanie"), hAsync("form", { method: "POST", action: this.baseUrl }, hAsync("input", { type: "hidden", name: "postget", value: "tak" }), hAsync("slot", null), hAsync("ks-button", { class: "clear", border: true, link: this.baseUrl, name: "Wyczy\u015B\u0107 Filtry" }), hAsync("ks-button", { submit: true, secondary: true, name: "Zobacz filtry" })))
+      hAsync("ks-sidepanel", { left: true }, hAsync("span", { class: "heading" }, "Filtrowanie"), hAsync("form", { method: "POST", action: this.baseUrl }, hAsync("input", { type: "hidden", name: "postget", value: "tak" }), this.query ?
+        hAsync("input", { type: "hidden", name: "szukaj", value: this.query })
+        : null, this.filters.map(filter => (filter === null || filter === void 0 ? void 0 : filter.items.length) > 0 ?
+        hAsync("ks-filter", { name: filter.name, active: filter.active }, filter.items.map(item => {
+          if (filter.type == "checkbox") {
+            item = item;
+            return hAsync("ks-filter-checkbox", { active: item.active, name: item.name, value: item.value, text: item.content });
+          }
+          if (filter.type == "color") {
+            item = item;
+            return hAsync("ks-filter-color", { active: item.active, name: item.name, value: item.value, color: item.content });
+          }
+          if (filter.type == "slider") {
+            item = item;
+            return hAsync("ks-filter-slider", { name: item.name, values: item.values, snap: item.snap, steps: item.steps, from: item.from, to: item.to });
+          }
+          return null;
+        }))
+        : null), hAsync("ks-button", { class: "clear", border: true, link: this.baseUrl, name: "Wyczy\u015B\u0107 Filtry" }), hAsync("ks-button", { submit: true, secondary: true, name: "Zobacz filtry" })))
     ];
   }
   get root() { return getElement(this); }
   static get style() { return filteringCss; }
   static get cmpMeta() { return {
-    "$flags$": 4,
+    "$flags$": 0,
     "$tagName$": "ks-filtering",
     "$members$": {
-      "baseUrl": [1, "base-url"]
+      "baseUrl": [1, "base-url"],
+      "query": [1],
+      "filters": [16]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
@@ -30456,25 +30480,7 @@ class PageListing {
       hAsync("ks-info-banner", { image: infoBanner.image, color: infoBanner.color, width: infoBanner.width, height: infoBanner.height, name: infoBanner.name, link: infoBanner.link, theme: infoBanner.theme })
       : null, hAsync("ks-listing-header", { heading: listing.get('title'), breadcrumbs: listing.get('breadcrumbs'), description: listing.get('description'), categories: listing.get('categories'), query: query, autocorrect: listing.get('autocorrect') }), navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 ?
       hAsync("ks-listing-navigation", { products: navigation.products }, (filters === null || filters === void 0 ? void 0 : filters.length) > 0 ?
-        hAsync("ks-filtering", { "base-url": navigation.base }, query ?
-          hAsync("input", { type: "hidden", name: "szukaj", value: query })
-          : null, filters.map(filter => (filter === null || filter === void 0 ? void 0 : filter.items.length) > 0 ?
-          hAsync("ks-filter", { name: filter.name, active: filter.active }, filter.items.map(item => {
-            if (filter.type == "checkbox") {
-              item = item;
-              return hAsync("ks-filter-checkbox", { active: item.active, name: item.name, value: item.value, text: item.content });
-            }
-            if (filter.type == "color") {
-              item = item;
-              return hAsync("ks-filter-color", { active: item.active, name: item.name, value: item.value, color: item.content });
-            }
-            if (filter.type == "slider") {
-              item = item;
-              return hAsync("ks-filter-slider", { name: item.name, values: item.values, snap: item.snap, steps: item.steps, from: item.from, to: item.to });
-            }
-            return null;
-          }))
-          : null))
+        hAsync("ks-filtering", { "base-url": navigation.base, query: query, filters: filters })
         : null, hAsync("ks-sorting", { post: navigation.paginationBase }), hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.paginationBase, pattern: navigation.pattern }))
       : null, (products === null || products === void 0 ? void 0 : products.length) > 0 ?
       hAsync("ks-product-container", null, products.map(card => hAsync("ks-product-card", { product: card })))
