@@ -14227,6 +14227,7 @@ class Contact {
 class ContactButtons {
   constructor(hostRef) {
     registerInstance(this, hostRef);
+    this.phone = "000000000";
   }
   render() {
     return [
