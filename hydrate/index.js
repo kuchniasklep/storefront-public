@@ -14126,12 +14126,14 @@ class CartSelectPayment {
       return value.id == this.active;
     });
     const strings = cart.get("strings");
+    const paymentSelect = cart.get("payment").length > 0 ?
+      strings.paymentSelect : strings.paymentMethodMissing;
     return [
       hAsync("div", { class: "select animation", onClick: () => {
           if (!this.loading)
             this.toggled = !this.toggled;
         } }, hAsync("div", { class: "selectSlot" }, this.active == -1 ?
-        hAsync("ks-cart-select-item", { name: strings.paymentSelect }) :
+        hAsync("ks-cart-select-item", { name: paymentSelect }) :
         hAsync("ks-cart-select-item", { logo: activeItem.logo, name: activeItem.name, price: activeItem.price })), hAsync("div", { class: "selectIcon" }, hAsync("span", { "uk-icon": "icon: triangle-down; ratio: 1.3" }))),
       hAsync("div", { class: "items", hidden: !this.toggled }, cart.get("payment").map((item) => hAsync("ks-cart-select-item", { key: item.id, logo: item.logo, name: item.name, price: item.price, color: item.color, onClick: () => this.ActivateItem(item.id) })))
     ];
@@ -14211,12 +14213,14 @@ class CartSelectShipping {
       return value.id == this.active;
     });
     const strings = cart.get("strings");
+    const shippingSelect = cart.get("shipping").length > 0 ?
+      strings.shippingSelect : strings.shippingMethodMissing;
     return [
       hAsync("div", { class: "select animation", onClick: () => {
           if (!this.loading)
             this.toggled = !this.toggled;
         } }, hAsync("div", { class: "selectSlot" }, this.active == -1 ?
-        hAsync("ks-cart-select-item", { name: strings.shippingSelect }) :
+        hAsync("ks-cart-select-item", { name: shippingSelect }) :
         hAsync("ks-cart-select-item", { logo: activeItem.logo, name: activeItem.name, price: activeItem.price })), hAsync("div", { class: "selectIcon" }, hAsync("span", { "uk-icon": "icon: triangle-down; ratio: 1.3" }))),
       hAsync("div", { class: "items", hidden: !this.toggled }, cart.get("shipping").map((item) => hAsync("ks-cart-select-item", { key: item.id, logo: item.logo, name: item.name, price: item.price, color: item.color, onClick: () => this.ActivateItem(item.id) })))
     ];
@@ -14530,7 +14534,7 @@ class Contact {
 class ContactButtons {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.phone = undefined;
+    this.phone = "000000000";
     this.email = undefined;
   }
   render() {
