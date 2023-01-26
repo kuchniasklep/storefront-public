@@ -14227,6 +14227,7 @@ class Contact {
 class ContactButtons {
   constructor(hostRef) {
     registerInstance(this, hostRef);
+    this.phone = "000000000";
   }
   render() {
     return [
@@ -26857,7 +26858,7 @@ class PageProduct {
       hAsync("ks-product-attribute", { icon: "dollar-sign" }, installments === null || installments === void 0 ? void 0 : installments.attributeMessage)
       : null, model || ean ?
       hAsync("ks-product-attribute", { style: { marginTop: "15px" }, icon: "file", faded: true }, hAsync("span", { style: { marginRight: "15px" } }, model ? hAsync("span", { style: { marginRight: "7px" } }, "Model: ", model, " ") : null, ean ? hAsync("span", null, "EAN: ", ean) : null))
-      : null, hAsync("ks-product-history", { name: product.get('history'), productId: product.get('id'), api: commonDynamic.get('api').productHistory }), hAsync("div", { class: "buttons" }, product.get('negotiateEnabled') ?
+      : null, hAsync("div", { class: "buttons" }, product.get('negotiateEnabled') ?
       hAsync("ks-product-negotiate", null, hAsync("ks-product-button", null, product.get('negotiate').heading))
       : null, (installments.payuId && installments.payuKey) || installments.caParameters ?
       hAsync("ks-product-installments", { name: installments.button }, installments.payuId && installments.payuKey ?
@@ -28274,19 +28275,20 @@ class ProductPoints {
   }; }
 }
 
-const productPriceCss = "ks-product-price{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;margin:10px 0 20px;font-family:var(--product-price-font);font-weight:700}ks-product-price .previous{display:inline-block;color:var(--color-faded);font-size:var(--product-price-size);line-height:var(--product-price-size);position:relative;margin-left:15px}ks-product-price .previous::after{background-color:var(--color-faded);content:\"\";height:0.1em;left:-3px;right:-3px;position:absolute;top:46%}ks-product-price .current{color:var(--color-secondary);font-size:var(--product-price-size-emphasis);line-height:var(--product-price-size)}@media only screen and (max-width: 560px){ks-product-price .price{display:block;width:100%;margin-bottom:20px;margin-right:0px;text-align:center}}ks-product-price .currency{width:15px;height:15px;padding:5px;line-height:13px;margin:1px 0 0 10px;border-radius:30px;background-color:var(--color-secondary);color:white;font-family:var(--product-price-font);text-align:center;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none}";
+const productPriceCss = "ks-product-price{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;margin:12px 0 12px;font-family:var(--product-price-font);font-weight:700}ks-product-price .main{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;margin-bottom:3px}ks-product-price .previous{display:inline-block;color:var(--color-faded);font-size:var(--product-price-size);line-height:var(--product-price-size);position:relative;margin-left:15px}ks-product-price .lowest{display:block;width:100%;font-weight:500}ks-product-price .previous::after{background-color:var(--color-faded);content:\"\";height:0.1em;left:-3px;right:-3px;position:absolute;top:46%}ks-product-price .current{color:var(--color-secondary);font-size:var(--product-price-size-emphasis);line-height:var(--product-price-size)}@media only screen and (max-width: 960px){ks-product-price{-ms-flex-align:center;align-items:center}}@media only screen and (max-width: 560px){ks-product-price .price{display:block;width:100%;margin-bottom:20px;margin-right:0px;text-align:center}}ks-product-price .currency{width:15px;height:15px;padding:5px;line-height:13px;margin:1px 0 0 10px;border-radius:30px;background-color:var(--color-secondary);color:white;font-family:var(--product-price-font);text-align:center;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none}";
 
 class ProductPrice {
   constructor(hostRef) {
     registerInstance(this, hostRef);
   }
   render() {
-    const previousPrice = product.get("previousPrice").replace('.', ',');
+    var _a, _b;
+    const previousPrice = (_a = product.get("previousPrice")) === null || _a === void 0 ? void 0 : _a.replace('.', ',');
     const currentPrice = product.get("currentPrice").replace('.', ',');
+    const lowestPrice = (_b = product.get("lowestPrice")) === null || _b === void 0 ? void 0 : _b.replace('.', ',');
     return [
-      hAsync("div", { class: "current" }, currentPrice),
-      hAsync("div", { class: "currency" }, "z\u0142"),
-      previousPrice ? hAsync("div", { class: "previous" }, previousPrice) : null
+      hAsync("div", { class: "main" }, hAsync("div", { class: "current" }, currentPrice), hAsync("div", { class: "currency" }, "z\u0142"), previousPrice ? hAsync("div", { class: "previous" }, previousPrice) : null),
+      lowestPrice ? hAsync("div", { class: "lowest" }, "Najni\u017Csza cena z 30 dni: ", lowestPrice, " z\u0142") : null
     ];
   }
   static get style() { return productPriceCss; }
