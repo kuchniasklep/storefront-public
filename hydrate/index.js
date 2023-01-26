@@ -30737,7 +30737,7 @@ class PageProduct {
       hAsync("ks-product-attribute", { icon: "dollar-sign" }, installments === null || installments === void 0 ? void 0 : installments.attributeMessage)
       : null, model || ean ?
       hAsync("ks-product-attribute", { style: { marginTop: "15px" }, icon: "file", faded: true }, hAsync("span", { style: { marginRight: "15px" } }, model ? hAsync("span", { style: { marginRight: "7px" } }, strings.model, " ", model, " ") : null, ean ? hAsync("span", null, strings.ean, " ", ean) : null))
-      : null, hAsync("ks-product-history", { name: product.get('history'), productId: product.get('id'), api: commonDynamic.get('api').productHistory }), hAsync("div", { class: "buttons" }, product.get('negotiateEnabled') ?
+      : null, hAsync("div", { class: "buttons" }, product.get('negotiateEnabled') ?
       hAsync("ks-product-negotiate", null, hAsync("ks-product-button", null, product.get('negotiate').heading))
       : null, (installments.payuId && installments.payuKey) || installments.caParameters ?
       hAsync("ks-product-installments", { name: installments.button }, installments.payuId && installments.payuKey ?
@@ -32171,20 +32171,21 @@ class ProductPoints {
   }; }
 }
 
-const productPriceCss = "ks-product-price{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;margin:10px 0 20px;font-family:var(--product-price-font);font-weight:700}ks-product-price .previous{display:inline-block;color:var(--color-faded);font-size:var(--product-price-size);line-height:var(--product-price-size);position:relative;margin-left:15px}ks-product-price .previous::after{background-color:var(--color-faded);content:\"\";height:0.1em;left:-3px;right:-3px;position:absolute;top:46%}ks-product-price .current{color:var(--color-secondary);font-size:var(--product-price-size-emphasis);line-height:var(--product-price-size)}@media only screen and (max-width: 560px){ks-product-price .price{display:block;width:100%;margin-bottom:20px;margin-right:0px;text-align:center}}ks-product-price .currency{width:26px;height:26px;margin:0 0 0 10px;border-radius:30px;background-color:var(--color-secondary);color:white;font-family:var(--product-price-font);-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:baseline;align-items:baseline}";
+const productPriceCss = "ks-product-price{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;margin:12px 0 12px;font-family:var(--product-price-font);font-weight:700}ks-product-price .main{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;margin-bottom:3px}ks-product-price .previous{display:inline-block;color:var(--color-faded);font-size:var(--product-price-size);line-height:var(--product-price-size);position:relative;margin-left:15px}ks-product-price .lowest{display:block;width:100%;font-weight:500}ks-product-price .previous::after{background-color:var(--color-faded);content:\"\";height:0.1em;left:-3px;right:-3px;position:absolute;top:46%}ks-product-price .current{color:var(--color-secondary);font-size:var(--product-price-size-emphasis);line-height:var(--product-price-size)}@media only screen and (max-width: 960px){ks-product-price{-ms-flex-align:center;align-items:center}}@media only screen and (max-width: 560px){ks-product-price .price{display:block;width:100%;margin-bottom:20px;margin-right:0px;text-align:center}}ks-product-price .currency{width:26px;height:26px;margin:0 0 0 10px;border-radius:30px;background-color:var(--color-secondary);color:white;font-family:var(--product-price-font);-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:baseline;align-items:baseline}";
 
 class ProductPrice {
   constructor(hostRef) {
     registerInstance(this, hostRef);
   }
   render() {
+    const strings = product.get("strings");
     const symbol = common.get('currency').symbol;
     const currentPrice = priceFormatNoCurrency(product.get("currentPrice"));
     const previousPrice = priceFormatNoCurrency(product.get("previousPrice"));
+    const lowestPrice = priceFormatNoCurrency(product.get("lowestPrice"));
     return [
-      hAsync("div", { class: "current" }, currentPrice),
-      hAsync("div", { class: "currency" }, symbol),
-      previousPrice ? hAsync("div", { class: "previous" }, previousPrice) : null
+      hAsync("div", { class: "main" }, hAsync("div", { class: "current" }, currentPrice), hAsync("div", { class: "currency" }, symbol), previousPrice ? hAsync("div", { class: "previous" }, previousPrice) : null),
+      lowestPrice ? hAsync("div", { class: "lowest" }, strings.lowestPrice, " ", lowestPrice, " ", symbol) : null
     ];
   }
   static get style() { return productPriceCss; }
