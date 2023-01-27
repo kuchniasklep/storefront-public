@@ -12814,6 +12814,10 @@ function priceFormat(value) {
   return priceFormatNoCurrency(value) + ` ${currency.symbol}`;
 }
 function priceFormatNoCurrency(value) {
+  if (typeof value === 'undefined' || value === null)
+    return "";
+  if (typeof value === 'string')
+    value = parseFloat(value);
   const currency = common.get('currency');
   if (!currency)
     return value.toString();
