@@ -20848,7 +20848,8 @@ class Form {
     this.method = undefined;
   }
   render() {
-    return (hAsync("form", { action: this.action, method: this.method, enctype: "multipart/form-data", onSubmit: (event) => this.Submit(event) }, hAsync("slot", null), hAsync("input", { class: "uk-button uk-button-danger uk-width-1-1 uk-margin-medium-top", style: { padding: "8px 40px" }, type: "submit", value: "Wy\u015Blij Formularz", formnovalidate: true })));
+    const strings = common.get("translations");
+    return (hAsync("form", { action: this.action, method: this.method, enctype: "multipart/form-data", onSubmit: (event) => this.Submit(event) }, hAsync("slot", null), hAsync("input", { class: "uk-button uk-button-danger uk-width-1-1 uk-margin-medium-top", style: { padding: "8px 40px" }, type: "submit", value: strings.inputSubmitForm, formnovalidate: true })));
   }
   async Submit(event) {
     event.preventDefault();
@@ -23828,12 +23829,13 @@ class InputCheck {
     return !this.invalid;
   }
   async Validate() {
+    const strings = common.get("translations");
     const input = this.root.querySelector("input");
     let valid = true;
     let message = "";
     if (this.required && !input.checked) {
       valid = false;
-      message = "Pole wymagane.";
+      message = strings.inputFieldRequired;
     }
     this.invalid = !valid;
     this.invalidMessage = message;
@@ -26329,13 +26331,14 @@ class InputDate {
     return this.valid;
   }
   async Validate() {
+    const strings = common.get("translations");
     const input = this.root.querySelector("input");
     let valid = true;
     let message = "";
     if (this.required) {
       if (input.value.length == 0) {
         valid = false;
-        message = "Pole wymagane.";
+        message = strings.inputFieldRequired;
       }
     }
     this.valid = valid;
@@ -26383,6 +26386,7 @@ class InputDynamic {
     input.onchange = () => this.Validate();
   }
   async Validate() {
+    const strings = common.get("translations");
     const input = this.root.querySelector("input");
     const component = this.root.querySelector("ks-input-text");
     var headers = new Headers();
@@ -26413,9 +26417,9 @@ class InputDynamic {
           .catch(error => {
           let message = error;
           if (Number.isInteger(error))
-            message = `Błąd połączenia - ${error}`;
+            message = strings.inputConnectionError + error;
           else if (!navigator.onLine)
-            message = "Brak połączenia z internetem";
+            message = strings.inputInternetConnectionError;
           component.setAttribute("message", message);
           resolve(false);
         });
@@ -26492,6 +26496,7 @@ class InputNumber {
     return this.valid;
   }
   async Validate() {
+    const strings = common.get("translations");
     const input = this.root.querySelector("input");
     let valid = true;
     let message = "";
@@ -26499,7 +26504,7 @@ class InputNumber {
     if (this.required) {
       if (input.value.length == 0) {
         valid = false;
-        message = "Pole wymagane.";
+        message = strings.inputFieldRequired;
       }
     }
     this.valid = valid;
@@ -26596,6 +26601,7 @@ class InputSelectDynamic {
     this.message = "";
   }
   async FetchData() {
+    const strings = common.get("translations");
     var headers = new Headers();
     headers.append('pragma', 'no-cache');
     headers.append('cache-control', 'no-cache');
@@ -26617,9 +26623,9 @@ class InputSelectDynamic {
       .catch(error => {
       let message = error;
       if (Number.isInteger(error))
-        message = `Błąd połączenia - ${error}`;
+        message = strings.inputConnectionError + error;
       else if (!navigator.onLine)
-        message = "Brak połączenia z internetem. ";
+        message = strings.inputInternetConnectionError;
       this.message = message;
     });
     this.loading = false;
@@ -26638,10 +26644,11 @@ class InputSelectDynamic {
     return doc.documentElement.textContent;
   }
   render() {
+    const strings = common.get("translations");
     return (hAsync("div", { class: "uk-position-relative" }, hAsync("ks-input-select", { name: this.name, label: this.label, error: this.message != "", "light-up": this.lightUp }, this.data.map((item) => hAsync("option", { selected: this.selectedId == item.value ? true : false, value: item.value }, this.Decode(item.name)))), this.loading ?
       hAsync("div", { class: "uk-position-absolute uk-animation-fade", style: { top: "20px", left: "0px", width: "100%", height: "50px", backgroundColor: "rgba(255, 255, 255, 0.7)" } }, hAsync("div", { "uk-spinner": true, class: "uk-position-center" }))
       : null, this.message != "" ?
-      hAsync("div", { class: "uk-position-absolute", style: { top: "20px", left: "0px", width: "100%", height: "50px", backgroundColor: "rgba(255, 255, 255)" } }, hAsync("p", { class: "uk-position-center uk-text-danger" }, this.message, " ", hAsync("a", { onClick: () => this.FetchData() }, "Od\u015Bwie\u017C")))
+      hAsync("div", { class: "uk-position-absolute", style: { top: "20px", left: "0px", width: "100%", height: "50px", backgroundColor: "rgba(255, 255, 255)" } }, hAsync("p", { class: "uk-position-center uk-text-danger" }, this.message, " ", hAsync("a", { onClick: () => this.FetchData() }, strings.inputRefresh)))
       : null));
   }
   static get watchers() { return {
@@ -26728,17 +26735,18 @@ class InputText {
     return this.message == "" ? true : false;
   }
   async Validate() {
+    const strings = common.get("translations");
     const input = this.root.querySelector("input");
-    let message = "";
+    let message = [];
     if (this.email) {
       const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       if (!regex.test(input.value.toLowerCase()))
-        message = "Nieprawidłowy adres e-mail.";
+        message = [strings.inputIncorrectEmail];
     }
     if (this.digits) {
       const regex = /^([0-9])*$/;
       if (!regex.test(input.value))
-        message = "W polu dozwolone są tylko liczby.";
+        message = [strings.inputOnlyNumbers];
     }
     if (this.price) {
       input.value = input.value.replace(",", ".");
@@ -26746,25 +26754,25 @@ class InputText {
         input.value = parseFloat(input.value).toFixed(2);
       const regex = /^([0-9])*([.][0-9]{1,2})?$/;
       if (!regex.test(input.value))
-        message = "W polu dozwolone są tylko ceny bez waluty.";
+        message = [strings.inputOnlyPricesWithoutCurrency];
     }
     if (this.sameAs) {
       const other = this.root.closest("form").querySelector(`input[name='${this.sameAs}']`);
       if (input.value != other.value)
-        message += `Podane ${this.password ? "hasła" : "pola"} nie są takie same.`;
+        message.push(this.password ? strings.inputPasswordsDontMatch : strings.inputFieldsDontMatch);
     }
     if (this.regex != "" && this.regexMessage != "") {
       const regex = new RegExp(this.regex, "i");
       if (!regex.test(input.value))
-        message += this.regexMessage;
+        message.push(this.regexMessage);
     }
     if (input.value.length < this.min)
-      message += ` Pole wymaga minimum ${this.min} znaków.`;
+      message.push(strings.inputMinCharacters.replace('{count}', this.min.toString()));
     if (input.value.length > this.max)
-      message += ` Pole nie może przekroczyć ${this.max} znaków.`;
+      message.push(strings.inputMaxCharacters.replace('{count}', this.max.toString()));
     if (this.required && input.value.length == 0)
-      message = "Pole wymagane.";
-    this.message = message;
+      message = [strings.inputFieldRequired];
+    this.message = message.join(" ");
     return Promise.resolve();
   }
   get root() { return getElement(this); }
@@ -26839,23 +26847,24 @@ class InputTextarea {
     return !this.invalid;
   }
   async Validate() {
+    const strings = common.get("translations");
     const input = this.root.querySelector("textarea");
     let valid = true;
-    let message = "";
+    let message = [];
     if (input.value.length < this.min) {
       valid = false;
-      message += ` Pole wymaga minimum ${this.min} znaków.`;
+      message.push(strings.inputMinCharacters.replace('{count}', this.min.toString()));
     }
     if (input.value.length > this.max) {
       valid = false;
-      message += ` Pole nie może przekroczyć ${this.max} znaków.`;
+      message.push(strings.inputMaxCharacters.replace('{count}', this.max.toString()));
     }
     if (this.required && input.value.length == 0) {
       valid = false;
-      message = "Pole wymagane.";
+      message = [strings.inputFieldRequired];
     }
     this.invalid = !valid;
-    this.invalidMessage = message;
+    this.invalidMessage = message.join(' ');
     return Promise.resolve();
   }
   get root() { return getElement(this); }
