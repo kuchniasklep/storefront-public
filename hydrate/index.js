@@ -18100,7 +18100,7 @@ class Featured {
   }; }
 }
 
-const featuredContainerCss = "ks-featured-container{display:-ms-flexbox;display:flex;max-width:1200px;width:100%;margin:auto;min-height:10px}ks-featured-container>.left{-ms-flex:1;flex:1;margin-right:5px}ks-featured-container>.right{-ms-flex:1;flex:1;margin-left:5px}ks-featured-container>div>*:not(:last-child){margin-bottom:10px}@media (max-width: 840px){ks-featured-container{display:block}ks-featured-container>.left,ks-featured-container>.right{margin-right:0;margin-left:0}ks-featured-container>div:first-child>*{margin-bottom:10px}}";
+const featuredContainerCss = "ks-featured-container{display:-ms-flexbox;display:flex;max-width:1200px;width:100%;margin:auto;margin-bottom:20px;min-height:10px}ks-featured-container>.left{-ms-flex:1;flex:1;margin-right:5px}ks-featured-container>.right{-ms-flex:1;flex:1;margin-left:5px}ks-featured-container>div>*:not(:last-child){margin-bottom:10px}@media (max-width: 840px){ks-featured-container{display:block}ks-featured-container>.left,ks-featured-container>.right{margin-right:0;margin-left:0}ks-featured-container>div:first-child>*{margin-bottom:10px}}";
 
 class FeaturedContainer {
   constructor(hostRef) {
@@ -30383,7 +30383,7 @@ const home = createStore({
   logoBanners: []
 });
 
-const homeCss = "ks-page-home{display:block}ks-page-home>*>h3{font-size:24px;margin:25px 0;text-align:center}ks-page-home .logo-banner-container{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;padding:10px}";
+const homeCss = "ks-page-home{display:block}ks-page-home>*>h3{font-size:24px;margin:5px 0 25px 0;text-align:center}ks-page-home .logo-banner-container{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;padding:10px}ks-page-home ks-see-more{margin:15px 0 25px 0}";
 
 class PageHome {
   constructor(hostRef) {
