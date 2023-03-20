@@ -24163,27 +24163,6 @@ async function ValidateInput(root) {
   return valid;
 }
 
-let resolve;
-const tracker = createStore({
-  loaded: loadtracker(),
-  resolved: new Promise(r => resolve = r),
-  trackers: []
-});
-function eachTracker(callable) {
-  tracker.get("resolved").then(() => {
-    tracker.get("trackers").forEach(item => {
-      callable(item);
-    });
-  });
-}
-function loadtracker() {
-  return new Promise(resolve => {
-    window.addEventListener("load", function () {
-      resolve();
-    });
-  });
-}
-
 var DataLayer;
 (function (DataLayer) {
   var resolvepageview;
@@ -24192,6 +24171,9 @@ var DataLayer;
       resolve();
     };
   });
+  function facebookConversionAPI(dataLayer) {
+    jsonfetch('https://kuchniasklep.pl/api/fbconversion.php', dataLayer);
+  }
   function customerData() {
     const customer = commonDynamic.get('customer');
     const customerDataAvaliable = commonDynamic.get('loggedIn') && customer;
@@ -24211,6 +24193,7 @@ var DataLayer;
     var _a;
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(Object.assign({ event: 'ks.pageview', facebookEventId: eventID }, customerData()));
     resolvepageview();
+    facebookConversionAPI(window.dataLayer);
   }
   DataLayer.pageview = pageview;
   async function product(product, eventID = "") {
@@ -24224,6 +24207,7 @@ var DataLayer;
           currencyCode: product.currency,
           impressions: UAenchancedEcommerceItems([product])
         } } }));
+    facebookConversionAPI(window.dataLayer);
   }
   DataLayer.product = product;
   async function listing(listing) {
@@ -24256,6 +24240,7 @@ var DataLayer;
             products: UAenchancedEcommerceItems([product])
           }
         } } }));
+    facebookConversionAPI(window.dataLayer);
   }
   DataLayer.addToCart = addToCart;
   async function removeFromCart(product) {
@@ -24313,6 +24298,7 @@ var DataLayer;
             products: UAenchancedEcommerceItems(order.products)
           }
         } } }));
+    facebookConversionAPI(window.dataLayer);
   }
   DataLayer.order_checkout = order_checkout;
   async function order_form(order, eventID) {
@@ -24328,6 +24314,7 @@ var DataLayer;
             products: UAenchancedEcommerceItems(order.products)
           }
         } } }));
+    facebookConversionAPI(window.dataLayer);
   }
   DataLayer.order_form = order_form;
   async function order_placed(order, eventID) {
@@ -24472,7 +24459,6 @@ class NewsletterPopup {
       place: "Zapis do newslettera | Popup"
     };
     DataLayer.subscribe(data);
-    eachTracker(item => item === null || item === void 0 ? void 0 : item.subscribe(commonDynamic.state, data));
   }
   setSubscription() {
     let customer = commonDynamic.get('customer');
@@ -24577,7 +24563,6 @@ class NewsletterPopupEdrone {
       place: "Zapis do newslettera | Popup"
     };
     DataLayer.subscribe(data);
-    eachTracker(item => item === null || item === void 0 ? void 0 : item.subscribe(commonDynamic.state, data));
   }
   async Show() {
     this.dialog.show();
@@ -25292,7 +25277,6 @@ class OrderForm {
       place: "Zapis do newslettera | Rejestracja Zamówienie"
     };
     DataLayer.subscribe(data);
-    eachTracker(item => item === null || item === void 0 ? void 0 : item.subscribe(commonDynamic.state, data));
   }
   ShowPrompt(message) {
     const prompt = this.root.querySelector("ks-order-form-modal");
@@ -25979,338 +25963,6 @@ class Overlay {
   }; }
 }
 
-class TikTokTracker {
-  constructor() {
-    this.ttq = new Promise(resolve => {
-      var checkExist = setInterval(() => {
-        if (ttq !== undefined) {
-          resolve(ttq);
-          clearInterval(checkExist);
-        }
-      }, 100);
-    });
-  }
-  pageview(_commonDynamic, _eventID) {
-    this.ttq.then(ttq => {
-      ttq.track("Browse");
-    });
-  }
-  product(product, _eventID = "") {
-    this.ttq.then(ttq => {
-      ttq.track('ViewContent', {
-        content_type: 'product',
-        content_id: product.id,
-        content_name: product.name,
-        currency: product.currency,
-        price: product.currentPrice,
-        quantity: 1,
-        value: product.currentPrice
-      });
-    });
-  }
-  // @ts-ignore
-  listing(_listing, _eventID) {
-  }
-  addToCart(product, _eventID) {
-    this.ttq.then(ttq => {
-      ttq.track('AddToCart', {
-        content_type: 'product',
-        content_id: product.id,
-        content_name: product.name,
-        currency: product.currency,
-        price: product.currentPrice,
-        quantity: product.quantity,
-        value: product.currentPrice * product.quantity
-      });
-    });
-  }
-  order_checkout(_commonDynamic, order, _eventID) {
-    this.ttq.then(ttq => {
-      ttq.track('StartCheckout', {
-        contents: this.transformProducts(order.products),
-        value: order.productValue,
-        currency: order.currency
-      });
-    });
-  }
-  order_form(_commonDynamic, order, _eventID) {
-    this.ttq.then(ttq => {
-      ttq.track('AddBilling', {
-        contents: this.transformProducts(order.products),
-        value: order.productValue,
-        currency: order.currency
-      });
-    });
-  }
-  order_placed(_commonDynamic, order, _eventID) {
-    this.ttq.then(ttq => {
-      ttq.track('Checkout', {
-        contents: this.transformProducts(order.products),
-        value: order.productValue,
-        currency: order.currency
-      });
-    });
-  }
-  // @ts-ignore
-  search(query) {
-    /*
-    this.ttq.then(ttq => {
-        ttq.track('Search', {
-            query: query
-        });
-    });*/
-  }
-  subscribe(_commonDynamic, _subscription) {
-  }
-  transformProducts(products) {
-    return products.map(product => {
-      return {
-        content_id: product.id,
-        content_type: 'product',
-        content_name: product.name,
-        quantity: product.quantity,
-        price: product.currentPrice
-      };
-    });
-  }
-}
-
-class FacebookTracker {
-  constructor(ids) {
-    const id_array = ids.split(", ");
-    this.pixel = new Promise(resolve => {
-      // @ts-ignore
-      !function (f, b, e, v, n, t, s) {
-        if (f.fbq)
-          return;
-        n = f.fbq = function () {
-          n.callMethod ?
-            n.callMethod.apply(n, arguments) : n.queue.push(arguments);
-        };
-        if (!f._fbq)
-          f._fbq = n;
-        n.push = n;
-        n.loaded = !0;
-        n.version = '2.0';
-        n.queue = [];
-        t = b.createElement(e);
-        t.async = !0;
-        t.src = v;
-        s = b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t, s);
-      }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
-      id_array.forEach(id => {
-        fbq('init', id);
-      });
-      resolve(fbq);
-    });
-  }
-  pageview(_commonDynamic, _eventID) {
-    this.pixel.then(fbq => {
-      fbq('track', 'PageView', {}, { eventID: _eventID });
-    });
-  }
-  product(product, _eventID = "") {
-    this.pixel.then(fbq => {
-      fbq('track', "ViewContent", {
-        content_type: 'product',
-        content_name: product.name,
-        value: product.currentPrice,
-        currency: product.currency,
-        content_ids: [product.id]
-      }, {
-        eventID: _eventID
-      });
-    });
-  }
-  // @ts-ignore
-  listing(_listing, _eventID) {
-  }
-  addToCart(product, _eventID) {
-    this.pixel.then(fbq => {
-      fbq('track', 'AddToCart', {
-        content_type: 'product',
-        content_name: product.name,
-        value: product.currentPrice,
-        currency: product.currency,
-        contents: [
-          { id: product.id, quantity: product.quantity }
-        ]
-      }, {
-        eventID: _eventID
-      });
-    });
-  }
-  order_checkout(_commonDynamic, order, _eventID) {
-    this.pixel.then(fbq => {
-      fbq('track', "InitiateCheckout", {
-        contents: this.transformProducts(order.products),
-        content_type: 'product',
-        value: order.productValue,
-        currency: order.currency
-      }, {
-        eventID: _eventID
-      });
-    });
-  }
-  // @ts-ignore
-  order_form(commonDynamic, order, _eventID) {
-  }
-  order_placed(_commonDynamic, order, _eventID) {
-    this.pixel.then(fbq => {
-      fbq('track', 'Purchase', {
-        contents: this.transformProducts(order.products),
-        content_type: 'product',
-        value: order.productValue,
-        currency: order.currency
-      }, {
-        eventID: _eventID
-      });
-    });
-  }
-  search(query) {
-    this.pixel.then(fbq => {
-      fbq('track', "Search", {
-        search_string: query
-      });
-    });
-  }
-  subscribe(_commonDynamic, _subscription) {
-  }
-  transformProducts(products) {
-    return products.map(product => {
-      return {
-        id: product.id,
-        quantity: product.quantity
-      };
-    });
-  }
-}
-
-class EdroneTracker {
-  init(async = undefined) {
-    var _a, _b;
-    if ((_a = window._edrone) === null || _a === void 0 ? void 0 : _a.page_loaded)
-      (_b = window._edrone) === null || _b === void 0 ? void 0 : _b.init(async);
-  }
-  relativeToAbsolute(url) {
-    return url.includes('http') ? url : document.baseURI + url;
-  }
-  pageview(commonDynamic, _eventID) {
-    if (!commonDynamic.loggedIn || !commonDynamic.customer)
-      return;
-    const customer = commonDynamic.customer;
-    window._edrone = window._edrone || {};
-    window._edrone.email = customer.email;
-    window._edrone.first_name = customer.firstName;
-    window._edrone.last_name = customer.lastName;
-    window._edrone.subscriber_status = customer.subscriber ? 1 : 0;
-    window._edrone.country = customer.countryISO2;
-    window._edrone.city = customer.city;
-    window._edrone.phone = customer.phone;
-    this.init();
-  }
-  product(product, _eventID = "") {
-    window._edrone = window._edrone || {};
-    window._edrone.product_skus = product.model;
-    window._edrone.product_ids = product.id;
-    window._edrone.product_titles = encodeURIComponent(product.name);
-    if ((product === null || product === void 0 ? void 0 : product.images.length) > 0)
-      window._edrone.product_images = encodeURIComponent(this.relativeToAbsolute(product.images[0].full.url));
-    window._edrone.product_urls = encodeURIComponent(this.relativeToAbsolute(document.location.href));
-    window._edrone.product_availability = product.availability;
-    window._edrone.product_category_ids = product.categories.map(crumb => crumb.id).join('~');
-    window._edrone.product_category_names = product.categories.map(crumb => encodeURIComponent(crumb.name)).join('~');
-    window._edrone.action_type = 'product_view';
-    this.init();
-  }
-  listing(listing, _eventID) {
-    window._edrone = window._edrone || {};
-    const categories = listing.breadcrumbs.filter(category => category.id != "0");
-    window._edrone.product_category_ids = categories.map(category => category.id).join('~');
-    window._edrone.product_category_names = categories.map(category => encodeURIComponent(category.name)).join('~');
-    window._edrone.action_type = 'category_view';
-    this.init();
-  }
-  addToCart(product, _eventID) {
-    window._edrone = window._edrone || {};
-    window._edrone.product_ids = product.id;
-    window._edrone.product_skus = product.sku;
-    window._edrone.product_titles = encodeURIComponent(product.name);
-    window._edrone.product_images = encodeURIComponent(this.relativeToAbsolute(product.imageFull));
-    window._edrone.product_urls = encodeURIComponent(this.relativeToAbsolute(product.link));
-    window._edrone.product_category_ids = product.categories.map(category => category.id).join('~');
-    window._edrone.product_category_names = product.categories.map(category => encodeURIComponent(category.name)).join('~');
-    window._edrone.action_type = "add_to_cart";
-    this.init();
-  }
-  // @ts-ignore
-  order_checkout(commonDynamic, order, _eventID) {
-    if (!commonDynamic.loggedIn || !commonDynamic.customer)
-      return;
-    const customer = commonDynamic.customer;
-    window._edrone = window._edrone || {};
-    window._edrone.email = customer.email;
-    window._edrone.first_name = customer.firstName;
-    window._edrone.last_name = customer.lastName;
-    window._edrone.subscriber_status = customer.subscriber ? 1 : 0;
-    window._edrone.country = customer.countryISO2;
-    window._edrone.city = customer.city;
-    window._edrone.phone = customer.phone;
-    window._edrone.action_type = 'other';
-    this.init();
-  }
-  // @ts-ignore
-  order_form(commonDynamic, order, _eventID) {
-  }
-  order_placed(commonDynamic, order, _eventID) {
-    const customer = commonDynamic.customer;
-    const products = order.products;
-    window._edrone = window._edrone || {};
-    window._edrone.email = customer.email;
-    window._edrone.first_name = customer.firstName;
-    window._edrone.last_name = customer.lastName;
-    window._edrone.subscriber_status = customer.subscriber ? 1 : 0;
-    window._edrone.product_skus = products.map(product => product.sku).join('|');
-    window._edrone.product_ids = products.map(product => product.id).join('|');
-    window._edrone.product_titles = products.map(product => encodeURIComponent(product.id)).join('|');
-    window._edrone.product_images = products.map(product => encodeURIComponent(this.relativeToAbsolute(product.image))).join('|');
-    window._edrone.product_urls = products.map(product => encodeURIComponent(this.relativeToAbsolute(product.link))).join('|');
-    window._edrone.product_counts = products.map(product => product.quantity).join('|');
-    window._edrone.product_category_ids = products.map(product => product.categories.map(category => category.id).join('~')).join('|');
-    window._edrone.product_category_names = products.map(product => product.categories.map(category => encodeURIComponent(category.name)).join('~')).join('|');
-    window._edrone.order_id = order.id;
-    window._edrone.country = customer.countryISO2;
-    window._edrone.city = customer.city;
-    window._edrone.base_currency = customer.currency;
-    window._edrone.order_currency = order.currency;
-    window._edrone.base_payment_value = order.productValue;
-    window._edrone.order_payment_value = order.productValue;
-    window._edrone.action_type = 'order';
-    this.init();
-  }
-  search(_query) {
-  }
-  subscribe(commonDynamic, subscription) {
-    window._edrone = window._edrone || {};
-    window._edrone.customer_tags = subscription.place;
-    window._edrone.email = subscription.email;
-    if (subscription === null || subscription === void 0 ? void 0 : subscription.name)
-      window._edrone.first_name = subscription.name;
-    window._edrone.subscriber_status = subscription.subscriber ? 1 : 0;
-    if (commonDynamic.loggedIn && commonDynamic.customer) {
-      const customer = commonDynamic.customer;
-      window._edrone.first_name = customer.firstName;
-      window._edrone.last_name = customer.lastName;
-      window._edrone.country = customer.countryISO2;
-      window._edrone.city = customer.city;
-      window._edrone.phone = customer.phone;
-    }
-    window._edrone.action_type = 'subscribe';
-    this.init(false);
-  }
-}
-
 function loadCommonData(commonDataId, commonDynamicId, Build) {
   const commonDataElement = document.getElementById(commonDataId);
   const commonData = JSON.parse(commonDataElement.innerHTML);
@@ -26325,24 +25977,10 @@ function loadCommonData(commonDataId, commonDynamicId, Build) {
     });
     setTimeout(() => {
       commonDynamic.set("loaded", true);
+      const tracking = commonDynamic.get("tracking");
+      DataLayer.pageview(tracking.pageview);
     }, 100);
-    trackBase();
   }
-}
-function trackBase() {
-  tracker.get("loaded").then(() => {
-    const tracking = commonDynamic.get("tracking");
-    DataLayer.pageview(tracking.pageview);
-    const append = (obj) => tracker.set("trackers", [...tracker.get('trackers'), obj]);
-    if (tracking.tiktok)
-      append(new TikTokTracker());
-    if (tracking.facebook)
-      append(new FacebookTracker(tracking.facebook));
-    if (tracking.edrone)
-      append(new EdroneTracker());
-    eachTracker(item => item === null || item === void 0 ? void 0 : item.pageview(commonDynamic.state, tracking.pageview));
-    resolve();
-  });
 }
 
 const baseCss = "ks-page-base{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;min-height:100vh}";
@@ -26602,7 +26240,6 @@ class PageListing {
   track() {
     if (!listing.get('query')) {
       DataLayer.listing(listing.state);
-      eachTracker(item => item === null || item === void 0 ? void 0 : item.listing(listing.state, null));
     }
   }
   render() {
@@ -26847,7 +26484,6 @@ class PageProduct {
   }
   track() {
     DataLayer.product(product.state, productDynamic.get("eventId"));
-    eachTracker(item => item === null || item === void 0 ? void 0 : item.product(product.state, productDynamic.get("eventId")));
   }
   render() {
     var _a;
@@ -29525,14 +29161,6 @@ class TrackerOrder {
       DataLayer.order_form(data, this.eventId);
     else if (this.placed)
       DataLayer.order_placed(data, this.eventId);
-    eachTracker(item => {
-      if (this.checkout)
-        item === null || item === void 0 ? void 0 : item.order_checkout(commonDynamic.state, data, this.eventId);
-      else if (this.form)
-        item === null || item === void 0 ? void 0 : item.order_form(commonDynamic.state, data, this.eventId);
-      else if (this.placed)
-        item === null || item === void 0 ? void 0 : item.order_placed(commonDynamic.state, data, this.eventId);
-    });
   }
   static get cmpMeta() { return {
     "$flags$": 0,
@@ -29557,7 +29185,6 @@ class TrackerProduct {
   }
   componentWillLoad() {
     DataLayer.search(this.query);
-    eachTracker(item => item === null || item === void 0 ? void 0 : item.search(this.eventId, this.query));
   }
   static get cmpMeta() { return {
     "$flags$": 0,
