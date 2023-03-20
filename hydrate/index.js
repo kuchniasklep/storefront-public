@@ -24191,6 +24191,7 @@ var DataLayer;
   }
   async function pageview(eventID) {
     var _a;
+    eventID = crypto.randomUUID();
     const data = Object.assign({ event: 'ks.pageview', facebookEventId: eventID }, customerData());
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(data);
     resolvepageview();
@@ -24200,6 +24201,7 @@ var DataLayer;
   async function product(product, eventID = "") {
     var _a, _b;
     await pageviewed;
+    eventID = crypto.randomUUID();
     const categories = product.breadcrumbs;
     const data = Object.assign(Object.assign({ event: 'ks.product', facebookEventId: eventID }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productImage: (product === null || product === void 0 ? void 0 : product.images.length) > 0 ? relativeToAbsolute(product.images[0].full.url) : undefined, productURL: relativeToAbsolute(document.location.href), productSKU: product.model, productBrand: product.brand.name, productCategory: categories[categories.length - 1].name, productAvailability: product.shippingTime, productQuantity: 1, productCategories: product.categories, ecomm_prodid: product.id, ecomm_pagetype: 'product', ecomm_totalvalue: product.currentPrice, ecommerce: {
         items: enchancedEcommerceItems([product])
@@ -24233,6 +24235,7 @@ var DataLayer;
   async function addToCart(product, eventID) {
     var _a, _b;
     await pageviewed;
+    eventID = crypto.randomUUID();
     const data = Object.assign(Object.assign({ event: 'ks.addToCart', facebookEventId: eventID }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
         items: enchancedEcommerceItems([product])
       }, uaecommerce: { ecommerce: {
@@ -24291,6 +24294,7 @@ var DataLayer;
   async function order_checkout(order, eventID) {
     var _a, _b;
     await pageviewed;
+    eventID = crypto.randomUUID();
     const data = Object.assign(Object.assign({ event: 'ks.checkout', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderCoupon: order.coupon, ecommerce: {
         items: enchancedEcommerceItems(order.products)
       }, uaecommerce: { ecommerce: {
@@ -24308,6 +24312,7 @@ var DataLayer;
   async function order_form(order, eventID) {
     var _a, _b;
     await pageviewed;
+    eventID = crypto.randomUUID();
     const data = Object.assign(Object.assign({ event: 'ks.orderForm', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderCoupon: order.coupon, ecommerce: {
         items: enchancedEcommerceItems(order.products)
       }, uaecommerce: { ecommerce: {
@@ -24325,6 +24330,7 @@ var DataLayer;
   async function order_placed(order, eventID) {
     var _a, _b;
     await pageviewed;
+    eventID = crypto.randomUUID();
     const data = Object.assign(Object.assign({ event: 'ks.order', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderId: order.id, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderCoupon: order.coupon, ecomm_prodid: JSON.stringify(Object.values(order.products).map(product => product.id)), ecomm_pagetype: 'purchase', ecomm_totalvalue: order.productValue, ecommerce: {
         transaction_id: order.id,
         value: order.totalValue,
