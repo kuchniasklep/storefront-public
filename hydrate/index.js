@@ -27683,8 +27683,8 @@ class NavbarSearch {
   }
   async getData() {
     const language = common.get("language");
-    const sessionName = `navbar-autocomplete-${language}`;
-    const sessiondateName = `navbar-autocomplete-date-${language}`;
+    const sessionName = `navbar-autocomplete-${language.id}`;
+    const sessiondateName = `navbar-autocomplete-date-${language.id}`;
     const session = sessionStorage.getItem(sessionName);
     const sessiondate = sessionStorage.getItem(sessiondateName);
     const now = new Date().getTime();
