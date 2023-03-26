@@ -30362,7 +30362,9 @@ class PageProduct {
     const strings = product.get('strings');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, infoBanner ?
       hAsync("ks-info-banner", { image: infoBanner.image, color: infoBanner.color, width: infoBanner.width, height: infoBanner.height, name: infoBanner.name, link: infoBanner.link, theme: infoBanner.theme })
-      : null, hAsync("ks-container", null, hAsync("ks-product-notify-edrone", null), hAsync("ks-product-admin", null), hAsync("ks-product-info", null, product.get('traits') ?
+      : null, hAsync("ks-container", null, hAsync("ks-product-notify-edrone", null), hAsync("ks-product-admin", null), product.get("message") ?
+      hAsync("ks-product-message", null)
+      : null, hAsync("ks-product-info", null, product.get('traits') ?
       hAsync("ks-product-traits", null)
       : null, hAsync("ks-product-purchase", { cartText: common.get('translations').addToCart, availabilityText: strings.notifyAvailability }), hAsync("ks-product-shipping", null), product.get('warranty') ?
       hAsync("ks-product-attribute", { style: { marginTop: "15px" }, icon: "tool", href: product.get('warrantyLink') }, product.get('warranty'))
@@ -31022,7 +31024,7 @@ function OpenSuggestions(id, name) {
   suggestions.show(id, name);
 }
 
-const productCardCss = "ks-product-card{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:justify;justify-content:space-between;width:100%;text-align:center;background:var(--card-background);color:var(--card-text-color);-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow)}@media (min-width: 360px){ks-product-card{width:calc(50% - 15px)}}@media (min-width: 640px){ks-product-card{width:228px}}ks-product-card .top{display:block;padding:15px;min-height:200px;color:inherit !important;text-decoration:none !important;font-size:14px}ks-product-card ks-img2{height:auto;margin-bottom:10px;max-width:100%}ks-product-card .price>*{display:block;font-family:var(--font-emphasis)}ks-product-card .price .previous{color:#888888;font-size:15px}ks-product-card .price .current{color:var(--color-secondary);font-weight:bold;font-size:17px}ks-product-card .bottom{display:-ms-flexbox;display:flex;margin-top:10px}ks-product-card .bottom .unavailable,ks-product-card .bottom .link{display:block;width:100%;padding:10px 10px;font-size:.875rem;text-align:center;text-decoration:none;text-transform:none;color:white;background-color:var(--color-secondary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-product-card .bottom .unavailable{color:#252525;background-color:#f1f1f1}ks-product-card .bottom .link:hover{background-color:var(--color-secondary-hover)}ks-product-card .bottom .link:active{background-color:var(--color-secondary-active)}ks-product-card[unavailable] .top,ks-product-card[unavailable] .price{opacity:0.6}ks-product-card[unavailable] .price .current{color:#252525}@media (max-width: 420px){ks-product-card .top{font-size:13px;padding:8px}ks-product-card .price{line-height:18px}}ks-product-card .cart{position:relative;display:block;width:100%;height:100%;min-height:42px;min-width:44px;padding:1px 10px;font-size:.875rem;line-height:40px;text-align:center;text-decoration:none;text-transform:none;font-family:var(--font-regular);outline:none;border:none;border-radius:0px;color:white;background-color:var(--product-card-primary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-product-card .cart:hover{background-color:var(--product-card-primary-hover)}ks-product-card .cart:active{background-color:var(--product-card-primary-active)}ks-product-card .fav{position:relative;display:block;height:100%;min-height:42px;min-width:44px;padding:1px 10px;font-size:.875rem;line-height:40px;text-align:center;text-decoration:none;text-transform:none;outline:none;border:none;border-radius:0px;color:white;background-color:var(--product-card-secondary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-product-card .fav:hover{background-color:var(--product-card-secondary-hover)}ks-product-card .fav:active{background-color:var(--product-card-secondary-active)}ks-product-card .fav .success{display:-ms-flexbox;display:flex;position:absolute;top:0;left:0;width:100%;height:100%;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;background-color:var(--product-card-secondary);-webkit-animation:fade-in 0.2s 1;animation:fade-in 0.2s 1}";
+const productCardCss = "ks-product-card{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:justify;justify-content:space-between;width:100%;text-align:center;background:var(--card-background);color:var(--card-text-color);-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow)}@media (min-width: 360px){ks-product-card{width:calc(50% - 15px)}}@media (min-width: 640px){ks-product-card{width:228px}}ks-product-card .top{display:block;padding:15px 15px 5px 15px;min-height:200px;color:inherit !important;text-decoration:none !important;font-size:14px}ks-product-card ks-img2{height:auto;margin-bottom:5px;max-width:100%}ks-product-card .price>*{display:block;font-family:var(--font-emphasis)}ks-product-card .price .previous{color:#888888;font-size:15px}ks-product-card[squashed] .price .previous{margin-bottom:-6px}ks-product-card .price .current{color:var(--color-secondary);font-weight:bold;font-size:17px}ks-product-card .bottom{display:-ms-flexbox;display:flex;margin-top:10px}ks-product-card .bottom .unavailable,ks-product-card .bottom .link{display:block;width:100%;padding:10px 10px;font-size:.875rem;text-align:center;text-decoration:none;text-transform:none;color:white;background-color:var(--color-secondary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-product-card .bottom .unavailable{color:#252525;background-color:#f1f1f1}ks-product-card .bottom .link:hover{background-color:var(--color-secondary-hover)}ks-product-card .bottom .link:active{background-color:var(--color-secondary-active)}ks-product-card[unavailable] .top,ks-product-card[unavailable] .price{opacity:0.6}ks-product-card[unavailable] .price .current{color:#252525}@media (max-width: 420px){ks-product-card .top{font-size:13px;padding:8px}ks-product-card .price{line-height:18px}}ks-product-card .cart{position:relative;display:block;width:100%;height:100%;min-height:42px;min-width:44px;padding:1px 10px;font-size:.875rem;line-height:40px;text-align:center;text-decoration:none;text-transform:none;font-family:var(--font-regular);outline:none;border:none;border-radius:0px;color:white;background-color:var(--product-card-primary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-product-card .cart:hover{background-color:var(--product-card-primary-hover)}ks-product-card .cart:active{background-color:var(--product-card-primary-active)}ks-product-card .fav{position:relative;display:block;height:100%;min-height:42px;min-width:44px;padding:1px 10px;font-size:.875rem;line-height:40px;text-align:center;text-decoration:none;text-transform:none;outline:none;border:none;border-radius:0px;color:white;background-color:var(--product-card-secondary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-product-card .fav:hover{background-color:var(--product-card-secondary-hover)}ks-product-card .fav:active{background-color:var(--product-card-secondary-active)}ks-product-card .fav .success{display:-ms-flexbox;display:flex;position:absolute;top:0;left:0;width:100%;height:100%;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;background-color:var(--product-card-secondary);-webkit-animation:fade-in 0.2s 1;animation:fade-in 0.2s 1}ks-product-card .shipping{color:#259325;margin-top:5px}ks-product-card .shipping ks-icon{padding:2px;background-color:#259325;border-radius:15px;color:white}ks-product-card .shipping ks-icon svg{stroke-width:2;-webkit-transform:translateY(0.5px);transform:translateY(0.5px)}";
 
 class ProductCard$1 {
   constructor(hostRef) {
@@ -31032,8 +31034,10 @@ class ProductCard$1 {
     this.cartLoading = false;
     this.favLoading = false;
     this.favSuccess = false;
+    this.squashed = false;
   }
   componentWillLoad() {
+    var _a;
     this.productShortData = {
       id: this.product.id,
       traitIDs: "",
@@ -31049,6 +31053,8 @@ class ProductCard$1 {
       breadcrumbs: this.product.breadcrumbs,
       brandName: this.product.brandName
     };
+    if ((_a = this.product) === null || _a === void 0 ? void 0 : _a.shippingMessage)
+      this.squashed = true;
   }
   cart() {
     this.cartLoading = true;
@@ -31073,6 +31079,7 @@ class ProductCard$1 {
     }
   }
   render() {
+    var _a;
     const translations = common.get('translations');
     const currentPrice = priceFormat(this.product.currentPrice);
     const previousPrice = priceFormat(this.product.previousPrice);
@@ -31081,6 +31088,9 @@ class ProductCard$1 {
       hAsync("div", { class: "price" }, this.product.previousPrice ?
         hAsync("s", { class: "previous" }, previousPrice)
         : null, hAsync("span", { class: "current" }, currentPrice)),
+      ((_a = this.product) === null || _a === void 0 ? void 0 : _a.shippingMessage) ?
+        hAsync("div", { class: "shipping" }, hAsync("ks-icon", { name: "check", size: 0.6 }), " ", this.product.shippingMessage)
+        : null,
       hAsync("div", { class: "bottom" }, this.product.unavailable ? hAsync("a", { href: this.product.link, class: "unavailable" }, translations.unavailable)
         : this.linkOnly ? hAsync("a", { href: this.product.link, class: "link" }, translations.seeMore)
           : [
@@ -31100,13 +31110,14 @@ class ProductCard$1 {
     "$members$": {
       "linkOnly": [4, "link-only"],
       "product": [16],
+      "squashed": [1540],
       "cartLoading": [32],
       "favLoading": [32],
       "favSuccess": [32]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
+    "$attrsToReflect$": [["squashed", "squashed"]]
   }; }
 }
 
@@ -31545,6 +31556,27 @@ class ProductInfo {
     "$listeners$": [[8, "click", "clickOutside"]],
     "$lazyBundleId$": "-",
     "$attrsToReflect$": [["active", "active"]]
+  }; }
+}
+
+const productMessageCss = "ks-product-message{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;text-align:center;padding:15px 20px;border-radius:15px;background-color:var(--color-secondary-darker);color:var(--text-color-secondary);opacity:1;-webkit-animation:flash 1s ease infinite;animation:flash 1s ease infinite}@media screen and (max-width: 1200px){ks-product-message{border-radius:0px;margin:0}}@-webkit-keyframes flash{0%{opacity:1}33%{opacity:1}66%{opacity:0.7}100%{opacity:1}}@keyframes flash{0%{opacity:1}33%{opacity:1}66%{opacity:0.7}100%{opacity:1}}";
+
+class ProductMessage {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+  }
+  render() {
+    var _a;
+    return (_a = product.get("message")) !== null && _a !== void 0 ? _a : null;
+  }
+  static get style() { return productMessageCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-product-message",
+    "$members$": undefined,
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
   }; }
 }
 
@@ -33334,6 +33366,7 @@ registerComponents([
   ProductImages,
   ProductInfo$1,
   ProductInfo,
+  ProductMessage,
   ProductNegotiate,
   ProductNotify,
   ProductNotifyEdrone,
