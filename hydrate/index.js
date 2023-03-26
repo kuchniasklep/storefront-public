@@ -26518,7 +26518,9 @@ class PageProduct {
     const review = product.get('reviewAverage');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, infoBanner ?
       hAsync("ks-info-banner", { image: infoBanner.image, color: infoBanner.color, width: infoBanner.width, height: infoBanner.height, name: infoBanner.name, link: infoBanner.link, theme: infoBanner.theme })
-      : null, hAsync("ks-container", null, hAsync("ks-product-notify-edrone", null), hAsync("ks-product-admin", null), hAsync("ks-product-info", null, product.get('traits') ?
+      : null, hAsync("ks-container", null, hAsync("ks-product-notify-edrone", null), hAsync("ks-product-admin", null), product.get("message") ?
+      hAsync("ks-product-message", null)
+      : null, hAsync("ks-product-info", null, product.get('traits') ?
       hAsync("ks-product-traits", null)
       : null, hAsync("ks-product-purchase", null), hAsync("ks-product-shipping", null), product.get('warranty') ?
       hAsync("ks-product-attribute", { style: { marginTop: "15px" }, icon: "tool", href: product.get('warrantyLink') }, product.get('warranty'))
@@ -27732,6 +27734,27 @@ class ProductInfo {
     "$listeners$": [[8, "click", "clickOutside"]],
     "$lazyBundleId$": "-",
     "$attrsToReflect$": [["active", "active"]]
+  }; }
+}
+
+const productMessageCss = "ks-product-message{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;text-align:center;padding:15px 20px;border-radius:15px;background-color:var(--color-secondary-darker);color:var(--text-color-secondary);opacity:1;-webkit-animation:flash 1s ease infinite;animation:flash 1s ease infinite}@media screen and (max-width: 1200px){ks-product-message{border-radius:0px;margin:0}}@-webkit-keyframes flash{0%{opacity:1}33%{opacity:1}66%{opacity:0.7}100%{opacity:1}}@keyframes flash{0%{opacity:1}33%{opacity:1}66%{opacity:0.7}100%{opacity:1}}";
+
+class ProductMessage {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+  }
+  render() {
+    var _a;
+    return (_a = product.get("message")) !== null && _a !== void 0 ? _a : null;
+  }
+  static get style() { return productMessageCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-product-message",
+    "$members$": undefined,
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
   }; }
 }
 
@@ -29595,6 +29618,7 @@ registerComponents([
   ProductImages,
   ProductInfo$1,
   ProductInfo,
+  ProductMessage,
   ProductNegotiate,
   ProductNotify,
   ProductNotifyEdrone,
