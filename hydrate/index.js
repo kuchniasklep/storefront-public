@@ -27639,7 +27639,10 @@ class NavbarLanguagePanel {
     const data = new FormData();
     data.append("id", language.id.toString());
     Fetch(commonDynamic.get('api').changeLanguage, data)
-      .then(() => document.location.reload());
+      .then(() => {
+      const href = document.location.href;
+      document.location.href = href.substring(0, href.indexOf(".html") + 5);
+    });
   }
   currencyChange(currency) {
     const data = new FormData();
