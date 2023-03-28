@@ -27641,7 +27641,10 @@ class NavbarLanguagePanel {
     Fetch(commonDynamic.get('api').changeLanguage, data)
       .then(() => {
       const href = document.location.href;
-      document.location.href = href.substring(0, href.indexOf(".html") + 5);
+      if (href.includes(".html"))
+        document.location.href = href.substring(0, href.indexOf(".html") + 5);
+      else
+        document.location.reload();
     });
   }
   currencyChange(currency) {
