@@ -26008,7 +26008,7 @@ class PageBase {
       loadCommonData(this.commonData, this.commonDynamicData, Build);
   }
   render() {
-    return hAsync(Host, null, !this.skipbase && hAsync("ks-page-header", null), hAsync("slot", null), !this.skipbase && hAsync("ks-page-footer", null), hAsync("ks-newsletter-popup-edrone", { displayOnLoad: common.get('newsletterPopup') }), common.get('newsletterSideButton') ? hAsync("ks-newsletter-side-button", null) : null, hAsync("ks-product-suggestions", { api: common.get('suggestionApi') }), hAsync("ks-error-popup", null), hAsync("ks-message-popup", null), hAsync("ks-cookie-popup", null));
+    return hAsync(Host, null, !this.skipbase && hAsync("ks-page-header", null), hAsync("slot", null), !this.skipbase && hAsync("ks-page-footer", null), hAsync("ks-newsletter-popup-edrone", { displayOnLoad: common.get('newsletterPopup') }), common.get('newsletterSideButton') ? hAsync("ks-newsletter-side-button", null) : null, hAsync("ks-product-suggestions", null), hAsync("ks-error-popup", null), hAsync("ks-message-popup", null), hAsync("ks-cookie-popup", null));
   }
   static get style() { return baseCss; }
   static get cmpMeta() { return {
@@ -28170,7 +28170,7 @@ class ProductSuggestions {
       headers.append('cache-control', 'no-cache');
       let body = new FormData();
       body.append("id", productId);
-      await fetch(this.api, {
+      await fetch(commonDynamic.get("api").suggestions, {
         method: 'POST',
         body: body,
         headers: headers,
@@ -28212,7 +28212,6 @@ class ProductSuggestions {
     "$flags$": 0,
     "$tagName$": "ks-product-suggestions",
     "$members$": {
-      "api": [1],
       "suggestionHeading": [1, "suggestion-heading"],
       "name": [32],
       "loading": [32],
