@@ -27910,6 +27910,7 @@ var DataLayer;
   }
   async function pageview(eventID) {
     var _a;
+    // @ts-ignore: Crypto type error
     eventID = crypto.randomUUID();
     const data = Object.assign({ event: 'ks.pageview', facebookEventId: eventID }, customerData());
     (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(data);
@@ -27920,6 +27921,7 @@ var DataLayer;
   async function product(product, eventID = "") {
     var _a, _b;
     await pageviewed;
+    // @ts-ignore: Crypto type error
     eventID = crypto.randomUUID();
     const categories = product.breadcrumbs;
     const data = Object.assign(Object.assign({ event: 'ks.product', facebookEventId: eventID }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productImage: (product === null || product === void 0 ? void 0 : product.images.length) > 0 ? relativeToAbsolute(product.images[0].full.url) : undefined, productURL: relativeToAbsolute(document.location.href), productSKU: product.model, productBrand: product.brand.name, productCategory: categories[categories.length - 1].name, productAvailability: product.shippingTime, productQuantity: 1, productCategories: product.categories, ecomm_prodid: product.id, ecomm_pagetype: 'product', ecomm_totalvalue: product.currentPrice, ecommerce: {
@@ -27954,6 +27956,7 @@ var DataLayer;
   async function addToCart(product, eventID) {
     var _a, _b;
     await pageviewed;
+    // @ts-ignore: Crypto type error
     eventID = crypto.randomUUID();
     const data = Object.assign(Object.assign({ event: 'ks.addToCart', facebookEventId: eventID }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
         items: enchancedEcommerceItems([product])
@@ -28013,6 +28016,7 @@ var DataLayer;
   async function order_checkout(order, eventID) {
     var _a, _b;
     await pageviewed;
+    // @ts-ignore: Crypto type error
     eventID = crypto.randomUUID();
     const data = Object.assign(Object.assign({ event: 'ks.checkout', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderCoupon: order.coupon, ecommerce: {
         items: enchancedEcommerceItems(order.products)
@@ -28031,6 +28035,7 @@ var DataLayer;
   async function order_form(order, eventID) {
     var _a, _b;
     await pageviewed;
+    // @ts-ignore: Crypto type error
     eventID = crypto.randomUUID();
     const data = Object.assign(Object.assign({ event: 'ks.orderForm', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderCoupon: order.coupon, ecommerce: {
         items: enchancedEcommerceItems(order.products)
@@ -28049,6 +28054,7 @@ var DataLayer;
   async function order_placed(order, eventID) {
     var _a, _b;
     await pageviewed;
+    // @ts-ignore: Crypto type error
     eventID = crypto.randomUUID();
     const data = Object.assign(Object.assign({ event: 'ks.order', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderId: order.id, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderCoupon: order.coupon, ecomm_prodid: JSON.stringify(Object.values(order.products).map(product => product.id)), ecomm_pagetype: 'purchase', ecomm_totalvalue: order.productValue, ecommerce: {
         transaction_id: order.id,
@@ -29905,7 +29911,7 @@ class PageBase {
       loadCommonData(this.commonData, this.commonDynamicData, Build);
   }
   render() {
-    return hAsync(Host, null, !this.skipbase && hAsync("ks-page-header", null), hAsync("slot", null), !this.skipbase && hAsync("ks-page-footer", null), hAsync("ks-newsletter-popup-edrone", { displayOnLoad: common.get('newsletterPopup') }), common.get('newsletterSideButton') ? hAsync("ks-newsletter-side-button", null) : null, hAsync("ks-product-suggestions", { api: common.get('suggestionApi') }), hAsync("ks-error-popup", null), hAsync("ks-message-popup", null), hAsync("ks-cookie-popup", null));
+    return hAsync(Host, null, !this.skipbase && hAsync("ks-page-header", null), hAsync("slot", null), !this.skipbase && hAsync("ks-page-footer", null), hAsync("ks-newsletter-popup-edrone", { displayOnLoad: common.get('newsletterPopup') }), common.get('newsletterSideButton') ? hAsync("ks-newsletter-side-button", null) : null, hAsync("ks-product-suggestions", null), hAsync("ks-error-popup", null), hAsync("ks-message-popup", null), hAsync("ks-cookie-popup", null));
   }
   static get style() { return baseCss; }
   static get cmpMeta() { return {
@@ -31942,12 +31948,11 @@ class ProductSimple {
   }; }
 }
 
-const productSuggestionsCss = "ks-product-suggestions{display:block}ks-product-suggestions .content{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;width:100%;height:100%;overflow-y:auto;background-color:white;text-align:center}ks-product-suggestions .content>.top{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-direction:column;flex-direction:column;-webkit-box-sizing:border-box;box-sizing:border-box;height:100%;padding:40px 20px;max-height:400px}ks-product-suggestions .content>.top>.heading{font-family:var(--font-emphasis);font-size:20px;font-weight:700}ks-product-suggestions .content>.top>.name{font-family:var(--font-emphasis);font-size:18px}ks-product-suggestions .content>.top>.buttons{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;margin-top:20px;max-width:600px;width:100%}ks-product-suggestions .content>.top>.buttons>*{-ms-flex:1 0 auto;flex:1 0 auto;margin:5px}ks-product-suggestions .content>.bottom{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-direction:column;flex-direction:column;position:relative;-webkit-box-sizing:border-box;box-sizing:border-box;padding:10px 0px;height:100%;background-color:#f2f2f2}ks-product-suggestions .content>.bottom>.fade-left,ks-product-suggestions .content>.bottom>.fade-right{position:absolute;top:0;height:100%;width:50px;z-index:1}ks-product-suggestions .content>.bottom>.fade-left{background-image:-webkit-gradient(linear, left top, right top, from(#f2f2f2), to(rgba(242, 242, 242, 0)));background-image:linear-gradient(to right, #f2f2f2, rgba(242, 242, 242, 0));left:0}ks-product-suggestions .content>.bottom>.fade-right{background-image:-webkit-gradient(linear, right top, left top, from(#f2f2f2), to(rgba(242, 242, 242, 0)));background-image:linear-gradient(to left, #f2f2f2, rgba(242, 242, 242, 0));right:0}ks-product-suggestions .swiper-container{width:100%;margin-bottom:15px}ks-product-suggestions .swiper-slide{height:100%;width:auto;max-width:230px;overflow:hidden;-webkit-animation:fade-in 0.8s ease 1;animation:fade-in 0.8s ease 1}ks-product-suggestions .swiper-slide>*{height:100%;width:230px}ks-product-suggestions .suggestion-heading{font-size:18px;margin:10px 0 20px 0;text-align:center}ks-product-suggestions ks-product-card .top{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;max-height:230px}@media (max-width: 560px){ks-product-suggestions .content>.top{padding:20px 10px}ks-product-suggestions .content>.top>.buttons{width:100%;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:stretch;align-items:stretch;margin-top:10px}ks-product-suggestions ks-product-card .top{min-height:210px;max-height:210px}}@media (max-width: 370px){ks-product-suggestions .content>.top>.buttons>*>button{padding-top:12px;padding-bottom:12px}ks-product-suggestions .content>.top>.heading{font-size:18px}ks-product-suggestions .content>.top>.name{font-family:var(--font-regular);font-size:14px}ks-product-suggestions .swiper-slide>*{width:200px}ks-product-suggestions ks-product-card .top{min-height:180px;max-height:180px}ks-product-suggestions .suggestion-heading{font-size:16px;margin:3px 0 10px 0}}";
+const productSuggestionsCss = "ks-product-suggestions{display:block}ks-product-suggestions .content{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;width:100%;height:100%;overflow-y:auto;background-color:white;text-align:center}ks-product-suggestions .content>.top{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-direction:column;flex-direction:column;-webkit-box-sizing:border-box;box-sizing:border-box;height:100%;padding:40px 20px;max-height:400px}ks-product-suggestions .content>.top>.heading{font-family:var(--font-emphasis);font-size:20px;font-weight:700}ks-product-suggestions .content>.top>.name{font-family:var(--font-emphasis);font-size:18px}ks-product-suggestions .content>.top>.buttons{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;margin-top:20px;max-width:600px;width:100%}ks-product-suggestions .content>.top>.buttons>*{-ms-flex:1 0 auto;flex:1 0 auto;margin:5px}ks-product-suggestions .content>.bottom{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-direction:column;flex-direction:column;position:relative;-webkit-box-sizing:border-box;box-sizing:border-box;padding:10px 0px;height:100%;background-color:#f2f2f2}ks-product-suggestions .content>.bottom>.fade-left,ks-product-suggestions .content>.bottom>.fade-right{position:absolute;top:0;height:100%;width:50px;z-index:1}ks-product-suggestions .content>.bottom>.fade-left{background-image:-webkit-gradient(linear, left top, right top, from(#f2f2f2), to(rgba(242, 242, 242, 0)));background-image:linear-gradient(to right, #f2f2f2, rgba(242, 242, 242, 0));left:0}ks-product-suggestions .content>.bottom>.fade-right{background-image:-webkit-gradient(linear, right top, left top, from(#f2f2f2), to(rgba(242, 242, 242, 0)));background-image:linear-gradient(to left, #f2f2f2, rgba(242, 242, 242, 0));right:0}ks-product-suggestions .swiper-container{width:100%;margin-bottom:15px}ks-product-suggestions .swiper-slide{height:100%;width:auto;max-width:230px;overflow:hidden;-webkit-animation:fade-in 0.8s ease 1;animation:fade-in 0.8s ease 1}ks-product-suggestions .swiper-slide>*{height:100%;width:230px}ks-product-suggestions .suggestion-heading{font-size:18px;margin:10px 0 20px 0;text-align:center}ks-product-suggestions ks-product-card .top{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column}@media (max-width: 560px){ks-product-suggestions .content>.top{padding:20px 10px}ks-product-suggestions .content>.top>.buttons{width:100%;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:stretch;align-items:stretch;margin-top:10px}}@media (max-width: 370px){ks-product-suggestions .content>.top>.buttons>*>button{padding-top:12px;padding-bottom:12px}ks-product-suggestions .content>.top>.heading{font-size:18px}ks-product-suggestions .content>.top>.name{font-family:var(--font-regular);font-size:14px}ks-product-suggestions .swiper-slide>*{width:200px}ks-product-suggestions .suggestion-heading{font-size:16px;margin:3px 0 10px 0}}";
 
 class ProductSuggestions {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.api = undefined;
     this.suggestionHeading = "Produkty sugerowane";
     this.name = undefined;
     this.loading = true;
@@ -31968,7 +31973,7 @@ class ProductSuggestions {
       headers.append('cache-control', 'no-cache');
       let body = new FormData();
       body.append("id", productId);
-      await fetch(this.api, {
+      await fetch(commonDynamic.get("api").suggestions, {
         method: 'POST',
         body: body,
         headers: headers,
@@ -32003,7 +32008,7 @@ class ProductSuggestions {
   }
   render() {
     const strings = common.get('translations');
-    return hAsync("ks-overlay", null, hAsync("div", { class: "content" }, hAsync("div", { class: "top" }, hAsync("div", { class: "heading" }, strings.suggestionAddedToCart), hAsync("div", { class: "name" }, this.name), hAsync("div", { class: "buttons" }, hAsync("ks-button", { secondary: true, name: strings.suggestionGoToCart, onClick: () => this.toCart() }), hAsync("ks-button", { name: strings.suggestionContinueBrowsing, onClick: () => this.hide() }))), hAsync("div", { class: "bottom" }, this.loading ? null : hAsync("h3", { class: "suggestion-heading" }, this.suggestionHeading), this.loading ? hAsync("ks-loader", { dark: true, large: true }) : null, hAsync("div", { class: "swiper-container product-suggestions", style: { display: this.loading ? "none" : "block" } }, hAsync("div", { class: "swiper-wrapper" }, this.products.map((product) => hAsync("div", { class: "swiper-slide" }, hAsync("ks-product-card", { "link-only": true, product: product }))))), hAsync("div", { class: "fade-left" }), hAsync("div", { class: "fade-right" }))));
+    return hAsync("ks-overlay", null, hAsync("div", { class: "content" }, hAsync("div", { class: "top" }, hAsync("div", { class: "heading" }, "Dodano do koszyka"), hAsync("div", { class: "buttons" }, hAsync("ks-button", { secondary: true, name: strings.suggestionGoToCart, onClick: () => this.toCart() }), hAsync("ks-button", { name: strings.suggestionContinueBrowsing, onClick: () => this.hide() }))), hAsync("div", { class: "bottom" }, this.loading ? null : hAsync("h3", { class: "suggestion-heading" }, this.suggestionHeading), this.loading ? hAsync("ks-loader", { dark: true, large: true }) : null, hAsync("div", { class: "swiper-container product-suggestions", style: { display: this.loading ? "none" : "block" } }, hAsync("div", { class: "swiper-wrapper" }, this.products.map((product) => hAsync("div", { class: "swiper-slide" }, hAsync("ks-product-card", { "link-only": true, product: product }))))), hAsync("div", { class: "fade-left" }), hAsync("div", { class: "fade-right" }))));
   }
   get root() { return getElement(this); }
   static get style() { return productSuggestionsCss; }
@@ -32011,7 +32016,6 @@ class ProductSuggestions {
     "$flags$": 0,
     "$tagName$": "ks-product-suggestions",
     "$members$": {
-      "api": [1],
       "suggestionHeading": [1, "suggestion-heading"],
       "name": [32],
       "loading": [32],
