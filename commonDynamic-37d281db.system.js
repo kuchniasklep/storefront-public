@@ -1,0 +1,1 @@
+System.register(["./index-0ecc4079.system.js"],(function(e){"use strict";var t;return{setters:[function(e){t=e.c}],execute:function(){var n=e("c",t({loaded:false,loggedIn:false,customer:{},cartCount:0,heartCount:0,api:{},tracking:{},consent:{}}))}}}));
