@@ -1,1 +1,0 @@
-import{c as a}from"./index-bca22170.js";const o=a({loaded:!1,adminBar:{}});export{o as p}

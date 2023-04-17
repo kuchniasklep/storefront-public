@@ -1,0 +1,1 @@
+import{c as r}from"./common-e4bd89b8.js";function n(n){if(null==n)return"";"string"==typeof n&&(n=parseFloat(n));const o=r.get("currency");return o?t(n)+` ${o.symbol}`:n.toString()}function t(n){if(null==n)return"";"string"==typeof n&&(n=parseFloat(n));const t=r.get("currency");return t?n.toFixed(2).replace(".",t.separator):n.toString()}export{t as a,n as p}

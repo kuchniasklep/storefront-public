@@ -1,1 +1,0 @@
-import{c}from"./index-bca22170.js";const o=c({});export{o as c}
