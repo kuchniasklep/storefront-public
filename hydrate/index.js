@@ -12154,7 +12154,7 @@ var Thumbs$1 = {
   }
 };
 
-const bannerContainerCss = "ks-banner-container{display:block;position:relative}ks-banner-container .swiper-wrapper{max-height:550px;height:100%}ks-banner-container a{position:relative}ks-banner-container .pagination{position:absolute;left:0;right:0;bottom:-35px;height:35px;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;opacity:0;-webkit-transition:opacity 0.5s ease;transition:opacity 0.5s ease}ks-banner-container[loaded] .pagination{opacity:1}ks-banner-container .swiper-pagination{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;position:relative;padding:10px;background-color:#dcdcdc}ks-banner-container .swiper-pagination-bullet{background-color:rgba(29, 29, 29, 0);border:rgb(133, 133, 133) 1px solid;height:10px;width:10px;margin:0 5px;opacity:1;-webkit-transition:background-color 0.3s ease,\n                border 0.3s ease;transition:background-color 0.3s ease,\n                border 0.3s ease}ks-banner-container .swiper-pagination-bullet:hover{background-color:rgba(29, 29, 29, 0.192)}ks-banner-container .swiper-pagination-bullet-active{background-color:rgb(29, 29, 29) !important;border:rgba(133, 133, 133, 0) 1px solid;opacity:1}ks-banner-container .pagination svg{fill:#dcdcdc}@media (max-width: 638px){ks-banner-container .pagination{display:none}}";
+const bannerContainerCss = "ks-banner-container{display:block;position:relative}ks-banner-container .swiper-wrapper{max-height:550px;height:100%}ks-banner-container a{position:relative}ks-banner-container .pagination{position:absolute;left:0;right:0;bottom:0px;height:35px;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;opacity:0;-webkit-transition:opacity 0.5s ease;transition:opacity 0.5s ease}ks-banner-container[loaded] .pagination{opacity:1}ks-banner-container .swiper-pagination{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;position:relative;padding:10px}ks-banner-container .swiper-pagination-bullet{height:10px;width:10px;margin:0 5px;opacity:1;-webkit-transition:background-color 0.3s ease,\n                border 0.3s ease;transition:background-color 0.3s ease,\n                border 0.3s ease}ks-banner-container .swiper-pagination-bullet-active{background-color:white;opacity:1}ks-banner-container .pagination svg{fill:#dcdcdc}@media (max-width: 638px){ks-banner-container .pagination{display:none}}ks-banner-container[home] .pagination{bottom:-35px}ks-banner-container[home] .swiper-pagination{background-color:#dcdcdc}ks-banner-container[home] .swiper-pagination-bullet{background-color:rgba(29, 29, 29, 0);border:rgb(133, 133, 133) 1px solid}ks-banner-container[home] .swiper-pagination-bullet:hover{background-color:rgba(29, 29, 29, 0.192)}ks-banner-container[home] .swiper-pagination-bullet-active{background-color:rgb(29, 29, 29) !important;border:rgba(133, 133, 133, 0) 1px solid}";
 
 Swiper.use([Pagination$2, Autoplay$1]);
 class BannerContainer {
@@ -12164,6 +12164,7 @@ class BannerContainer {
     this.rendered = false;
     this.delay = 0;
     this.autoplay = 5000;
+    this.home = undefined;
     this.loaded = false;
   }
   componentDidLoad() {
@@ -12198,7 +12199,7 @@ class BannerContainer {
     }, this.delay);
   }
   render() {
-    return hAsync(Host, null, hAsync("div", { class: "swiper-container" }, hAsync("div", { class: "swiper-wrapper" }, hAsync("slot", null))), hAsync("div", { class: "pagination" }, hAsync("svg", { height: "36", width: "36" }, hAsync("polygon", { points: "0,0 36,0 36,36" })), hAsync("div", { class: "swiper-pagination" }), hAsync("svg", { height: "36", width: "36" }, hAsync("polygon", { points: "0,0 36,0 0,36" }))));
+    return hAsync(Host, null, hAsync("div", { class: "swiper-container" }, hAsync("div", { class: "swiper-wrapper" }, hAsync("slot", null))), hAsync("div", { class: "pagination" }, this.home ? hAsync("svg", { height: "36", width: "36" }, hAsync("polygon", { points: "0,0 36,0 36,36" })) : null, hAsync("div", { class: "swiper-pagination" }), this.home ? hAsync("svg", { height: "36", width: "36" }, hAsync("polygon", { points: "0,0 36,0 0,36" })) : null));
   }
   get root() { return getElement(this); }
   static get style() { return bannerContainerCss; }
@@ -12208,11 +12209,12 @@ class BannerContainer {
     "$members$": {
       "delay": [2],
       "autoplay": [2],
+      "home": [516],
       "loaded": [1540]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["loaded", "loaded"]]
+    "$attrsToReflect$": [["home", "home"], ["loaded", "loaded"]]
   }; }
 }
 
@@ -14620,6 +14622,148 @@ class Container {
     "$flags$": 4,
     "$tagName$": "ks-product-container",
     "$members$": undefined,
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const aboutCss = "ks-content-about{display:block;text-align:center;padding:40px 20px}ks-content-about .main-image{width:150px;margin:auto}ks-content-about h2{margin:15px 0 40px 0}ks-content-about .items{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;-ms-flex-pack:center;justify-content:center}ks-content-about .item{max-width:300px;padding:7px}ks-content-about .item ks-img3{width:50px;height:50px;margin:0px auto 10px auto}ks-content-about .item h3{margin-bottom:7px}";
+
+class ContentAbout {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.content = undefined;
+  }
+  render() {
+    return hAsync(Host, null, hAsync("ks-img3", { class: "main-image", fit: "contain", image: this.content.image, webp: this.content.webp, alt: this.content.heading, width: this.content.width, height: this.content.height }), hAsync("h2", null, this.content.heading), hAsync("div", { class: "items" }, this.content.items.map(item => this.item(item))));
+  }
+  item(item) {
+    return hAsync("div", { class: "item" }, hAsync("ks-img3", { fit: "contain", image: item.image, webp: item.webp, alt: item.heading, width: item.width, height: item.height }), hAsync("h3", null, item.heading), hAsync("p", null, item.paragraph));
+  }
+  static get style() { return aboutCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-content-about",
+    "$members$": {
+      "content": [16]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const bannerWithTextCss = "ks-content-banner-with-text{display:block;margin:auto}ks-content-banner-with-text .banner{position:relative;height:auto}ks-content-banner-with-text .banner ks-img3{max-height:550px;height:100%}ks-content-banner-with-text .banner .text{position:absolute;inset:0px;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;max-width:1000px;-webkit-box-sizing:border-box;box-sizing:border-box;margin:auto;padding:50px}ks-content-banner-with-text .banner .text.horizontal-left{-ms-flex-align:start;align-items:flex-start;text-align:left}ks-content-banner-with-text .banner .text.horizontal-center{-ms-flex-align:center;align-items:center;text-align:center}ks-content-banner-with-text .banner .text.horizontal-right{-ms-flex-align:end;align-items:flex-end;text-align:right}ks-content-banner-with-text .banner .text.vertical-top{-ms-flex-pack:start;justify-content:flex-start}ks-content-banner-with-text .banner .text.vertical-center{-ms-flex-pack:center;justify-content:center}ks-content-banner-with-text .banner .text.vertical-bottom{-ms-flex-pack:end;justify-content:flex-end}ks-content-banner-with-text .banner .text .mainText{background-color:rgba(0, 0, 0, 0.5);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);padding:10px 20px;font-size:22px;font-family:var(--font-emphasis)}ks-content-banner-with-text .banner .text .aboveText{text-shadow:0px 0 11px black, 0px 0 4px black;font-size:18px;margin-bottom:5px}@media screen and (max-width: 640px){ks-content-banner-with-text .banner .text{padding:15px}ks-content-banner-with-text .banner .text .mainText{padding:6px 15px;font-size:18px}ks-content-banner-with-text .banner .text .aboveText{font-size:16px;margin-bottom:3px}}";
+
+class ContentBannerWithText$1 {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.delay = 0;
+    this.autoplay = 5000;
+    this.content = undefined;
+  }
+  render() {
+    return hAsync("ks-banner-container", { delay: this.delay, autoplay: this.autoplay }, this.content.banners.map((item, index) => this.banner(item, index == 0)));
+  }
+  banner(item, sync) {
+    return hAsync("a", { class: "banner swiper-slide", style: this.bannerStyle(item), href: item.link ? item.link : null }, hAsync("ks-img3", { fit: item.fit, sync: sync, image: item.image, webp: item.webp, alt: item.name, width: item.width, height: item.height }), hAsync("div", { class: "text " + this.alignmentClass(item) }, item.aboveText ? hAsync("div", { class: "aboveText" }, item.aboveText) : null, item.mainText ? hAsync("div", { class: "mainText" }, item.mainText) : null));
+  }
+  bannerStyle(item) {
+    return {
+      backgroundColor: item.backgroundColor,
+      color: item.textColor
+    };
+  }
+  alignmentClass(item) {
+    const horizontal = item.horizontalAlignment || "center";
+    const vertical = item.verticalAlignment || "center";
+    return `horizontal-${horizontal} vertical-${vertical}`;
+  }
+  static get style() { return bannerWithTextCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-content-banner-with-text",
+    "$members$": {
+      "delay": [2],
+      "autoplay": [2],
+      "content": [16]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const linkTilesCss = "ks-content-link-tiles{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-content-link-tiles .tile{-ms-flex:1 1 350px;flex:1 1 350px;height:280px;position:relative;background-color:#000000}ks-content-link-tiles .tile ks-img3{height:100%;width:100%;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease;opacity:1}ks-content-link-tiles .tile:hover ks-img3{opacity:0.5}ks-content-link-tiles .tile ks-img3:after{content:\"\";position:absolute;inset:0px;background:-webkit-gradient(linear, left top, left bottom, from(rgb(0 0 0 / 60%)), color-stop(35%, rgba(0,0,0,0)));background:linear-gradient(180deg, rgb(0 0 0 / 60%) 0%, rgba(0,0,0,0) 35%)}ks-content-link-tiles .tile .text{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:justify;justify-content:space-between;position:absolute;inset:0px;padding:15px 20px;color:#ffffff}ks-content-link-tiles .tile .heading{font-family:var(--font-emphasis);font-size:22px;text-shadow:0 0 7px black}ks-content-link-tiles .tile .links{opacity:0;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-content-link-tiles .tile:hover .links{opacity:1}ks-content-link-tiles .tile .links a{display:block;color:white !important;text-decoration:none !important;text-shadow:0 0 4px black}ks-content-link-tiles .tile .links a span{display:inline-block;-webkit-transform:translateX(0px);transform:translateX(0px);transition:-webkit-transform 0.3s ease;-webkit-transition:-webkit-transform 0.3s ease;transition:transform 0.3s ease;transition:transform 0.3s ease, -webkit-transform 0.3s ease}ks-content-link-tiles .tile .links a:hover span{-webkit-transform:translateX(10px);transform:translateX(10px)}ks-content-link-tiles .tile .links a ks-icon{margin-left:-5px}@media screen and (max-width: 640px){ks-content-link-tiles .tile{height:220px}ks-content-link-tiles .tile .heading{font-size:18px}ks-content-link-tiles .tile .text{padding:10px 15px}ks-content-link-tiles .tile .links{opacity:1}ks-content-link-tiles .tile ks-img3{opacity:0.6}}@media screen and (max-width: 370px){ks-content-link-tiles .tile .links{font-size:13px}}";
+
+class ContentBannerWithText {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.content = undefined;
+  }
+  render() {
+    return hAsync(Host, { style: this.containerStyle() }, this.content.tiles.map(item => this.tile(item)));
+  }
+  tile(item) {
+    return hAsync("div", { class: "tile" }, hAsync("ks-img3", { fit: "cover", image: item.image, webp: item.webp, alt: item.name, width: item.width, height: item.height }), hAsync("div", { class: "text" }, hAsync("div", { class: "heading" }, item.name), hAsync("div", { class: "links" }, item.links.map(link => hAsync("a", { href: link.href }, hAsync("ks-icon", { name: "chevron-right" }), hAsync("span", null, link.name))))));
+  }
+  containerStyle() {
+    return {
+      gap: `${this.content.gap}px` || 'unset'
+    };
+  }
+  static get style() { return linkTilesCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-content-link-tiles",
+    "$members$": {
+      "content": [16]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const featuredWithTextCss = "ks-content-featured-with-text{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-content-featured-with-text .featured{-ms-flex:1 1 500px;flex:1 1 500px;position:relative;background-color:#000000;height:500px}ks-content-featured-with-text .featured ks-img3{height:100%;width:100%;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease;opacity:1}ks-content-featured-with-text .featured .overlay{position:absolute;inset:0px;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;max-width:1000px;-webkit-box-sizing:border-box;box-sizing:border-box;margin:auto}ks-content-featured-with-text .featured .overlay.horizontal-left{text-align:left}ks-content-featured-with-text .featured .overlay.horizontal-center{text-align:center}ks-content-featured-with-text .featured .overlay.horizontal-right{text-align:right}ks-content-featured-with-text .featured .overlay.vertical-top{-ms-flex-pack:start;justify-content:flex-start}ks-content-featured-with-text .featured .overlay.vertical-center{-ms-flex-pack:center;justify-content:center}ks-content-featured-with-text .featured .overlay.vertical-bottom{-ms-flex-pack:end;justify-content:flex-end}ks-content-featured-with-text .featured .text{background-color:rgba(0, 0, 0, 0.5);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);padding:10px 20px;font-size:22px;font-family:var(--font-emphasis)}ks-content-featured-with-text .featured .text .aboveText{font-size:16px;margin-bottom:-4px}@media screen and (max-width: 1000px){ks-content-featured-with-text .featured{height:400px}}@media screen and (max-width: 640px){ks-content-featured-with-text .featured{height:300px}ks-content-featured-with-text .featured .text{padding:15px}ks-content-featured-with-text .featured .text .mainText{padding:6px 15px;font-size:18px}ks-content-featured-with-text .featured .text .aboveText{font-size:14px;margin-bottom:-4px}}";
+
+class ContentFeaturedWithText {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.content = undefined;
+  }
+  render() {
+    return hAsync(Host, { style: this.containerStyle() }, this.content.featured.map(item => this.featured(item)));
+  }
+  featured(item) {
+    return hAsync("div", { class: "featured", style: this.bannerStyle(item) }, hAsync("ks-img3", { fit: item.fit, image: item.image, webp: item.webp, alt: item.name, width: item.width, height: item.height }), item.mainText || item.aboveText ?
+      hAsync("div", { class: "overlay " + this.alignmentClass(item) }, hAsync("div", { class: "text" }, item.aboveText ? hAsync("div", { class: "aboveText" }, item.aboveText) : null, item.mainText))
+      : null);
+  }
+  containerStyle() {
+    return {
+      gap: `${this.content.gap}px` || 'unset'
+    };
+  }
+  bannerStyle(item) {
+    return {
+      backgroundColor: item.backgroundColor,
+      color: item.textColor
+    };
+  }
+  alignmentClass(item) {
+    const horizontal = item.horizontalAlignment || "center";
+    const vertical = item.verticalAlignment || "center";
+    return `horizontal-${horizontal} vertical-${vertical}`;
+  }
+  static get style() { return featuredWithTextCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-content-featured-with-text",
+    "$members$": {
+      "content": [16]
+    },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": []
@@ -23727,6 +23871,110 @@ class Img2 {
   }; }
 }
 
+const img3Css = "ks-img3{display:block;-webkit-box-sizing:border-box;box-sizing:border-box;font-size:0;max-height:inherit;position:relative}ks-img3 picture{max-height:inherit}ks-img3 img{width:100%;height:100%;max-height:inherit;-o-object-position:center;object-position:center;opacity:1;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-img3 img.loading{opacity:0;height:0}ks-img3[fit='contain'] img{-o-object-fit:contain;object-fit:contain}ks-img3[fit='cover'] img{-o-object-fit:cover;object-fit:cover}ks-img3[fit='fill'] img{-o-object-fit:fill;object-fit:fill}ks-img3[fit='scale-down'] img{-o-object-fit:scale-down;object-fit:scale-down}ks-img3[fit='none'] img{-o-object-fit:none;object-fit:none}";
+
+class Img3 {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.lazyLoaded = createEvent(this, "lazyLoaded", 7);
+    this.image = undefined;
+    this.webp = undefined;
+    this.alt = undefined;
+    this.target = undefined;
+    this.observerMargin = undefined;
+    this.sync = false;
+    this.width = undefined;
+    this.height = undefined;
+    this.fit = undefined;
+    this.loaded = false;
+  }
+  loadHandler(e) {
+    var _a;
+    if (e.target instanceof HTMLElement && !((_a = e.target.getAttribute("src")) === null || _a === void 0 ? void 0 : _a.includes('data:image'))) {
+      this.loaded = true;
+      this.lazyLoaded.emit();
+    }
+  }
+  srcListener() {
+    const image = this.root.querySelector("img");
+    image.removeAttribute("src");
+    image.setAttribute("src", this.image);
+    setTimeout(() => {
+      if (!image.complete) {
+        this.loaded = false;
+      }
+    }, 200);
+  }
+  componentDidLoad() {
+    if (!this.sync)
+      window_load.promise.then(() => this.initializeObserver());
+  }
+  initializeObserver() {
+    this.img = this.root.querySelector('img');
+    this.source = this.root.querySelector('source');
+    const target = this.target ? this.root.closest(this.target) : this.root.parentElement;
+    const onIntersection = (entries) => {
+      var _a;
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          if (this.observer) {
+            this.observer.disconnect();
+          }
+          if ((_a = this.source) === null || _a === void 0 ? void 0 : _a.getAttribute('data-srcSet')) {
+            this.source.setAttribute('srcSet', this.source.getAttribute('data-srcSet'));
+            this.source.removeAttribute('data-srcSet');
+          }
+          if (this.img.getAttribute('data-src')) {
+            this.img.setAttribute('src', this.img.getAttribute('data-src'));
+            this.img.removeAttribute('data-src');
+          }
+        }
+      }
+    };
+    if (this.image && target) {
+      this.observer = new IntersectionObserver(onIntersection, {
+        rootMargin: this.observerMargin
+      });
+      this.observer.observe(target);
+    }
+  }
+  render() {
+    const loading = this.loaded ? "" : "loading";
+    if (this.sync)
+      return [
+        hAsync("picture", null, this.webp ? hAsync("source", { srcSet: this.webp, type: "image/webp" }) : null, hAsync("img", { src: this.image, alt: this.alt, width: this.width, height: this.height })),
+      ];
+    return [
+      hAsync("picture", null, this.webp ? hAsync("source", { "data-srcSet": this.webp, type: "image/webp" }) : null, hAsync("img", { class: loading, onLoad: (e) => this.loadHandler(e), "data-src": this.image, alt: this.alt, width: this.width, height: this.height })),
+      (!this.loaded ? hAsync("ks-loader", { dark: true }) : null)
+    ];
+  }
+  get root() { return getElement(this); }
+  static get watchers() { return {
+    "image": ["srcListener"]
+  }; }
+  static get style() { return img3Css; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-img3",
+    "$members$": {
+      "image": [513],
+      "webp": [1],
+      "alt": [1],
+      "target": [1],
+      "observerMargin": [1, "observer-margin"],
+      "sync": [4],
+      "width": [2],
+      "height": [2],
+      "fit": [513],
+      "loaded": [32]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": [["image", "image"], ["fit", "fit"]]
+  }; }
+}
+
 const infoBannerCss = "ks-info-banner{display:block;position:relative;max-height:100px;height:100%}ks-info-banner{display:block}ks-info-banner a{display:-ms-flexbox;display:flex;max-height:100px;height:100%;-ms-flex-pack:center;justify-content:center}ks-info-banner ks-img{height:auto}";
 
 class InfoBanner {
@@ -29776,7 +30024,7 @@ class Overlay {
 
 const article = createStore({});
 
-const articleCss = "ks-page-article{display:block}ks-page-article .article-container{background:#fff;color:#373737;-webkit-box-shadow:0 2px 8px rgb(0 0 0 / 15%);box-shadow:0 2px 8px rgb(0 0 0 / 15%);margin-bottom:0;padding:40px}ks-page-article h1{font-size:26px;font-weight:700}ks-page-article h2{font-size:20px;font-weight:700}ks-page-article h3{font-size:18px;font-weight:700}";
+const articleCss = "ks-page-article{display:block}ks-page-article .article-container{background:#fff;color:#373737;margin-bottom:0;padding:40px}ks-page-article h1{font-size:26px;font-weight:700}ks-page-article h2{font-size:20px;font-weight:700}ks-page-article h3{font-size:18px;font-weight:700}";
 
 class PageArticle {
   constructor(hostRef) {
@@ -29806,6 +30054,14 @@ class PageArticle {
           return hAsync("ks-description-products", { products: entry.products });
         case "ComponentContentHtml":
           return hAsync("ks-description-html", { html: entry.html });
+        case "ComponentContentBannerAndText":
+          return hAsync("ks-content-banner-with-text", { content: entry });
+        case "ComponentContentLinkTiles":
+          return hAsync("ks-content-link-tiles", { content: entry });
+        case "ComponentContentFeaturedAndText":
+          return hAsync("ks-content-featured-with-text", { content: entry });
+        case "ComponentContentAbout":
+          return hAsync("ks-content-about", { content: entry });
         default:
           return null;
       }
@@ -30103,7 +30359,7 @@ class PageHome {
     const articlesMore = home.get('articlesMore');
     const seeMore = home.get('seeMore');
     const review = home.get('reviewAverage');
-    return hAsync("ks-page-base", { loadCommon: false, skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, banners ? hAsync("ks-banner-container", null, banners.map((banner, index) => hAsync("ks-banner", { sync: index == 0, active: index == 0, name: banner.name, color: banner.color, link: banner.link, image: banner.image, webp: banner.webp, width: banner.width, height: banner.height, theme: banner.theme }))) : null, info ? hAsync("ks-homepage-info", null, hAsync("h1", { slot: "mainHeading" }, info.mainHeading), hAsync("p", { slot: "mainContent" }, info.mainParagraph), hAsync("h2", { slot: "firstHeading" }, info.firstHeading), hAsync("p", { slot: "firstContent" }, info.firstParagraph), hAsync("h2", { slot: "secondHeading" }, info.secondHeading), hAsync("p", { slot: "secondContent" }, info.secondParagraph), hAsync("h2", { slot: "thirdHeading" }, info.thirdHeading), hAsync("p", { slot: "thirdContent" }, info.thirdParagraph)) : null, review ?
+    return hAsync("ks-page-base", { loadCommon: false, skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, banners ? hAsync("ks-banner-container", { home: true }, banners.map((banner, index) => hAsync("ks-banner", { sync: index == 0, active: index == 0, name: banner.name, color: banner.color, link: banner.link, image: banner.image, webp: banner.webp, width: banner.width, height: banner.height, theme: banner.theme }))) : null, info ? hAsync("ks-homepage-info", null, hAsync("h1", { slot: "mainHeading" }, info.mainHeading), hAsync("p", { slot: "mainContent" }, info.mainParagraph), hAsync("h2", { slot: "firstHeading" }, info.firstHeading), hAsync("p", { slot: "firstContent" }, info.firstParagraph), hAsync("h2", { slot: "secondHeading" }, info.secondHeading), hAsync("p", { slot: "secondContent" }, info.secondParagraph), hAsync("h2", { slot: "thirdHeading" }, info.thirdHeading), hAsync("p", { slot: "thirdContent" }, info.thirdParagraph)) : null, review ?
       hAsync("ks-review-average", { href: review.href, message: review.message, reviews: review.reviews, months: review.months, totalReviews: review.totalReviews, average: review.average, example: review.example })
       : null, products ? hAsync("ks-homepage-products", null, products.map(products => hAsync("ks-product-container", null, products.products.map(card => hAsync("ks-product-card", { product: card }))))) : null, featured ? hAsync("ks-featured-container", null, featured.map(banner => hAsync("ks-featured", { slot: banner.side, name: banner.name, image: banner.image, webp: banner.webp, link: banner.link, width: banner.width, height: banner.height }))) : null, recipes ? [
       hAsync("h3", null, recipesHeading),
@@ -33264,6 +33520,10 @@ registerComponents([
   ContactButtons,
   Container$1,
   Container,
+  ContentAbout,
+  ContentBannerWithText$1,
+  ContentBannerWithText,
+  ContentFeaturedWithText,
   CookiePopup,
   DescriptionHTML,
   DescriptionImage$1,
@@ -33289,6 +33549,7 @@ registerComponents([
   Image,
   Img,
   Img2,
+  Img3,
   InfoBanner,
   InfoMessage,
   InputCheck,
