@@ -23871,7 +23871,7 @@ class Img2 {
   }; }
 }
 
-const img3Css = "ks-img3{display:block;-webkit-box-sizing:border-box;box-sizing:border-box;font-size:0;max-height:inherit}ks-img3 picture{max-height:inherit}ks-img3 img{width:100%;height:100%;max-height:inherit;-o-object-position:center;object-position:center;opacity:1;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-img3 img.loading{opacity:0;height:0}ks-img3[fit='contain'] img{-o-object-fit:contain;object-fit:contain}ks-img3[fit='cover'] img{-o-object-fit:cover;object-fit:cover}ks-img3[fit='fill'] img{-o-object-fit:fill;object-fit:fill}ks-img3[fit='scale-down'] img{-o-object-fit:scale-down;object-fit:scale-down}ks-img3[fit='none'] img{-o-object-fit:none;object-fit:none}";
+const img3Css = "ks-img3{display:block;-webkit-box-sizing:border-box;box-sizing:border-box;font-size:0;max-height:inherit;position:relative}ks-img3 picture{max-height:inherit}ks-img3 img{width:100%;height:100%;max-height:inherit;-o-object-position:center;object-position:center;opacity:1;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-img3 img.loading{opacity:0;height:0}ks-img3[fit='contain'] img{-o-object-fit:contain;object-fit:contain}ks-img3[fit='cover'] img{-o-object-fit:cover;object-fit:cover}ks-img3[fit='fill'] img{-o-object-fit:fill;object-fit:fill}ks-img3[fit='scale-down'] img{-o-object-fit:scale-down;object-fit:scale-down}ks-img3[fit='none'] img{-o-object-fit:none;object-fit:none}";
 
 class Img3 {
   constructor(hostRef) {
