@@ -29538,8 +29538,8 @@ class OrderLogin {
     }).then(response => response.text());
     const prompt = document.createElement("ks-order-login-prompt");
     prompt.setAttribute("heading", this.promptHeading);
-    prompt.setAttribute("toCart", this.promptToCart);
-    prompt.setAttribute("toConfirmation", this.promptToConfirmation);
+    prompt.setAttribute("to-cart", this.promptToCart);
+    prompt.setAttribute("to-confirmation", this.promptToConfirmation);
     if (response.search("koszyk.html") != -1) {
       prompt.setAttribute("message", this.cartProductsMessage);
     }
