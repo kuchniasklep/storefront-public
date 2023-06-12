@@ -18147,7 +18147,7 @@ var marked_umd = createCommonjsModule(function (module, exports) {
 }));
 });
 
-const descriptionTextCss = "ks-description-text{display:block;margin-bottom:30px}ks-description-text.left{text-align:left}ks-description-text.center{text-align:center}ks-description-text.right{text-align:right}ks-description-text.nomargin{margin:0}";
+const descriptionTextCss = "ks-description-text{display:block;margin:0 auto 30px auto;max-width:1200px}ks-description-text.left{text-align:left}ks-description-text.center{text-align:center}ks-description-text.right{text-align:right}ks-description-text.nomargin{margin:0 auto}";
 
 class DescriptionText {
   constructor(hostRef) {
@@ -18175,7 +18175,7 @@ class DescriptionText {
   }; }
 }
 
-const descriptionTextImageCss = "ks-description-text-image{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;-ms-flex-wrap:wrap;flex-wrap:wrap;margin:0;padding:0;margin-bottom:30px}ks-description-text-image[alignment=\"top\"]{-ms-flex-align:start;align-items:flex-start}ks-description-text-image[alignment=\"middle\"]{-ms-flex-align:center;align-items:center}ks-description-text-image[alignment=\"bottom\"]{-ms-flex-align:end;align-items:flex-end}ks-description-text-image[position=\"left\"]{-ms-flex-direction:row-reverse;flex-direction:row-reverse}ks-description-text-image .image{width:100%;margin:20px 0px 0px 0px}@media (min-width: 960px){ks-description-text-image .text{-ms-flex:1 !important;flex:1 !important}ks-description-text-image .image{width:50%;margin:0px 0px 0px 30px;max-width:500px}ks-description-text-image[position=\"left\"] .image{margin:0px 30px 0px 0px}}";
+const descriptionTextImageCss = "ks-description-text-image{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;-ms-flex-wrap:wrap;flex-wrap:wrap;padding:0;margin:0 auto 30px auto;max-width:1200px}ks-description-text-image[alignment=\"top\"]{-ms-flex-align:start;align-items:flex-start}ks-description-text-image[alignment=\"middle\"]{-ms-flex-align:center;align-items:center}ks-description-text-image[alignment=\"bottom\"]{-ms-flex-align:end;align-items:flex-end}ks-description-text-image[position=\"left\"]{-ms-flex-direction:row-reverse;flex-direction:row-reverse}ks-description-text-image .image{width:100%;margin:20px 0px 0px 0px}@media (min-width: 960px){ks-description-text-image .text{-ms-flex:1 !important;flex:1 !important}ks-description-text-image .image{width:50%;margin:0px 0px 0px 30px;max-width:500px}ks-description-text-image[position=\"left\"] .image{margin:0px 30px 0px 0px}}";
 
 class DescriptionTextImage {
   constructor(hostRef) {
