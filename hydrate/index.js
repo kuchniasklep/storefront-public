@@ -12218,7 +12218,7 @@ class BannerContainer {
   }; }
 }
 
-const buttonCss = "ks-button{display:block}ks-button>*{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;text-align:center;-webkit-box-sizing:border-box;box-sizing:border-box;font-size:var(--product-button-size);width:100%;padding:12px 20px;outline-style:none;border-style:none;text-decoration:none !important;cursor:pointer;border-radius:0px;font-family:var(--font-regular);font-size:15px;border:1px solid var(--color-dark);background-color:var(--color-dark);color:var(--text-color-dark) !important;-webkit-transition:var(--transition-background-color),\n                var(--transition-border-color);transition:var(--transition-background-color),\n                var(--transition-border-color)}ks-button:not([transitionless])>*:hover{background-color:var(--color-dark-hover)}ks-button:not([transitionless])>*:active{background-color:var(--color-dark-active)}ks-button[round]>*{border-radius:100px}ks-button[narrow]>*{padding:9px 20px}ks-button[narrower]>*{padding:6px 18px}ks-button[tall]>*{padding:18px 20px}ks-button:not([name])>*{padding:12px}ks-button:not([name])[narrow]>*{padding:9px}ks-button:not([name])[narrower]>*{padding:6px}ks-button:not([name])[tall]>*{padding:18px}ks-button[primary]>*{color:var(--text-color-primary) !important;background-color:var(--color-primary) !important;border:1px solid var(--color-primary) !important}ks-button[primary]:not([transitionless])>*:hover{background-color:var(--color-primary-hover)}ks-button[primary]:not([transitionless])>*:active{background-color:var(--color-primary-active)}ks-button[secondary]>*{color:var(--text-color-secondary) !important;background-color:var(--color-secondary) !important;border:1px solid var(--color-secondary) !important}ks-button[secondary]:not([transitionless])>*:hover{background-color:var(--color-secondary-hover)}ks-button[secondary]:not([transitionless])>*:active{background-color:var(--color-secondary-active)}ks-button[border]>*{border:1px solid var(--color-dark);color:var(--color-dark) !important;background-color:rgba(0, 0, 0, 0)}ks-button[border]:not([transitionless])>*:hover{background-color:rgba(0, 0, 0, 0.096)}ks-button[border]:not([transitionless])>*:active{background-color:rgba(0, 0, 0, 0.336)}ks-button[border][light]>*{border:1px solid #ffffff;color:var(--text-color-dark) !important;background-color:rgba(255, 255, 255, 0)}ks-button[border][light]:not([transitionless])>*:hover{background-color:rgba(255, 255, 255, 0.096)}ks-button[border][light]:not([transitionless])>*:active{background-color:rgba(255, 255, 255, 0.336)}ks-button[disabled]>*{background-color:#e2e2e2 !important}ks-button[border][muted]>*{border:1px solid #e5e5e5}ks-button[border][muted]:not([transitionless])>*:hover{border-color:#bebebe;background-color:rgba(255, 255, 255, 0)}ks-button[border][muted]:not([transitionless])>*:active{border-color:#8d8d8d;background-color:rgba(255, 255, 255, 0)}ks-button[name] ks-icon{margin-left:10px}ks-button[left][name] ks-icon{margin-right:10px;margin-left:0}ks-button[transparent]>*{border:none;color:var(--color-dark) !important;background-color:rgba(0, 0, 0, 0)}ks-button[transparent]:not([transitionless])>*:hover{background-color:rgba(0, 0, 0, 0.096)}ks-button[transparent]:not([transitionless])>*:active{background-color:rgba(0, 0, 0, 0.336)}ks-button[icon][name] ks-icon{margin:0 4px}ks-button[light]:not([border])>*{color:black !important;background-color:rgba(255, 255, 255, 1);border:1px solid #ffffff}ks-button[light]:not([border])>*:hover{background-color:rgba(255, 255, 255, 0.692)}ks-button[light]:not([border])>*:active{background-color:rgba(255, 255, 255, 0.452)}";
+const buttonCss$1 = "ks-button{display:block}ks-button>*{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;text-align:center;-webkit-box-sizing:border-box;box-sizing:border-box;font-size:var(--product-button-size);width:100%;padding:12px 20px;outline-style:none;border-style:none;text-decoration:none !important;cursor:pointer;border-radius:0px;font-family:var(--font-regular);font-size:15px;border:1px solid var(--color-dark);background-color:var(--color-dark);color:var(--text-color-dark) !important;-webkit-transition:var(--transition-background-color),\n                var(--transition-border-color);transition:var(--transition-background-color),\n                var(--transition-border-color)}ks-button:not([transitionless])>*:hover{background-color:var(--color-dark-hover)}ks-button:not([transitionless])>*:active{background-color:var(--color-dark-active)}ks-button[round]>*{border-radius:100px}ks-button[narrow]>*{padding:9px 20px}ks-button[narrower]>*{padding:6px 18px}ks-button[tall]>*{padding:18px 20px}ks-button:not([name])>*{padding:12px}ks-button:not([name])[narrow]>*{padding:9px}ks-button:not([name])[narrower]>*{padding:6px}ks-button:not([name])[tall]>*{padding:18px}ks-button[primary]>*{color:var(--text-color-primary) !important;background-color:var(--color-primary) !important;border:1px solid var(--color-primary) !important}ks-button[primary]:not([transitionless])>*:hover{background-color:var(--color-primary-hover)}ks-button[primary]:not([transitionless])>*:active{background-color:var(--color-primary-active)}ks-button[secondary]>*{color:var(--text-color-secondary) !important;background-color:var(--color-secondary) !important;border:1px solid var(--color-secondary) !important}ks-button[secondary]:not([transitionless])>*:hover{background-color:var(--color-secondary-hover)}ks-button[secondary]:not([transitionless])>*:active{background-color:var(--color-secondary-active)}ks-button[border]>*{border:1px solid var(--color-dark);color:var(--color-dark) !important;background-color:rgba(0, 0, 0, 0)}ks-button[border]:not([transitionless])>*:hover{background-color:rgba(0, 0, 0, 0.096)}ks-button[border]:not([transitionless])>*:active{background-color:rgba(0, 0, 0, 0.336)}ks-button[border][light]>*{border:1px solid #ffffff;color:var(--text-color-dark) !important;background-color:rgba(255, 255, 255, 0)}ks-button[border][light]:not([transitionless])>*:hover{background-color:rgba(255, 255, 255, 0.096)}ks-button[border][light]:not([transitionless])>*:active{background-color:rgba(255, 255, 255, 0.336)}ks-button[disabled]>*{background-color:#e2e2e2 !important}ks-button[border][muted]>*{border:1px solid #e5e5e5}ks-button[border][muted]:not([transitionless])>*:hover{border-color:#bebebe;background-color:rgba(255, 255, 255, 0)}ks-button[border][muted]:not([transitionless])>*:active{border-color:#8d8d8d;background-color:rgba(255, 255, 255, 0)}ks-button[name] ks-icon{margin-left:10px}ks-button[left][name] ks-icon{margin-right:10px;margin-left:0}ks-button[transparent]>*{border:none;color:var(--color-dark) !important;background-color:rgba(0, 0, 0, 0)}ks-button[transparent]:not([transitionless])>*:hover{background-color:rgba(0, 0, 0, 0.096)}ks-button[transparent]:not([transitionless])>*:active{background-color:rgba(0, 0, 0, 0.336)}ks-button[icon][name] ks-icon{margin:0 4px}ks-button[light]:not([border])>*{color:black !important;background-color:rgba(255, 255, 255, 1);border:1px solid #ffffff}ks-button[light]:not([border])>*:hover{background-color:rgba(255, 255, 255, 0.692)}ks-button[light]:not([border])>*:active{background-color:rgba(255, 255, 255, 0.452)}";
 
 class Button {
   constructor(hostRef) {
@@ -12250,7 +12250,7 @@ class Button {
     return hAsync("button", { disabled: this.disabled }, this.icon && this.left ? hAsync("ks-icon", { name: this.icon, size: 0.9 }) : null, this.name, this.icon && !this.left ? hAsync("ks-icon", { name: this.icon, size: 0.9 }) : null);
   }
   get root() { return getElement(this); }
-  static get style() { return buttonCss; }
+  static get style() { return buttonCss$1; }
   static get cmpMeta() { return {
     "$flags$": 0,
     "$tagName$": "ks-button",
@@ -14729,6 +14729,31 @@ class ContentBreadcrumbs {
   }; }
 }
 
+const buttonCss = "ks-content-button{display:block;margin-bottom:20px}@media screen and (min-width: 420px){ks-content-button.center{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center}ks-content-button.left{display:-ms-flexbox;display:flex;-ms-flex-pack:start;justify-content:flex-start}ks-content-button.right{display:-ms-flexbox;display:flex;-ms-flex-pack:end;justify-content:flex-end}ks-content-button a{padding-left:40px;padding-right:40px}}";
+
+class ContentButton {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.text = undefined;
+    this.content = undefined;
+  }
+  render() {
+    return hAsync(Host, { class: this.content.align }, hAsync("ks-button", { name: this.content.name, link: this.content.link, nofollow: this.content.nofollow, round: this.content.round, tall: this.content.size == 'tall', narrow: this.content.size == 'narrow', narrower: this.content.size == 'narrower', border: this.content.style == 'border', primary: this.content.style == 'primary', secondary: this.content.style == 'secondary', transparent: this.content.style == 'transparent' }));
+  }
+  static get style() { return buttonCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-content-button",
+    "$members$": {
+      "text": [1],
+      "content": [16]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
 const featuredWithTextCss = "ks-content-featured-with-text{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-content-featured-with-text .featured{-ms-flex:1 1 500px;flex:1 1 500px;position:relative;background-color:#000000;height:500px}ks-content-featured-with-text .featured ks-img3{height:100%;width:100%;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease;opacity:1}ks-content-featured-with-text .featured .overlay{position:absolute;inset:0px;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;max-width:1000px;-webkit-box-sizing:border-box;box-sizing:border-box;margin:auto}ks-content-featured-with-text .featured .overlay.horizontal-left{text-align:left}ks-content-featured-with-text .featured .overlay.horizontal-center{text-align:center}ks-content-featured-with-text .featured .overlay.horizontal-right{text-align:right}ks-content-featured-with-text .featured .overlay.vertical-top{-ms-flex-pack:start;justify-content:flex-start}ks-content-featured-with-text .featured .overlay.vertical-center{-ms-flex-pack:center;justify-content:center}ks-content-featured-with-text .featured .overlay.vertical-bottom{-ms-flex-pack:end;justify-content:flex-end}ks-content-featured-with-text .featured .text{background-color:rgba(0, 0, 0, 0.5);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);padding:10px 20px;font-size:22px;font-family:var(--font-emphasis)}ks-content-featured-with-text .featured .text .aboveText{font-size:16px;margin-bottom:-4px}@media screen and (max-width: 1000px){ks-content-featured-with-text .featured{height:400px}}@media screen and (max-width: 640px){ks-content-featured-with-text .featured{height:300px}ks-content-featured-with-text .featured .text{padding:15px}ks-content-featured-with-text .featured .text .mainText{padding:6px 15px;font-size:18px}ks-content-featured-with-text .featured .text .aboveText{font-size:14px;margin-bottom:-4px}}";
 
 class ContentFeaturedWithText {
@@ -15029,7 +15054,7 @@ class DescriptionImage {
   }; }
 }
 
-const descriptionProductsCss = "ks-description-products{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;border-top:#f2f2f2 solid 1px;border-bottom:#eeeeee solid 1px;margin-bottom:20px;padding:10px 0 20px 10px}ks-description-products[kind='standard']{border:none}";
+const descriptionProductsCss = "ks-description-products{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;border-top:#f2f2f2 solid 1px;border-bottom:#eeeeee solid 1px;padding:10px 0 20px 0;margin:0 -15px 0px -15px}ks-description-products ks-product-container{margin-left:-30px;margin-right:-20px;margin-top:-15px;padding:0}ks-description-products[kind='standard']{border:none}@media screen and (max-width: 640px){ks-description-products{padding:10px 5px 20px 5px}ks-description-products ks-product-container{margin-left:-20px;margin-right:-5px}}";
 
 class DescriptionProducts {
   constructor(hostRef) {
@@ -30086,7 +30111,7 @@ class Overlay {
 
 const article = createStore({});
 
-const articleCss = "ks-page-article{display:block}ks-page-article .article-container{-webkit-box-sizing:border-box;box-sizing:border-box;max-width:1200px;width:100%;margin:0 auto 0 auto;padding:40px;background:#fff;color:#373737}ks-page-article .article-container.full-width{max-width:100%}ks-page-article .article-container.no-padding{padding:0px}ks-page-article h1{font-size:26px;font-weight:700}ks-page-article h2{font-size:20px;font-weight:700}ks-page-article h3{font-size:18px;font-weight:700}ks-page-article hr{-webkit-box-sizing:content-box;box-sizing:content-box;height:0;overflow:visible;text-align:inherit;border:0;border-top:1px solid #e5e5e5}";
+const articleCss = "ks-page-article{display:block}ks-page-article .article-container{-webkit-box-sizing:border-box;box-sizing:border-box;max-width:1200px;width:100%;margin:0 auto 0 auto;padding:40px;background:#fff;color:#373737}ks-page-article .article-container.full-width{max-width:100%}ks-page-article .article-container.no-padding{padding:0px}ks-page-article h1{font-size:26px;font-weight:700}ks-page-article h2{font-size:20px;font-weight:700}ks-page-article h3{font-size:18px;font-weight:700}ks-page-article hr{-webkit-box-sizing:content-box;box-sizing:content-box;height:0;overflow:visible;text-align:inherit;border:0;border-top:1px solid #e5e5e5}@media screen and (max-width: 640px){ks-page-article .article-container{padding:40px 20px}}";
 
 class PageArticle {
   constructor(hostRef) {
@@ -30130,6 +30155,8 @@ class PageArticle {
           return hAsync("ks-content-tags", { items: entry.items });
         case "ComponentContentSeparator":
           return hAsync("ks-content-separator", { content: entry });
+        case "ComponentContentButton":
+          return hAsync("ks-content-button", { content: entry });
         default: return null;
       }
     });
@@ -33594,6 +33621,7 @@ registerComponents([
   ContentBannerWithText$1,
   ContentBannerWithText,
   ContentBreadcrumbs,
+  ContentButton,
   ContentFeaturedWithText,
   ContentSeparator,
   ContentTags,
