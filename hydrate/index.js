@@ -15054,7 +15054,7 @@ class DescriptionImage {
   }; }
 }
 
-const descriptionProductsCss = "ks-description-products{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;border-top:#f2f2f2 solid 1px;border-bottom:#eeeeee solid 1px;padding:10px 0 20px 0;margin:0 -15px 0px -15px}ks-description-products ks-product-container{margin-left:-30px;margin-right:-20px;margin-top:-15px;padding:0}ks-description-products[kind='standard']{border:none}@media screen and (max-width: 640px){ks-description-products{padding:10px 5px 20px 5px}ks-description-products ks-product-container{margin-left:-20px;margin-right:-5px}}";
+const descriptionProductsCss = "ks-description-products{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;border-top:#f2f2f2 solid 1px;border-bottom:#eeeeee solid 1px;padding:10px 0 20px 0;margin:0 -15px 0px -15px}ks-description-products ks-product-container{margin-left:-30px;margin-right:-20px;margin-top:-15px;padding:0}ks-description-products[kind='standard']{border:none}ks-description-products[kind='simple']{margin-bottom:20px}@media screen and (max-width: 640px){ks-description-products{padding:10px 5px 20px 5px}ks-description-products ks-product-container{margin-left:-20px;margin-right:-5px}ks-description-products[kind='simple']{margin-bottom:20px}}";
 
 class DescriptionProducts {
   constructor(hostRef) {
