@@ -15029,7 +15029,7 @@ class DescriptionHTML {
   }; }
 }
 
-const descriptionImageCss = "ks-description-image{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center}ks-description-image .image{max-width:100%}";
+const descriptionImageCss = "ks-description-image{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;margin-bottom:20px}ks-description-image .image{max-width:100%}";
 
 class DescriptionImage {
   constructor(hostRef) {
