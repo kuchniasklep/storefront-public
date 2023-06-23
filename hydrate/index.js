@@ -24141,9 +24141,11 @@ class InfoBanner {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.content = undefined;
+    this.productBanner = undefined;
   }
   render() {
-    const theme = this.content.theme;
+    var _a;
+    const theme = (_a = this.content) === null || _a === void 0 ? void 0 : _a.theme;
     const themeStyle = theme ? `:root {
       --navbar-color: ${theme.navbarColor} !important;
       --navbar-color-hover: ${theme.navbarColorHover} !important;
@@ -24153,7 +24155,8 @@ class InfoBanner {
       --navbar-category-active: ${theme.categoryColorActive} !important;
       --navbar-category-backdrop: ${theme.categoryColorBackdrop} !important;
     }` : null;
-    return hAsync(Host, { style: { backgroundColor: this.content.color } }, hAsync("a", { href: this.content.link, "aria-label": this.content.name }, hAsync("ks-img3", { sync: true, fit: "contain", width: this.content.width, height: this.content.height, image: this.content.image, webp: this.content.webp, alt: this.content.name })), theme ? hAsync("style", { innerHTML: themeStyle }) : null);
+    const data = this.productBanner ? this.productBanner : this.content;
+    return hAsync(Host, { style: { backgroundColor: data.color } }, hAsync("a", { href: data.link, "aria-label": data.name }, hAsync("ks-img3", { sync: true, fit: "contain", width: data.width, height: data.height, image: data.image, webp: data.webp, alt: data.name })), theme ? hAsync("style", { innerHTML: themeStyle }) : null);
   }
   ;
   static get style() { return infoBannerCss; }
@@ -24161,7 +24164,8 @@ class InfoBanner {
     "$flags$": 0,
     "$tagName$": "ks-content-info-banner",
     "$members$": {
-      "content": [16]
+      "content": [16],
+      "productBanner": [16]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
@@ -30816,7 +30820,7 @@ class PageProduct {
         hAsync("ks-product-calculator-ca", { price: product.get("currentPrice"), parameters: installments.caParameters }, hAsync("ks-product-button", { icon: installments.caIcon }))
         : null)
       : null), hAsync("ks-product-brand", { slot: "brand" }))), productBanner && (productBanner === null || productBanner === void 0 ? void 0 : productBanner.image) ?
-      hAsync("ks-container", null, hAsync("ks-content-info-banner", { content: productBanner }))
+      hAsync("ks-container", null, hAsync("ks-content-info-banner", { productBanner: productBanner }))
       : null, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 || (variants === null || variants === void 0 ? void 0 : variants.length) > 0 ?
       hAsync("ks-container", { padding: true }, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 && !((variants === null || variants === void 0 ? void 0 : variants.length) > 0) ?
         hAsync("ks-product-tags", null)
