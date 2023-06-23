@@ -30816,7 +30816,7 @@ class PageProduct {
         hAsync("ks-product-calculator-ca", { price: product.get("currentPrice"), parameters: installments.caParameters }, hAsync("ks-product-button", { icon: installments.caIcon }))
         : null)
       : null), hAsync("ks-product-brand", { slot: "brand" }))), productBanner && (productBanner === null || productBanner === void 0 ? void 0 : productBanner.image) ?
-      hAsync("ks-container", null, hAsync("ks-content-info-banner", { content: infoBanner }))
+      hAsync("ks-container", null, hAsync("ks-content-info-banner", { content: productBanner }))
       : null, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 || (variants === null || variants === void 0 ? void 0 : variants.length) > 0 ?
       hAsync("ks-container", { padding: true }, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 && !((variants === null || variants === void 0 ? void 0 : variants.length) > 0) ?
         hAsync("ks-product-tags", null)
