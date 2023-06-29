@@ -14634,20 +14634,28 @@ class ContentAbout {
   }; }
 }
 
-const bannerWithTextCss = "ks-content-banner-with-text{display:block;margin:auto}ks-content-banner-with-text .banner{position:relative;height:auto}ks-content-banner-with-text .banner ks-img3{max-height:550px;height:100%}ks-content-banner-with-text .banner .text{position:absolute;inset:0px;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;max-width:1000px;-webkit-box-sizing:border-box;box-sizing:border-box;margin:auto;padding:50px}ks-content-banner-with-text .banner .text.horizontal-left{-ms-flex-align:start;align-items:flex-start;text-align:left}ks-content-banner-with-text .banner .text.horizontal-center{-ms-flex-align:center;align-items:center;text-align:center}ks-content-banner-with-text .banner .text.horizontal-right{-ms-flex-align:end;align-items:flex-end;text-align:right}ks-content-banner-with-text .banner .text.vertical-top{-ms-flex-pack:start;justify-content:flex-start}ks-content-banner-with-text .banner .text.vertical-center{-ms-flex-pack:center;justify-content:center}ks-content-banner-with-text .banner .text.vertical-bottom{-ms-flex-pack:end;justify-content:flex-end}ks-content-banner-with-text .banner .text .mainText{background-color:rgba(0, 0, 0, 0.5);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);padding:10px 20px;font-size:22px;font-family:var(--font-emphasis)}ks-content-banner-with-text .banner .text .aboveText{text-shadow:0px 0 11px black, 0px 0 4px black;font-size:18px;margin-bottom:5px}@media screen and (max-width: 640px){ks-content-banner-with-text .banner .text{padding:15px}ks-content-banner-with-text .banner .text .mainText{padding:6px 15px;font-size:18px}ks-content-banner-with-text .banner .text .aboveText{font-size:16px;margin-bottom:3px}}";
+const bannersCss = "ks-content-banners{display:block;margin:auto;position:relative}ks-content-banners .banner{position:relative;height:auto;max-height:550px;height:100vw}ks-content-banners .banner ks-img3{max-height:550px;height:100%}ks-content-banners .banner .text{position:absolute;inset:0px;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;max-width:1000px;-webkit-box-sizing:border-box;box-sizing:border-box;margin:auto;padding:50px}ks-content-banners .banner .text.horizontal-left{-ms-flex-align:start;align-items:flex-start;text-align:left}ks-content-banners .banner .text.horizontal-center{-ms-flex-align:center;align-items:center;text-align:center}ks-content-banners .banner .text.horizontal-right{-ms-flex-align:end;align-items:flex-end;text-align:right}ks-content-banners .banner .text.vertical-top{-ms-flex-pack:start;justify-content:flex-start}ks-content-banners .banner .text.vertical-center{-ms-flex-pack:center;justify-content:center}ks-content-banners .banner .text.vertical-bottom{-ms-flex-pack:end;justify-content:flex-end}ks-content-banners .banner .text .mainText{background-color:rgba(0, 0, 0, 0.5);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);padding:10px 20px;font-size:22px;font-family:var(--font-emphasis)}ks-content-banners .banner .text .aboveText{text-shadow:0px 0 11px black, 0px 0 4px black;font-size:18px;margin-bottom:5px}@media screen and (max-width: 640px){ks-content-banners .banner .text{padding:15px}ks-content-banners .banner .text .mainText{padding:6px 15px;font-size:18px}ks-content-banners .banner .text .aboveText{font-size:16px;margin-bottom:3px}}ks-content-banners .swiper-wrapper{max-height:550px;height:100%}ks-content-banners a{position:relative}ks-content-banners .pagination{position:absolute;left:0;right:0;bottom:0px;height:35px;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;opacity:0;-webkit-transition:opacity 0.5s ease;transition:opacity 0.5s ease}ks-content-banners[loaded] .pagination{opacity:1}ks-content-banners .swiper-pagination{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;position:relative;padding:10px}ks-content-banners .swiper-pagination-bullet{height:10px;width:10px;margin:0 5px;opacity:1;-webkit-transition:background-color 0.3s ease,\n                border 0.3s ease;transition:background-color 0.3s ease,\n                border 0.3s ease}ks-content-banners .swiper-pagination-bullet-active{background-color:white;opacity:1}ks-content-banners .pagination svg{fill:#dcdcdc}@media (max-width: 638px){ks-content-banners .pagination{display:none}}ks-content-banners[home] .pagination{bottom:-35px}ks-content-banners[home] .swiper-pagination{background-color:#dcdcdc}ks-content-banners[home] .swiper-pagination-bullet{background-color:rgba(29, 29, 29, 0);border:rgb(133, 133, 133) 1px solid}ks-content-banners[home] .swiper-pagination-bullet:hover{background-color:rgba(29, 29, 29, 0.192)}ks-banner-container[home] .swiper-pagination-bullet-active{background-color:rgb(29, 29, 29) !important;border:rgba(133, 133, 133, 0) 1px solid}";
 
-class ContentBannerWithText$1 {
+Swiper.use([Pagination$2, Autoplay$1]);
+class ContentBannerWithText$2 {
   constructor(hostRef) {
     registerInstance(this, hostRef);
+    this.window = false;
+    this.rendered = false;
     this.delay = 0;
     this.autoplay = 5000;
     this.content = undefined;
+    this.home = undefined;
+    this.loaded = false;
+    this.activeIndex = 0;
   }
   render() {
-    return hAsync("ks-banner-container", { delay: this.delay, autoplay: this.autoplay }, this.content.banners.map((item, index) => this.banner(item, index == 0)));
+    return hAsync(Host, null, hAsync("div", { class: "swiper-container" }, hAsync("div", { class: "swiper-wrapper" }, this.content.map((item, index) => this.banner(item, index, index == 0)))), hAsync("div", { class: "pagination" }, this.home ? hAsync("svg", { height: "36", width: "36" }, hAsync("polygon", { points: "0,0 36,0 36,36" })) : null, hAsync("div", { class: "swiper-pagination" }), this.home ? hAsync("svg", { height: "36", width: "36" }, hAsync("polygon", { points: "0,0 36,0 0,36" })) : null));
   }
-  banner(item, sync) {
-    return hAsync("a", { class: "banner swiper-slide", style: this.bannerStyle(item), href: item.link ? item.link : null }, hAsync("ks-img3", { fit: item.fit, sync: sync, image: item.image, webp: item.webp, alt: item.name, width: item.width, height: item.height }), hAsync("div", { class: "text " + this.alignmentClass(item) }, item.aboveText ? hAsync("div", { class: "aboveText" }, item.aboveText) : null, item.mainText ? hAsync("div", { class: "mainText" }, item.mainText) : null));
+  banner(item, index, sync) {
+    return hAsync("a", { class: "banner swiper-slide", style: this.bannerStyle(item), href: item.link ? item.link : null }, hAsync("ks-img3", { fit: item.fit, sync: sync, image: item.image, webp: item.webp, alt: item.name, width: item.width, height: item.height }), hAsync("div", { class: "text " + this.alignmentClass(item) }, item.aboveText ? hAsync("div", { class: "aboveText" }, item.aboveText) : null, item.mainText ? hAsync("div", { class: "mainText" }, item.mainText) : null), item.theme && index == this.activeIndex ?
+      hAsync("style", { innerHTML: this.bannerTheme(item) })
+      : null);
   }
   bannerStyle(item) {
     return {
@@ -14655,29 +14663,71 @@ class ContentBannerWithText$1 {
       color: item.textColor
     };
   }
+  bannerTheme(item) {
+    return `:root {
+			--navbar-color: ${item.theme.navbarColor} !important;
+			--navbar-color-hover: ${item.theme.navbarColorHover} !important;
+			--navbar-color-active: ${item.theme.navbarColorActive} !important;
+			--navbar-category-color: ${item.theme.categoryColor} !important;
+			--navbar-category-hover: ${item.theme.categoryColorHover} !important;
+			--navbar-category-active: ${item.theme.categoryColorActive} !important;
+			--navbar-category-backdrop: ${item.theme.categoryColorBackdrop} !important;
+		}`;
+  }
   alignmentClass(item) {
     const horizontal = item.horizontalAlignment || "center";
     const vertical = item.verticalAlignment || "center";
     return `horizontal-${horizontal} vertical-${vertical}`;
   }
-  static get style() { return bannerWithTextCss; }
+  componentDidLoad() {
+    window_load.promise.then(() => this.initialize());
+  }
+  initialize() {
+    setTimeout(() => {
+      this.carousel = new Swiper('ks-content-banners .swiper-container', {
+        observer: true,
+        observeParents: true,
+        centeredSlides: true,
+        slidesPerView: "auto",
+        preventInteractionOnTransition: true,
+        grabCursor: true,
+        autoplay: {
+          delay: this.autoplay,
+        },
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true
+        }
+      });
+      this.carousel.on('slideChange', () => {
+        this.activeIndex = this.carousel.activeIndex;
+        console.log(this.activeIndex);
+      });
+      this.loaded = true;
+    }, this.delay);
+  }
+  get root() { return getElement(this); }
+  static get style() { return bannersCss; }
   static get cmpMeta() { return {
     "$flags$": 0,
-    "$tagName$": "ks-content-banner-with-text",
+    "$tagName$": "ks-content-banners",
     "$members$": {
       "delay": [2],
       "autoplay": [2],
-      "content": [16]
+      "content": [16],
+      "home": [516],
+      "loaded": [1540],
+      "activeIndex": [32]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
+    "$attrsToReflect$": [["home", "home"], ["loaded", "loaded"]]
   }; }
 }
 
 const linkTilesCss = "ks-content-link-tiles{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-content-link-tiles .tile{-ms-flex:1 1 350px;flex:1 1 350px;height:280px;position:relative;background-color:#000000}ks-content-link-tiles .tile ks-img3{height:100%;width:100%;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease;opacity:1}ks-content-link-tiles .tile:hover ks-img3{opacity:0.5}ks-content-link-tiles .tile ks-img3:after{content:\"\";position:absolute;inset:0px;background:-webkit-gradient(linear, left top, left bottom, from(rgb(0 0 0 / 60%)), color-stop(35%, rgba(0,0,0,0)));background:linear-gradient(180deg, rgb(0 0 0 / 60%) 0%, rgba(0,0,0,0) 35%)}ks-content-link-tiles .tile .text{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:justify;justify-content:space-between;position:absolute;inset:0px;padding:15px 20px;color:#ffffff}ks-content-link-tiles .tile .heading{font-family:var(--font-emphasis);font-size:22px;text-shadow:0 0 7px black}ks-content-link-tiles .tile .links{opacity:0;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-content-link-tiles .tile:hover .links{opacity:1}ks-content-link-tiles .tile .links a{display:block;color:white !important;text-decoration:none !important;text-shadow:0 0 4px black}ks-content-link-tiles .tile .links a span{display:inline-block;-webkit-transform:translateX(0px);transform:translateX(0px);transition:-webkit-transform 0.3s ease;-webkit-transition:-webkit-transform 0.3s ease;transition:transform 0.3s ease;transition:transform 0.3s ease, -webkit-transform 0.3s ease}ks-content-link-tiles .tile .links a:hover span{-webkit-transform:translateX(10px);transform:translateX(10px)}ks-content-link-tiles .tile .links a ks-icon{margin-left:-5px}@media screen and (max-width: 640px){ks-content-link-tiles .tile{height:220px}ks-content-link-tiles .tile .heading{font-size:18px}ks-content-link-tiles .tile .text{padding:10px 15px}ks-content-link-tiles .tile .links{opacity:1}ks-content-link-tiles .tile ks-img3{opacity:0.6}}@media screen and (max-width: 370px){ks-content-link-tiles .tile .links{font-size:13px}}";
 
-class ContentBannerWithText {
+class ContentBannerWithText$1 {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.content = undefined;
@@ -14697,6 +14747,29 @@ class ContentBannerWithText {
   static get cmpMeta() { return {
     "$flags$": 0,
     "$tagName$": "ks-content-link-tiles",
+    "$members$": {
+      "content": [16]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const thumbnailsCss = "ks-content-thumbnails{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-wrap:wrap;flex-wrap:wrap;gap:5px;max-width:1200px;margin:auto}ks-content-thumbnails .thumbnail{-ms-flex:1 1 300px;flex:1 1 300px;max-width:290px;aspect-ratio:2 / 1;border-radius:10px;overflow:hidden;opacity:1.0;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-content-thumbnails .thumbnail:hover{opacity:0.85}ks-content-thumbnails .thumbnail:active{opacity:0.7}ks-content-thumbnails .thumbnail>*{height:100%}@media screen and (max-width: 500px){ks-content-thumbnails .thumbnail{max-width:100%}}";
+
+class ContentBannerWithText {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.content = undefined;
+  }
+  render() {
+    return this.content.map(item => hAsync("a", { class: "thumbnail", href: item.link }, hAsync("ks-img3", { fit: "cover", image: item.image, webp: item.webp, alt: item.name, width: item.width, height: item.height })));
+  }
+  static get style() { return thumbnailsCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-content-thumbnails",
     "$members$": {
       "content": [16]
     },
@@ -24062,50 +24135,41 @@ class Img3 {
   }; }
 }
 
-const infoBannerCss = "ks-info-banner{display:block;position:relative;max-height:100px;height:100%}ks-info-banner{display:block}ks-info-banner a{display:-ms-flexbox;display:flex;max-height:100px;height:100%;-ms-flex-pack:center;justify-content:center}ks-info-banner ks-img{height:auto}";
+const infoBannerCss = "ks-content-info-banner{display:block;position:relative;max-height:100px;height:100%}ks-content-info-banner{display:block}ks-content-info-banner a{display:-ms-flexbox;display:flex;max-height:100px;height:100%;-ms-flex-pack:center;justify-content:center}";
 
 class InfoBanner {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.name = undefined;
-    this.color = undefined;
-    this.image = undefined;
-    this.webp = undefined;
-    this.link = undefined;
-    this.width = undefined;
-    this.height = undefined;
-    this.theme = undefined;
+    this.content = undefined;
+    this.productBanner = undefined;
   }
   render() {
-    const theme = this.theme ? `:root {
-      --navbar-color: ${this.theme.navbarColor} !important;
-      --navbar-color-hover: ${this.theme.navbarColorHover} !important;
-      --navbar-color-active: ${this.theme.navbarColorActive} !important;
-      --navbar-category-color: ${this.theme.categoryColor} !important;
-      --navbar-category-hover: ${this.theme.categoryColorHover} !important;
-      --navbar-category-active: ${this.theme.categoryColorActive} !important;
-      --navbar-category-backdrop: ${this.theme.categoryColorBackdrop} !important;
+    var _a;
+    const theme = (_a = this.content) === null || _a === void 0 ? void 0 : _a.theme;
+    const themeStyle = theme ? `:root {
+      --navbar-color: ${theme.navbarColor} !important;
+      --navbar-color-hover: ${theme.navbarColorHover} !important;
+      --navbar-color-active: ${theme.navbarColorActive} !important;
+      --navbar-category-color: ${theme.categoryColor} !important;
+      --navbar-category-hover: ${theme.categoryColorHover} !important;
+      --navbar-category-active: ${theme.categoryColorActive} !important;
+      --navbar-category-backdrop: ${theme.categoryColorBackdrop} !important;
     }` : null;
-    return hAsync(Host, { style: { backgroundColor: this.color } }, hAsync("a", { href: this.link, "aria-label": this.name }, hAsync("ks-img2", { sync: true, fill: true, center: true, width: this.width, height: this.height, src: this.image, webp: this.webp, alt: this.name })), theme ? hAsync("style", { innerHTML: theme }) : null);
+    const data = this.productBanner ? this.productBanner : this.content;
+    return hAsync(Host, { style: { backgroundColor: data.color } }, hAsync("a", { href: data.link, "aria-label": data.name }, hAsync("ks-img3", { sync: true, fit: "contain", width: data.width, height: data.height, image: data.image, webp: data.webp, alt: data.name })), theme ? hAsync("style", { innerHTML: themeStyle }) : null);
   }
   ;
   static get style() { return infoBannerCss; }
   static get cmpMeta() { return {
     "$flags$": 0,
-    "$tagName$": "ks-info-banner",
+    "$tagName$": "ks-content-info-banner",
     "$members$": {
-      "name": [1],
-      "color": [1],
-      "image": [1],
-      "webp": [1],
-      "link": [1],
-      "width": [514],
-      "height": [514],
-      "theme": [16]
+      "content": [16],
+      "productBanner": [16]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["width", "width"], ["height", "height"]]
+    "$attrsToReflect$": []
   }; }
 }
 
@@ -30141,8 +30205,6 @@ class PageArticle {
           return hAsync("ks-description-products", { products: entry.products, kind: entry.kind });
         case "ComponentContentHtml":
           return hAsync("ks-description-html", { html: entry.html });
-        case "ComponentContentBannerAndText":
-          return hAsync("ks-content-banner-with-text", { content: entry });
         case "ComponentContentLinkTiles":
           return hAsync("ks-content-link-tiles", { content: entry });
         case "ComponentContentFeaturedAndText":
@@ -30157,6 +30219,12 @@ class PageArticle {
           return hAsync("ks-content-separator", { content: entry });
         case "ComponentContentButton":
           return hAsync("ks-content-button", { content: entry });
+        case "ComponentContentBannerAndText":
+          return hAsync("ks-content-banners", { content: entry.banners });
+        case "ComponentContentVisualCampaign":
+          return entry.kind == 'banners' ? hAsync("ks-content-banners", { content: entry.banners }) :
+            entry.kind == 'thumbnails' ? hAsync("ks-content-thumbnails", { content: entry.thumbnails }) :
+              null;
         default: return null;
       }
     });
@@ -30164,7 +30232,10 @@ class PageArticle {
   render() {
     const fullWidth = article.get("fullWidth") ? "full-width" : "";
     const noPadding = article.get("noPadding") ? "no-padding" : "";
-    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("div", { class: ["article-container", fullWidth, noPadding].join(" ") }, this.renderDescription(article.get('content'))));
+    const infoBanner = article.get('infoBanner');
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, infoBanner ?
+      hAsync("ks-content-info-banner", { content: infoBanner })
+      : null, hAsync("div", { class: ["article-container", fullWidth, noPadding].join(" ") }, this.renderDescription(article.get('content'))));
   }
   static get style() { return articleCss; }
   static get cmpMeta() { return {
@@ -30521,7 +30592,7 @@ class PageListing {
     const review = listing.get('reviewAverage');
     const strings = common.get('translations');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, infoBanner ?
-      hAsync("ks-info-banner", { image: infoBanner.image, color: infoBanner.color, width: infoBanner.width, height: infoBanner.height, name: infoBanner.name, link: infoBanner.link, theme: infoBanner.theme })
+      hAsync("ks-content-info-banner", { content: infoBanner })
       : null, hAsync("ks-listing-header", { heading: listing.get('title'), breadcrumbs: listing.get('breadcrumbs'), description: listing.get('description'), categories: listing.get('categories'), query: query, autocorrect: listing.get('autocorrect') }), navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 ?
       hAsync("ks-listing-navigation", { products: navigation.products }, (filters === null || filters === void 0 ? void 0 : filters.length) > 0 ?
         hAsync("ks-filtering", { "base-url": navigation.base, query: query, filters: filters })
@@ -30725,7 +30796,7 @@ class PageProduct {
     const review = product.get('reviewAverage');
     const strings = product.get('strings');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, infoBanner ?
-      hAsync("ks-info-banner", { image: infoBanner.image, color: infoBanner.color, width: infoBanner.width, height: infoBanner.height, name: infoBanner.name, link: infoBanner.link, theme: infoBanner.theme })
+      hAsync("ks-content-info-banner", { content: infoBanner })
       : null, hAsync("ks-container", null, hAsync("ks-product-notify-edrone", null), hAsync("ks-product-admin", null), product.get("message") ?
       hAsync("ks-product-message", null)
       : null, hAsync("ks-product-info", null, product.get('traits') ?
@@ -30749,7 +30820,7 @@ class PageProduct {
         hAsync("ks-product-calculator-ca", { price: product.get("currentPrice"), parameters: installments.caParameters }, hAsync("ks-product-button", { icon: installments.caIcon }))
         : null)
       : null), hAsync("ks-product-brand", { slot: "brand" }))), productBanner && (productBanner === null || productBanner === void 0 ? void 0 : productBanner.image) ?
-      hAsync("ks-container", null, hAsync("ks-info-banner", { image: productBanner.image, color: productBanner.color, width: productBanner.width, height: productBanner.height, name: productBanner.name, link: productBanner.link }))
+      hAsync("ks-container", null, hAsync("ks-content-info-banner", { productBanner: productBanner }))
       : null, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 || (variants === null || variants === void 0 ? void 0 : variants.length) > 0 ?
       hAsync("ks-container", { padding: true }, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 && !((variants === null || variants === void 0 ? void 0 : variants.length) > 0) ?
         hAsync("ks-product-tags", null)
@@ -33618,6 +33689,7 @@ registerComponents([
   Container$1,
   Container,
   ContentAbout,
+  ContentBannerWithText$2,
   ContentBannerWithText$1,
   ContentBannerWithText,
   ContentBreadcrumbs,
