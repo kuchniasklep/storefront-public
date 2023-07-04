@@ -5833,7 +5833,7 @@ class Alert {
   }; }
 }
 
-const articleCardCss = "ks-article-card{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:justify;justify-content:space-between;background-color:white;-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow)}ks-article-card .image{position:relative;padding-top:50%;max-width:100%;overflow:hidden}ks-article-card .image>*{position:absolute;top:0}ks-article-card .info{padding:15px;-ms-flex:1 0 auto;flex:1 0 auto;font-size:.875rem;line-height:1.5}ks-article-card .info h3{margin-bottom:5px}ks-article-card .info a{text-decoration:none !important;color:#151515;-webkit-transition:var(--transition-color);transition:var(--transition-color)}ks-article-card .info a:hover{color:var(--color-secondary)}ks-article-card .info a:active{color:var(--color-secondary-hover)}ks-article-card .meta{font-size:.875rem;line-height:1.4;color:#707070}ks-article-card .meta ks-icon:not(:first-of-type){margin-left:15px}ks-article-card .footer{padding:20px;text-align:center;position:relative;border-top:1px solid #e2e2e2}ks-article-card .footer a{text-decoration:none !important;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;color:#151515;font-size:.875rem;line-height:1.4;position:relative;opacity:1;-webkit-transition:opacity 0.2s ease;transition:opacity 0.2s ease}ks-article-card .footer a:active{opacity:0.6}ks-article-card .footer a:before{content:\"\";position:absolute;left:50%;bottom:-2px;-webkit-transform:translateX(-50%);transform:translateX(-50%);height:1px;width:0%;border-bottom:1px solid #151515;opacity:1;-webkit-transition:width 0.3s ease, opacity 0.2s ease;transition:width 0.3s ease, opacity 0.2s ease}ks-article-card .footer a:hover:before{width:100%}ks-article-card .footer a:active:before{opacity:0.6;width:100%}@media screen and (min-width: 960px) and (max-width: 1200px){ks-article-card[hide-on-odd]{display:none !important}}";
+const articleCardCss = "ks-article-card{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:justify;justify-content:space-between;background-color:white;-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow)}ks-article-card[flat]{border:#ededed 1px solid;border-radius:6px;overflow:hidden;-webkit-box-shadow:none;box-shadow:none}ks-article-card[flat] .footer{border-color:#ededed}ks-article-card .image{position:relative;padding-top:50%;max-width:100%;overflow:hidden}ks-article-card .image>*{position:absolute;top:0}ks-article-card .info{padding:15px;-ms-flex:1 0 auto;flex:1 0 auto;font-size:.875rem;line-height:1.5}ks-article-card .info h3{margin-bottom:5px}ks-article-card .info a{text-decoration:none !important;color:#151515;-webkit-transition:var(--transition-color);transition:var(--transition-color)}ks-article-card .info a:hover{color:var(--color-secondary)}ks-article-card .info a:active{color:var(--color-secondary-hover)}ks-article-card .meta{font-size:.875rem;line-height:1.4;color:#707070}ks-article-card .meta ks-icon:not(:first-of-type){margin-left:15px}ks-article-card .footer{padding:15px;text-align:center;position:relative;border-top:1px solid #e2e2e2}ks-article-card .footer a{text-decoration:none !important;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;color:#151515;font-size:.875rem;line-height:1.4;position:relative;opacity:1;-webkit-transition:opacity 0.2s ease;transition:opacity 0.2s ease}ks-article-card .footer a:active{opacity:0.6}ks-article-card .footer a:before{content:\"\";position:absolute;left:50%;bottom:-2px;-webkit-transform:translateX(-50%);transform:translateX(-50%);height:1px;width:0%;border-bottom:1px solid #151515;opacity:1;-webkit-transition:width 0.3s ease, opacity 0.2s ease;transition:width 0.3s ease, opacity 0.2s ease}ks-article-card .footer a:hover:before{width:100%}ks-article-card .footer a:active:before{opacity:0.6;width:100%}@media screen and (min-width: 960px) and (max-width: 1200px){ks-article-card[hide-on-odd]{display:none !important}}";
 
 class ArticleCard {
   constructor(hostRef) {
@@ -5847,6 +5847,7 @@ class ArticleCard {
     this.width = undefined;
     this.height = undefined;
     this.hideOnOdd = false;
+    this.flat = false;
   }
   render() {
     return [
@@ -5868,11 +5869,12 @@ class ArticleCard {
       "link": [1],
       "width": [2],
       "height": [2],
-      "hideOnOdd": [516, "hide-on-odd"]
+      "hideOnOdd": [516, "hide-on-odd"],
+      "flat": [516]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["hideOnOdd", "hide-on-odd"]]
+    "$attrsToReflect$": [["hideOnOdd", "hide-on-odd"], ["flat", "flat"]]
   }; }
 }
 
@@ -14608,23 +14610,60 @@ class Container {
   }; }
 }
 
-const aboutCss = "ks-content-about{display:block;text-align:center;padding:40px 20px}ks-content-about .main-image{width:150px;margin:auto}ks-content-about h2{margin:15px 0 40px 0}ks-content-about .items{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;-ms-flex-pack:center;justify-content:center}ks-content-about .item{max-width:300px;padding:7px}ks-content-about .item ks-img3{width:50px;height:50px;margin:0px auto 10px auto}ks-content-about .item h3{margin-bottom:7px}";
+const aboutCss = "ks-content-about{display:block;text-align:center;padding:10px}ks-content-about .main-image{width:150px;margin:auto}ks-content-about h2{margin:15px 0 10px 0}ks-content-about p,ks-content-about h2,ks-content-about h3{max-width:1200px;margin-left:auto;margin-right:auto}ks-content-about .items{margin-top:30px;display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;-ms-flex-pack:center;justify-content:center;gap:10px}ks-content-about .item{max-width:300px;padding:7px}ks-content-about .item ks-img3{width:50px;height:50px;margin:0px auto 10px auto}ks-content-about .item h3{margin-bottom:7px}ks-content-about ks-button{display:none}@media (max-width: 1100px){ks-content-about.expand .items{display:block}ks-content-about.expand .item{max-width:100%}}@media (max-width: 800px){ks-content-about ks-button{display:block}ks-content-about.expand .items{display:none}ks-content-about[expanded].expand .items{display:-ms-flexbox;display:flex}}";
 
 class ContentAbout {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.content = undefined;
+    this.expanded = false;
   }
   render() {
-    return hAsync(Host, null, hAsync("ks-img3", { class: "main-image", fit: "contain", image: this.content.image, webp: this.content.webp, alt: this.content.heading, width: this.content.width, height: this.content.height }), hAsync("h2", null, this.content.heading), hAsync("div", { class: "items" }, this.content.items.map(item => this.item(item))));
+    const image = this.content.image;
+    const heading = this.content.heading;
+    const paragraph = this.content.paragraph;
+    return hAsync(Host, { class: this.content.style }, image ?
+      hAsync("ks-img3", { class: "main-image", fit: "contain", image: image, webp: this.content.webp, alt: this.content.heading, width: this.content.width, height: this.content.height })
+      : null, heading ? hAsync("h2", null, heading) : null, paragraph ? hAsync("p", null, paragraph) : null, hAsync("div", { class: "items" }, this.content.items.map(item => this.item(item))), this.content.style == 'expand' ?
+      hAsync("ks-button", { border: true, round: true, name: this.expanded ? "Zwiń" : "Rozwiń", onClick: () => this.expanded = !this.expanded })
+      : null);
   }
   item(item) {
-    return hAsync("div", { class: "item" }, hAsync("ks-img3", { fit: "contain", image: item.image, webp: item.webp, alt: item.heading, width: item.width, height: item.height }), hAsync("h3", null, item.heading), hAsync("p", null, item.paragraph));
+    const image = item.image;
+    const heading = item.heading;
+    const paragraph = item.paragraph;
+    return hAsync("div", { class: "item" }, image ?
+      hAsync("ks-img3", { fit: "contain", image: item.image, webp: item.webp, alt: item.heading, width: item.width, height: item.height })
+      : null, heading ? hAsync("h3", null, heading) : null, paragraph ? hAsync("p", null, paragraph) : null);
   }
   static get style() { return aboutCss; }
   static get cmpMeta() { return {
     "$flags$": 0,
     "$tagName$": "ks-content-about",
+    "$members$": {
+      "content": [16],
+      "expanded": [1540]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": [["expanded", "expanded"]]
+  }; }
+}
+
+const articlesCss$1 = "ks-content-articles{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;-ms-flex-pack:center;justify-content:center;max-width:1200px;margin:auto;width:100%;min-height:10px}ks-content-articles>*{width:calc(25% - 10px);margin:5px;-webkit-box-sizing:border-box;box-sizing:border-box}@media screen and (max-width: 639px){ks-content-articles>*{width:100%}}@media screen and (min-width: 640px) and (max-width: 959px){ks-content-articles>*{width:calc(50% - 10px)}}@media screen and (min-width: 960px) and (max-width: 1199px){ks-content-articles>*{width:calc(33.3333333333% - 10px)}}";
+
+class ContentArticles {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.content = undefined;
+  }
+  render() {
+    return this.content.articles.map(article => hAsync("ks-article-card", { flat: true, link: article.link, heading: article.heading, image: article.image, webp: article.webp, date: article.date, views: article.views }, hAsync("p", null, article.description)));
+  }
+  static get style() { return articlesCss$1; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-content-articles",
     "$members$": {
       "content": [16]
     },
@@ -14634,10 +14673,10 @@ class ContentAbout {
   }; }
 }
 
-const bannersCss = "ks-content-banners{display:block;margin:auto;position:relative}ks-content-banners .banner{position:relative;height:auto;max-height:550px;height:100vw}ks-content-banners .banner ks-img3{max-height:550px;height:100%}ks-content-banners .banner .text{position:absolute;inset:0px;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;max-width:1000px;-webkit-box-sizing:border-box;box-sizing:border-box;margin:auto;padding:50px}ks-content-banners .banner .text.horizontal-left{-ms-flex-align:start;align-items:flex-start;text-align:left}ks-content-banners .banner .text.horizontal-center{-ms-flex-align:center;align-items:center;text-align:center}ks-content-banners .banner .text.horizontal-right{-ms-flex-align:end;align-items:flex-end;text-align:right}ks-content-banners .banner .text.vertical-top{-ms-flex-pack:start;justify-content:flex-start}ks-content-banners .banner .text.vertical-center{-ms-flex-pack:center;justify-content:center}ks-content-banners .banner .text.vertical-bottom{-ms-flex-pack:end;justify-content:flex-end}ks-content-banners .banner .text .mainText{background-color:rgba(0, 0, 0, 0.5);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);padding:10px 20px;font-size:22px;font-family:var(--font-emphasis)}ks-content-banners .banner .text .aboveText{text-shadow:0px 0 11px black, 0px 0 4px black;font-size:18px;margin-bottom:5px}@media screen and (max-width: 640px){ks-content-banners .banner .text{padding:15px}ks-content-banners .banner .text .mainText{padding:6px 15px;font-size:18px}ks-content-banners .banner .text .aboveText{font-size:16px;margin-bottom:3px}}ks-content-banners .swiper-wrapper{max-height:550px;height:100%}ks-content-banners a{position:relative}ks-content-banners .pagination{position:absolute;left:0;right:0;bottom:0px;height:35px;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;opacity:0;-webkit-transition:opacity 0.5s ease;transition:opacity 0.5s ease}ks-content-banners[loaded] .pagination{opacity:1}ks-content-banners .swiper-pagination{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;position:relative;padding:10px}ks-content-banners .swiper-pagination-bullet{height:10px;width:10px;margin:0 5px;opacity:1;-webkit-transition:background-color 0.3s ease,\n                border 0.3s ease;transition:background-color 0.3s ease,\n                border 0.3s ease}ks-content-banners .swiper-pagination-bullet-active{background-color:white;opacity:1}ks-content-banners .pagination svg{fill:#dcdcdc}@media (max-width: 638px){ks-content-banners .pagination{display:none}}ks-content-banners[home] .pagination{bottom:-35px}ks-content-banners[home] .swiper-pagination{background-color:#dcdcdc}ks-content-banners[home] .swiper-pagination-bullet{background-color:rgba(29, 29, 29, 0);border:rgb(133, 133, 133) 1px solid}ks-content-banners[home] .swiper-pagination-bullet:hover{background-color:rgba(29, 29, 29, 0.192)}ks-banner-container[home] .swiper-pagination-bullet-active{background-color:rgb(29, 29, 29) !important;border:rgba(133, 133, 133, 0) 1px solid}";
+const bannersCss = "ks-content-banners{display:block;margin:auto;position:relative}ks-content-banners .banner{position:relative;height:auto;max-height:550px;height:100vw}ks-content-banners .banner ks-img3{max-height:550px;height:100%}ks-content-banners .banner .text{position:absolute;inset:0px;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;max-width:1000px;-webkit-box-sizing:border-box;box-sizing:border-box;margin:auto;padding:50px}ks-content-banners .banner .text.horizontal-left{-ms-flex-align:start;align-items:flex-start;text-align:left}ks-content-banners .banner .text.horizontal-center{-ms-flex-align:center;align-items:center;text-align:center}ks-content-banners .banner .text.horizontal-right{-ms-flex-align:end;align-items:flex-end;text-align:right}ks-content-banners .banner .text.vertical-top{-ms-flex-pack:start;justify-content:flex-start}ks-content-banners .banner .text.vertical-center{-ms-flex-pack:center;justify-content:center}ks-content-banners .banner .text.vertical-bottom{-ms-flex-pack:end;justify-content:flex-end}ks-content-banners .banner .text .mainText{background-color:rgba(0, 0, 0, 0.5);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);padding:10px 20px;font-size:22px;font-family:var(--font-emphasis)}ks-content-banners .banner .text .aboveText{text-shadow:0px 0 11px black, 0px 0 4px black;font-size:18px;margin-bottom:5px}@media screen and (max-width: 640px){ks-content-banners .banner .text{padding:15px}ks-content-banners .banner .text .mainText{padding:6px 15px;font-size:18px}ks-content-banners .banner .text .aboveText{font-size:16px;margin-bottom:3px}}ks-content-banners .swiper-wrapper{max-height:550px;height:100%}ks-content-banners a{position:relative}ks-content-banners .pagination{position:absolute;left:0;right:0;bottom:0px;height:35px;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;opacity:0;-webkit-transition:opacity 0.5s ease;transition:opacity 0.5s ease}ks-content-banners[loaded] .pagination{opacity:1}ks-content-banners .swiper-pagination{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;position:relative;padding:10px}ks-content-banners .swiper-pagination-bullet{height:10px;width:10px;margin:0 5px;opacity:1;-webkit-transition:background-color 0.3s ease,\n                border 0.3s ease;transition:background-color 0.3s ease,\n                border 0.3s ease}ks-content-banners .swiper-pagination-bullet-active{background-color:white;opacity:1}@media (max-width: 638px){ks-content-banners .pagination{display:none}}ks-content-banners[home] .pagination{bottom:-35px}ks-content-banners[home] .swiper-pagination-bullet{background-color:rgba(29, 29, 29, 0)}ks-content-banners[home] .swiper-pagination-bullet:hover{background-color:rgba(29, 29, 29, 0.192)}ks-banner-container[home] .swiper-pagination-bullet-active{background-color:rgb(29, 29, 29) !important}";
 
 Swiper.use([Pagination$2, Autoplay$1]);
-class ContentBannerWithText$2 {
+class ContentBannerWithText$1 {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.window = false;
@@ -14650,7 +14689,7 @@ class ContentBannerWithText$2 {
     this.activeIndex = 0;
   }
   render() {
-    return hAsync(Host, null, hAsync("div", { class: "swiper-container" }, hAsync("div", { class: "swiper-wrapper" }, this.content.map((item, index) => this.banner(item, index, index == 0)))), hAsync("div", { class: "pagination" }, this.home ? hAsync("svg", { height: "36", width: "36" }, hAsync("polygon", { points: "0,0 36,0 36,36" })) : null, hAsync("div", { class: "swiper-pagination" }), this.home ? hAsync("svg", { height: "36", width: "36" }, hAsync("polygon", { points: "0,0 36,0 0,36" })) : null));
+    return hAsync(Host, null, hAsync("div", { class: "swiper-container" }, hAsync("div", { class: "swiper-wrapper" }, this.content.map((item, index) => this.banner(item, index, index == 0)))), hAsync("div", { class: "pagination" }, hAsync("div", { class: "swiper-pagination" })));
   }
   banner(item, index, sync) {
     return hAsync("a", { class: "banner swiper-slide", style: this.bannerStyle(item), href: item.link ? item.link : null }, hAsync("ks-img3", { fit: item.fit, sync: sync, image: item.image, webp: item.webp, alt: item.name, width: item.width, height: item.height }), hAsync("div", { class: "text " + this.alignmentClass(item) }, item.aboveText ? hAsync("div", { class: "aboveText" }, item.aboveText) : null, item.mainText ? hAsync("div", { class: "mainText" }, item.mainText) : null), item.theme && index == this.activeIndex ?
@@ -14727,7 +14766,7 @@ class ContentBannerWithText$2 {
 
 const linkTilesCss = "ks-content-link-tiles{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-content-link-tiles .tile{-ms-flex:1 1 350px;flex:1 1 350px;height:280px;position:relative;background-color:#000000}ks-content-link-tiles .tile ks-img3{height:100%;width:100%;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease;opacity:1}ks-content-link-tiles .tile:hover ks-img3{opacity:0.5}ks-content-link-tiles .tile ks-img3:after{content:\"\";position:absolute;inset:0px;background:-webkit-gradient(linear, left top, left bottom, from(rgb(0 0 0 / 60%)), color-stop(35%, rgba(0,0,0,0)));background:linear-gradient(180deg, rgb(0 0 0 / 60%) 0%, rgba(0,0,0,0) 35%)}ks-content-link-tiles .tile .text{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:justify;justify-content:space-between;position:absolute;inset:0px;padding:15px 20px;color:#ffffff}ks-content-link-tiles .tile .heading{font-family:var(--font-emphasis);font-size:22px;text-shadow:0 0 7px black}ks-content-link-tiles .tile .links{opacity:0;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-content-link-tiles .tile:hover .links{opacity:1}ks-content-link-tiles .tile .links a{display:block;color:white !important;text-decoration:none !important;text-shadow:0 0 4px black}ks-content-link-tiles .tile .links a span{display:inline-block;-webkit-transform:translateX(0px);transform:translateX(0px);transition:-webkit-transform 0.3s ease;-webkit-transition:-webkit-transform 0.3s ease;transition:transform 0.3s ease;transition:transform 0.3s ease, -webkit-transform 0.3s ease}ks-content-link-tiles .tile .links a:hover span{-webkit-transform:translateX(10px);transform:translateX(10px)}ks-content-link-tiles .tile .links a ks-icon{margin-left:-5px}@media screen and (max-width: 640px){ks-content-link-tiles .tile{height:220px}ks-content-link-tiles .tile .heading{font-size:18px}ks-content-link-tiles .tile .text{padding:10px 15px}ks-content-link-tiles .tile .links{opacity:1}ks-content-link-tiles .tile ks-img3{opacity:0.6}}@media screen and (max-width: 370px){ks-content-link-tiles .tile .links{font-size:13px}}";
 
-class ContentBannerWithText$1 {
+class ContentBannerWithText {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.content = undefined;
@@ -14747,29 +14786,6 @@ class ContentBannerWithText$1 {
   static get cmpMeta() { return {
     "$flags$": 0,
     "$tagName$": "ks-content-link-tiles",
-    "$members$": {
-      "content": [16]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
-
-const thumbnailsCss = "ks-content-thumbnails{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-wrap:wrap;flex-wrap:wrap;gap:5px;max-width:1200px;margin:auto}ks-content-thumbnails .thumbnail{-ms-flex:1 1 300px;flex:1 1 300px;max-width:290px;aspect-ratio:2 / 1;border-radius:10px;overflow:hidden;opacity:1.0;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-content-thumbnails .thumbnail:hover{opacity:0.85}ks-content-thumbnails .thumbnail:active{opacity:0.7}ks-content-thumbnails .thumbnail>*{height:100%}@media screen and (max-width: 500px){ks-content-thumbnails .thumbnail{max-width:100%}}";
-
-class ContentBannerWithText {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.content = undefined;
-  }
-  render() {
-    return this.content.map(item => hAsync("a", { class: "thumbnail", href: item.link }, hAsync("ks-img3", { fit: "cover", image: item.image, webp: item.webp, alt: item.name, width: item.width, height: item.height })));
-  }
-  static get style() { return thumbnailsCss; }
-  static get cmpMeta() { return {
-    "$flags$": 0,
-    "$tagName$": "ks-content-thumbnails",
     "$members$": {
       "content": [16]
     },
@@ -14827,6 +14843,29 @@ class ContentButton {
   }; }
 }
 
+const featuredCss$1 = "ks-content-featured{display:block;-webkit-columns:2;-moz-columns:2;columns:2;-webkit-column-gap:10px;-moz-column-gap:10px;column-gap:10px;max-width:1100px;margin:auto}ks-content-featured .featured{display:block;overflow:hidden;border-radius:10px;margin-bottom:10px;opacity:1.0;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-content-featured .featured:hover{opacity:0.85}ks-content-featured .featured:active{opacity:0.7}ks-content-featured .featured>*{height:100%}@media screen and (max-width: 720px){ks-content-featured{-webkit-columns:1;-moz-columns:1;columns:1}}";
+
+class ContentFeatured {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.content = undefined;
+  }
+  render() {
+    return this.content.map(item => hAsync("a", { class: "featured", href: item.link }, hAsync("ks-img3", { fit: "cover", image: item.image, webp: item.webp, alt: item.name, width: item.width, height: item.height })));
+  }
+  static get style() { return featuredCss$1; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-content-featured",
+    "$members$": {
+      "content": [16]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
 const featuredWithTextCss = "ks-content-featured-with-text{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-content-featured-with-text .featured{-ms-flex:1 1 500px;flex:1 1 500px;position:relative;background-color:#000000;height:500px}ks-content-featured-with-text .featured ks-img3{height:100%;width:100%;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease;opacity:1}ks-content-featured-with-text .featured .overlay{position:absolute;inset:0px;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;max-width:1000px;-webkit-box-sizing:border-box;box-sizing:border-box;margin:auto}ks-content-featured-with-text .featured .overlay.horizontal-left{text-align:left}ks-content-featured-with-text .featured .overlay.horizontal-center{text-align:center}ks-content-featured-with-text .featured .overlay.horizontal-right{text-align:right}ks-content-featured-with-text .featured .overlay.vertical-top{-ms-flex-pack:start;justify-content:flex-start}ks-content-featured-with-text .featured .overlay.vertical-center{-ms-flex-pack:center;justify-content:center}ks-content-featured-with-text .featured .overlay.vertical-bottom{-ms-flex-pack:end;justify-content:flex-end}ks-content-featured-with-text .featured .text{background-color:rgba(0, 0, 0, 0.5);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);padding:10px 20px;font-size:22px;font-family:var(--font-emphasis)}ks-content-featured-with-text .featured .text .aboveText{font-size:16px;margin-bottom:-4px}@media screen and (max-width: 1000px){ks-content-featured-with-text .featured{height:400px}}@media screen and (max-width: 640px){ks-content-featured-with-text .featured{height:300px}ks-content-featured-with-text .featured .text{padding:15px}ks-content-featured-with-text .featured .text .mainText{padding:6px 15px;font-size:18px}ks-content-featured-with-text .featured .text .aboveText{font-size:14px;margin-bottom:-4px}}";
 
 class ContentFeaturedWithText {
@@ -14868,6 +14907,62 @@ class ContentFeaturedWithText {
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": []
+  }; }
+}
+
+const recipesCss$1 = "ks-content-recipes{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;-ms-flex-pack:center;justify-content:center;max-width:1200px;margin:auto;width:100%;min-height:10px}ks-content-recipes>*{width:calc(25% - 10px);margin:5px;-webkit-box-sizing:border-box;box-sizing:border-box}@media screen and (max-width: 639px){ks-content-recipes>*{width:100%}}@media screen and (min-width: 640px) and (max-width: 959px){ks-content-recipes>*{width:calc(50% - 10px)}}@media screen and (min-width: 960px) and (max-width: 1199px){ks-content-recipes>*{width:calc(33.3333333333% - 10px)}}";
+
+class ContentRecipes {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.content = undefined;
+  }
+  render() {
+    return this.content.recipes.map(recipe => hAsync("ks-recipe-card", { flat: true, heading: recipe.heading, cuisine: recipe.cuisine, category: recipe.category, link: recipe.link, image: recipe.image, webp: recipe.webp, width: recipe.width, height: recipe.height, "cuisine-link": recipe.cuisineLink, "category-link": recipe.categoryLink }));
+  }
+  static get style() { return recipesCss$1; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-content-recipes",
+    "$members$": {
+      "content": [16]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const reviewsCss = "ks-content-reviews{display:block;max-width:1220px !important;width:100%;margin:20px auto 20px auto;padding:0 10px !important;-webkit-box-sizing:border-box;box-sizing:border-box}ks-content-reviews>a{display:-ms-flexbox;display:flex;border-radius:20px;overflow:hidden}ks-content-reviews blockquote{background-color:white;color:black !important;margin:0;padding:20px 30px;width:100%;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;text-align:center;-webkit-box-sizing:border-box;box-sizing:border-box}ks-content-reviews[grey] blockquote{background-color:#f1f1f1}ks-content-reviews blockquote span{color:rgb(255 195 0);font-size:36px;font-weight:500;line-height:16px;vertical-align:bottom;margin:0 3px}ks-content-reviews .rating{background-color:rgb(255 195 0);color:white;font-family:var(--font-emphasis);font-weight:700;padding:15px;max-width:210px;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;text-align:center}ks-content-reviews .percentage{font-size:56px;line-height:56px}ks-content-reviews .message{font-size:14px}ks-content-reviews .stars{display:-ms-flexbox;display:flex;max-width:150px;margin-bottom:10px}ks-content-reviews .stars .off{opacity:0.5}@media (max-width: 600px){ks-content-reviews>a{-ms-flex-direction:column;flex-direction:column}ks-content-reviews .rating{max-width:100%}}";
+
+class ContentReviews {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.grey = undefined;
+    this.content = undefined;
+  }
+  render() {
+    const percentage = ((this.content.average / 5) * 100).toFixed(0);
+    const message = this.content.message
+      .replace("{reviews}", this.content.reviews.toString())
+      .replace("{months}", this.content.months.toString())
+      .replace("{totalReviews}", this.content.totalReviews.toString());
+    return hAsync("a", { href: this.content.href, target: "_blank" }, hAsync("div", { class: "rating" }, hAsync("div", { class: "percentage" }, percentage, "%"), hAsync("div", { class: "stars" }, this.star(Math.round(this.content.average) >= 1), this.star(Math.round(this.content.average) >= 2), this.star(Math.round(this.content.average) >= 3), this.star(Math.round(this.content.average) >= 4), this.star(Math.round(this.content.average) >= 5)), hAsync("div", { class: "message" }, message)), hAsync("blockquote", null, hAsync("div", null, hAsync("span", null, "\u201C"), this.content.example, hAsync("span", null, "\u201D"))));
+  }
+  star(on) {
+    return hAsync("svg", { class: on ? "" : "off", width: "100%", height: "100%", viewBox: "0 0 50 50", version: "1.1", xmlns: "http://www.w3.org/2000/svg", xmlSpace: "preserve", style: { fillRule: "evenodd", clipRule: "evenodd", strokeLinejoin: "round", strokeMiterlimit: "2" } }, hAsync("g", { transform: "matrix(1,0,0,1,0,2.38729)" }, hAsync("path", { d: "M25,0L30.613,17.275L48.776,17.275L34.082,27.951L39.695,45.225L25,34.549L10.305,45.225L15.918,27.951L1.224,17.275L19.387,17.275L25,0Z", style: { fill: "white" } })));
+  }
+  static get style() { return reviewsCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-content-reviews",
+    "$members$": {
+      "grey": [516],
+      "content": [16]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": [["grey", "grey"]]
   }; }
 }
 
@@ -14918,6 +15013,29 @@ class ContentTags {
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": [["muted", "muted"]]
+  }; }
+}
+
+const thumbnailsCss = "ks-content-thumbnails{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-wrap:wrap;flex-wrap:wrap;gap:5px;max-width:1200px;margin:auto}ks-content-thumbnails .thumbnail{-ms-flex:1 1 300px;flex:1 1 300px;max-width:290px;aspect-ratio:2 / 1;border-radius:10px;overflow:hidden;opacity:1.0;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-content-thumbnails .thumbnail:hover{opacity:0.85}ks-content-thumbnails .thumbnail:active{opacity:0.7}ks-content-thumbnails .thumbnail>*{height:100%}@media screen and (max-width: 500px){ks-content-thumbnails .thumbnail{max-width:100%}}";
+
+class ContentThumbnail {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.content = undefined;
+  }
+  render() {
+    return this.content.map(item => hAsync("a", { class: "thumbnail", href: item.link }, hAsync("ks-img3", { fit: "cover", image: item.image, webp: item.webp, alt: item.name, width: item.width, height: item.height })));
+  }
+  static get style() { return thumbnailsCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-content-thumbnails",
+    "$members$": {
+      "content": [16]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
   }; }
 }
 
@@ -30192,7 +30310,7 @@ class PageArticle {
       article.set(key, articleData[key]);
     });
   }
-  renderDescription(content) {
+  renderDescription(content, type) {
     return content.map(entry => {
       switch (entry.type) {
         case "ComponentContentText":
@@ -30222,9 +30340,16 @@ class PageArticle {
         case "ComponentContentBannerAndText":
           return hAsync("ks-content-banners", { content: entry.banners });
         case "ComponentContentVisualCampaign":
-          return entry.kind == 'banners' ? hAsync("ks-content-banners", { content: entry.banners }) :
+          return entry.kind == 'banners' ? hAsync("ks-content-banners", { content: entry.banners, home: type == "homepage" }) :
             entry.kind == 'thumbnails' ? hAsync("ks-content-thumbnails", { content: entry.thumbnails }) :
-              null;
+              entry.kind == 'featured' ? hAsync("ks-content-featured", { content: entry.featured }) :
+                null;
+        case "ComponentContentReviews":
+          return hAsync("ks-content-reviews", { content: entry, grey: true });
+        case "ComponentContentRecipes":
+          return hAsync("ks-content-recipes", { content: entry });
+        case "ComponentContentArticles":
+          return hAsync("ks-content-articles", { content: entry });
         default: return null;
       }
     });
@@ -30235,7 +30360,7 @@ class PageArticle {
     const infoBanner = article.get('infoBanner');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, infoBanner ?
       hAsync("ks-content-info-banner", { content: infoBanner })
-      : null, hAsync("div", { class: ["article-container", fullWidth, noPadding].join(" ") }, this.renderDescription(article.get('content'))));
+      : null, hAsync("div", { class: ["article-container", fullWidth, noPadding].join(" ") }, this.renderDescription(article.get('content'), article.get("type"))));
   }
   static get style() { return articleCss; }
   static get cmpMeta() { return {
@@ -30526,9 +30651,7 @@ class PageHome {
     const articlesMore = home.get('articlesMore');
     const seeMore = home.get('seeMore');
     const review = home.get('reviewAverage');
-    return hAsync("ks-page-base", { loadCommon: false, skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, banners ? hAsync("ks-banner-container", { home: true }, banners.map((banner, index) => hAsync("ks-banner", { sync: index == 0, active: index == 0, name: banner.name, color: banner.color, link: banner.link, image: banner.image, webp: banner.webp, width: banner.width, height: banner.height, theme: banner.theme }))) : null, info ? hAsync("ks-homepage-info", null, hAsync("h1", { slot: "mainHeading" }, info.mainHeading), hAsync("p", { slot: "mainContent" }, info.mainParagraph), hAsync("h2", { slot: "firstHeading" }, info.firstHeading), hAsync("p", { slot: "firstContent" }, info.firstParagraph), hAsync("h2", { slot: "secondHeading" }, info.secondHeading), hAsync("p", { slot: "secondContent" }, info.secondParagraph), hAsync("h2", { slot: "thirdHeading" }, info.thirdHeading), hAsync("p", { slot: "thirdContent" }, info.thirdParagraph)) : null, review ?
-      hAsync("ks-review-average", { href: review.href, message: review.message, reviews: review.reviews, months: review.months, totalReviews: review.totalReviews, average: review.average, example: review.example })
-      : null, products ? hAsync("ks-homepage-products", null, products.map(products => hAsync("ks-product-container", null, products.products.map(card => hAsync("ks-product-card", { product: card }))))) : null, featured ? hAsync("ks-featured-container", null, featured.map(banner => hAsync("ks-featured", { slot: banner.side, name: banner.name, image: banner.image, webp: banner.webp, link: banner.link, width: banner.width, height: banner.height }))) : null, recipes ? [
+    return hAsync("ks-page-base", { loadCommon: false, skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, banners ? hAsync("ks-banner-container", { home: true }, banners.map((banner, index) => hAsync("ks-banner", { sync: index == 0, active: index == 0, name: banner.name, color: banner.color, link: banner.link, image: banner.image, webp: banner.webp, width: banner.width, height: banner.height, theme: banner.theme }))) : null, info ? hAsync("ks-homepage-info", null, hAsync("h1", { slot: "mainHeading" }, info.mainHeading), hAsync("p", { slot: "mainContent" }, info.mainParagraph), hAsync("h2", { slot: "firstHeading" }, info.firstHeading), hAsync("p", { slot: "firstContent" }, info.firstParagraph), hAsync("h2", { slot: "secondHeading" }, info.secondHeading), hAsync("p", { slot: "secondContent" }, info.secondParagraph), hAsync("h2", { slot: "thirdHeading" }, info.thirdHeading), hAsync("p", { slot: "thirdContent" }, info.thirdParagraph)) : null, review ? hAsync("ks-content-reviews", { content: review }) : null, products ? hAsync("ks-homepage-products", null, products.map(products => hAsync("ks-product-container", null, products.products.map(card => hAsync("ks-product-card", { product: card }))))) : null, featured ? hAsync("ks-featured-container", null, featured.map(banner => hAsync("ks-featured", { slot: banner.side, name: banner.name, image: banner.image, webp: banner.webp, link: banner.link, width: banner.width, height: banner.height }))) : null, recipes ? [
       hAsync("h3", null, recipesHeading),
       hAsync("ks-article-container", null, recipes.map(recipe => hAsync("ks-recipe-card", { heading: recipe.heading, cuisine: recipe.cuisine, category: recipe.category, link: recipe.link, image: recipe.image, webp: recipe.webp, width: recipe.width, height: recipe.height, "cuisine-link": recipe.cuisineLink, "category-link": recipe.categoryLink }))),
       hAsync("ks-see-more", { href: recipesMore, text: seeMore })
@@ -30606,10 +30729,10 @@ class PageListing {
       hAsync("ks-listing-footer", { description: bottomDescription }, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 ?
         hAsync("div", { slot: "tags" }, tags.map(crumb => hAsync("a", { href: crumb.link }, crumb.name)))
         : null, !query && navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 && review ?
-        hAsync("ks-review-average", { slot: "comments", grey: true, href: review.href, message: review.message, reviews: review.reviews, months: review.months, totalReviews: review.totalReviews, average: review.average, example: review.example })
+        hAsync("ks-content-reviews", { content: review, slot: "comments", grey: true })
         : null)
       : !query && navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 && review ?
-        hAsync("ks-review-average", { href: review.href, message: review.message, reviews: review.reviews, months: review.months, totalReviews: review.totalReviews, average: review.average, example: review.example })
+        hAsync("ks-content-reviews", { content: review })
         : null);
   }
   static get style() { return listingCss; }
@@ -30842,9 +30965,8 @@ class PageProduct {
       : null, (accessories === null || accessories === void 0 ? void 0 : accessories.length) > 0 ? [
       hAsync("h3", null, strings.accessoriesHeading),
       hAsync("ks-product-container", null, accessories.map(card => hAsync("ks-product-card", { product: card })))
-    ]
-      : null, review ?
-      hAsync("ks-review-average", { href: review.href, message: review.message, reviews: review.reviews, months: review.months, totalReviews: review.totalReviews, average: review.average, example: review.example })
+    ] : null, review ?
+      hAsync("ks-content-reviews", { content: review })
       : null);
   }
   static get style() { return productCss; }
@@ -32878,7 +33000,7 @@ class RadioTile {
   }; }
 }
 
-const recipeCardCss = "ks-recipe-card{display:block;background-color:#ffffff;-webkit-box-shadow:0 2px 8px rgba(0,0,0,0.15);box-shadow:0 2px 8px rgba(0,0,0,0.15)}ks-recipe-card>a{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-direction:column;flex-direction:column;position:relative;max-width:100%}ks-recipe-card a{color:inherit}ks-recipe-card .info{padding:15px;font-family:var(--font-regular);font-size:14px;text-align:center;text-decoration:none !important;color:#707070;-webkit-transition:color 0.3s ease, opacity 0.3s ease;transition:color 0.3s ease, opacity 0.3s ease}ks-recipe-card h3{font-family:var(--font-emphasis);font-size:20px;color:#252525;-webkit-transition:color 0.3s ease;transition:color 0.3s ease;margin-bottom:5px}ks-recipe-card .dot{margin:0 8px}ks-recipe-card a:hover{text-decoration:none}ks-recipe-card>a:hover .info{color:var(--color-secondary)}ks-recipe-card>a:hover h3{color:var(--color-secondary)}ks-recipe-card .info a:hover{opacity:0.6}@media screen and (min-width: 960px) and (max-width: 1199px){ks-recipe-card[hide-on-odd]{display:none !important}}";
+const recipeCardCss = "ks-recipe-card{display:block;background-color:#ffffff;-webkit-box-shadow:0 2px 8px rgba(0,0,0,0.15);box-shadow:0 2px 8px rgba(0,0,0,0.15)}ks-recipe-card[flat]{border:#ededed 1px solid;border-radius:6px;overflow:hidden;-webkit-box-shadow:none;box-shadow:none}ks-recipe-card>a{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-direction:column;flex-direction:column;position:relative;max-width:100%}ks-recipe-card a{color:inherit}ks-recipe-card .info{padding:15px;font-family:var(--font-regular);font-size:14px;text-align:center;text-decoration:none !important;color:#707070;-webkit-transition:color 0.3s ease, opacity 0.3s ease;transition:color 0.3s ease, opacity 0.3s ease}ks-recipe-card h3{font-family:var(--font-emphasis);font-size:20px;color:#252525;-webkit-transition:color 0.3s ease;transition:color 0.3s ease;margin-bottom:5px}ks-recipe-card .dot{margin:0 8px}ks-recipe-card a:hover{text-decoration:none}ks-recipe-card>a:hover .info{color:var(--color-secondary)}ks-recipe-card>a:hover h3{color:var(--color-secondary)}ks-recipe-card .info a:hover{opacity:0.6}@media screen and (min-width: 960px) and (max-width: 1199px){ks-recipe-card[hide-on-odd]{display:none !important}}";
 
 class RecipeCard {
   constructor(hostRef) {
@@ -32894,6 +33016,7 @@ class RecipeCard {
     this.cuisineLink = undefined;
     this.categoryLink = undefined;
     this.hideOnOdd = false;
+    this.flat = false;
   }
   render() {
     return (hAsync("a", { href: this.link }, hAsync("ks-img2", { horizontal: true, src: this.image, webp: this.webp, width: this.width, height: this.height, alt: this.heading }), hAsync("div", { class: "info" }, hAsync("h3", null, this.heading), hAsync("div", null, hAsync("a", { href: this.cuisineLink }, this.cuisine), hAsync("span", { class: "dot" }, "\u2022"), hAsync("a", { href: this.categoryLink }, this.category)))));
@@ -32914,11 +33037,12 @@ class RecipeCard {
       "link": [1],
       "cuisineLink": [1, "cuisine-link"],
       "categoryLink": [1, "category-link"],
-      "hideOnOdd": [4, "hide-on-odd"]
+      "hideOnOdd": [4, "hide-on-odd"],
+      "flat": [516]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
+    "$attrsToReflect$": [["flat", "flat"]]
   }; }
 }
 
@@ -33068,51 +33192,6 @@ class RecipeProcedure {
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": []
-  }; }
-}
-
-const reviewAverageCss = "ks-review-average{display:block;max-width:1220px !important;width:100%;margin:20px auto 20px auto;padding:0 10px !important;-webkit-box-sizing:border-box;box-sizing:border-box}ks-review-average>a{display:-ms-flexbox;display:flex;border-radius:20px;overflow:hidden}ks-review-average blockquote{background-color:white;color:black !important;margin:0;padding:20px 30px;width:100%;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;text-align:center;-webkit-box-sizing:border-box;box-sizing:border-box}ks-review-average[grey] blockquote{background-color:#f1f1f1}ks-review-average blockquote span{color:rgb(255 195 0);font-size:36px;font-weight:500;line-height:16px;vertical-align:bottom;margin:0 3px}ks-review-average .rating{background-color:rgb(255 195 0);color:white;font-family:var(--font-emphasis);font-weight:700;padding:15px;max-width:210px;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;text-align:center}ks-review-average .percentage{font-size:56px;line-height:56px}ks-review-average .message{font-size:14px}ks-review-average .stars{display:-ms-flexbox;display:flex;max-width:150px;margin-bottom:10px}ks-review-average .stars .off{opacity:0.5}@media (max-width: 600px){ks-review-average>a{-ms-flex-direction:column;flex-direction:column}ks-review-average .rating{max-width:100%}}";
-
-class ReviewAverage {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.grey = undefined;
-    this.href = undefined;
-    this.message = undefined;
-    this.reviews = undefined;
-    this.months = undefined;
-    this.totalReviews = undefined;
-    this.average = undefined;
-    this.example = undefined;
-  }
-  render() {
-    const percentage = ((this.average / 5) * 100).toFixed(0);
-    const message = this.message
-      .replace("{reviews}", this.reviews.toString())
-      .replace("{months}", this.months.toString())
-      .replace("{totalReviews}", this.totalReviews.toString());
-    return hAsync("a", { href: this.href, target: "_blank" }, hAsync("div", { class: "rating" }, hAsync("div", { class: "percentage" }, percentage, "%"), hAsync("div", { class: "stars" }, this.star(Math.round(this.average) >= 1), this.star(Math.round(this.average) >= 2), this.star(Math.round(this.average) >= 3), this.star(Math.round(this.average) >= 4), this.star(Math.round(this.average) >= 5)), hAsync("div", { class: "message" }, message)), hAsync("blockquote", null, hAsync("div", null, hAsync("span", null, "\u201C"), this.example, hAsync("span", null, "\u201D"))));
-  }
-  star(on) {
-    return hAsync("svg", { class: on ? "" : "off", width: "100%", height: "100%", viewBox: "0 0 50 50", version: "1.1", xmlns: "http://www.w3.org/2000/svg", xmlSpace: "preserve", style: { fillRule: "evenodd", clipRule: "evenodd", strokeLinejoin: "round", strokeMiterlimit: "2" } }, hAsync("g", { transform: "matrix(1,0,0,1,0,2.38729)" }, hAsync("path", { d: "M25,0L30.613,17.275L48.776,17.275L34.082,27.951L39.695,45.225L25,34.549L10.305,45.225L15.918,27.951L1.224,17.275L19.387,17.275L25,0Z", style: { fill: "white" } })));
-  }
-  static get style() { return reviewAverageCss; }
-  static get cmpMeta() { return {
-    "$flags$": 0,
-    "$tagName$": "ks-review-average",
-    "$members$": {
-      "grey": [516],
-      "href": [1],
-      "message": [1],
-      "reviews": [2],
-      "months": [2],
-      "totalReviews": [2, "total-reviews"],
-      "average": [2],
-      "example": [1]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["grey", "grey"]]
   }; }
 }
 
@@ -33689,14 +33768,18 @@ registerComponents([
   Container$1,
   Container,
   ContentAbout,
-  ContentBannerWithText$2,
+  ContentArticles,
   ContentBannerWithText$1,
   ContentBannerWithText,
   ContentBreadcrumbs,
   ContentButton,
+  ContentFeatured,
   ContentFeaturedWithText,
+  ContentRecipes,
+  ContentReviews,
   ContentSeparator,
   ContentTags,
+  ContentThumbnail,
   CookiePopup,
   DescriptionHTML,
   DescriptionImage,
@@ -33833,7 +33916,6 @@ registerComponents([
   RecipeIngredient,
   RecipeNutrition,
   RecipeProcedure,
-  ReviewAverage,
   ReviewProduct,
   Section,
   SectionHeading,
