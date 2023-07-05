@@ -14650,7 +14650,7 @@ class ContentAbout {
   }; }
 }
 
-const articlesCss$1 = "ks-content-articles{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;-ms-flex-pack:center;justify-content:center;max-width:1200px;margin:20px auto;width:100%;min-height:10px}ks-content-articles>*{width:calc(25% - 10px);margin:5px;-webkit-box-sizing:border-box;box-sizing:border-box}@media screen and (max-width: 639px){ks-content-articles>*{width:100%}}@media screen and (min-width: 640px) and (max-width: 959px){ks-content-articles>*{width:calc(50% - 10px)}}@media screen and (min-width: 960px) and (max-width: 1199px){ks-content-articles>*{width:calc(33.3333333333% - 10px)}}";
+const articlesCss$1 = "ks-content-articles{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;-ms-flex-pack:center;justify-content:center;max-width:1200px;margin:20px auto;width:100%;min-height:10px;padding:10px;-webkit-box-sizing:border-box;box-sizing:border-box}ks-content-articles>*{width:calc(25% - 10px);margin:5px;-webkit-box-sizing:border-box;box-sizing:border-box}@media screen and (max-width: 639px){ks-content-articles>*{width:100%}}@media screen and (min-width: 640px) and (max-width: 959px){ks-content-articles>*{width:calc(50% - 10px)}}@media screen and (min-width: 960px) and (max-width: 1199px){ks-content-articles>*{width:calc(33.3333333333% - 10px)}}";
 
 class ContentArticles {
   constructor(hostRef) {
@@ -14843,7 +14843,7 @@ class ContentButton {
   }; }
 }
 
-const featuredCss$1 = "ks-content-featured{display:block;-webkit-columns:2;-moz-columns:2;columns:2;-webkit-column-gap:10px;-moz-column-gap:10px;column-gap:10px;max-width:1100px;margin:auto}ks-content-featured .featured{display:block;overflow:hidden;border-radius:10px;margin-bottom:10px;opacity:1.0;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-content-featured .featured:hover{opacity:0.85}ks-content-featured .featured:active{opacity:0.7}ks-content-featured .featured>*{height:100%}@media screen and (max-width: 720px){ks-content-featured{-webkit-columns:1;-moz-columns:1;columns:1}}";
+const featuredCss$1 = "ks-content-featured{display:block;-webkit-columns:2;-moz-columns:2;columns:2;-webkit-column-gap:10px;-moz-column-gap:10px;column-gap:10px;max-width:1100px;margin:auto;padding:0 10px;-webkit-box-sizing:border-box;box-sizing:border-box}ks-content-featured .featured{display:block;overflow:hidden;border-radius:10px;margin-bottom:10px;opacity:1.0;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-content-featured .featured:hover{opacity:0.85}ks-content-featured .featured:active{opacity:0.7}ks-content-featured .featured>*{height:100%}@media screen and (max-width: 720px){ks-content-featured{-webkit-columns:1;-moz-columns:1;columns:1}}";
 
 class ContentFeatured {
   constructor(hostRef) {
@@ -14910,7 +14910,7 @@ class ContentFeaturedWithText {
   }; }
 }
 
-const recipesCss$1 = "ks-content-recipes{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;-ms-flex-pack:center;justify-content:center;max-width:1200px;margin:20px auto;width:100%;min-height:10px}ks-content-recipes>*{width:calc(25% - 10px);margin:5px;-webkit-box-sizing:border-box;box-sizing:border-box}@media screen and (max-width: 639px){ks-content-recipes>*{width:100%}}@media screen and (min-width: 640px) and (max-width: 959px){ks-content-recipes>*{width:calc(50% - 10px)}}@media screen and (min-width: 960px) and (max-width: 1199px){ks-content-recipes>*{width:calc(33.3333333333% - 10px)}}";
+const recipesCss$1 = "ks-content-recipes{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;-ms-flex-pack:center;justify-content:center;max-width:1200px;margin:20px auto;width:100%;min-height:10px;padding:10px;-webkit-box-sizing:border-box;box-sizing:border-box}ks-content-recipes>*{width:calc(25% - 10px);margin:5px;-webkit-box-sizing:border-box;box-sizing:border-box}@media screen and (max-width: 639px){ks-content-recipes>*{width:100%}}@media screen and (min-width: 640px) and (max-width: 959px){ks-content-recipes>*{width:calc(50% - 10px)}}@media screen and (min-width: 960px) and (max-width: 1199px){ks-content-recipes>*{width:calc(33.3333333333% - 10px)}}";
 
 class ContentRecipes {
   constructor(hostRef) {
@@ -15016,7 +15016,7 @@ class ContentTags {
   }; }
 }
 
-const thumbnailsCss = "ks-content-thumbnails{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-wrap:wrap;flex-wrap:wrap;gap:5px;max-width:1200px;margin:auto}ks-content-thumbnails .thumbnail{-ms-flex:1 1 300px;flex:1 1 300px;max-width:290px;aspect-ratio:2 / 1;border-radius:10px;overflow:hidden;opacity:1.0;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-content-thumbnails .thumbnail:hover{opacity:0.85}ks-content-thumbnails .thumbnail:active{opacity:0.7}ks-content-thumbnails .thumbnail>*{height:100%}@media screen and (max-width: 500px){ks-content-thumbnails .thumbnail{max-width:100%}}";
+const thumbnailsCss = "ks-content-thumbnails{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-wrap:wrap;flex-wrap:wrap;gap:5px;max-width:1200px;margin:auto;padding:0 10px;-webkit-box-sizing:border-box;box-sizing:border-box}ks-content-thumbnails .thumbnail{-ms-flex:1 1 300px;flex:1 1 300px;max-width:290px;aspect-ratio:2 / 1;border-radius:10px;overflow:hidden;opacity:1.0;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-content-thumbnails .thumbnail:hover{opacity:0.85}ks-content-thumbnails .thumbnail:active{opacity:0.7}ks-content-thumbnails .thumbnail>*{height:100%}@media screen and (max-width: 500px){ks-content-thumbnails .thumbnail{max-width:100%}}";
 
 class ContentThumbnail {
   constructor(hostRef) {
@@ -15245,7 +15245,7 @@ class DescriptionImage {
   }; }
 }
 
-const descriptionProductsCss = "ks-description-products{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;border-top:#f2f2f2 solid 1px;border-bottom:#eeeeee solid 1px;padding:10px 0 20px 0;margin:0 -15px 0px -15px}ks-description-products ks-product-container{margin-left:-30px;margin-right:-20px;margin-top:-15px;padding:0}ks-description-products[kind='standard']{border:none}ks-description-products[kind='simple']{margin-bottom:20px}@media screen and (max-width: 640px){ks-description-products{padding:10px 5px 20px 5px}ks-description-products ks-product-container{margin-left:-20px;margin-right:-5px}ks-description-products[kind='simple']{margin-bottom:20px}}";
+const descriptionProductsCss = "ks-description-products{display:-ms-flexbox;display:flex;-ms-flex-flow:row wrap;flex-flow:row wrap;-ms-flex-pack:center;justify-content:center;-ms-flex-align:stretch;align-items:stretch;gap:10px;border-top:#f2f2f2 solid 1px;border-bottom:#eeeeee solid 1px;padding:10px 10px 20px 10px}ks-description-products>*{width:100%;-webkit-box-sizing:border-box;box-sizing:border-box}ks-description-products[kind='standard']{border:none}ks-description-products[kind='simple']{margin-bottom:20px}@media screen and (max-width: 640px){ks-description-products>*{width:228px}ks-description-products[kind='simple']{margin-bottom:20px}}@media (min-width: 360px) and (max-width: 640px){ks-description-products>*{width:48% !important}}";
 
 class DescriptionProducts {
   constructor(hostRef) {
@@ -15254,9 +15254,9 @@ class DescriptionProducts {
     this.kind = undefined;
   }
   render() {
-    return hAsync("ks-product-container", null, this.products.map(product => this.kind == "standard" ?
+    return this.products.map(product => this.kind == "standard" ?
       hAsync("ks-product-card", { flat: true, product: product }) :
-      hAsync("ks-product-simple", { name: product.name, img: product.image, link: product.link, currentPrice: product.currentPrice, previousPrice: product.previousPrice })));
+      hAsync("ks-product-simple", { name: product.name, img: product.image, link: product.link, currentPrice: product.currentPrice, previousPrice: product.previousPrice }));
   }
   static get style() { return descriptionProductsCss; }
   static get cmpMeta() { return {
