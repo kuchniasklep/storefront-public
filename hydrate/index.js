@@ -24149,7 +24149,7 @@ class Img2 {
   }; }
 }
 
-const img3Css = "ks-img3{display:block;-webkit-box-sizing:border-box;box-sizing:border-box;font-size:0;max-height:inherit;position:relative}ks-img3 picture{max-height:inherit}ks-img3 img{width:100%;height:100%;max-height:inherit;-o-object-position:center;object-position:center;opacity:1;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-img3 img.loading{opacity:0;height:0}ks-img3[fit='contain'] img{-o-object-fit:contain;object-fit:contain}ks-img3[fit='cover'] img{-o-object-fit:cover;object-fit:cover}ks-img3[fit='fill'] img{-o-object-fit:fill;object-fit:fill}ks-img3[fit='scale-down'] img{-o-object-fit:scale-down;object-fit:scale-down}ks-img3[fit='none'] img{-o-object-fit:none;object-fit:none}";
+const img3Css = "ks-img3{display:block;-webkit-box-sizing:border-box;box-sizing:border-box;font-size:0;max-height:inherit;position:relative}ks-img3 picture{max-height:inherit}ks-img3 img{width:100%;height:100%;max-height:inherit;-o-object-position:center;object-position:center;opacity:1;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-img3 img.loading{opacity:0;height:0}ks-img3[fit='contain'] img{-o-object-fit:contain;object-fit:contain}ks-img3[fit='cover'] img{-o-object-fit:cover;object-fit:cover}ks-img3[fit='fill'] img{-o-object-fit:fill;object-fit:fill}ks-img3[fit='scale-down'] img{-o-object-fit:scale-down;object-fit:scale-down}ks-img3[fit='none'] img{-o-object-fit:none;object-fit:none}ks-img3[fit='contain'] canvas{-o-object-fit:contain;object-fit:contain}ks-img3[fit='cover'] canvas{-o-object-fit:cover;object-fit:cover}ks-img3[fit='fill'] canvas{-o-object-fit:fill;object-fit:fill}ks-img3[fit='scale-down'] canvas{-o-object-fit:scale-down;object-fit:scale-down}ks-img3[fit='none'] canvas{-o-object-fit:none;object-fit:none}ks-img2 canvas{display:inline-block;width:auto;height:auto;max-width:inherit;max-height:inherit;font-size:0;vertical-align:middle}";
 
 class Img3 {
   constructor(hostRef) {
@@ -24224,7 +24224,10 @@ class Img3 {
       ];
     return [
       hAsync("picture", null, this.webp ? hAsync("source", { "data-srcSet": this.webp, type: "image/webp" }) : null, hAsync("img", { class: loading, onLoad: (e) => this.loadHandler(e), "data-src": this.image, alt: this.alt, width: this.width, height: this.height })),
-      (!this.loaded ? hAsync("ks-loader", { dark: true }) : null)
+      (!this.loaded ? [
+        hAsync("ks-loader", { dark: true }),
+        hAsync("canvas", { width: this.width, height: this.height })
+      ] : null)
     ];
   }
   get root() { return getElement(this); }
