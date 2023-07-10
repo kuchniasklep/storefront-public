@@ -28072,7 +28072,7 @@ class NavbarContactPanel {
   }
   render() {
     return hAsync(Host, { class: this.visible }, hAsync("div", { class: "navbar", style: { width: `${this.menuWidth}px` } }, hAsync("ks-navbar-button", { icon: "x", onClick: () => this.Toggle() })), hAsync("div", { class: "content" }, this.initialized ?
-      hAsync("div", { class: "map" }, hAsync("iframe", { frameborder: "0", height: this.height, width: this.width, src: "https://maps.google.pl/maps?ie=UTF8&q=Pozna%C5%84ska+23%2C+58-500+Jelenia+G%C3%B3ra&gl=PL&hl=pl&t=m&iwloc=A&output=embed" }))
+      hAsync("div", { class: "map" }, hAsync("iframe", { frameborder: "0", height: this.height, width: this.width, src: "https://maps.google.pl/maps?ie=UTF8&q=Jana%20III%20Sobieskiego%2047%2C%2058-500%20Jelenia%20G%C3%B3ra&gl=PL&\nhl=pl&t=m&iwloc=A&output=embed" }))
       : null, hAsync("div", { class: "info ks-text-decorated" }, hAsync("div", { class: "address" }, common.get('company'), " ", hAsync("br", null), common.get('address'), " ", hAsync("br", null), common.get('nip'), " ", hAsync("br", null), hAsync("br", null), common.get('workingHours'), " ", hAsync("br", null)), hAsync("div", { class: "buttons" }, hAsync("div", { class: "margin" }, hAsync("a", { href: "tel:" + common.get('phone') }, common.get('phone')), hAsync("br", null), hAsync("a", { href: "mailto:" + common.get('email') }, common.get('email')))))));
   }
   get root() { return getElement(this); }
