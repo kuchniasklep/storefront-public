@@ -1,0 +1,2 @@
+import{c as o}from"./common-46fdf31d.js";import{c as t}from"./commonDynamic-3e6c308f.js";import{D as c}from"./dataLayer-d75ea728.js";function m(m,n,s){const e=document.getElementById(m);const a=JSON.parse(e.innerHTML);Object.keys(a).map((t=>{o.set(t,a[t])}));if(s.isBrowser){const o=document.getElementById(n);const m=JSON.parse(o.innerHTML);Object.keys(m).map((o=>{t.set(o,m[o])}));setTimeout((()=>{t.set("loaded",true);const o=t.get("tracking");c.pageview(o.pageview)}),100)}}export{m as l};
+//# sourceMappingURL=loadCommon-1c9bf0eb.js.map

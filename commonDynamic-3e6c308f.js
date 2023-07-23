@@ -1,0 +1,2 @@
+import{c as a}from"./index-33fbe4a7.js";const e=a({loaded:false,loggedIn:false,customer:{},cartCount:0,heartCount:0,api:{},tracking:{},consent:{}});export{e as c};
+//# sourceMappingURL=commonDynamic-3e6c308f.js.map

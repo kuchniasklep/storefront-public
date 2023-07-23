@@ -1,0 +1,2 @@
+import{c as o}from"./index-33fbe4a7.js";const e=o({logo:"",categoryUrl:"",cartLink:"",heartLink:"",accountLink:"",loginLink:"",logoutLink:"",registerLink:"",softwareLink:"",promo:"",promoLink:"",email:"",phone:"",workingHours:"",company:"",address:"",nip:"",newsletterPopup:false,newsletterApi:"",suggestionApi:"",autocompleteApi:"",cookieMessage:"",cookieButton:"",cookieDelay:1e3,categories:[],social:[],reviewers:[],footerLinks:[],translations:{}});export{e as c};
+//# sourceMappingURL=common-46fdf31d.js.map

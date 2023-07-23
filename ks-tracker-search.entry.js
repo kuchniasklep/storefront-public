@@ -1,1 +1,2 @@
-import{r as s}from"./index-e3198654.js";import{D as o}from"./dataLayer-e8b81260.js";import"./commonDynamic-1f04aed5.js";import"./index-5a4e318f.js";import"./fetch-bbb23998.js";const t=class{constructor(o){s(this,o),this.eventId="",this.query=void 0}componentWillLoad(){o.search(this.query)}};export{t as ks_tracker_search}
+import{r as s}from"./index-1b90b4d2.js";import{D as t}from"./dataLayer-d75ea728.js";import"./commonDynamic-3e6c308f.js";import"./index-33fbe4a7.js";import"./fetch-13200e62.js";const o=class{constructor(t){s(this,t);this.eventId="";this.query=undefined}componentWillLoad(){t.search(this.query)}};export{o as ks_tracker_search};
+//# sourceMappingURL=ks-tracker-search.entry.js.map

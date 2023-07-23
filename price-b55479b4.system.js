@@ -1,0 +1,2 @@
+System.register(["./common-34e3f2b7.system.js"],(function(t){"use strict";var e;return{setters:[function(t){e=t.c}],execute:function(){t({a:n,p:r});function r(t){if(typeof t==="undefined"||t===null)return"";if(typeof t==="string")t=parseFloat(t);var r=e.get("currency");if(!r)return t.toString();return n(t)+" ".concat(r.symbol)}function n(t){if(typeof t==="undefined"||t===null)return"";if(typeof t==="string")t=parseFloat(t);var r=e.get("currency");if(!r)return t.toString();return t.toFixed(2).replace(".",r.separator)}}}}));
+//# sourceMappingURL=price-b55479b4.system.js.map

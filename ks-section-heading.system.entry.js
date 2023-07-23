@@ -1,1 +1,2 @@
-System.register(["./index-229c64eb.system.js"],(function(t){"use strict";var e,n;return{setters:[function(t){e=t.r;n=t.h}],execute:function(){var r=t("ks_section_heading",function(){function t(t){e(this,t)}t.prototype.render=function(){return[n("h3",{class:"uk-text-center uk-margin-medium-bottom"},n("slot",null))]};return t}())}}}));
+System.register(["./index-56e4ba05.system.js"],(function(t){"use strict";var e,n;return{setters:[function(t){e=t.r;n=t.h}],execute:function(){var r=t("ks_section_heading",function(){function t(t){e(this,t)}t.prototype.render=function(){return[n("h3",{class:"uk-text-center uk-margin-medium-bottom"},n("slot",null))]};return t}())}}}));
+//# sourceMappingURL=ks-section-heading.system.entry.js.map

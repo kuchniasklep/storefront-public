@@ -1,1 +1,2 @@
-import{r,h as o,g as s}from"./index-e3198654.js";const t=class{constructor(o){r(this,o),this.dark=!1}componentDidLoad(){this.root.style.display="block"}render(){return o("hr",{class:"uk-margin-remove",style:{borderColor:this.dark?"#404040":"#dadada"}})}get root(){return s(this)}};export{t as ks_order_separator}
+import{r,h as s,g as o}from"./index-1b90b4d2.js";const t=class{constructor(s){r(this,s);this.dark=false}componentDidLoad(){this.root.style.display="block"}render(){const r=this.dark?"#404040":"#dadada";return s("hr",{class:"uk-margin-remove",style:{borderColor:r}})}get root(){return o(this)}};export{t as ks_order_separator};
+//# sourceMappingURL=ks-order-separator.entry.js.map

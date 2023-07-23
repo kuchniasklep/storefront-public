@@ -1,0 +1,2 @@
+import{c as n}from"./common-46fdf31d.js";function r(r){if(typeof r==="undefined"||r===null)return"";if(typeof r==="string")r=parseFloat(r);const e=n.get("currency");if(!e)return r.toString();return t(r)+` ${e.symbol}`}function t(r){if(typeof r==="undefined"||r===null)return"";if(typeof r==="string")r=parseFloat(r);const t=n.get("currency");if(!t)return r.toString();return r.toFixed(2).replace(".",t.separator)}export{t as a,r as p};
+//# sourceMappingURL=price-d2724a6c.js.map

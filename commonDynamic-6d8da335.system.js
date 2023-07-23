@@ -1,0 +1,2 @@
+System.register(["./index-c9cb740c.system.js"],(function(e){"use strict";var t;return{setters:[function(e){t=e.c}],execute:function(){var c=e("c",t({loaded:false,loggedIn:false,customer:{},cartCount:0,heartCount:0,api:{},tracking:{},consent:{}}))}}}));
+//# sourceMappingURL=commonDynamic-6d8da335.system.js.map

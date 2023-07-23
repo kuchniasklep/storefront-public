@@ -1,0 +1,2 @@
+System.register(["./index-c9cb740c.system.js"],(function(e){"use strict";var t;return{setters:[function(e){t=e.c}],execute:function(){var c=e("r",t({}))}}}));
+//# sourceMappingURL=register-9040eeb1.system.js.map
