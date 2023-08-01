@@ -28811,9 +28811,7 @@ class NewsletterPopupEdrone {
       const newsletterAPI = commonDynamic.get('api').newsletter;
       // Server side call
       formfetch(newsletterAPI, { "email": email.toString() });
-      setTimeout(() => {
-        this.track(data.get('email'), data.get('name'));
-      }, 500);
+      this.track(data.get('email'), data.get('name'));
       this.dialog.showSuccess(strings.newsletterPopupSuccessHeading, strings.newsletterPopupSuccessMessage);
       this.success = true;
     });
