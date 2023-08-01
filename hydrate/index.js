@@ -28807,7 +28807,13 @@ class NewsletterPopupEdrone {
       }
       const target = event.target;
       const data = new FormData(target);
-      this.track(data.get('email'), data.get('name'));
+      const email = data.get('email');
+      const newsletterAPI = commonDynamic.get('api').newsletter;
+      // Server side call
+      formfetch(newsletterAPI, { "email": email.toString() });
+      setTimeout(() => {
+        this.track(data.get('email'), data.get('name'));
+      }, 500);
       this.dialog.showSuccess(strings.newsletterPopupSuccessHeading, strings.newsletterPopupSuccessMessage);
       this.success = true;
     });
