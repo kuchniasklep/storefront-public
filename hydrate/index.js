@@ -13737,7 +13737,7 @@ class CartProductContainer {
     const string = cart.get('strings');
     return [
       hAsync("ks-cart-product-heading", { removable: true, productTableNames: string.productTableNames, productTablePrices: string.productTablePrices, productTableCount: string.productTableCount, productTableRemove: string.productTableRemove }),
-      products.map(([id, product]) => hAsync("ks-cart-product", { key: id, "product-id": id, name: product.name, link: product.link, img: product.image, price: product.currentPrice, amount: product.quantity, "max-amount": product.maxQuantity, "shipping-time": product.shippingTime, "count-unit": string.countUnit }))
+      products.map(([id, product]) => hAsync("ks-cart-product", { removable: true, key: id, "product-id": id, name: product.name, link: product.link, img: product.image, price: product.currentPrice, amount: product.quantity, "max-amount": product.maxQuantity, "shipping-time": product.shippingTime, "count-unit": string.countUnit }))
     ];
   }
   get root() { return getElement(this); }
