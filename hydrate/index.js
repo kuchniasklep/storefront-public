@@ -28538,7 +28538,7 @@ var DataLayer;
     await pageviewed;
     // @ts-ignore: Crypto type error
     eventID = crypto.randomUUID();
-    const data = Object.assign(Object.assign({ event: 'ks.checkout', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderCoupon: order.coupon, ecommerce: {
+    const data = Object.assign(Object.assign({ event: 'ks.checkout', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderShippingTime: order.totalShippingTime, orderCoupon: order.coupon, ecommerce: {
         items: enchancedEcommerceItems(order.products)
       }, uaecommerce: { ecommerce: {
           checkout: {
@@ -28557,7 +28557,7 @@ var DataLayer;
     await pageviewed;
     // @ts-ignore: Crypto type error
     eventID = crypto.randomUUID();
-    const data = Object.assign(Object.assign({ event: 'ks.orderForm', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderCoupon: order.coupon, ecommerce: {
+    const data = Object.assign(Object.assign({ event: 'ks.orderForm', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderShippingTime: order.totalShippingTime, orderCoupon: order.coupon, ecommerce: {
         items: enchancedEcommerceItems(order.products)
       }, uaecommerce: { ecommerce: {
           checkout: {
@@ -28576,7 +28576,7 @@ var DataLayer;
     await pageviewed;
     // @ts-ignore: Crypto type error
     eventID = crypto.randomUUID();
-    const data = Object.assign(Object.assign({ event: 'ks.order', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderId: order.id, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderCoupon: order.coupon, ecomm_prodid: JSON.stringify(Object.values(order.products).map(product => product.id)), ecomm_pagetype: 'purchase', ecomm_totalvalue: order.productValue, ecommerce: {
+    const data = Object.assign(Object.assign({ event: 'ks.order', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderId: order.id, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderShippingTime: order.totalShippingTime, orderCoupon: order.coupon, ecomm_prodid: JSON.stringify(Object.values(order.products).map(product => product.id)), ecomm_pagetype: 'purchase', ecomm_totalvalue: order.productValue, ecommerce: {
         transaction_id: order.id,
         value: order.totalValue,
         currency: order.currency,
