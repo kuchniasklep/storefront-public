@@ -1,0 +1,1 @@
+System.register(["./index-afb1cee9.system.js"],(function(e){"use strict";var t;return{setters:[function(e){t=e.c}],execute:function(){var s=e("p",t({}))}}}));

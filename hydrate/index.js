@@ -4945,28 +4945,261 @@ function hydrateFactory($stencilWindow, $stencilHydrateOpts, $stencilHydrateResu
 const NAMESPACE = 'ks-components';
 const BUILD = /* ks-components */ { allRenderFn: false, appendChildSlotFix: false, asyncLoading: true, attachStyles: true, cloneNodeFix: false, cmpDidLoad: true, cmpDidRender: true, cmpDidUnload: false, cmpDidUpdate: true, cmpShouldUpdate: false, cmpWillLoad: true, cmpWillRender: true, cmpWillUpdate: true, connectedCallback: false, constructableCSS: false, cssAnnotations: true, cssVarShim: false, devTools: false, disconnectedCallback: false, dynamicImportShim: false, element: false, event: true, hasRenderFn: true, hostListener: true, hostListenerTarget: true, hostListenerTargetBody: false, hostListenerTargetDocument: true, hostListenerTargetParent: false, hostListenerTargetWindow: true, hotModuleReplacement: false, hydrateClientSide: true, hydrateServerSide: true, hydratedAttribute: false, hydratedClass: true, isDebug: false, isDev: false, isTesting: false, lazyLoad: true, lifecycle: true, lifecycleDOMEvents: false, member: true, method: true, mode: false, observeAttribute: true, profile: false, prop: true, propBoolean: true, propMutable: true, propNumber: true, propString: true, reflect: true, safari10: false, scoped: false, scriptDataOpts: false, shadowDelegatesFocus: false, shadowDom: false, shadowDomShim: true, slot: true, slotChildNodesFix: false, slotRelocation: true, state: true, style: true, svg: true, taskQueue: true, updatable: true, vdomAttribute: true, vdomClass: true, vdomFunctional: true, vdomKey: true, vdomListener: true, vdomPropOrAttr: true, vdomRef: false, vdomRender: true, vdomStyle: true, vdomText: true, vdomXlink: false, watchCallback: true };
 
-window.iziGetPayData = (_prefix, _phoneNumber, _bindingPlace) => {
-  //const browserData = (window as any).iziGetBrowserData({ base64: true });
-  return Promise.resolve({
-    qr_code: 'string',
-    deep_link: 'string',
-    deep_link_hms: 'string',
+async function Fetch(url, body = null) {
+  const headers = new Headers();
+  headers.append('pragma', 'no-cache');
+  headers.append('cache-control', 'no-cache');
+  return fetch(url, {
+    method: 'POST',
+    body: body,
+    headers: headers,
+    credentials: "same-origin"
+  })
+    .then(response => {
+    if (!response.ok)
+      throw { name: response.status, message: response.statusText };
+    return response;
   });
+}
+async function formfetch(url, formProperties) {
+  let body = null;
+  if (formProperties) {
+    body = new FormData();
+    Object.entries(formProperties).forEach(([key, value]) => {
+      body.append(key, value);
+    });
+  }
+  return internalfetch(url, body);
+}
+async function jsonfetch(url, data) {
+  return internalfetch(url, JSON.stringify(data));
+}
+async function internalfetch(url, body) {
+  const headers = new Headers();
+  headers.append('pragma', 'no-cache');
+  headers.append('cache-control', 'no-cache');
+  return fetch(url, {
+    method: 'POST',
+    body: body,
+    headers: headers,
+    credentials: "same-origin"
+  }).then(response => {
+    if (!response.ok)
+      throw { name: response.status, message: response.statusText };
+    return response;
+  });
+}
+
+const appendToMap = (map, propName, value) => {
+    const items = map.get(propName);
+    if (!items) {
+        map.set(propName, [value]);
+    }
+    else if (!items.includes(value)) {
+        items.push(value);
+    }
+};
+const debounce$1 = (fn, ms) => {
+    let timeoutId;
+    return (...args) => {
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
+        timeoutId = setTimeout(() => {
+            timeoutId = 0;
+            fn(...args);
+        }, ms);
+    };
+};
+
+/**
+ * Check if a possible element isConnected.
+ * The property might not be there, so we check for it.
+ *
+ * We want it to return true if isConnected is not a property,
+ * otherwise we would remove these elements and would not update.
+ *
+ * Better leak in Edge than to be useless.
+ */
+const isConnected = (maybeElement) => !('isConnected' in maybeElement) || maybeElement.isConnected;
+const cleanupElements = debounce$1((map) => {
+    for (let key of map.keys()) {
+        map.set(key, map.get(key).filter(isConnected));
+    }
+}, 2000);
+const stencilSubscription = () => {
+    if (typeof getRenderingRef !== 'function') {
+        // If we are not in a stencil project, we do nothing.
+        // This function is not really exported by @stencil/core.
+        return {};
+    }
+    const elmsToUpdate = new Map();
+    return {
+        dispose: () => elmsToUpdate.clear(),
+        get: (propName) => {
+            const elm = getRenderingRef();
+            if (elm) {
+                appendToMap(elmsToUpdate, propName, elm);
+            }
+        },
+        set: (propName) => {
+            const elements = elmsToUpdate.get(propName);
+            if (elements) {
+                elmsToUpdate.set(propName, elements.filter(forceUpdate$1));
+            }
+            cleanupElements(elmsToUpdate);
+        },
+        reset: () => {
+            elmsToUpdate.forEach((elms) => elms.forEach(forceUpdate$1));
+            cleanupElements(elmsToUpdate);
+        },
+    };
+};
+
+const createObservableMap = (defaultState, shouldUpdate = (a, b) => a !== b) => {
+    let states = new Map(Object.entries(defaultState !== null && defaultState !== void 0 ? defaultState : {}));
+    const handlers = {
+        dispose: [],
+        get: [],
+        set: [],
+        reset: [],
+    };
+    const reset = () => {
+        states = new Map(Object.entries(defaultState !== null && defaultState !== void 0 ? defaultState : {}));
+        handlers.reset.forEach((cb) => cb());
+    };
+    const dispose = () => {
+        // Call first dispose as resetting the state would
+        // cause less updates ;)
+        handlers.dispose.forEach((cb) => cb());
+        reset();
+    };
+    const get = (propName) => {
+        handlers.get.forEach((cb) => cb(propName));
+        return states.get(propName);
+    };
+    const set = (propName, value) => {
+        const oldValue = states.get(propName);
+        if (shouldUpdate(value, oldValue, propName)) {
+            states.set(propName, value);
+            handlers.set.forEach((cb) => cb(propName, value, oldValue));
+        }
+    };
+    const state = (typeof Proxy === 'undefined'
+        ? {}
+        : new Proxy(defaultState, {
+            get(_, propName) {
+                return get(propName);
+            },
+            ownKeys(_) {
+                return Array.from(states.keys());
+            },
+            getOwnPropertyDescriptor() {
+                return {
+                    enumerable: true,
+                    configurable: true,
+                };
+            },
+            has(_, propName) {
+                return states.has(propName);
+            },
+            set(_, propName, value) {
+                set(propName, value);
+                return true;
+            },
+        }));
+    const on = (eventName, callback) => {
+        handlers[eventName].push(callback);
+        return () => {
+            removeFromArray(handlers[eventName], callback);
+        };
+    };
+    const onChange = (propName, cb) => {
+        const unSet = on('set', (key, newValue) => {
+            if (key === propName) {
+                cb(newValue);
+            }
+        });
+        const unReset = on('reset', () => cb(defaultState[propName]));
+        return () => {
+            unSet();
+            unReset();
+        };
+    };
+    const use = (...subscriptions) => {
+        const unsubs = subscriptions.reduce((unsubs, subscription) => {
+            if (subscription.set) {
+                unsubs.push(on('set', subscription.set));
+            }
+            if (subscription.get) {
+                unsubs.push(on('get', subscription.get));
+            }
+            if (subscription.reset) {
+                unsubs.push(on('reset', subscription.reset));
+            }
+            if (subscription.dispose) {
+                unsubs.push(on('dispose', subscription.dispose));
+            }
+            return unsubs;
+        }, []);
+        return () => unsubs.forEach((unsub) => unsub());
+    };
+    const forceUpdate = (key) => {
+        const oldValue = states.get(key);
+        handlers.set.forEach((cb) => cb(key, oldValue, oldValue));
+    };
+    return {
+        state,
+        get,
+        set,
+        on,
+        onChange,
+        use,
+        dispose,
+        reset,
+        forceUpdate,
+    };
+};
+const removeFromArray = (array, item) => {
+    const index = array.indexOf(item);
+    if (index >= 0) {
+        array[index] = array[array.length - 1];
+        array.length--;
+    }
+};
+
+const createStore = (defaultState, shouldUpdate) => {
+    const map = createObservableMap(defaultState, shouldUpdate);
+    map.use(stencilSubscription());
+    return map;
+};
+
+const commonDynamic = createStore({
+  loaded: false,
+  loggedIn: false,
+  customer: {},
+  cartCount: 0,
+  heartCount: 0,
+  api: {},
+  tracking: {},
+  consent: {}
+});
+
+window.iziGetPayData = (prefix, phoneNumber, bindingPlace) => {
+  const api = commonDynamic.get('api').inpostFrontend;
+  const browser = window.iziGetBrowserData();
+  return jsonfetch(`${api}/getpaydata`, {
+    browser: browser,
+    phonePrefix: prefix,
+    phoneNumber: phoneNumber,
+    bindingPlace: bindingPlace
+  })
+    .then(response => response.json());
 };
 window.iziGetIsBound = () => {
-  return Promise.resolve({
-    "phone_number": {
-      "country_prefix": "string",
-      "phone": "string"
-    },
-    "browser": {
-      "browser_trusted": true,
-      "browser_id": "string",
-    },
-    "name": "string",
-    "surname": "string",
-    "masked_phone_number": "string"
-  });
+  const api = commonDynamic.get('api').inpostFrontend;
+  return jsonfetch(`${api}/isbound`, {})
+    .then(response => response.json());
 };
 window.iziGetOrderComplete = () => {
   return Promise.resolve({
@@ -4975,14 +5208,34 @@ window.iziGetOrderComplete = () => {
   });
 };
 window.iziBindingDelete = () => {
-  return Promise.resolve();
+  const api = commonDynamic.get('api').inpostFrontend;
+  return jsonfetch(`${api}/bindingdelete`, {})
+    .then(response => response.json());
 };
-window.iziCanBeBound = (_productId) => {
-  return true ;
+window.iziCanBeBound = (productId) => {
+  const api = commonDynamic.get('api').inpostFrontend;
+  return jsonfetch(`${api}/canbebound`, {
+    product_id: productId
+  })
+    .then(response => response.json());
 };
-window.iziAddToCart = (_id) => {
-  return Promise.resolve();
+window.iziAddToCart = (id) => {
+  const api = commonDynamic.get('api').inpostFrontend;
+  return jsonfetch(`${api}/addtocart`, {
+    product_id: id
+  })
+    .then(response => response.json());
 };
+window.iziMobileLink = () => {
+  const api = commonDynamic.get('api').inpostFrontend;
+  return jsonfetch(`${api}/mobilelink`, {})
+    .then(response => response.json());
+};
+function InpostUpdateProductCount(count) {
+  const event = new CustomEvent("inpost-update-count", { detail: count });
+  const iziButtonsCollection = Array.from(document.getElementsByTagName("inpost-izi-button"));
+  iziButtonsCollection.forEach(el => el.dispatchEvent(event));
+}
 
 window.googleConsentListeners = [];
 window.addConsentListener = (callback) => {
@@ -12309,190 +12562,6 @@ class Card {
   }; }
 }
 
-const appendToMap = (map, propName, value) => {
-    const items = map.get(propName);
-    if (!items) {
-        map.set(propName, [value]);
-    }
-    else if (!items.includes(value)) {
-        items.push(value);
-    }
-};
-const debounce$1 = (fn, ms) => {
-    let timeoutId;
-    return (...args) => {
-        if (timeoutId) {
-            clearTimeout(timeoutId);
-        }
-        timeoutId = setTimeout(() => {
-            timeoutId = 0;
-            fn(...args);
-        }, ms);
-    };
-};
-
-/**
- * Check if a possible element isConnected.
- * The property might not be there, so we check for it.
- *
- * We want it to return true if isConnected is not a property,
- * otherwise we would remove these elements and would not update.
- *
- * Better leak in Edge than to be useless.
- */
-const isConnected = (maybeElement) => !('isConnected' in maybeElement) || maybeElement.isConnected;
-const cleanupElements = debounce$1((map) => {
-    for (let key of map.keys()) {
-        map.set(key, map.get(key).filter(isConnected));
-    }
-}, 2000);
-const stencilSubscription = () => {
-    if (typeof getRenderingRef !== 'function') {
-        // If we are not in a stencil project, we do nothing.
-        // This function is not really exported by @stencil/core.
-        return {};
-    }
-    const elmsToUpdate = new Map();
-    return {
-        dispose: () => elmsToUpdate.clear(),
-        get: (propName) => {
-            const elm = getRenderingRef();
-            if (elm) {
-                appendToMap(elmsToUpdate, propName, elm);
-            }
-        },
-        set: (propName) => {
-            const elements = elmsToUpdate.get(propName);
-            if (elements) {
-                elmsToUpdate.set(propName, elements.filter(forceUpdate$1));
-            }
-            cleanupElements(elmsToUpdate);
-        },
-        reset: () => {
-            elmsToUpdate.forEach((elms) => elms.forEach(forceUpdate$1));
-            cleanupElements(elmsToUpdate);
-        },
-    };
-};
-
-const createObservableMap = (defaultState, shouldUpdate = (a, b) => a !== b) => {
-    let states = new Map(Object.entries(defaultState !== null && defaultState !== void 0 ? defaultState : {}));
-    const handlers = {
-        dispose: [],
-        get: [],
-        set: [],
-        reset: [],
-    };
-    const reset = () => {
-        states = new Map(Object.entries(defaultState !== null && defaultState !== void 0 ? defaultState : {}));
-        handlers.reset.forEach((cb) => cb());
-    };
-    const dispose = () => {
-        // Call first dispose as resetting the state would
-        // cause less updates ;)
-        handlers.dispose.forEach((cb) => cb());
-        reset();
-    };
-    const get = (propName) => {
-        handlers.get.forEach((cb) => cb(propName));
-        return states.get(propName);
-    };
-    const set = (propName, value) => {
-        const oldValue = states.get(propName);
-        if (shouldUpdate(value, oldValue, propName)) {
-            states.set(propName, value);
-            handlers.set.forEach((cb) => cb(propName, value, oldValue));
-        }
-    };
-    const state = (typeof Proxy === 'undefined'
-        ? {}
-        : new Proxy(defaultState, {
-            get(_, propName) {
-                return get(propName);
-            },
-            ownKeys(_) {
-                return Array.from(states.keys());
-            },
-            getOwnPropertyDescriptor() {
-                return {
-                    enumerable: true,
-                    configurable: true,
-                };
-            },
-            has(_, propName) {
-                return states.has(propName);
-            },
-            set(_, propName, value) {
-                set(propName, value);
-                return true;
-            },
-        }));
-    const on = (eventName, callback) => {
-        handlers[eventName].push(callback);
-        return () => {
-            removeFromArray(handlers[eventName], callback);
-        };
-    };
-    const onChange = (propName, cb) => {
-        const unSet = on('set', (key, newValue) => {
-            if (key === propName) {
-                cb(newValue);
-            }
-        });
-        const unReset = on('reset', () => cb(defaultState[propName]));
-        return () => {
-            unSet();
-            unReset();
-        };
-    };
-    const use = (...subscriptions) => {
-        const unsubs = subscriptions.reduce((unsubs, subscription) => {
-            if (subscription.set) {
-                unsubs.push(on('set', subscription.set));
-            }
-            if (subscription.get) {
-                unsubs.push(on('get', subscription.get));
-            }
-            if (subscription.reset) {
-                unsubs.push(on('reset', subscription.reset));
-            }
-            if (subscription.dispose) {
-                unsubs.push(on('dispose', subscription.dispose));
-            }
-            return unsubs;
-        }, []);
-        return () => unsubs.forEach((unsub) => unsub());
-    };
-    const forceUpdate = (key) => {
-        const oldValue = states.get(key);
-        handlers.set.forEach((cb) => cb(key, oldValue, oldValue));
-    };
-    return {
-        state,
-        get,
-        set,
-        on,
-        onChange,
-        use,
-        dispose,
-        reset,
-        forceUpdate,
-    };
-};
-const removeFromArray = (array, item) => {
-    const index = array.indexOf(item);
-    if (index >= 0) {
-        array[index] = array[array.length - 1];
-        array.length--;
-    }
-};
-
-const createStore = (defaultState, shouldUpdate) => {
-    const map = createObservableMap(defaultState, shouldUpdate);
-    map.use(stencilSubscription());
-    return map;
-};
-
 const cart = createStore({});
 
 const cartButtonsCss = "ks-cart-buttons{display:block;position:relative;margin-top:20px}ks-cart-buttons>.confirm{-ms-flex:1;flex:1;width:100%;font-size:28px;font-weight:700;padding:20px}ks-cart-buttons ks-button{height:50px}ks-cart-buttons ks-button button{font-weight:700;font-size:17px;font-family:var(--font-emphasis)}ks-cart-buttons inpost-izi-button>*{width:100% !important}";
@@ -13104,51 +13173,6 @@ class CartEasyprotect {
   }; }
 }
 
-async function Fetch(url, body = null) {
-  const headers = new Headers();
-  headers.append('pragma', 'no-cache');
-  headers.append('cache-control', 'no-cache');
-  return fetch(url, {
-    method: 'POST',
-    body: body,
-    headers: headers,
-    credentials: "same-origin"
-  })
-    .then(response => {
-    if (!response.ok)
-      throw { name: response.status, message: response.statusText };
-    return response;
-  });
-}
-async function formfetch(url, formProperties) {
-  let body = null;
-  if (formProperties) {
-    body = new FormData();
-    Object.entries(formProperties).forEach(([key, value]) => {
-      body.append(key, value);
-    });
-  }
-  return internalfetch(url, body);
-}
-async function jsonfetch(url, data) {
-  return internalfetch(url, JSON.stringify(data));
-}
-async function internalfetch(url, body) {
-  const headers = new Headers();
-  headers.append('pragma', 'no-cache');
-  headers.append('cache-control', 'no-cache');
-  return fetch(url, {
-    method: 'POST',
-    body: body,
-    headers: headers,
-    credentials: "same-origin"
-  }).then(response => {
-    if (!response.ok)
-      throw { name: response.status, message: response.statusText };
-    return response;
-  });
-}
-
 async function removeProduct(id) {
   const data = await ProductLoadingWrapper(async () => {
     return fetch$1(cart.get('api').productRemove, { "id": id });
@@ -13204,6 +13228,7 @@ async function ProductCountCall(id, current, last) {
   else {
     cart.set("products", GetCorrectedProductAmounts(id, last));
     this.SetAmount(last, `ks-cart-product[ikey="${id}"] ks-cart-spinner`);
+    InpostUpdateProductCount(current);
   }
 }
 function GetCorrectedProductAmounts(id, amount, maxAmount) {
@@ -14891,17 +14916,6 @@ class ContentThumbnail {
     "$attrsToReflect$": []
   }; }
 }
-
-const commonDynamic = createStore({
-  loaded: false,
-  loggedIn: false,
-  customer: {},
-  cartCount: 0,
-  heartCount: 0,
-  api: {},
-  tracking: {},
-  consent: {}
-});
 
 const cookiePopupCss = "ks-cookie-popup{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;position:fixed;overflow:hidden;font-family:var(--font-emphasis);bottom:0px;left:0px;right:0px;z-index:10000000;background-color:var(--overlay-dark-background);-webkit-backdrop-filter:var(--overlay-dark-filter);backdrop-filter:var(--overlay-dark-filter);border-top:solid 1px #000000;color:white;transition:-webkit-transform 0.4s ease;-webkit-transition:-webkit-transform 0.4s ease;transition:transform 0.4s ease;transition:transform 0.4s ease, -webkit-transform 0.4s ease}ks-cookie-popup .message{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;height:80px;padding:15px;-webkit-box-sizing:border-box;box-sizing:border-box;text-align:center;font-size:15px;line-height:17px}ks-cookie-popup .message p{margin:0}ks-cookie-popup[requirement] .message p{background-color:#ff4242;border-radius:50px;padding:10px 15px}ks-cookie-popup .settings{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-direction:column;flex-direction:column;overflow-y:auto;height:500px;padding:0px 15px 15px 15px;-webkit-box-sizing:border-box;box-sizing:border-box;font-size:14px;line-height:14px}ks-cookie-popup .settings ks-button{margin-top:10px}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(500px);transform:translateY(500px)}ks-cookie-popup:not([hide])[extend]{-webkit-transform:translateY(0px);transform:translateY(0px)}ks-cookie-popup[hide]{-webkit-transform:translateY(620px);transform:translateY(620px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(620px);transform:translateY(620px);display:none}ks-cookie-popup p{margin:0;max-width:100%}ks-cookie-popup .buttons{display:-ms-flexbox;display:flex}ks-cookie-popup .buttons>*{width:-webkit-max-content;width:-moz-max-content;width:max-content}ks-cookie-popup .buttons>*:first-child{margin-right:5px}ks-cookie-popup .message .buttons{margin:0 0 0 20px}ks-cookie-popup .settings{max-width:800px}ks-cookie-popup .type{margin-bottom:10px}ks-cookie-popup .name{font-size:18px;font-weight:700}ks-cookie-popup .heading{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-align:center;align-items:center;margin-bottom:10px}ks-cookie-popup .check{position:relative;display:inline-block;width:50px;height:26px}ks-cookie-popup .check input{opacity:0;width:0;height:0}ks-cookie-popup .check .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;border-radius:34px;background-color:#ccc;-webkit-transition:.4s;transition:.4s}ks-cookie-popup .check .slider:before{position:absolute;content:\"\";height:20px;width:20px;left:4px;bottom:3px;border-radius:50%;background-color:#242424;-webkit-transition:.4s;transition:.4s}ks-cookie-popup .check input:disabled+.slider:before{background-color:#8d8d8d}ks-cookie-popup .check input:checked+.slider:before{-webkit-transform:translateX(22px);transform:translateX(22px)}ks-cookie-popup[requirement] .type.highlight .check .slider{background-color:#ff6f6f}ks-cookie-popup[requirement] .type.highlight .check .slider:before{background-color:#8d1515}ks-cookie-popup[requirement] .type.highlight .check input:checked+.slider{background-color:#87ff6f}ks-cookie-popup[requirement] .type.highlight .check input:checked+.slider:before{background-color:#198d15}@media (max-width: 700px){ks-cookie-popup .message{-ms-flex-direction:column;flex-direction:column;height:160px;font-size:14px}ks-cookie-popup .message p{margin:0 0 14px 0}ks-cookie-popup .settings{-ms-flex-pack:start;justify-content:flex-start}ks-cookie-popup[hide]{-webkit-transform:translateY(670px);transform:translateY(670px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(600px);transform:translateY(600px)}ks-cookie-popup[requirement] .message{height:120px}ks-cookie-popup[requirement][hide]{-webkit-transform:translateY(560px);transform:translateY(560px)}ks-cookie-popup[requirement]:not([show]){-webkit-transform:translateY(560px);transform:translateY(560px)}}@media (max-height: 700px){ks-cookie-popup .settings{height:400px}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(400px);transform:translateY(400px)}ks-cookie-popup[hide]{-webkit-transform:translateY(520px);transform:translateY(520px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(520px);transform:translateY(520px);display:none}}@media (max-height: 600px){ks-cookie-popup .settings{height:300px}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(300px);transform:translateY(300px)}ks-cookie-popup[hide]{-webkit-transform:translateY(420px);transform:translateY(420px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(420px);transform:translateY(420px)}}";
 
@@ -28404,7 +28418,7 @@ var DataLayer;
     await pageviewed;
     // @ts-ignore: Crypto type error
     eventID = crypto.randomUUID();
-    const data = Object.assign(Object.assign({ event: 'ks.checkout', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderCoupon: order.coupon, ecommerce: {
+    const data = Object.assign(Object.assign({ event: 'ks.checkout', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderShippingTime: order.totalShippingTimeDays, orderCoupon: order.coupon, ecommerce: {
         items: enchancedEcommerceItems(order.products)
       }, uaecommerce: { ecommerce: {
           checkout: {
@@ -28423,7 +28437,7 @@ var DataLayer;
     await pageviewed;
     // @ts-ignore: Crypto type error
     eventID = crypto.randomUUID();
-    const data = Object.assign(Object.assign({ event: 'ks.orderForm', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderCoupon: order.coupon, ecommerce: {
+    const data = Object.assign(Object.assign({ event: 'ks.orderForm', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderShippingTime: order.totalShippingTimeDays, orderCoupon: order.coupon, ecommerce: {
         items: enchancedEcommerceItems(order.products)
       }, uaecommerce: { ecommerce: {
           checkout: {
@@ -28442,7 +28456,7 @@ var DataLayer;
     await pageviewed;
     // @ts-ignore: Crypto type error
     eventID = crypto.randomUUID();
-    const data = Object.assign(Object.assign({ event: 'ks.order', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderId: order.id, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderCoupon: order.coupon, ecomm_prodid: JSON.stringify(Object.values(order.products).map(product => product.id)), ecomm_pagetype: 'purchase', ecomm_totalvalue: order.productValue, ecommerce: {
+    const data = Object.assign(Object.assign({ event: 'ks.order', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderId: order.id, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderShippingTime: order.totalShippingTimeDays, orderCoupon: order.coupon, ecomm_prodid: JSON.stringify(Object.values(order.products).map(product => product.id)), ecomm_pagetype: 'purchase', ecomm_totalvalue: order.productValue, ecommerce: {
         transaction_id: order.id,
         value: order.totalValue,
         currency: order.currency,
