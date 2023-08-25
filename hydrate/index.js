@@ -5233,6 +5233,11 @@ window.iziBindingDelete = () => {
   return jsonfetch(`${api}/bindingdelete`, {})
     .then(response => response.json());
 };
+function CartUpdate(productId) {
+  window.iziCanBeBound(productId)
+    .then(canBeBound => canBeBound ?
+    window.iziAddToCart(productId) : null);
+}
 window.iziCanBeBound = (productId) => {
   const api = commonDynamic.get('api').inpostFrontend;
   return jsonfetch(`${api}/canbebound`, {
@@ -5240,10 +5245,10 @@ window.iziCanBeBound = (productId) => {
   })
     .then(response => response.json());
 };
-window.iziAddToCart = (id) => {
+window.iziAddToCart = (productId) => {
   const api = commonDynamic.get('api').inpostFrontend;
   return jsonfetch(`${api}/addtocart`, {
-    product_id: id
+    product_id: productId
   })
     .then(response => response.json());
 };
@@ -13389,6 +13394,7 @@ function update(data) {
   Object.keys(data).map(key => {
     cart.set(key, data[key]);
   });
+  CartUpdate(0);
 }
 function loading() {
   cart.set("loading", cart.get("loading") + 1);
@@ -31483,6 +31489,7 @@ async function addToCart(product, place = 1) {
     navbar.IncrementCart(product.quantity.toString());
     OpenSuggestions(product.id, product.name);
     DataLayer.addToCart(product, data.event);
+    CartUpdate(product.id);
   })
     .catch(error => {
     errorpopup.show(error);

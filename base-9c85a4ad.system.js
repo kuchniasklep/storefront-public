@@ -1,1 +1,0 @@
-System.register(["./inpost-pay-a0f0489f.system.js"],(function(){"use strict";return{setters:[function(){}],execute:function(){window.googleConsentListeners=[];window.addConsentListener=function(n){window.googleConsentListeners.push(n)};window.googleConsentListeners.push((function(n){return console.log(n)}))}}}));
