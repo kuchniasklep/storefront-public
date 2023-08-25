@@ -5185,6 +5185,11 @@ const commonDynamic = createStore({
   consent: {}
 });
 
+function iziGetBinding() {
+  const api = commonDynamic.get('api').inpostFrontend;
+  return jsonfetch(`${api}/getbinding`, {})
+    .then(response => response.json());
+}
 window.iziGetPayData = (prefix, phoneNumber, bindingPlace) => {
   const api = commonDynamic.get('api').inpostFrontend;
   const browser = window.iziGetBrowserData();
@@ -5232,6 +5237,7 @@ window.iziMobileLink = () => {
     .then(response => response.json());
 };
 function InpostUpdateProductCount(count) {
+  console.log("InpostUpdateCount");
   const event = new CustomEvent("inpost-update-count", { detail: count });
   const iziButtonsCollection = Array.from(document.getElementsByTagName("inpost-izi-button"));
   iziButtonsCollection.forEach(el => el.dispatchEvent(event));
@@ -12564,7 +12570,7 @@ class Card {
 
 const cart = createStore({});
 
-const cartButtonsCss = "ks-cart-buttons{display:block;position:relative;margin-top:20px}ks-cart-buttons>.confirm{-ms-flex:1;flex:1;width:100%;font-size:28px;font-weight:700;padding:20px}ks-cart-buttons ks-button{height:50px}ks-cart-buttons ks-button button{font-weight:700;font-size:17px;font-family:var(--font-emphasis)}ks-cart-buttons inpost-izi-button>*{width:100% !important}";
+const cartButtonsCss = "ks-cart-buttons{display:block;position:relative;margin-top:20px}ks-cart-buttons>.confirm{-ms-flex:1;flex:1;width:100%;font-size:28px;font-weight:700;padding:20px}ks-cart-buttons ks-button{height:50px}ks-cart-buttons ks-button button{font-weight:700;font-size:17px;font-family:var(--font-emphasis)}";
 
 class CartButtons {
   constructor(hostRef) {
@@ -12586,10 +12592,6 @@ class CartButtons {
   componentDidLoad() {
     this.LoadingWatcher(cart.get("loading"));
     cart.onChange("loading", (loading) => this.LoadingWatcher(loading));
-    this.componentDidUpdate();
-  }
-  componentDidUpdate() {
-    window.handleInpostIziButtons();
   }
   async clickHandler() {
     if (!cart.get("loading")) {
@@ -12613,7 +12615,7 @@ class CartButtons {
     return [
       loading ? hAsync("ks-loader", null) : null,
       hAsync("ks-button", { secondary: true, disabled: loading, onClick: () => this.clickHandler(), name: cart.get("strings").submitButton }),
-      hAsync("inpost-izi-button", { name: "", masked_phone_number: "", language: "pl", variant: "secondary", basket: "true", dark_mode: "true", binding_place: "BASKET_SUMMARY" })
+      hAsync("ks-inpost-pay", { binding_place: "BASKET_SUMMARY", count: cart.get("productAmount") })
     ];
   }
   get root() { return getElement(this); }
@@ -13686,7 +13688,7 @@ class CartMessage {
   }; }
 }
 
-const cartProductCss = "ks-cart-product{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;font-size:16px;border-bottom:#ededed 1px solid}ks-cart-product:last-child{border-bottom:none}ks-cart-product .description{display:grid;grid-template-columns:1fr 110px 100px 50px;grid-template-rows:auto auto;gap:0px 5px;grid-template-areas:\"name     price count remove\"\n        \"shipping price count remove\";-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;-ms-flex:1;flex:1;padding:10px 0px}ks-cart-product:not([removable]) .description{grid-template-columns:1fr 110px 100px;grid-template-areas:\"name     price count\"\n        \"shipping price count\"}ks-cart-product:not([removable]) .remove-container{display:none}ks-cart-product .name{grid-area:name;color:inherit !important;text-decoration:none !important}ks-cart-product .price{grid-area:price;font-family:var(--font-emphasis);text-align:center}ks-cart-product .count{grid-area:count}ks-cart-product .amount{text-align:center}ks-cart-product .remove-container{grid-area:remove}ks-cart-product .shipping{grid-area:shipping;font-family:var(--font-emphasis);font-weight:700}ks-cart-product .remove{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-color:transparent;border:#d9d9d9 solid 1px;border-radius:50px;width:40px;height:40px;margin:5px}ks-cart-product .product-image{width:90px;height:90px;max-width:90px;max-height:90px;padding:10px;-webkit-box-sizing:border-box;box-sizing:border-box;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}@media only screen and (max-width: 860px){ks-cart-product .description{grid-template-rows:auto auto auto;grid-template-columns:auto auto 1fr;gap:5px 5px;grid-template-areas:\"name   name     name\"\n            \"price  shipping count\"}ks-cart-product:not([removable]) .description{grid-template-columns:auto auto 1fr;gap:5px 10px;grid-template-areas:\"name     name name\"\n            \"shipping price count\"}ks-cart-product:not([removable]) .amount{text-align:left !important}ks-cart-product .price{text-align:center;font-weight:700;color:#e21334}ks-cart-product .name{margin-bottom:-5px}}@media only screen and (max-width: 640px){ks-cart-product{-ms-flex-direction:column;flex-direction:column;position:relative}ks-cart-product .description{grid-template-rows:auto auto;grid-template-columns:auto auto auto;gap:5px 5px;grid-template-areas:\"name   name\"\n            \"price  shipping\"\n            \"count  count\"\n            \"remove remove\";text-align:center;justify-items:stretch}ks-cart-product:not([removable]) .description{grid-template-rows:auto auto;grid-template-columns:1fr auto 1fr;grid-template-areas:\"name   name     name\"\n            \"price  shipping count\"}ks-cart-product .price{text-align:right}ks-cart-product .count{text-align:center;margin-top:5px}ks-cart-product .shipping{text-align:left}ks-cart-product .remove-container{position:absolute;text-align:right;top:5px;right:0px}ks-cart-product .product-image{width:100%;height:100%;max-width:180px;max-height:180px}}";
+const cartProductCss = "ks-cart-product{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;font-size:16px;border-bottom:#ededed 1px solid}ks-cart-product:last-child{border-bottom:none}ks-cart-product .description{display:grid;grid-template-columns:1fr 110px 100px 50px;grid-template-rows:auto auto;gap:0px 5px;grid-template-areas:\"name     price count remove\"\n        \"shipping price count remove\";-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;-ms-flex:1;flex:1;padding:10px 0px}ks-cart-product:not([removable]) .description{grid-template-columns:1fr 110px 100px;grid-template-areas:\"name     price count\"\n        \"shipping price count\"}ks-cart-product:not([removable]) .remove-container{display:none}ks-cart-product .name{grid-area:name;color:inherit !important;text-decoration:none !important}ks-cart-product .price{grid-area:price;font-family:var(--font-emphasis);text-align:center}ks-cart-product .count{grid-area:count}ks-cart-product .amount{text-align:center}ks-cart-product .remove-container{grid-area:remove}ks-cart-product .shipping{grid-area:shipping;font-family:var(--font-emphasis);font-weight:700}ks-cart-product .remove{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-color:transparent;border:#d9d9d9 solid 1px;border-radius:50px;width:40px;height:40px;margin:5px}ks-cart-product .product-image{width:90px;height:90px;max-width:90px;max-height:90px;padding:10px;-webkit-box-sizing:border-box;box-sizing:border-box;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}@media only screen and (max-width: 860px){ks-cart-product .description{grid-template-rows:auto auto;grid-template-columns:auto auto 1fr;gap:5px 5px;grid-template-areas:\"name   name     name  remove\"\n            \"price  shipping count remove\"}ks-cart-product:not([removable]) .description{grid-template-columns:auto auto 1fr;gap:5px 10px;grid-template-areas:\"name     name name\"\n            \"shipping price count\"}ks-cart-product:not([removable]) .amount{text-align:left !important}ks-cart-product .price{text-align:center;font-weight:700;color:#e21334}ks-cart-product .name{margin-bottom:-5px}}@media only screen and (max-width: 640px){ks-cart-product{-ms-flex-direction:column;flex-direction:column;position:relative}ks-cart-product .description{grid-template-rows:auto auto;grid-template-columns:auto auto auto;gap:5px 5px;grid-template-areas:\"name   name\"\n            \"price  shipping\"\n            \"count  count\"\n            \"remove remove\";text-align:center;justify-items:stretch}ks-cart-product:not([removable]) .description{grid-template-rows:auto auto;grid-template-columns:1fr auto 1fr;grid-template-areas:\"name   name     name\"\n            \"price  shipping count\"}ks-cart-product .price{text-align:right}ks-cart-product .count{text-align:center;margin-top:5px}ks-cart-product .shipping{text-align:left}ks-cart-product .remove-container{position:absolute;text-align:right;top:5px;right:0px}ks-cart-product .product-image{width:100%;height:100%;max-width:180px;max-height:180px}}";
 
 class CartProduct {
   constructor(hostRef) {
@@ -30747,7 +30749,7 @@ const productDynamic = createStore({
   adminBar: {}
 });
 
-const productCss = "ks-page-product>ks-page-base>h3{text-align:center;margin-top:15px}ks-page-product>ks-page-base>ks-product-container{margin-bottom:15px}inpost-izi-button{margin-bottom:-15px;display:block}";
+const productCss = "ks-page-product>ks-page-base>h3{text-align:center;margin-top:15px}ks-page-product>ks-page-base>ks-product-container{margin-bottom:15px}ks-inpost-pay{margin-bottom:-15px}";
 
 class PageProduct {
   constructor(hostRef) {
@@ -30817,7 +30819,7 @@ class PageProduct {
       : null, hAsync("ks-product-info", null, product.get('traits') ?
       hAsync("ks-product-traits", null)
       : null, hAsync("ks-product-purchase", { cartText: common.get('translations').addToCart, availabilityText: strings.notifyAvailability }), product.get("availability") > 0 ?
-      hAsync("inpost-izi-button", { name: "", masked_phone_number: "", "data-product-id": product.get('id'), language: "pl", variant: "secondary", basket: "false", dark_mode: "true", count: product.get('count'), binding_place: "PRODUCT_CARD" })
+      hAsync("ks-inpost-pay", { binding_place: "PRODUCT_CARD", product: product.get("id") })
       : null, hAsync("ks-product-shipping", null), product.get('warranty') ?
       hAsync("ks-product-attribute", { style: { marginTop: "15px" }, icon: "tool", href: product.get('warrantyLink') }, product.get('warranty'))
       : null, points ?
@@ -33162,6 +33164,55 @@ class Section {
   }; }
 }
 
+const inpostPayCss = "ks-inpost-pay{display:block}ks-inpost-pay inpost-izi-button>*{width:100% !important}";
+
+class SeeMore$1 {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.binding_place = "BASKET_SUMMARY";
+    this.product_card = undefined;
+    this.order_create = undefined;
+    this.basket_popup = undefined;
+    this.product = "";
+    this.count = undefined;
+    this.data = undefined;
+  }
+  async componentWillLoad() {
+    iziGetBinding().then(response => {
+      this.data = response;
+    });
+  }
+  componentDidLoad() {
+    window.handleInpostIziButtons();
+  }
+  componentDidUpdate() {
+    window.handleInpostIziButtons();
+  }
+  render() {
+    var _a, _b, _c, _d;
+    const masked_phone = (_b = (_a = this.data) === null || _a === void 0 ? void 0 : _a.client_details) === null || _b === void 0 ? void 0 : _b.masked_phone_number;
+    const name = (_d = (_c = this.data) === null || _c === void 0 ? void 0 : _c.client_details) === null || _d === void 0 ? void 0 : _d.name;
+    return hAsync("inpost-izi-button", { "data-product-id": this.product, count: this.count, name: name, masked_phone_number: masked_phone, language: "pl", variant: "secondary", basket: this.binding_place == "BASKET_SUMMARY", dark_mode: "true", binding_place: this.binding_place });
+  }
+  static get style() { return inpostPayCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-inpost-pay",
+    "$members$": {
+      "binding_place": [513],
+      "product_card": [516],
+      "order_create": [516],
+      "basket_popup": [516],
+      "product": [513],
+      "count": [514],
+      "data": [32]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": [["binding_place", "binding_place"], ["product_card", "product_card"], ["order_create", "order_create"], ["basket_popup", "basket_popup"], ["product", "product"], ["count", "count"]]
+  }; }
+}
+
 const seeMoreCss = "ks-see-more{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;margin:15px 0}ks-see-more a{display:block;padding:5px 30px;border:none;border-radius:50px;background-color:white;color:#151515 !important;-webkit-box-shadow:0px 2px 6px rgba(0, 0, 0, 0.18);box-shadow:0px 2px 6px rgba(0, 0, 0, 0.18);font-size:.875rem;line-height:40px;text-align:center;text-decoration:none !important;-webkit-transform:scale(1);transform:scale(1);transition:box-shadow 0.2s ease,\n                -webkit-transform 0.2s ease;-webkit-transition:-webkit-box-shadow 0.2s ease,\n                -webkit-transform 0.2s ease;transition:-webkit-box-shadow 0.2s ease,\n                -webkit-transform 0.2s ease;transition:box-shadow 0.2s ease,\n                transform 0.2s ease;transition:box-shadow 0.2s ease,\n                transform 0.2s ease,\n                -webkit-box-shadow 0.2s ease,\n                -webkit-transform 0.2s ease;transition:box-shadow 0.2s ease,\n                transform 0.2s ease,\n                -webkit-transform 0.2s ease}ks-see-more a:hover{-webkit-transform:scale(1.05);transform:scale(1.05);-webkit-box-shadow:0px 2px 12px rgba(0, 0, 0, 0.18);box-shadow:0px 2px 12px rgba(0, 0, 0, 0.18)}ks-see-more a:active{-webkit-transform:scale(1.02);transform:scale(1.02);-webkit-box-shadow:0px 2px 8px rgba(0, 0, 0, 0.18);box-shadow:0px 2px 8px rgba(0, 0, 0, 0.18)}";
 
 class SeeMore {
@@ -33789,6 +33840,7 @@ registerComponents([
   RecipeProcedure,
   ReviewProduct,
   Section,
+  SeeMore$1,
   SeeMore,
   SidePanel,
   Sorting,
