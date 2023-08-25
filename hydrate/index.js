@@ -5213,7 +5213,7 @@ window.iziGetIsBound = () => {
     }
     const data = await fetchData();
     const timeout = counter < 15 ? 2000 : (counter < 30 ? 4000 : 8000);
-    if (!data)
+    if (!data || Object.keys(data).length === 0)
       setTimeout(() => poll(resolve, reject, counter + 1), timeout);
     else
       resolve(data);
