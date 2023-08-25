@@ -5203,8 +5203,24 @@ window.iziGetPayData = (prefix, phoneNumber, bindingPlace) => {
 };
 window.iziGetIsBound = () => {
   const api = commonDynamic.get('api').inpostFrontend;
-  return jsonfetch(`${api}/isbound`, {})
-    .then(response => response.json());
+  const fetchData = async () => jsonfetch(`${api}/isbound`, {})
+    .then(response => response.json())
+    .catch(() => null);
+  const poll = async (resolve, reject, counter) => {
+    if (counter > 45) {
+      reject();
+      return;
+    }
+    const data = await fetchData();
+    const timeout = counter < 15 ? 2000 : (counter < 30 ? 4000 : 8000);
+    if (!data)
+      setTimeout(() => poll(resolve, reject, counter + 1), timeout);
+    else
+      resolve(data);
+  };
+  return new Promise((resolve, reject) => {
+    return poll(resolve, reject, 1);
+  });
 };
 window.iziGetOrderComplete = () => {
   return Promise.resolve({
