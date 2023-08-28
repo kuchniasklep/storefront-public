@@ -5201,9 +5201,9 @@ window.iziGetPayData = (prefix, phoneNumber, bindingPlace) => {
   })
     .then(response => response.json());
 };
-async function poll(fetchFunction, maxCount = 10, delay = 200) {
+async function poll(fetchFunction, maxCount = 0, delay = 200) {
   const pass = async (resolve, reject, counter) => {
-    if (counter > maxCount) {
+    if (maxCount > 0 && counter >= maxCount) {
       reject();
       return;
     }
@@ -5219,9 +5219,10 @@ async function poll(fetchFunction, maxCount = 10, delay = 200) {
 }
 window.iziGetIsBound = () => {
   const api = commonDynamic.get('api').inpostFrontend;
-  return poll(() => jsonfetch(`${api}/isbound`, {})
+  const fetchData = () => jsonfetch(`${api}/isbound`, {})
     .then(response => response.json())
-    .catch(() => null));
+    .catch(() => null);
+  return poll(fetchData, 1);
 };
 window.iziGetOrderComplete = () => {
   return Promise.resolve({
