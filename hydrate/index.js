@@ -5403,7 +5403,6 @@ function messageError() {
   return document.querySelector('ks-error-popup');
 }
 
-var iziGetIsBoundController = new AbortController();
 function iziGetBinding() {
   const api = commonDynamic.get('api').inpostFrontend;
   return jsonfetch(`${api}/getbinding`, {})
@@ -5418,8 +5417,7 @@ window.iziGetPayData = (prefix, phoneNumber, bindingPlace) => {
     phoneNumber: phoneNumber,
     bindingPlace: bindingPlace
   })
-    .then(response => response.json())
-    .then(() => iziGetIsBoundController.abort());
+    .then(response => response.json());
 };
 async function poll(fetchFunction, maxCount = 0, delay = 200) {
   const pass = async (resolve, reject, counter) => {
@@ -5470,8 +5468,7 @@ window.iziGetOrderComplete = () => {
 window.iziBindingDelete = () => {
   const api = commonDynamic.get('api').inpostFrontend;
   return jsonfetch(`${api}/bindingdelete`, {})
-    .then(response => response.json())
-    .then(() => iziGetIsBoundController.abort());
+    .then(response => response.json());
 };
 function CartUpdate(productId) {
   window.iziCanBeBound(productId)
