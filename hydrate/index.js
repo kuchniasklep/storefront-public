@@ -5214,7 +5214,7 @@ async function poll(fetchFunction, maxCount = 0, delay = 200) {
       resolve(data);
   };
   return new Promise((resolve, reject) => {
-    return pass(resolve, reject, 1);
+    return pass(resolve, reject, 0);
   });
 }
 window.iziGetIsBound = () => {
