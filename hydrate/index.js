@@ -5186,6 +5186,223 @@ const commonDynamic = createStore({
   consent: {}
 });
 
+const cart = createStore({});
+
+async function reloadCart() {
+  update$1(await fetch$1(cart.get('api').reload));
+}
+async function removeProduct(id) {
+  const data = await ProductLoadingWrapper(async () => {
+    return fetch$1(cart.get('api').productRemove, { "id": id });
+  });
+  if (data) {
+    if (data.products.length == 0)
+      document.location.reload();
+    else
+      ShowMessageFromData("Błąd usuwania produktu", data, async (cleanedData) => {
+        update$1(cleanedData);
+        if ('discount' in cleanedData == false)
+          this.RemoveDiscount();
+      });
+  }
+  const product = document.querySelector(`ks-cart-product[ikey="${id}"]`);
+  if (product)
+    product.ResetLoading();
+}
+var lastProductCountCall = {};
+async function productCount(id, count, last) {
+  if (lastProductCountCall[id]) {
+    lastProductCountCall[id] = () => ProductCountCall(id, count, last);
+  }
+  else {
+    lastProductCountCall[id] = () => { };
+    ProductCountCall(id, count, last).then(() => {
+      if (lastProductCountCall[id]) {
+        lastProductCountCall[id]();
+        lastProductCountCall[id] = undefined;
+      }
+    });
+  }
+}
+async function ProductCountCall(id, current, last) {
+  const data = await ProductLoadingWrapper(async () => {
+    return fetch$1(cart.get('api').productCount, {
+      "id": id,
+      "ilosc": current.toString()
+    });
+  });
+  if (data) {
+    ShowMessageFromData("Błąd ilości produktu", data, async (cleanedData) => {
+      if ('error' in cleanedData) {
+        messagePopup().show("Błąd ilości produktu", cleanedData.error.message);
+        cart.set("products", GetCorrectedProductAmounts(id, cleanedData.error.amount, cleanedData.error.maxAmount));
+      }
+      else
+        await update$1(cleanedData);
+      if ('discount' in cleanedData == false)
+        RemoveDiscount();
+    });
+  }
+  else {
+    cart.set("products", GetCorrectedProductAmounts(id, last));
+    this.SetAmount(last, `ks-cart-product[ikey="${id}"] ks-cart-spinner`);
+  }
+}
+function GetCorrectedProductAmounts(id, amount, maxAmount) {
+  const products = cart.get("products");
+  products[id].quantity = amount;
+  if (maxAmount)
+    products[id].maxQuantity = maxAmount;
+  return products;
+}
+/*function GetDataWithoutProducts(data: any) {
+    const dataWithoutProducts = data;
+    delete dataWithoutProducts.products;
+    return dataWithoutProducts;
+}
+
+function SetAmount(amount: number, querySelector: string) {
+    console.log("test");
+    const component = document.querySelector(querySelector) as any;
+    if(component && 'SetAmount' in component)
+        component.SetAmount(amount);
+}*/
+async function addDeal(id) {
+  cart.set("loadingDeals", true);
+  const data = await fetch$1(cart.get('api').addDeal, { "id": id });
+  cart.set("loadingDeals", false);
+  if (!data || 'error' in data) {
+    messagePopup().show("Błąd dodawania gratisu", data.error.message);
+    return;
+  }
+  else
+    await update$1(data);
+  for (const key in cart.get('products')) {
+    const product = cart.get('products')[key];
+    const spinner = document.querySelector(`ks-cart-product[product-id="${product.id}"] ks-cart-spinner`);
+    spinner === null || spinner === void 0 ? void 0 : spinner.SetAmount(product.quantity);
+  }
+}
+async function countryChange(code) {
+  StartLoading(`ks-cart-select-shipping`);
+  StartLoading(`ks-cart-select-payment`);
+  update$1(await fetch$1(cart.get('api').countryChange, { "data": code }));
+  ResetLoading(`ks-cart-select-shipping`);
+  ResetLoading(`ks-cart-select-payment`);
+}
+async function shippingChange(id) {
+  StartLoading(`ks-cart-select-payment`);
+  update$1(await fetch$1(cart.get('api').shippingChange, { "data": id.toString() }));
+  ResetLoading(`ks-cart-select-payment`);
+}
+async function paymentChange(id) {
+  update$1(await fetch$1(cart.get('api').paymentChange, { "data": id.toString() }));
+}
+async function discountRemove() {
+  update$1(await fetch$1(cart.get('api').discountRemove));
+  RemoveDiscount();
+}
+function RemoveDiscount() {
+  cart.set("discount", {});
+}
+async function discountCodeAdd(code) {
+  const data = await fetch$1(cart.get('api').discountCode, { "data": code });
+  ShowMessageFromData("Błąd dodawania kodu", data, (pData) => {
+    update$1(pData);
+  });
+  ResetLoading(`ks-cart-discount-code`);
+}
+async function discountPointsAdd(points) {
+  const data = await fetch$1(cart.get('api').discountPoints, { "data": points.toString() });
+  ScrollToElement('ks-cart-discount-container ks-cart-heading');
+  update$1(data);
+  ResetLoading(`ks-cart-discount-points`);
+}
+function ScrollToElement(querySelector) {
+  const heading = document.querySelectorAll(querySelector);
+  let scrollAmount = 0;
+  if (heading.length == 2)
+    scrollAmount = heading[1].getBoundingClientRect().top - heading[0].getBoundingClientRect().top;
+  if (scrollAmount)
+    window.scrollBy(0, -scrollAmount);
+}
+async function easyprotectChange(insured) {
+  const api = cart.get("api").easyprotectChange;
+  loading();
+  await jsonfetch(api, insured)
+    .then(response => response.json())
+    .then(json => update$1(json));
+  loaded();
+}
+async function easyprotectRemove(id) {
+  const api = cart.get("api").easyprotectRemove;
+  loading();
+  await formfetch(api, { "id": id })
+    .then(response => response.json())
+    .then(json => update$1(json));
+  loaded();
+}
+function StartLoading(querySelector) {
+  const component = document.querySelector(querySelector);
+  if (component && 'StartLoading' in component)
+    component.StartLoading();
+}
+function ResetLoading(querySelector) {
+  const component = document.querySelector(querySelector);
+  if (component && 'ResetLoading' in component)
+    component.ResetLoading();
+}
+async function ShowMessageFromData(name, data, callback) {
+  if ('message' in data) {
+    messagePopup().show(name, data.message);
+    delete data.message;
+    // Update state after modal animation finishes.
+    setTimeout(() => {
+      callback(data);
+    }, 200);
+  }
+  else
+    callback(data);
+}
+async function ProductLoadingWrapper(func) {
+  cart.set("loadingProducts", cart.get("loadingProducts") + 1);
+  const output = await func();
+  cart.set("loadingProducts", cart.get("loadingProducts") - 1);
+  return output;
+}
+async function fetch$1(url, formProperties) {
+  loading();
+  return formfetch(url, formProperties)
+    .then(response => response.json())
+    .then(json => {
+    loaded();
+    return json;
+  })
+    .catch(error => {
+    loaded();
+    messageError().show(error);
+    return {};
+  });
+}
+function update$1(data) {
+  Object.keys(data).map(key => {
+    cart.set(key, data[key]);
+  });
+  CartUpdate(0);
+}
+function loading() {
+  cart.set("loading", cart.get("loading") + 1);
+}
+function loaded() {
+  cart.set("loading", cart.get("loading") - 1);
+}
+function messagePopup() {
+  return document.querySelector('ks-message-popup');
+}
+function messageError() {
+  return document.querySelector('ks-error-popup');
+}
+
 var iziGetIsBoundController = new AbortController();
 function iziGetBinding() {
   const api = commonDynamic.get('api').inpostFrontend;
@@ -5220,14 +5437,29 @@ async function poll(fetchFunction, maxCount = 0, delay = 200) {
     return pass(resolve, reject, 0);
   });
 }
+var pollCartAbortController = new AbortController;
+function iziPollCart() {
+  const api = commonDynamic.get('api').inpostFrontend;
+  const pollCart = () => jsonfetch(`${api}/detectchanges`, {}, pollCartAbortController.signal)
+    .then(response => response.json())
+    .then(data => {
+    if (data.cartUpdated) {
+      reloadCart();
+      setTimeout(pollCart, 500);
+    }
+  });
+  setTimeout(pollCart, 1500);
+}
 window.iziGetIsBound = () => {
   const api = commonDynamic.get('api').inpostFrontend;
-  iziGetIsBoundController.abort();
-  iziGetIsBoundController = new AbortController();
-  const fetchData = () => jsonfetch(`${api}/isbound`, {}, iziGetIsBoundController.signal)
+  const fetchData = () => jsonfetch(`${api}/isbound`, {})
     .then(response => response.json())
     .catch(() => null);
-  return poll(fetchData, 30);
+  return poll(fetchData, 0, 1500).then(response => {
+    if (Object.keys(response).length > 0)
+      iziPollCart();
+    return response;
+  });
 };
 window.iziGetOrderComplete = () => {
   return Promise.resolve({
@@ -8711,7 +8943,7 @@ function updateClickedSlide(e) {
   }
 }
 
-var update$1 = {
+var update = {
   updateSize: updateSize,
   updateSlides: updateSlides,
   updateAutoHeight: updateAutoHeight,
@@ -11016,7 +11248,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var prototypes = {
   modular: modular,
   eventsEmitter: eventsEmitter,
-  update: update$1,
+  update: update,
   translate: translate,
   transition: transition,
   slide: slide,
@@ -12598,8 +12830,6 @@ class Card {
   }; }
 }
 
-const cart = createStore({});
-
 const cartButtonsCss = "ks-cart-buttons{display:block;position:relative;margin-top:20px}ks-cart-buttons>.confirm{-ms-flex:1;flex:1;width:100%;font-size:28px;font-weight:700;padding:20px}ks-cart-buttons ks-button{height:50px}ks-cart-buttons ks-button button{font-weight:700;font-size:17px;font-family:var(--font-emphasis)}";
 
 class CartButtons {
@@ -13203,218 +13433,6 @@ class CartEasyprotect {
     "$lazyBundleId$": "-",
     "$attrsToReflect$": []
   }; }
-}
-
-async function removeProduct(id) {
-  const data = await ProductLoadingWrapper(async () => {
-    return fetch$1(cart.get('api').productRemove, { "id": id });
-  });
-  if (data) {
-    if (data.products.length == 0)
-      document.location.reload();
-    else
-      ShowMessageFromData("Błąd usuwania produktu", data, async (cleanedData) => {
-        update(cleanedData);
-        if ('discount' in cleanedData == false)
-          this.RemoveDiscount();
-      });
-  }
-  const product = document.querySelector(`ks-cart-product[ikey="${id}"]`);
-  if (product)
-    product.ResetLoading();
-}
-var lastProductCountCall = {};
-async function productCount(id, count, last) {
-  if (lastProductCountCall[id]) {
-    lastProductCountCall[id] = () => ProductCountCall(id, count, last);
-  }
-  else {
-    lastProductCountCall[id] = () => { };
-    ProductCountCall(id, count, last).then(() => {
-      if (lastProductCountCall[id]) {
-        lastProductCountCall[id]();
-        lastProductCountCall[id] = undefined;
-      }
-    });
-  }
-}
-async function ProductCountCall(id, current, last) {
-  const data = await ProductLoadingWrapper(async () => {
-    return fetch$1(cart.get('api').productCount, {
-      "id": id,
-      "ilosc": current.toString()
-    });
-  });
-  if (data) {
-    ShowMessageFromData("Błąd ilości produktu", data, async (cleanedData) => {
-      if ('error' in cleanedData) {
-        messagePopup().show("Błąd ilości produktu", cleanedData.error.message);
-        cart.set("products", GetCorrectedProductAmounts(id, cleanedData.error.amount, cleanedData.error.maxAmount));
-      }
-      else
-        await update(cleanedData);
-      if ('discount' in cleanedData == false)
-        RemoveDiscount();
-    });
-  }
-  else {
-    cart.set("products", GetCorrectedProductAmounts(id, last));
-    this.SetAmount(last, `ks-cart-product[ikey="${id}"] ks-cart-spinner`);
-  }
-}
-function GetCorrectedProductAmounts(id, amount, maxAmount) {
-  const products = cart.get("products");
-  products[id].quantity = amount;
-  if (maxAmount)
-    products[id].maxQuantity = maxAmount;
-  return products;
-}
-/*function GetDataWithoutProducts(data: any) {
-    const dataWithoutProducts = data;
-    delete dataWithoutProducts.products;
-    return dataWithoutProducts;
-}
-
-function SetAmount(amount: number, querySelector: string) {
-    console.log("test");
-    const component = document.querySelector(querySelector) as any;
-    if(component && 'SetAmount' in component)
-        component.SetAmount(amount);
-}*/
-async function addDeal(id) {
-  cart.set("loadingDeals", true);
-  const data = await fetch$1(cart.get('api').addDeal, { "id": id });
-  cart.set("loadingDeals", false);
-  if (!data || 'error' in data) {
-    messagePopup().show("Błąd dodawania gratisu", data.error.message);
-    return;
-  }
-  else
-    await update(data);
-  for (const key in cart.get('products')) {
-    const product = cart.get('products')[key];
-    const spinner = document.querySelector(`ks-cart-product[product-id="${product.id}"] ks-cart-spinner`);
-    spinner === null || spinner === void 0 ? void 0 : spinner.SetAmount(product.quantity);
-  }
-}
-async function countryChange(code) {
-  StartLoading(`ks-cart-select-shipping`);
-  StartLoading(`ks-cart-select-payment`);
-  update(await fetch$1(cart.get('api').countryChange, { "data": code }));
-  ResetLoading(`ks-cart-select-shipping`);
-  ResetLoading(`ks-cart-select-payment`);
-}
-async function shippingChange(id) {
-  StartLoading(`ks-cart-select-payment`);
-  update(await fetch$1(cart.get('api').shippingChange, { "data": id.toString() }));
-  ResetLoading(`ks-cart-select-payment`);
-}
-async function paymentChange(id) {
-  update(await fetch$1(cart.get('api').paymentChange, { "data": id.toString() }));
-}
-async function discountRemove() {
-  update(await fetch$1(cart.get('api').discountRemove));
-  RemoveDiscount();
-}
-function RemoveDiscount() {
-  cart.set("discount", {});
-}
-async function discountCodeAdd(code) {
-  const data = await fetch$1(cart.get('api').discountCode, { "data": code });
-  ShowMessageFromData("Błąd dodawania kodu", data, (pData) => {
-    update(pData);
-  });
-  ResetLoading(`ks-cart-discount-code`);
-}
-async function discountPointsAdd(points) {
-  const data = await fetch$1(cart.get('api').discountPoints, { "data": points.toString() });
-  ScrollToElement('ks-cart-discount-container ks-cart-heading');
-  update(data);
-  ResetLoading(`ks-cart-discount-points`);
-}
-function ScrollToElement(querySelector) {
-  const heading = document.querySelectorAll(querySelector);
-  let scrollAmount = 0;
-  if (heading.length == 2)
-    scrollAmount = heading[1].getBoundingClientRect().top - heading[0].getBoundingClientRect().top;
-  if (scrollAmount)
-    window.scrollBy(0, -scrollAmount);
-}
-async function easyprotectChange(insured) {
-  const api = cart.get("api").easyprotectChange;
-  loading();
-  await jsonfetch(api, insured)
-    .then(response => response.json())
-    .then(json => update(json));
-  loaded();
-}
-async function easyprotectRemove(id) {
-  const api = cart.get("api").easyprotectRemove;
-  loading();
-  await formfetch(api, { "id": id })
-    .then(response => response.json())
-    .then(json => update(json));
-  loaded();
-}
-function StartLoading(querySelector) {
-  const component = document.querySelector(querySelector);
-  if (component && 'StartLoading' in component)
-    component.StartLoading();
-}
-function ResetLoading(querySelector) {
-  const component = document.querySelector(querySelector);
-  if (component && 'ResetLoading' in component)
-    component.ResetLoading();
-}
-async function ShowMessageFromData(name, data, callback) {
-  if ('message' in data) {
-    messagePopup().show(name, data.message);
-    delete data.message;
-    // Update state after modal animation finishes.
-    setTimeout(() => {
-      callback(data);
-    }, 200);
-  }
-  else
-    callback(data);
-}
-async function ProductLoadingWrapper(func) {
-  cart.set("loadingProducts", cart.get("loadingProducts") + 1);
-  const output = await func();
-  cart.set("loadingProducts", cart.get("loadingProducts") - 1);
-  return output;
-}
-async function fetch$1(url, formProperties) {
-  loading();
-  return formfetch(url, formProperties)
-    .then(response => response.json())
-    .then(json => {
-    loaded();
-    return json;
-  })
-    .catch(error => {
-    loaded();
-    messageError().show(error);
-    return {};
-  });
-}
-function update(data) {
-  Object.keys(data).map(key => {
-    cart.set(key, data[key]);
-  });
-  CartUpdate(0);
-}
-function loading() {
-  cart.set("loading", cart.get("loading") + 1);
-}
-function loaded() {
-  cart.set("loading", cart.get("loading") - 1);
-}
-function messagePopup() {
-  return document.querySelector('ks-message-popup');
-}
-function messageError() {
-  return document.querySelector('ks-error-popup');
 }
 
 const cartEasyprotectDialogCss = "ks-cart-easyprotect-dialog{display:block}ks-cart-easyprotect-dialog .hidden{display:none}ks-cart-easyprotect-dialog .content{background-color:var(--card-background);-webkit-box-shadow:var(--big-shadow);box-shadow:var(--big-shadow);color:var(--card-text-color);position:relative;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:720px;width:100%}ks-cart-easyprotect-dialog .content h2{font-size:24px;font-weight:700;text-align:center;margin-top:30px}ks-cart-easyprotect-dialog .content p{text-align:center;margin:10px 10px 20px 10px}ks-cart-easyprotect-dialog .content>.products .items{padding:10px 20px;max-height:320px;overflow-y:auto}ks-cart-easyprotect-dialog .content>.warranty .items{padding:0 20px 0 20px;max-height:270px;overflow-y:auto}ks-cart-easyprotect-dialog .content.hidden{display:none}ks-cart-easyprotect-dialog .content.hide{opacity:0;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-cart-easyprotect-dialog ks-button{z-index:20;position:relative;margin-top:20px}ks-cart-easyprotect-dialog ks-button[disabled]{border-top:#bebebe 1px solid}ks-cart-easyprotect-dialog ks-button button{background-color:var(--easyprotect-color);border-color:var(--easyprotect-color)}ks-cart-easyprotect-dialog ks-button button:hover{background-color:var(--easyprotect-color-hover) !important;border-color:var(--easyprotect-color-hover) !important}ks-cart-easyprotect-dialog ks-button button:active{background-color:var(--easyprotect-color-active) !important;border-color:var(--easyprotect-color-active) !important}ks-cart-easyprotect-dialog ks-button[disabled] button{background-color:#e2e2e2 !important;border-color:#e2e2e2 !important;color:#3d3d3d !important;cursor:auto}ks-cart-easyprotect-dialog ks-overlay .content{-webkit-animation:0.4s vertical-swipe-out 1;animation:0.4s vertical-swipe-out 1}ks-cart-easyprotect-dialog ks-overlay.active .content{-webkit-animation:0.4s vertical-swipe-in 1;animation:0.4s vertical-swipe-in 1}@media (max-width: 720px){ks-cart-easyprotect-dialog .content{height:100%}ks-cart-easyprotect-dialog .content>.products,ks-cart-easyprotect-dialog .content>.warranty{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;height:100%;max-height:100%;padding:0}ks-cart-easyprotect-dialog .content>.products>.items,ks-cart-easyprotect-dialog .content>.warranty>.items{padding:0 10px 0 10px;max-height:none}ks-cart-easyprotect-dialog ks-button{margin-top:auto}ks-cart-easyprotect-dialog .content p{margin:5px 10px 15px 10px}}@media (max-width: 420px){ks-cart-easyprotect-dialog .content h2{font-size:20px;margin:20px 10px 10px 10px}ks-cart-easyprotect-dialog .content p{font-size:15px}}ks-cart-easyprotect-dialog .content .close,ks-cart-easyprotect-dialog .content .back{position:absolute;top:20px;z-index:20;border-radius:50px;padding:10px;-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-cart-easyprotect-dialog .content .close:hover,ks-cart-easyprotect-dialog .content .back:hover{background-color:#f2f2f2}ks-cart-easyprotect-dialog .content .close:active,ks-cart-easyprotect-dialog .content .back:active{background-color:#dbdbdb}ks-cart-easyprotect-dialog .content .close{right:20px}ks-cart-easyprotect-dialog .content .back{left:20px}@media (max-width: 420px){ks-cart-easyprotect-dialog .content .close,ks-cart-easyprotect-dialog .content .back{padding:3px;top:17px}ks-cart-easyprotect-dialog .content .close{right:8px}ks-cart-easyprotect-dialog .content .back{left:8px}}ks-cart-easyprotect-dialog .content .loading{position:absolute;top:0;bottom:0;left:0;right:0;z-index:100;background-color:white;-webkit-animation:fade-in 0.3s ease;animation:fade-in 0.3s ease}";
@@ -30409,7 +30427,7 @@ class PageCart {
   componentWillLoad() {
     const cartDataElement = document.getElementById(this.cartData);
     const cartData = JSON.parse(cartDataElement.innerHTML);
-    update(cartData);
+    update$1(cartData);
     DataLayer.view_cart(cartData);
   }
   async RemoveProduct(event) {
