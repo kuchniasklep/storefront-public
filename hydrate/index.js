@@ -5443,8 +5443,8 @@ function iziPollCart() {
     .then(data => {
     if (data.cartUpdated) {
       reloadCart();
-      setTimeout(pollCart, 500);
     }
+    setTimeout(pollCart, 500);
   });
   setTimeout(pollCart, 1500);
 }
