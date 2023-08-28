@@ -5201,26 +5201,27 @@ window.iziGetPayData = (prefix, phoneNumber, bindingPlace) => {
   })
     .then(response => response.json());
 };
-window.iziGetIsBound = () => {
-  const api = commonDynamic.get('api').inpostFrontend;
-  const fetchData = async () => jsonfetch(`${api}/isbound`, {})
-    .then(response => response.json())
-    .catch(() => null);
-  const poll = async (resolve, reject, counter) => {
-    if (counter > 45) {
+async function poll(fetchFunction, maxCount = 10, delay = 200) {
+  const pass = async (resolve, reject, counter) => {
+    if (counter > maxCount) {
       reject();
       return;
     }
-    const data = await fetchData();
-    const timeout = counter < 15 ? 2000 : (counter < 30 ? 4000 : 8000);
+    const data = await fetchFunction();
     if (!data || Object.keys(data).length === 0)
-      setTimeout(() => poll(resolve, reject, counter + 1), timeout);
+      setTimeout(() => pass(resolve, reject, counter + 1), delay);
     else
       resolve(data);
   };
   return new Promise((resolve, reject) => {
-    return poll(resolve, reject, 1);
+    return pass(resolve, reject, 1);
   });
+}
+window.iziGetIsBound = () => {
+  const api = commonDynamic.get('api').inpostFrontend;
+  return poll(() => jsonfetch(`${api}/isbound`, {})
+    .then(response => response.json())
+    .catch(() => null));
 };
 window.iziGetOrderComplete = () => {
   return Promise.resolve({
@@ -5250,7 +5251,8 @@ window.iziAddToCart = (productId) => {
   return jsonfetch(`${api}/addtocart`, {
     product_id: productId
   })
-    .then(response => response.json());
+    .then(response => response.json())
+    .then(data => InpostUpdateProductCount(data.product_count));
 };
 window.iziMobileLink = () => {
   const api = commonDynamic.get('api').inpostFrontend;
@@ -13251,7 +13253,6 @@ async function ProductCountCall(id, current, last) {
   else {
     cart.set("products", GetCorrectedProductAmounts(id, last));
     this.SetAmount(last, `ks-cart-product[ikey="${id}"] ks-cart-spinner`);
-    InpostUpdateProductCount(current);
   }
 }
 function GetCorrectedProductAmounts(id, amount, maxAmount) {
