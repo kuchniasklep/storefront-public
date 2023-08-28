@@ -5186,6 +5186,7 @@ const commonDynamic = createStore({
   consent: {}
 });
 
+var iziGetIsBoundController = new AbortController();
 function iziGetBinding() {
   const api = commonDynamic.get('api').inpostFrontend;
   return jsonfetch(`${api}/getbinding`, {})
@@ -5200,7 +5201,8 @@ window.iziGetPayData = (prefix, phoneNumber, bindingPlace) => {
     phoneNumber: phoneNumber,
     bindingPlace: bindingPlace
   })
-    .then(response => response.json());
+    .then(response => response.json())
+    .then(() => iziGetIsBoundController.abort());
 };
 async function poll(fetchFunction, maxCount = 0, delay = 200) {
   const pass = async (resolve, reject, counter) => {
@@ -5218,7 +5220,6 @@ async function poll(fetchFunction, maxCount = 0, delay = 200) {
     return pass(resolve, reject, 0);
   });
 }
-var iziGetIsBoundController = new AbortController();
 window.iziGetIsBound = () => {
   const api = commonDynamic.get('api').inpostFrontend;
   iziGetIsBoundController.abort();
@@ -5237,7 +5238,8 @@ window.iziGetOrderComplete = () => {
 window.iziBindingDelete = () => {
   const api = commonDynamic.get('api').inpostFrontend;
   return jsonfetch(`${api}/bindingdelete`, {})
-    .then(response => response.json());
+    .then(response => response.json())
+    .then(() => iziGetIsBoundController.abort());
 };
 function CartUpdate(productId) {
   window.iziCanBeBound(productId)
