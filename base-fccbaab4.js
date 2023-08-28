@@ -1,1 +1,0 @@
-import"./inpost-pay-a8f6a07f.js";window.googleConsentListeners=[],window.addConsentListener=o=>{window.googleConsentListeners.push(o)},window.googleConsentListeners.push((o=>console.log(o)));

@@ -4971,14 +4971,15 @@ async function formfetch(url, formProperties) {
   }
   return internalfetch(url, body);
 }
-async function jsonfetch(url, data) {
-  return internalfetch(url, JSON.stringify(data));
+async function jsonfetch(url, data, signal) {
+  return internalfetch(url, JSON.stringify(data), signal);
 }
-async function internalfetch(url, body) {
+async function internalfetch(url, body, signal) {
   const headers = new Headers();
   headers.append('pragma', 'no-cache');
   headers.append('cache-control', 'no-cache');
   return fetch(url, {
+    signal: signal,
     method: 'POST',
     body: body,
     headers: headers,
@@ -5217,9 +5218,11 @@ async function poll(fetchFunction, maxCount = 0, delay = 200) {
     return pass(resolve, reject, 0);
   });
 }
+const iziGetIsBoundController = new AbortController();
 window.iziGetIsBound = () => {
   const api = commonDynamic.get('api').inpostFrontend;
-  const fetchData = () => jsonfetch(`${api}/isbound`, {})
+  iziGetIsBoundController.abort();
+  const fetchData = () => jsonfetch(`${api}/isbound`, {}, iziGetIsBoundController.signal)
     .then(response => response.json())
     .catch(() => null);
   return poll(fetchData, 1);
