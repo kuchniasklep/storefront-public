@@ -5218,14 +5218,15 @@ async function poll(fetchFunction, maxCount = 0, delay = 200) {
     return pass(resolve, reject, 0);
   });
 }
-const iziGetIsBoundController = new AbortController();
+var iziGetIsBoundController = new AbortController();
 window.iziGetIsBound = () => {
   const api = commonDynamic.get('api').inpostFrontend;
   iziGetIsBoundController.abort();
+  iziGetIsBoundController = new AbortController();
   const fetchData = () => jsonfetch(`${api}/isbound`, {}, iziGetIsBoundController.signal)
     .then(response => response.json())
     .catch(() => null);
-  return poll(fetchData, 1);
+  return poll(fetchData, 30);
 };
 window.iziGetOrderComplete = () => {
   return Promise.resolve({
