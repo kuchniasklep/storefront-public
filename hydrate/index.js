@@ -4961,7 +4961,7 @@ async function Fetch(url, body = null) {
     return response;
   });
 }
-async function formfetch(url, formProperties) {
+async function formfetch(url, formProperties, signal) {
   let body = null;
   if (formProperties) {
     body = new FormData();
@@ -4969,7 +4969,7 @@ async function formfetch(url, formProperties) {
       body.append(key, value);
     });
   }
-  return internalfetch(url, body);
+  return internalfetch(url, body, signal);
 }
 async function jsonfetch(url, data, signal) {
   return internalfetch(url, JSON.stringify(data), signal);
@@ -5188,13 +5188,268 @@ const commonDynamic = createStore({
 
 const cart = createStore({});
 
+var DataLayer;
+(function (DataLayer) {
+  var resolvepageview;
+  var pageviewed = new Promise(resolve => {
+    resolvepageview = () => {
+      resolve();
+    };
+  });
+  function facebookConversionAPI(dataLayer) {
+    jsonfetch('https://kuchniasklep.pl/api/fbconversion.php', dataLayer);
+  }
+  function customerData() {
+    const customer = commonDynamic.get('customer');
+    const customerDataAvaliable = commonDynamic.get('loggedIn') && customer;
+    return {
+      customerDataAvailable: customerDataAvaliable,
+      customerEmail: customerDataAvaliable ? customer.email : undefined,
+      customerFirstName: customerDataAvaliable ? customer.firstName : undefined,
+      customerLastName: customerDataAvaliable ? customer.lastName : undefined,
+      customerSubscriberStatus: customerDataAvaliable ? (customer.subscriber ? 1 : 0) : undefined,
+      customerCountryISO2: customerDataAvaliable ? customer.countryISO2 : undefined,
+      customerCity: customerDataAvaliable ? customer.city : undefined,
+      customerPhone: customerDataAvaliable ? customer.phone : undefined,
+      customerCurrency: customerDataAvaliable ? customer.currency : undefined,
+    };
+  }
+  async function pageview(eventID) {
+    var _a;
+    // @ts-ignore: Crypto type error
+    eventID = crypto.randomUUID();
+    const data = Object.assign({ event: 'ks.pageview', facebookEventId: eventID }, customerData());
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(data);
+    resolvepageview();
+    facebookConversionAPI(data);
+  }
+  DataLayer.pageview = pageview;
+  async function product(product, eventID = "") {
+    var _a, _b;
+    await pageviewed;
+    // @ts-ignore: Crypto type error
+    eventID = crypto.randomUUID();
+    const categories = product.breadcrumbs;
+    const data = Object.assign(Object.assign({ event: 'ks.product', facebookEventId: eventID }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productImage: (product === null || product === void 0 ? void 0 : product.images.length) > 0 ? relativeToAbsolute(product.images[0].full.url) : undefined, productURL: relativeToAbsolute(document.location.href), productSKU: product.model, productBrand: product.brand.name, productCategory: categories[categories.length - 1].name, productAvailability: product.shippingTime, productQuantity: 1, productCategories: product.categories, ecomm_prodid: product.id, ecomm_pagetype: 'product', ecomm_totalvalue: product.currentPrice, ecommerce: {
+        items: enchancedEcommerceItems([product])
+      }, uaecommerce: { ecommerce: {
+          currencyCode: product.currency,
+          impressions: UAenchancedEcommerceItems([product])
+        } } });
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(data);
+    facebookConversionAPI(data);
+  }
+  DataLayer.product = product;
+  async function listing(listing) {
+    var _a, _b, _c, _d;
+    await pageviewed;
+    const type = listing.type == "category" ? "category" :
+      listing.type == "manufacturer" ? "manufacturer" :
+        listing.type == "search" ? "search" :
+          null;
+    if (!type)
+      return;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: `ks.listing` }, customerData()), { type: type, listingCategories: type == "category" ? listing.breadcrumbs.filter(category => category.id != "0") : undefined, listingProducts: listing.products, ecommerce: {
+        items: enchancedEcommerceItems(listing.products)
+      }, uaecommerce: { ecommerce: {
+          currencyCode: (_d = (_c = listing.products) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.currency,
+          impressions: UAenchancedEcommerceItems(listing.products)
+        } } }));
+  }
+  DataLayer.listing = listing;
+  async function addToCart(product, eventID) {
+    var _a, _b;
+    await pageviewed;
+    // @ts-ignore: Crypto type error
+    eventID = crypto.randomUUID();
+    const data = Object.assign(Object.assign({ event: 'ks.addToCart', facebookEventId: eventID }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
+        items: enchancedEcommerceItems([product])
+      }, uaecommerce: { ecommerce: {
+          currencyCode: product.currency,
+          add: {
+            products: UAenchancedEcommerceItems([product])
+          }
+        } } });
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(data);
+    facebookConversionAPI(data);
+  }
+  DataLayer.addToCart = addToCart;
+  async function removeFromCart(product) {
+    var _a, _b;
+    await pageviewed;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.removeFromCart' }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
+        items: enchancedEcommerceItems([product])
+      }, uaecommerce: { ecommerce: {
+          currencyCode: product.currency,
+          remove: {
+            products: UAenchancedEcommerceItems([product])
+          }
+        } } }));
+  }
+  DataLayer.removeFromCart = removeFromCart;
+  async function addToFavourites(product) {
+    var _a, _b;
+    await pageviewed;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.addToFavourites' }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
+        items: enchancedEcommerceItems([product]),
+        value: product.currentPrice,
+        currency: product.currency
+      } }));
+  }
+  DataLayer.addToFavourites = addToFavourites;
+  async function view_cart(cart) {
+    var _a, _b;
+    await pageviewed;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.viewCart' }, customerData()), { cartCurrency: cart.currency, cartProductValue: cart.productValue, cartValue: cart.totalValue, cartProducts: cart.products, ecomm_prodid: JSON.stringify(Object.values(cart.products).map(product => product.id)), ecomm_pagetype: 'cart', ecomm_totalvalue: cart.productValue, ecommerce: {
+        items: enchancedEcommerceItems(Object.values(cart.products)),
+        value: cart.productValue,
+        currency: cart.currency
+      }, uaecommerce: { ecommerce: {
+          checkout: {
+            actionField: { step: 1 },
+            currencyCode: cart.currency,
+            products: UAenchancedEcommerceItems(Object.values(cart.products))
+          }
+        } } }));
+  }
+  DataLayer.view_cart = view_cart;
+  async function order_checkout(order, eventID) {
+    var _a, _b;
+    await pageviewed;
+    // @ts-ignore: Crypto type error
+    eventID = crypto.randomUUID();
+    const data = Object.assign(Object.assign({ event: 'ks.checkout', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderShippingTime: order.totalShippingTimeDays, orderCoupon: order.coupon, ecommerce: {
+        items: enchancedEcommerceItems(order.products)
+      }, uaecommerce: { ecommerce: {
+          checkout: {
+            actionField: { step: 3 },
+            currencyCode: order.currency,
+            products: UAenchancedEcommerceItems(order.products)
+          }
+        } } });
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(data);
+    facebookConversionAPI(data);
+  }
+  DataLayer.order_checkout = order_checkout;
+  async function order_form(order, eventID) {
+    var _a, _b;
+    await pageviewed;
+    // @ts-ignore: Crypto type error
+    eventID = crypto.randomUUID();
+    const data = Object.assign(Object.assign({ event: 'ks.orderForm', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderShippingTime: order.totalShippingTimeDays, orderCoupon: order.coupon, ecommerce: {
+        items: enchancedEcommerceItems(order.products)
+      }, uaecommerce: { ecommerce: {
+          checkout: {
+            actionField: { step: 2 },
+            currencyCode: order.currency,
+            products: UAenchancedEcommerceItems(order.products)
+          }
+        } } });
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(data);
+    facebookConversionAPI(data);
+  }
+  DataLayer.order_form = order_form;
+  async function order_placed(order, eventID) {
+    var _a, _b;
+    await pageviewed;
+    // @ts-ignore: Crypto type error
+    eventID = crypto.randomUUID();
+    const data = Object.assign(Object.assign({ event: 'ks.order', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderId: order.id, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderShippingTime: order.totalShippingTimeDays, orderCoupon: order.coupon, ecomm_prodid: JSON.stringify(Object.values(order.products).map(product => product.id)), ecomm_pagetype: 'purchase', ecomm_totalvalue: order.productValue, ecommerce: {
+        transaction_id: order.id,
+        value: order.totalValue,
+        currency: order.currency,
+        shipping: order.shippingValue,
+        coupon: order.coupon,
+        items: enchancedEcommerceItems(order.products)
+      }, uaecommerce: { ecommerce: {
+          purchase: {
+            currencyCode: order.currency,
+            actionField: {
+              id: order.id,
+              revenue: order.totalValue,
+              shipping: order.shippingValue,
+              coupon: order.coupon
+            },
+            products: UAenchancedEcommerceItems(order.products)
+          }
+        } } });
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(data);
+    facebookConversionAPI(data);
+  }
+  DataLayer.order_placed = order_placed;
+  async function search(query) {
+    var _a;
+    await pageviewed;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(Object.assign({ event: 'ks.search', searchQuery: query }, customerData()));
+  }
+  DataLayer.search = search;
+  async function subscribe(subscription) {
+    var _a;
+    await pageviewed;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(Object.assign(Object.assign({ event: 'ks.subscribe' }, customerData()), { subscriptionPlace: subscription.place, subscriptionEmail: subscription.email, subscriptionName: subscription === null || subscription === void 0 ? void 0 : subscription.name, subscriptionStatus: subscription.subscriber ? 1 : 0 }));
+  }
+  DataLayer.subscribe = subscribe;
+  async function recipe(recipe) {
+    var _a;
+    await pageviewed;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(Object.assign(Object.assign({ event: 'ks.recipe' }, customerData()), { recipeName: recipe.title, recipeCategory: recipe.category, recipeCuisine: recipe.cuisine }));
+  }
+  DataLayer.recipe = recipe;
+  function relativeToAbsolute(url) {
+    return url.includes('http') ? url : document.baseURI + url;
+  }
+  function enchancedEcommerceItems(products) {
+    return products.map((product, index) => {
+      const categories = product.breadcrumbs.filter(category => category.name != "Strona główna").map(category => category.name).reverse();
+      return {
+        item_id: product.id,
+        item_name: product.name,
+        currency: product.currency,
+        index: index,
+        price: product.currentPrice,
+        item_brand: product.brandName,
+        item_category: categories === null || categories === void 0 ? void 0 : categories[0],
+        item_category2: categories === null || categories === void 0 ? void 0 : categories[1],
+        item_category3: categories === null || categories === void 0 ? void 0 : categories[2],
+        item_category4: categories === null || categories === void 0 ? void 0 : categories[3],
+        item_category5: categories === null || categories === void 0 ? void 0 : categories[4],
+      };
+    });
+  }
+  function UAenchancedEcommerceItems(products) {
+    return products.map((product, index) => {
+      const categories = product.breadcrumbs.filter(category => category.name != "Strona główna").map(category => category.name);
+      return {
+        name: product.name,
+        id: product.id,
+        price: product.currentPrice,
+        brand: product.brandName,
+        category: categories.join('/'),
+        position: index + 1,
+        quantity: product.quantity
+      };
+    });
+  }
+})(DataLayer || (DataLayer = {}));
+
 async function reloadCart() {
-  update$1(await fetch$1(cart.get('api').reload));
+  update$1(await fetch$1(cart.get('api').reload), false);
 }
 async function removeProduct(id) {
-  const data = await ProductLoadingWrapper(async () => {
-    return fetch$1(cart.get('api').productRemove, { "id": id });
-  });
+  var _a;
+  const productData = (_a = cart.get("products")) === null || _a === void 0 ? void 0 : _a[id];
+  if (productData)
+    DataLayer.removeFromCart(productData);
+  const data = await fetch$1(cart.get('api').productRemove, { "id": id });
   if (data) {
     if (data.products.length == 0)
       document.location.reload();
@@ -5209,64 +5464,25 @@ async function removeProduct(id) {
   if (product)
     product.ResetLoading();
 }
-var lastProductCountCall = {};
-async function productCount(id, count, last) {
-  if (lastProductCountCall[id]) {
-    lastProductCountCall[id] = () => ProductCountCall(id, count, last);
-  }
-  else {
-    lastProductCountCall[id] = () => { };
-    ProductCountCall(id, count, last).then(() => {
-      if (lastProductCountCall[id]) {
-        lastProductCountCall[id]();
-        lastProductCountCall[id] = undefined;
-      }
-    });
-  }
-}
-async function ProductCountCall(id, current, last) {
-  const data = await ProductLoadingWrapper(async () => {
-    return fetch$1(cart.get('api').productCount, {
-      "id": id,
-      "ilosc": current.toString()
-    });
-  });
+var productCountAbortController = new AbortController();
+async function productCount(id, count) {
+  productCountAbortController.abort();
+  productCountAbortController = new AbortController();
+  const data = await fetch$1(cart.get('api').productCount, {
+    "id": id,
+    "ilosc": count.toString()
+  }, productCountAbortController.signal);
   if (data) {
     ShowMessageFromData("Błąd ilości produktu", data, async (cleanedData) => {
-      if ('error' in cleanedData) {
+      if ('error' in cleanedData)
         messagePopup().show("Błąd ilości produktu", cleanedData.error.message);
-        cart.set("products", GetCorrectedProductAmounts(id, cleanedData.error.amount, cleanedData.error.maxAmount));
-      }
       else
-        await update$1(cleanedData);
+        update$1(cleanedData);
       if ('discount' in cleanedData == false)
         RemoveDiscount();
     });
   }
-  else {
-    cart.set("products", GetCorrectedProductAmounts(id, last));
-    this.SetAmount(last, `ks-cart-product[ikey="${id}"] ks-cart-spinner`);
-  }
 }
-function GetCorrectedProductAmounts(id, amount, maxAmount) {
-  const products = cart.get("products");
-  products[id].quantity = amount;
-  if (maxAmount)
-    products[id].maxQuantity = maxAmount;
-  return products;
-}
-/*function GetDataWithoutProducts(data: any) {
-    const dataWithoutProducts = data;
-    delete dataWithoutProducts.products;
-    return dataWithoutProducts;
-}
-
-function SetAmount(amount: number, querySelector: string) {
-    console.log("test");
-    const component = document.querySelector(querySelector) as any;
-    if(component && 'SetAmount' in component)
-        component.SetAmount(amount);
-}*/
 async function addDeal(id) {
   cart.set("loadingDeals", true);
   const data = await fetch$1(cart.get('api').addDeal, { "id": id });
@@ -5277,11 +5493,6 @@ async function addDeal(id) {
   }
   else
     await update$1(data);
-  for (const key in cart.get('products')) {
-    const product = cart.get('products')[key];
-    const spinner = document.querySelector(`ks-cart-product[product-id="${product.id}"] ks-cart-spinner`);
-    spinner === null || spinner === void 0 ? void 0 : spinner.SetAmount(product.quantity);
-  }
 }
 async function countryChange(code) {
   StartLoading(`ks-cart-select-shipping`);
@@ -5364,31 +5575,28 @@ async function ShowMessageFromData(name, data, callback) {
   else
     callback(data);
 }
-async function ProductLoadingWrapper(func) {
-  cart.set("loadingProducts", cart.get("loadingProducts") + 1);
-  const output = await func();
-  cart.set("loadingProducts", cart.get("loadingProducts") - 1);
-  return output;
-}
-async function fetch$1(url, formProperties) {
+async function fetch$1(url, formProperties, signal) {
   loading();
-  return formfetch(url, formProperties)
+  return formfetch(url, formProperties, signal)
     .then(response => response.json())
     .then(json => {
     loaded();
     return json;
   })
     .catch(error => {
-    loaded();
-    messageError().show(error);
+    if (error.name != 'AbortError') {
+      loaded();
+      messageError().show(error);
+    }
     return {};
   });
 }
-function update$1(data) {
+function update$1(data, cartUpdate = true) {
   Object.keys(data).map(key => {
     cart.set(key, data[key]);
   });
-  CartUpdate(0);
+  if (cartUpdate)
+    CartUpdate(0);
 }
 function loading() {
   cart.set("loading", cart.get("loading") + 1);
@@ -12895,12 +13103,11 @@ const cartCountrySelectCss = "ks-cart-country-select{display:-ms-flexbox;display
 class CartCountrySelect {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.countryChange = createEvent(this, "countryChange", 7);
     this.heading = undefined;
   }
   ChangeHandler(event) {
     const target = event.target;
-    this.countryChange.emit(target.value);
+    countryChange(target.value);
   }
   render() {
     return [
@@ -12959,7 +13166,6 @@ const dealCss$1 = ".cart-deal{display:-ms-flexbox;display:flex;overflow:hidden;-
 class CartDeal {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.addDeal = createEvent(this, "addDeal", 7);
     this.ikey = undefined;
     this.name = undefined;
     this.img = undefined;
@@ -12968,7 +13174,7 @@ class CartDeal {
     this.loading = false;
   }
   Add() {
-    this.addDeal.emit(this.ikey);
+    addDeal(this.ikey);
   }
   render() {
     const translations = common.get('translations');
@@ -13019,7 +13225,6 @@ const dealCss = ".cart-deal{display:-ms-flexbox;display:flex;overflow:hidden;-ms
 class CartDealGroup {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.addDeal = createEvent(this, "addDeal", 7);
     this.ikey = undefined;
     this.name = undefined;
     this.deals = undefined;
@@ -13033,7 +13238,7 @@ class CartDealGroup {
     this.currentDeal = this.deals[select.selectedIndex];
   }
   Add() {
-    this.addDeal.emit(this.currentDeal.id);
+    addDeal(this.currentDeal.id);
   }
   render() {
     const translations = common.get('translations');
@@ -13061,7 +13266,6 @@ const cartDiscountCodeCss = "ks-cart-discount-code{display:block}ks-cart-discoun
 class CartDiscountCode {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.discountCodeAdd = createEvent(this, "discountCodeAdd", 7);
     this.placeholder = "";
     this.image = "";
     this.loading = false;
@@ -13076,7 +13280,7 @@ class CartDiscountCode {
         const valueString = value.toString();
         if (valueString != "") {
           this.loading = true;
-          this.discountCodeAdd.emit(valueString);
+          discountCodeAdd(valueString);
         }
       }
     }
@@ -13240,7 +13444,6 @@ const cartDiscountPointsCss = "ks-cart-discount-points{display:block}ks-cart-dis
 class CartDiscountPoints {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.discountPointsAdd = createEvent(this, "discountPointsAdd", 7);
     this.placeholder = "";
     this.message = "";
     this.points = 1;
@@ -13255,9 +13458,9 @@ class CartDiscountPoints {
       const value = input.value;
       if (value) {
         const valueNumber = parseInt(value.toString());
-        if (valueNumber != NaN) {
+        if (!Number.isNaN(valueNumber)) {
           this.loading = true;
-          this.discountPointsAdd.emit(valueNumber);
+          discountPointsAdd(valueNumber);
         }
       }
     }
@@ -13358,14 +13561,12 @@ const cartDiscountTicketCss = "ks-cart-discount-ticket{display:-ms-flexbox;displ
 class CartDiscountTicket {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.discountRemove = createEvent(this, "discountRemove", 7);
     this.name = "";
     this.value = "";
     this.loading = false;
   }
   discountRemoveHandler() {
-    this.loading = true;
-    this.discountRemove.emit();
+    discountRemove();
   }
   render() {
     const parsed = parseFloat(this.value);
@@ -13738,8 +13939,6 @@ const cartProductCss = "ks-cart-product{display:-ms-flexbox;display:flex;-ms-fle
 class CartProduct {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.removeProduct = createEvent(this, "removeProduct", 7);
-    this.productCount = createEvent(this, "productCount", 7);
     this.productId = undefined;
     this.name = undefined;
     this.img = undefined;
@@ -13755,10 +13954,7 @@ class CartProduct {
   }
   onRemoveHandler() {
     this.loading = true;
-    this.removeProduct.emit(this.productId);
-  }
-  onCountHandler(detail) {
-    this.productCount.emit([this.productId, detail.current, detail.last]);
+    removeProduct(this.productId);
   }
   async ResetLoading() {
     this.loading = false;
@@ -13768,7 +13964,7 @@ class CartProduct {
     return [
       hAsync("a", { class: "product-image", href: this.link }, hAsync("ks-img3", { fit: 'contain', image: this.img, width: 180, height: 180, alt: "zdj\u0119cie produktu" })),
       hAsync("div", { class: "description" }, hAsync("a", { class: "name", href: this.link, innerHTML: this.name }), hAsync("span", { class: "price" }, price), hAsync("span", { class: "shipping" }, this.shippingTime), hAsync("div", { class: "count" }, this.removable ?
-        hAsync("ks-cart-spinner", { onChanged: (e) => this.onCountHandler(e.detail), "initial-value": this.amount, max: this.maxAmount }) :
+        hAsync("ks-cart-spinner", { product: this.productId, value: this.amount, max: this.maxAmount }) :
         hAsync("div", { class: "amount" }, this.amount, " ", this.countUnit)), hAsync("div", { class: "remove-container" }, this.removable ? this.loading ?
         hAsync("ks-loader", null) :
         hAsync("button", { class: "remove", onClick: () => this.onRemoveHandler() }, hAsync("ks-icon", { name: "x" }))
@@ -14070,7 +14266,6 @@ const cartSelectCss$1 = ".select{display:-ms-flexbox;display:flex;-ms-flex-pack:
 class CartSelectPayment {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.paymentChange = createEvent(this, "paymentChange", 7);
     this.name = "";
     this.valid = false;
     this.error = false;
@@ -14102,7 +14297,7 @@ class CartSelectPayment {
     this.root.classList.add("ks-cart-select");
   }
   ActivateItem(id) {
-    this.paymentChange.emit(id);
+    paymentChange(id);
     this.toggled = false;
     this.active = id;
     this.valid = true;
@@ -14157,7 +14352,6 @@ const cartSelectCss = ".select{display:-ms-flexbox;display:flex;-ms-flex-pack:ce
 class CartSelectShipping {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.shippingChange = createEvent(this, "shippingChange", 7);
     this.name = "";
     this.valid = false;
     this.error = false;
@@ -14189,7 +14383,7 @@ class CartSelectShipping {
   }
   ActivateItem(id) {
     if (id != cart.get("activeShipping"))
-      this.shippingChange.emit(id);
+      shippingChange(id);
     this.toggled = false;
     this.active = id;
     this.valid = true;
@@ -14287,31 +14481,24 @@ const cartSpinnerCss = "ks-cart-spinner{display:-ms-inline-flexbox;display:inlin
 class CartSpinner {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.changed = createEvent(this, "changed", 7);
+    this.product = undefined;
     this.name = undefined;
-    this.initialValue = 1;
-    this.max = undefined;
     this.value = 1;
-  }
-  componentWillLoad() {
-    this.value = this.initialValue;
+    this.max = undefined;
   }
   Increment() {
-    const last = this.value;
     if (typeof this.max === "undefined" || this.value < this.max) {
       this.value += 1;
-      this.onChangedHandler(this.value, last);
+      this.onChangedHandler(this.value);
     }
   }
   Decrement() {
-    const last = this.value;
     if (this.value > 1) {
       this.value -= 1;
-      this.onChangedHandler(this.value, last);
+      this.onChangedHandler(this.value);
     }
   }
   Change(e) {
-    const last = this.value;
     const input = e.target;
     const parsed = parseInt(input.value);
     if (!isNaN(parsed) && parsed > 0 && (typeof this.max === "undefined" || parsed <= this.max))
@@ -14324,13 +14511,10 @@ class CartSpinner {
       this.value = 1;
       input.value = "1";
     }
-    this.onChangedHandler(this.value, last);
+    this.onChangedHandler(this.value);
   }
-  onChangedHandler(current, last) {
-    this.changed.emit({ current, last });
-  }
-  async SetAmount(amount) {
-    this.value = amount;
+  onChangedHandler(value) {
+    productCount(this.product, value);
   }
   render() {
     return this.max == 1 ? "1 szt." : [
@@ -14345,15 +14529,14 @@ class CartSpinner {
     "$flags$": 0,
     "$tagName$": "ks-cart-spinner",
     "$members$": {
+      "product": [1],
       "name": [1],
-      "initialValue": [1538, "initial-value"],
-      "max": [2],
-      "value": [32],
-      "SetAmount": [64]
+      "value": [1538],
+      "max": [2]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["initialValue", "initial-value"]]
+    "$attrsToReflect$": [["value", "value"]]
   }; }
 }
 
@@ -28329,259 +28512,6 @@ async function ValidateInput(root) {
   return valid;
 }
 
-var DataLayer;
-(function (DataLayer) {
-  var resolvepageview;
-  var pageviewed = new Promise(resolve => {
-    resolvepageview = () => {
-      resolve();
-    };
-  });
-  function facebookConversionAPI(dataLayer) {
-    jsonfetch('https://kuchniasklep.pl/api/fbconversion.php', dataLayer);
-  }
-  function customerData() {
-    const customer = commonDynamic.get('customer');
-    const customerDataAvaliable = commonDynamic.get('loggedIn') && customer;
-    return {
-      customerDataAvailable: customerDataAvaliable,
-      customerEmail: customerDataAvaliable ? customer.email : undefined,
-      customerFirstName: customerDataAvaliable ? customer.firstName : undefined,
-      customerLastName: customerDataAvaliable ? customer.lastName : undefined,
-      customerSubscriberStatus: customerDataAvaliable ? (customer.subscriber ? 1 : 0) : undefined,
-      customerCountryISO2: customerDataAvaliable ? customer.countryISO2 : undefined,
-      customerCity: customerDataAvaliable ? customer.city : undefined,
-      customerPhone: customerDataAvaliable ? customer.phone : undefined,
-      customerCurrency: customerDataAvaliable ? customer.currency : undefined,
-    };
-  }
-  async function pageview(eventID) {
-    var _a;
-    // @ts-ignore: Crypto type error
-    eventID = crypto.randomUUID();
-    const data = Object.assign({ event: 'ks.pageview', facebookEventId: eventID }, customerData());
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(data);
-    resolvepageview();
-    facebookConversionAPI(data);
-  }
-  DataLayer.pageview = pageview;
-  async function product(product, eventID = "") {
-    var _a, _b;
-    await pageviewed;
-    // @ts-ignore: Crypto type error
-    eventID = crypto.randomUUID();
-    const categories = product.breadcrumbs;
-    const data = Object.assign(Object.assign({ event: 'ks.product', facebookEventId: eventID }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productImage: (product === null || product === void 0 ? void 0 : product.images.length) > 0 ? relativeToAbsolute(product.images[0].full.url) : undefined, productURL: relativeToAbsolute(document.location.href), productSKU: product.model, productBrand: product.brand.name, productCategory: categories[categories.length - 1].name, productAvailability: product.shippingTime, productQuantity: 1, productCategories: product.categories, ecomm_prodid: product.id, ecomm_pagetype: 'product', ecomm_totalvalue: product.currentPrice, ecommerce: {
-        items: enchancedEcommerceItems([product])
-      }, uaecommerce: { ecommerce: {
-          currencyCode: product.currency,
-          impressions: UAenchancedEcommerceItems([product])
-        } } });
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(data);
-    facebookConversionAPI(data);
-  }
-  DataLayer.product = product;
-  async function listing(listing) {
-    var _a, _b, _c, _d;
-    await pageviewed;
-    const type = listing.type == "category" ? "category" :
-      listing.type == "manufacturer" ? "manufacturer" :
-        listing.type == "search" ? "search" :
-          null;
-    if (!type)
-      return;
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: `ks.listing` }, customerData()), { type: type, listingCategories: type == "category" ? listing.breadcrumbs.filter(category => category.id != "0") : undefined, listingProducts: listing.products, ecommerce: {
-        items: enchancedEcommerceItems(listing.products)
-      }, uaecommerce: { ecommerce: {
-          currencyCode: (_d = (_c = listing.products) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.currency,
-          impressions: UAenchancedEcommerceItems(listing.products)
-        } } }));
-  }
-  DataLayer.listing = listing;
-  async function addToCart(product, eventID) {
-    var _a, _b;
-    await pageviewed;
-    // @ts-ignore: Crypto type error
-    eventID = crypto.randomUUID();
-    const data = Object.assign(Object.assign({ event: 'ks.addToCart', facebookEventId: eventID }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
-        items: enchancedEcommerceItems([product])
-      }, uaecommerce: { ecommerce: {
-          currencyCode: product.currency,
-          add: {
-            products: UAenchancedEcommerceItems([product])
-          }
-        } } });
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(data);
-    facebookConversionAPI(data);
-  }
-  DataLayer.addToCart = addToCart;
-  async function removeFromCart(product) {
-    var _a, _b;
-    await pageviewed;
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.removeFromCart' }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
-        items: enchancedEcommerceItems([product])
-      }, uaecommerce: { ecommerce: {
-          currencyCode: product.currency,
-          remove: {
-            products: UAenchancedEcommerceItems([product])
-          }
-        } } }));
-  }
-  DataLayer.removeFromCart = removeFromCart;
-  async function addToFavourites(product) {
-    var _a, _b;
-    await pageviewed;
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.addToFavourites' }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
-        items: enchancedEcommerceItems([product]),
-        value: product.currentPrice,
-        currency: product.currency
-      } }));
-  }
-  DataLayer.addToFavourites = addToFavourites;
-  async function view_cart(cart) {
-    var _a, _b;
-    await pageviewed;
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.viewCart' }, customerData()), { cartCurrency: cart.currency, cartProductValue: cart.productValue, cartValue: cart.totalValue, cartProducts: cart.products, ecomm_prodid: JSON.stringify(Object.values(cart.products).map(product => product.id)), ecomm_pagetype: 'cart', ecomm_totalvalue: cart.productValue, ecommerce: {
-        items: enchancedEcommerceItems(Object.values(cart.products)),
-        value: cart.productValue,
-        currency: cart.currency
-      }, uaecommerce: { ecommerce: {
-          checkout: {
-            actionField: { step: 1 },
-            currencyCode: cart.currency,
-            products: UAenchancedEcommerceItems(Object.values(cart.products))
-          }
-        } } }));
-  }
-  DataLayer.view_cart = view_cart;
-  async function order_checkout(order, eventID) {
-    var _a, _b;
-    await pageviewed;
-    // @ts-ignore: Crypto type error
-    eventID = crypto.randomUUID();
-    const data = Object.assign(Object.assign({ event: 'ks.checkout', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderShippingTime: order.totalShippingTimeDays, orderCoupon: order.coupon, ecommerce: {
-        items: enchancedEcommerceItems(order.products)
-      }, uaecommerce: { ecommerce: {
-          checkout: {
-            actionField: { step: 3 },
-            currencyCode: order.currency,
-            products: UAenchancedEcommerceItems(order.products)
-          }
-        } } });
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(data);
-    facebookConversionAPI(data);
-  }
-  DataLayer.order_checkout = order_checkout;
-  async function order_form(order, eventID) {
-    var _a, _b;
-    await pageviewed;
-    // @ts-ignore: Crypto type error
-    eventID = crypto.randomUUID();
-    const data = Object.assign(Object.assign({ event: 'ks.orderForm', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderShippingTime: order.totalShippingTimeDays, orderCoupon: order.coupon, ecommerce: {
-        items: enchancedEcommerceItems(order.products)
-      }, uaecommerce: { ecommerce: {
-          checkout: {
-            actionField: { step: 2 },
-            currencyCode: order.currency,
-            products: UAenchancedEcommerceItems(order.products)
-          }
-        } } });
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(data);
-    facebookConversionAPI(data);
-  }
-  DataLayer.order_form = order_form;
-  async function order_placed(order, eventID) {
-    var _a, _b;
-    await pageviewed;
-    // @ts-ignore: Crypto type error
-    eventID = crypto.randomUUID();
-    const data = Object.assign(Object.assign({ event: 'ks.order', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderId: order.id, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderShippingTime: order.totalShippingTimeDays, orderCoupon: order.coupon, ecomm_prodid: JSON.stringify(Object.values(order.products).map(product => product.id)), ecomm_pagetype: 'purchase', ecomm_totalvalue: order.productValue, ecommerce: {
-        transaction_id: order.id,
-        value: order.totalValue,
-        currency: order.currency,
-        shipping: order.shippingValue,
-        coupon: order.coupon,
-        items: enchancedEcommerceItems(order.products)
-      }, uaecommerce: { ecommerce: {
-          purchase: {
-            currencyCode: order.currency,
-            actionField: {
-              id: order.id,
-              revenue: order.totalValue,
-              shipping: order.shippingValue,
-              coupon: order.coupon
-            },
-            products: UAenchancedEcommerceItems(order.products)
-          }
-        } } });
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(data);
-    facebookConversionAPI(data);
-  }
-  DataLayer.order_placed = order_placed;
-  async function search(query) {
-    var _a;
-    await pageviewed;
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(Object.assign({ event: 'ks.search', searchQuery: query }, customerData()));
-  }
-  DataLayer.search = search;
-  async function subscribe(subscription) {
-    var _a;
-    await pageviewed;
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(Object.assign(Object.assign({ event: 'ks.subscribe' }, customerData()), { subscriptionPlace: subscription.place, subscriptionEmail: subscription.email, subscriptionName: subscription === null || subscription === void 0 ? void 0 : subscription.name, subscriptionStatus: subscription.subscriber ? 1 : 0 }));
-  }
-  DataLayer.subscribe = subscribe;
-  async function recipe(recipe) {
-    var _a;
-    await pageviewed;
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(Object.assign(Object.assign({ event: 'ks.recipe' }, customerData()), { recipeName: recipe.title, recipeCategory: recipe.category, recipeCuisine: recipe.cuisine }));
-  }
-  DataLayer.recipe = recipe;
-  function relativeToAbsolute(url) {
-    return url.includes('http') ? url : document.baseURI + url;
-  }
-  function enchancedEcommerceItems(products) {
-    return products.map((product, index) => {
-      const categories = product.breadcrumbs.filter(category => category.name != "Strona główna").map(category => category.name).reverse();
-      return {
-        item_id: product.id,
-        item_name: product.name,
-        currency: product.currency,
-        index: index,
-        price: product.currentPrice,
-        item_brand: product.brandName,
-        item_category: categories === null || categories === void 0 ? void 0 : categories[0],
-        item_category2: categories === null || categories === void 0 ? void 0 : categories[1],
-        item_category3: categories === null || categories === void 0 ? void 0 : categories[2],
-        item_category4: categories === null || categories === void 0 ? void 0 : categories[3],
-        item_category5: categories === null || categories === void 0 ? void 0 : categories[4],
-      };
-    });
-  }
-  function UAenchancedEcommerceItems(products) {
-    return products.map((product, index) => {
-      const categories = product.breadcrumbs.filter(category => category.name != "Strona główna").map(category => category.name);
-      return {
-        name: product.name,
-        id: product.id,
-        price: product.currentPrice,
-        brand: product.brandName,
-        category: categories.join('/'),
-        position: index + 1,
-        quantity: product.quantity
-      };
-    });
-  }
-})(DataLayer || (DataLayer = {}));
-
 const newsletterPopupCss = "ks-newsletter-popup{display:block}ks-newsletter-popup form{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:justify;justify-content:space-between;height:100%;width:100%;max-width:720px}ks-newsletter-popup .info{padding:60px 60px 20px 60px;fill:#252525;-ms-flex:1 0 auto;flex:1 0 auto;min-height:10px}ks-newsletter-popup .info .top{width:100%;margin-bottom:10px;font-size:initial;max-height:30px}ks-newsletter-popup .info .heading{width:100%;font-family:var(--font-emphasis);font-size:initial;max-height:80px;margin-bottom:10px}ks-newsletter-popup .info p{text-align:center;margin-top:10px}ks-newsletter-popup .buttons{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;min-height:10px;margin-top:30px}ks-newsletter-popup .buttons>*{-ms-flex:1;flex:1}ks-newsletter-popup .close{color:black !important}ks-newsletter-popup ks-input-check{margin:20px;font-size:13px;line-height:18px}ks-newsletter-popup .email-form{display:-ms-flexbox;display:flex}ks-newsletter-popup .email-form>*{margin-bottom:0px}ks-newsletter-popup .email-form>* input{height:60px}ks-newsletter-popup .email-form>ks-button{width:30%}ks-newsletter-popup .email-form>ks-input-text{width:100%}ks-newsletter-popup .email{-ms-flex:1 0 0px;flex:1 0 0;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;background-color:#e5e5e5;color:black;font-size:18px;min-height:50px}@media (max-width: 720px){ks-newsletter-popup .info .heading{max-height:50px}ks-newsletter-popup .email{font-size:16px}}@media (max-width: 540px){ks-newsletter-popup .info{padding:70px 25px 20px 25px;min-height:180px}ks-newsletter-popup .info .top{display:none}ks-newsletter-popup .info p{font-size:13px}ks-newsletter-popup ks-input-check{font-size:11px;line-height:16px}ks-newsletter-popup .email-form{display:block}ks-newsletter-popup .email-form>ks-button{width:100%}ks-newsletter-popup .buttons{display:block;margin-top:0px}ks-newsletter-popup .buttons>*:first-child{border-bottom:1px solid #3a3a3a}ks-newsletter-popup ks-input-check{margin:15px}ks-newsletter-popup .info .heading{width:100%;max-height:40px}}";
 
 class NewsletterPopup {
@@ -30427,38 +30357,6 @@ class PageCart {
     update$1(cartData);
     DataLayer.view_cart(cartData);
   }
-  async RemoveProduct(event) {
-    var _a;
-    const productData = (_a = cart.get("products")) === null || _a === void 0 ? void 0 : _a[event.detail];
-    if (productData)
-      DataLayer.removeFromCart(productData);
-    removeProduct(event.detail);
-  }
-  async ProductCount(event) {
-    productCount(...event.detail);
-  }
-  async AddDeal(event) {
-    addDeal(event.detail);
-  }
-  async CountryChange(event) {
-    countryChange(event.detail);
-  }
-  async ShippingChange(event) {
-    shippingChange(event.detail);
-  }
-  async PaymentChange(event) {
-    paymentChange(event.detail);
-  }
-  async DiscountRemove() {
-    discountRemove();
-  }
-  async DiscountCodeAdd(event) {
-    discountCodeAdd(event.detail);
-  }
-  async DiscountPointsAdd(event) {
-    discountPointsAdd(event.detail);
-  }
-  ;
   render() {
     var _a;
     const commonStrings = common.get('translations');
@@ -30485,7 +30383,7 @@ class PageCart {
       "commonDynamicData": [1, "common-dynamic-data"],
       "cartData": [1, "cart-data"]
     },
-    "$listeners$": [[0, "removeProduct", "RemoveProduct"], [0, "productCount", "ProductCount"], [0, "addDeal", "AddDeal"], [0, "countryChange", "CountryChange"], [0, "shippingChange", "ShippingChange"], [0, "paymentChange", "PaymentChange"], [0, "discountRemove", "DiscountRemove"], [0, "discountCodeAdd", "DiscountCodeAdd"], [0, "discountPointsAdd", "DiscountPointsAdd"]],
+    "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": []
   }; }
@@ -33226,6 +33124,8 @@ class SeeMore$1 {
   async componentWillLoad() {
     iziGetBinding().then(response => {
       this.data = response;
+      if (this.data.hasOwnProperty('client_details'))
+        iziPollCart();
     });
   }
   componentDidLoad() {
