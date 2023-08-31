@@ -5644,7 +5644,11 @@ async function poll(fetchFunction, maxCount = 0, delay = 200) {
   });
 }
 var pollCartAbortController = new AbortController;
+var pollingInitialized = false;
 function iziPollCart() {
+  if (pollingInitialized)
+    return;
+  pollingInitialized = true;
   const api = commonDynamic.get('api').inpostFrontend;
   const pollCart = () => jsonfetch(`${api}/detectchanges`, {}, pollCartAbortController.signal)
     .then(response => response.json())
@@ -5652,7 +5656,7 @@ function iziPollCart() {
     if (data.cartUpdated) {
       reloadCart();
     }
-    setTimeout(pollCart, 1500);
+    setTimeout(pollCart, 200);
   });
   setTimeout(pollCart, 1500);
 }
