@@ -5456,8 +5456,6 @@ async function removeProduct(id) {
     else
       ShowMessageFromData("Błąd usuwania produktu", data, async (cleanedData) => {
         update$1(cleanedData);
-        if ('discount' in cleanedData == false)
-          this.RemoveDiscount();
       });
   }
   const product = document.querySelector(`ks-cart-product[ikey="${id}"]`);
@@ -5595,6 +5593,8 @@ function update$1(data, cartUpdate = true) {
   Object.keys(data).map(key => {
     cart.set(key, data[key]);
   });
+  if ('discount' in data == false)
+    this.RemoveDiscount();
   if (cartUpdate)
     CartUpdate(0);
 }
