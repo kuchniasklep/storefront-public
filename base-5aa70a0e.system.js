@@ -1,0 +1,1 @@
+System.register(["./inpost-pay-da1c2095.system.js"],(function(){"use strict";return{setters:[function(){}],execute:function(){window.googleConsentListeners=[];window.addConsentListener=function(n){window.googleConsentListeners.push(n)};window.googleConsentListeners.push((function(n){return console.log(n)}))}}}));

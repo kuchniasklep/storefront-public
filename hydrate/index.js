@@ -5652,7 +5652,7 @@ function iziPollCart() {
     if (data.cartUpdated) {
       reloadCart();
     }
-    setTimeout(pollCart, 500);
+    setTimeout(pollCart, 1500);
   });
   setTimeout(pollCart, 1500);
 }
