@@ -5594,7 +5594,7 @@ function update$1(data, cartUpdate = true) {
     cart.set(key, data[key]);
   });
   if ('discount' in data == false)
-    this.RemoveDiscount();
+    RemoveDiscount();
   if (cartUpdate)
     CartUpdate(0);
 }
