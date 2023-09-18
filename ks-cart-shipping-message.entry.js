@@ -1,1 +1,1 @@
-import{r as s,h as r}from"./index-ca9b706f.js";import{c as a}from"./cart-b9df7a0c.js";import"./index-9843a78d.js";const e=class{constructor(r){s(this,r)}render(){return r("ks-cart-message",{message:a.get("shippingMessage")})}};export{e as ks_cart_shipping_message}
+import{r as s,h as e}from"./index-ca9b706f.js";import{c as r}from"./cart-75f4ee6e.js";import"./index-9843a78d.js";const a=class{constructor(e){s(this,e)}render(){return e("ks-cart-message",{message:r.get("shippingMessage")})}};export{a as ks_cart_shipping_message}
