@@ -5585,8 +5585,8 @@ async function fetch$1(url, formProperties, signal) {
     return json;
   })
     .catch(error => {
+    loaded();
     if (error.name != 'AbortError') {
-      loaded();
       messageError().show(error);
     }
     return {};
@@ -5605,7 +5605,8 @@ function loading() {
   cart.set("loading", cart.get("loading") + 1);
 }
 function loaded() {
-  cart.set("loading", cart.get("loading") - 1);
+  if (cart.get("loading") > 0)
+    cart.set("loading", cart.get("loading") - 1);
 }
 function messagePopup() {
   return document.querySelector('ks-message-popup');
