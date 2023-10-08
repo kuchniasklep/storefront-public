@@ -30318,7 +30318,7 @@ class PageArticle {
     });
   }
   renderDescription(content, type) {
-    return content.map(entry => {
+    return content === null || content === void 0 ? void 0 : content.map(entry => {
       switch (entry.type) {
         case "ComponentContentText":
           return hAsync("ks-description-text", { text: entry.text, align: entry.align, nomargin: entry.nomargin });
@@ -32330,7 +32330,7 @@ class ProductNotifyEdrone {
   }; }
 }
 
-const productPriceCss = "ks-product-price{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;margin:12px 0 12px;font-family:var(--product-price-font);font-weight:700}ks-product-price .main{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;margin-bottom:3px}ks-product-price .previous{display:inline-block;color:var(--color-faded);font-size:var(--product-price-size);line-height:var(--product-price-size);position:relative;margin-left:15px}ks-product-price .lowest{display:block;width:100%;font-weight:500}ks-product-price .previous::after{background-color:var(--color-faded);content:\"\";height:0.1em;left:-3px;right:-3px;position:absolute;top:46%}ks-product-price .current{color:var(--color-secondary);font-size:var(--product-price-size-emphasis);line-height:var(--product-price-size)}@media only screen and (max-width: 960px){ks-product-price{-ms-flex-align:center;align-items:center}}@media only screen and (max-width: 560px){ks-product-price .price{display:block;width:100%;margin-bottom:20px;margin-right:0px;text-align:center}}ks-product-price .currency{width:26px;height:26px;margin:0 0 0 10px;border-radius:30px;background-color:var(--color-secondary);color:white;font-family:var(--product-price-font);-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:baseline;align-items:baseline}";
+const productPriceCss = "ks-product-price{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;margin:12px 0 12px;font-family:var(--product-price-font);font-weight:700}ks-product-price .main{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;margin-bottom:3px}ks-product-price .previous{display:inline-block;font-size:var(--product-price-size);line-height:var(--product-price-size);position:relative;margin-left:15px;font-weight:500}ks-product-price .lowest{display:block;width:100%;font-weight:500}ks-product-price .lowest .lowestPrice{font-size:var(--product-price-size);text-wrap:nowrap}ks-product-price .previous::after{background-color:var(--color-dark);content:\"\";height:0.05em;left:-3px;right:-3px;position:absolute;top:50%}ks-product-price .current{color:var(--color-secondary);font-size:var(--product-price-size-emphasis);line-height:var(--product-price-size)}@media only screen and (max-width: 960px){ks-product-price{-ms-flex-align:center;align-items:center}}@media only screen and (max-width: 560px){ks-product-price .price{display:block;width:100%;margin-bottom:20px;margin-right:0px;text-align:center}ks-product-price .lowest{text-align:center}}ks-product-price .currency{width:26px;height:26px;margin:0 0 0 10px;border-radius:30px;background-color:var(--color-secondary);color:white;font-family:var(--product-price-font);-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:baseline;align-items:baseline}";
 
 class ProductPrice {
   constructor(hostRef) {
@@ -32344,7 +32344,7 @@ class ProductPrice {
     const lowestPrice = priceFormatNoCurrency(product.get("lowestPrice"));
     return [
       hAsync("div", { class: "main" }, hAsync("div", { class: "current" }, currentPrice), hAsync("div", { class: "currency" }, symbol), previousPrice ? hAsync("div", { class: "previous" }, previousPrice) : null),
-      lowestPrice ? hAsync("div", { class: "lowest" }, strings.lowestPrice, " ", lowestPrice, " ", symbol) : null
+      lowestPrice ? hAsync("div", { class: "lowest" }, strings.lowestPrice, " ", hAsync("span", { class: "lowestPrice" }, lowestPrice, " ", symbol)) : null
     ];
   }
   static get style() { return productPriceCss; }
