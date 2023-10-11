@@ -1,0 +1,1 @@
+import{c as a}from"./index-5a4e318f.js";const o=a({loading:0,loadingDeals:!1});export{o as c}

@@ -5756,53 +5756,6 @@ const cmpModules = new Map, getModule = e => {
  isTesting: !1
 }, styles$1 = new Map;
 
-class Alert$1 {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.message = "";
-  }
-  componentWillLoad() {
-    this.hashCode = this.GenerateHash(this.message);
-  }
-  GenerateHash(str) {
-    var hash = 0, len = str.length;
-    if (str.length === 0) {
-      return hash;
-    }
-    for (let i = 0; i < len; i++) {
-      let charC = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + charC;
-      hash = hash & hash; // Convert to 32bit integer
-    }
-    return hash;
-  }
-  async componentDidLoad() {
-    const element = document.querySelector(`#ks-alert-${this.hashCode}`);
-    UIkit.modal(element).show();
-  }
-  Close() {
-    const element = document.querySelector(`#ks-alert-${this.hashCode}`);
-    UIkit.modal(element).hide().then(() => {
-      this.root.remove();
-      element.remove();
-    });
-  }
-  render() {
-    return (hAsync("div", { id: `ks-alert-${this.hashCode}`, class: "uk-modal-full", "uk-modal": "stack: true" }, hAsync("div", { class: "uk-modal-dialog" }, hAsync("div", { class: "uk-background-cover uk-flex uk-flex-between uk-flex-column", "uk-height-viewport": true }, hAsync("div", { class: "uk-padding-small uk-flex-auto uk-flex uk-flex-center uk-flex-middle uk-flex-column", style: { maxWidth: "1300px", margin: "auto" } }, hAsync("p", { class: "uk-text-center ks-text-decorated uk-h1", innerHTML: this.message }), hAsync("div", { class: "uk-margin-top" }, hAsync("button", { onClick: () => this.Close(), class: "uk-button uk-button-secondary", style: { padding: "5px 40px" } }, "OK")))))));
-  }
-  get root() { return getElement(this); }
-  static get cmpMeta() { return {
-    "$flags$": 0,
-    "$tagName$": "ks-alert",
-    "$members$": {
-      "message": [1]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
-
 const notificationCss = "ks-notification{display:-ms-flexbox;display:flex;background-color:#252525;color:white}ks-notification>.content{width:100%;padding:15px 20px;text-align:center;-webkit-box-sizing:border-box;box-sizing:border-box}ks-notification>.icon{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;padding:10px;min-width:50px;background:rgba(0, 0, 0, 0.1)}ks-notification p{margin:0 !important}ks-notification[red]{background-color:var(--color-secondary)}@media (max-width: 420px){ks-notification{-ms-flex-direction:column;flex-direction:column}ks-notification>.content{padding:10px 12px}}";
 
 class Alert {
@@ -12501,30 +12454,17 @@ const createStore = (defaultState, shouldUpdate) => {
     return map;
 };
 
-const cart = createStore({});
+const cart = createStore({
+  "loading": 0,
+  "loadingDeals": false,
+});
 
-const cartButtonsCss = "ks-cart-buttons{display:block}ks-cart-buttons>.confirm{-ms-flex:1;flex:1;width:100%;font-size:28px;font-weight:700;padding:20px}";
+const cartButtonsCss = "ks-cart-buttons{display:block;position:relative;margin-top:20px;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none}ks-cart-buttons>.confirm{-ms-flex:1;flex:1;width:100%;font-size:28px;font-weight:700;padding:20px}ks-cart-buttons ks-button{height:50px}ks-cart-buttons ks-button button{font-weight:700;font-size:17px;font-family:var(--font-emphasis)}ks-cart-buttons .loading{pointer-events:none;opacity:0.5}ks-cart-buttons ks-loader{top:23px}ks-cart-buttons>*{-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}";
 
 class CartButtons {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.href = "";
-    this.loadingDelayed = false;
-  }
-  LoadingWatcher(loading) {
-    if (loading) {
-      this.loadingTimeout = setTimeout(() => {
-        this.loadingDelayed = true;
-      }, 500);
-    }
-    else {
-      clearTimeout(this.loadingTimeout);
-      this.loadingDelayed = false;
-    }
-  }
-  componentDidLoad() {
-    this.LoadingWatcher(cart.get("loading"));
-    cart.onChange("loading", (loading) => this.LoadingWatcher(loading));
   }
   async clickHandler() {
     if (!cart.get("loading")) {
@@ -12544,9 +12484,11 @@ class CartButtons {
     }
   }
   render() {
-    return (hAsync("button", { class: "confirm uk-button uk-button-danger ks-text-decorated", onClick: () => this.clickHandler() }, this.loadingDelayed && cart.get("loading") ?
-      hAsync("div", { class: "uk-animation-fade", "uk-spinner": true }) :
-      hAsync("span", null, cart.get("strings").submitButton)));
+    const loading = cart.get("loading") > 0;
+    return [
+      loading ? hAsync("ks-loader", { dark: true }) : null,
+      hAsync("ks-button", { secondary: true, class: loading ? "loading" : "", onClick: () => this.clickHandler(), name: cart.get("strings").submitButton })
+    ];
   }
   get root() { return getElement(this); }
   static get style() { return cartButtonsCss; }
@@ -12554,557 +12496,7 @@ class CartButtons {
     "$flags$": 0,
     "$tagName$": "ks-cart-buttons",
     "$members$": {
-      "href": [1],
-      "loadingDelayed": [32]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
-
-const cartCountrySelectCss = "ks-cart-country-select{display:block}ks-cart-country-select .select{position:relative;height:35px;margin-bottom:35px}ks-cart-country-select .select .icons{position:absolute;width:50px;height:50px;padding:13px;top:0;right:0;pointer-events:none;opacity:1.0;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease;-webkit-box-sizing:border-box;box-sizing:border-box;background-color:#252525;color:white}ks-cart-country-select .select .icons span{position:absolute}ks-cart-country-select .select span:last-of-type{opacity:0.0}ks-cart-country-select .select select{height:50px;width:100%;padding:0 20px;outline:none;border:none;-moz-appearance:none;-webkit-appearance:none;appearance:none;background-color:#f8f8f8;border:1px solid #d2d2d2;-moz-text-align-last:left;text-align-last:left;font-size:16px;font-family:'Nunito', sans-serif;color:#151515;-webkit-transition:color 0.3s ease;transition:color 0.3s ease}ks-cart-country-select .select option{font-size:16px}ks-cart-country-select .select:hover select{color:#606060}ks-cart-country-select .select span:first-of-type{opacity:0.0 !important}ks-cart-country-select .select span:last-of-type{opacity:1.0 !important}ks-cart-country-select .select:hover span:first-of-type{opacity:0.0}ks-cart-country-select .select:hover span:last-of-type{opacity:1.0}";
-
-class CartCountrySelect {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.countryChange = createEvent(this, "countryChange", 7);
-    this.heading = undefined;
-  }
-  ChangeHandler(event) {
-    const target = event.target;
-    this.countryChange.emit(target.value);
-  }
-  render() {
-    return [
-      hAsync("ks-cart-heading", null, this.heading),
-      hAsync("div", { class: "select" }, hAsync("div", { class: "icons" }, hAsync("span", { "uk-icon": "icon: world; ratio: 1.2;" }), hAsync("span", { "uk-icon": "icon: triangle-down; ratio: 1.2;" })), hAsync("select", { onChange: (ev) => this.ChangeHandler(ev) }, cart.get('countries').map(country => hAsync("option", { value: country.value, selected: country === null || country === void 0 ? void 0 : country.selected }, country.name))))
-    ];
-  }
-  get root() { return getElement(this); }
-  static get style() { return cartCountrySelectCss; }
-  static get cmpMeta() { return {
-    "$flags$": 0,
-    "$tagName$": "ks-cart-country-select",
-    "$members$": {
-      "heading": [1]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
-
-const common = createStore({
-  logo: "",
-  categoryUrl: "",
-  cartLink: "",
-  heartLink: "",
-  accountLink: "",
-  loginLink: "",
-  logoutLink: "",
-  registerLink: "",
-  softwareLink: "",
-  promo: "",
-  promoLink: "",
-  email: "",
-  phone: "",
-  workingHours: "",
-  company: "",
-  address: "",
-  nip: "",
-  newsletterPopup: false,
-  newsletterApi: "",
-  suggestionApi: "",
-  autocompleteApi: "",
-  cookieMessage: "",
-  cookieButton: "",
-  cookieDelay: 1000,
-  categories: [],
-  social: [],
-  reviewers: [],
-  footerLinks: [],
-  translations: {}
-});
-
-const dealCss = "ks-cart-deal{display:-ms-flexbox;display:flex;overflow:hidden;-ms-flex-pack:space-evenly;justify-content:space-evenly;-ms-flex-align:center;align-items:center;background-color:#252525;padding:0 30px;-webkit-box-sizing:border-box;box-sizing:border-box;margin:0 0 30px 0}ks-cart-deal .image{position:relative;-webkit-box-sizing:border-box;box-sizing:border-box;width:180px;height:180px;-webkit-transform:translateX(-20px);transform:translateX(-20px)}ks-cart-deal .circle{position:absolute;-webkit-box-sizing:border-box;box-sizing:border-box;overflow:hidden;width:145px;height:145px;padding:10px;border-radius:100%;background-color:white}ks-cart-deal .fx{position:absolute;width:250px;height:250px;max-width:initial;-webkit-animation-name:rotate;animation-name:rotate;-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite;-webkit-animation-timing-function:linear;animation-timing-function:linear}ks-cart-deal .fx1{-webkit-animation-duration:50s;animation-duration:50s}ks-cart-deal .fx2{-webkit-animation-duration:40s;animation-duration:40s;animation-direction:reverse}ks-cart-deal .fx3{-webkit-animation-duration:40s;animation-duration:40s}ks-cart-deal .fx4{-webkit-animation-duration:50s;animation-duration:50s;animation-direction:reverse}@-webkit-keyframes rotate{from{-webkit-transform:translate(-50%, -50%) rotate(0deg);transform:translate(-50%, -50%) rotate(0deg)}to{-webkit-transform:translate(-50%, -50%) rotate(360deg);transform:translate(-50%, -50%) rotate(360deg)}}@keyframes rotate{from{-webkit-transform:translate(-50%, -50%) rotate(0deg);transform:translate(-50%, -50%) rotate(0deg)}to{-webkit-transform:translate(-50%, -50%) rotate(360deg);transform:translate(-50%, -50%) rotate(360deg)}}ks-cart-deal .center{top:50%;left:50%;-webkit-transform:translate(-50%, -50%);transform:translate(-50%, -50%)}ks-cart-deal .text{color:white;font-size:18px;text-align:center}ks-cart-deal .top>a{color:white;text-decoration:none}ks-cart-deal .text>.bottom{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;font-size:34px;font-weight:700}ks-cart-deal button{margin-left:20px;padding:8px 30px 10px 30px;border-radius:50px;border-style:none;outline-style:none;font-weight:700;font-size:18px;width:260px;background-color:#ff3838;color:white;-webkit-transition:background-color 0.3s;transition:background-color 0.3s}ks-cart-deal button:hover{background-color:#e62c2c}ks-cart-deal button:active{background-color:#d41e1e;-webkit-transition:background-color 0.1s;transition:background-color 0.1s}@media only screen and (max-width: 760px){ks-cart-deal{display:block;padding:20px}ks-cart-deal .image{-webkit-transform:translateX(0px);transform:translateX(0px);margin:10px auto 30px auto}}@media only screen and (max-width: 460px){ks-cart-deal .text>.bottom{-ms-flex-direction:column;flex-direction:column;font-size:34px}ks-cart-deal button{margin:5px 0 0 0}}ks-cart-deal .large{display:none}@media only screen and (min-width: 1100px){ks-cart-deal{-ms-flex-pack:distribute;justify-content:space-around}ks-cart-deal .large{display:block}ks-cart-deal .small{display:none}ks-cart-deal .text{text-align:left;min-width:400px}ks-cart-deal .text>.bottom{display:block;font-size:34px;line-height:34px}ks-cart-deal button{margin-left:0;padding:15px 30px 17px 30px;border-radius:50px;border-style:none;outline-style:none;font-weight:700;font-size:18px;background-color:#ff3838;color:white}}";
-
-class CartDeal {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.addDeal = createEvent(this, "addDeal", 7);
-    this.ikey = undefined;
-    this.name = undefined;
-    this.img = undefined;
-    this.link = undefined;
-    this.price = undefined;
-    this.loading = false;
-  }
-  Add() {
-    this.addDeal.emit(this.ikey);
-  }
-  render() {
-    const translations = common.get('translations');
-    return [
-      hAsync("a", { href: this.link }, hAsync("div", { class: "image" }, hAsync("div", { class: "circle center" }, hAsync("ks-img", { src: this.img, alt: this.name, vertical: true, center: true })), hAsync("svg", { class: "fx fx1 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "80", fill: "transparent", stroke: "white", "stroke-width": "3", "stroke-dasharray": "50, 32" })), hAsync("svg", { class: "fx fx2 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "88", fill: "transparent", stroke: "white", "stroke-width": "3", "stroke-dasharray": "50,59" })), hAsync("svg", { class: "fx fx3 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "96", fill: "transparent", stroke: "white", "stroke-width": "3", "stroke-dasharray": "30,30" })), hAsync("svg", { class: "fx fx4 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "106", fill: "transparent", stroke: "white", "stroke-width": "3", "stroke-dasharray": "70,60" })))),
-      hAsync("div", { class: "text ks-text-decorated" }, hAsync("div", { class: "top" }, hAsync("a", { href: this.link }, this.name)), hAsync("div", { class: "bottom" }, this.price, hAsync("button", { class: "ks-text-decorated small", onClick: () => this.Add() }, cart.get('loadingDeals') ? hAsync("div", { "uk-spinner": "ratio: 0.8" }) : hAsync("span", null, translations.addToCart)))),
-      hAsync("button", { class: "ks-text-decorated large", onClick: () => this.Add() }, cart.get('loadingDeals') ? hAsync("div", { "uk-spinner": "ratio: 0.8" }) : hAsync("span", null, translations.addToCart))
-    ];
-  }
-  static get style() { return dealCss; }
-  static get cmpMeta() { return {
-    "$flags$": 0,
-    "$tagName$": "ks-cart-deal",
-    "$members$": {
-      "ikey": [513],
-      "name": [1],
-      "img": [1],
-      "link": [1],
-      "price": [1],
-      "loading": [32]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["ikey", "ikey"]]
-  }; }
-}
-
-class CartDealContainer {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-  }
-  render() {
-    return [
-      cart.get("dealGroups").map((group) => hAsync("ks-cart-deal-group", { key: group.name, name: group.name, deals: group.deals })),
-      cart.get("deals").map((product) => hAsync("ks-cart-deal", { key: product.id, ikey: product.id, name: product.name, link: product.link, img: product.img, price: product.price }))
-    ];
-  }
-  get root() { return getElement(this); }
-  static get cmpMeta() { return {
-    "$flags$": 0,
-    "$tagName$": "ks-cart-deal-container",
-    "$members$": undefined,
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
-
-const dealGroupCss = "ks-cart-deal-group{display:-ms-flexbox;display:flex;overflow:hidden;-ms-flex-pack:space-evenly;justify-content:space-evenly;-ms-flex-align:center;align-items:center;background-color:#252525;padding:0 30px;-webkit-box-sizing:border-box;box-sizing:border-box;margin:0 0 30px 0}ks-cart-deal-group .image{position:relative;-webkit-box-sizing:border-box;box-sizing:border-box;width:180px;height:180px;-webkit-transform:translateX(-20px);transform:translateX(-20px)}ks-cart-deal-group .circle{position:absolute;-webkit-box-sizing:border-box;box-sizing:border-box;overflow:hidden;width:145px;height:145px;padding:10px;border-radius:100%;background-color:white}ks-cart-deal-group .fx{position:absolute;width:250px;height:250px;max-width:initial;-webkit-animation-name:rotate;animation-name:rotate;-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite;-webkit-animation-timing-function:linear;animation-timing-function:linear}ks-cart-deal-group .fx1{-webkit-animation-duration:50s;animation-duration:50s}ks-cart-deal-group .fx2{-webkit-animation-duration:40s;animation-duration:40s;animation-direction:reverse}ks-cart-deal-group .fx3{-webkit-animation-duration:40s;animation-duration:40s}ks-cart-deal-group .fx4{-webkit-animation-duration:50s;animation-duration:50s;animation-direction:reverse}@-webkit-keyframes rotate{from{-webkit-transform:translate(-50%, -50%) rotate(0deg);transform:translate(-50%, -50%) rotate(0deg)}to{-webkit-transform:translate(-50%, -50%) rotate(360deg);transform:translate(-50%, -50%) rotate(360deg)}}@keyframes rotate{from{-webkit-transform:translate(-50%, -50%) rotate(0deg);transform:translate(-50%, -50%) rotate(0deg)}to{-webkit-transform:translate(-50%, -50%) rotate(360deg);transform:translate(-50%, -50%) rotate(360deg)}}ks-cart-deal-group .center{top:50%;left:50%;-webkit-transform:translate(-50%, -50%);transform:translate(-50%, -50%)}ks-cart-deal-group .text{color:white;font-size:18px;text-align:center}ks-cart-deal-group .top>a{color:white;text-decoration:none}ks-cart-deal-group .text>.bottom{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;font-size:34px;font-weight:700}ks-cart-deal-group button{margin-left:20px;padding:8px 30px 10px 30px;border-radius:50px;border-style:none;outline-style:none;font-weight:700;font-size:18px;width:260px;background-color:#ff3838;color:white;-webkit-transition:background-color 0.3s;transition:background-color 0.3s}ks-cart-deal-group button:hover{background-color:#e62c2c}ks-cart-deal-group button:active{background-color:#d41e1e;-webkit-transition:background-color 0.1s;transition:background-color 0.1s}ks-cart-deal-group .variants{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center}ks-cart-deal-group .variants label{display:block;-webkit-box-sizing:border-box;box-sizing:border-box;padding:6px 20px 8px 15px;font-size:15px;background-color:#4d4d4d;-ms-flex-negative:0;flex-shrink:0;height:36px}ks-cart-deal-group select{display:block;margin:15px 0;padding:8px 40px 10px 10px;width:100%;height:36px;font-size:15px;-webkit-appearance:none;-moz-appearance:none;appearance:none;background-color:#353535;color:#f2f2f2 !important;border:none;background-image:url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');background-repeat:no-repeat, repeat;background-position:right 15px top 50%, 0 0;background-size:10px auto, 100%;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease}ks-cart-deal-group select::-ms-expand{display:none}ks-cart-deal-group select:hover{background-color:#404040}ks-cart-deal-group select:focus{outline:none}ks-cart-deal-group select option{font-weight:normal}@media only screen and (max-width: 760px){ks-cart-deal-group{display:block;padding:20px}ks-cart-deal-group .image{-webkit-transform:translateX(0px);transform:translateX(0px);margin:10px auto 30px auto}ks-cart-deal-group .variants{-ms-flex-pack:center;justify-content:center}ks-cart-deal-group select{max-width:220px;text-align:center;-moz-text-align-last:center;text-align-last:center}}@media only screen and (max-width: 460px){ks-cart-deal-group .text>.bottom{-ms-flex-direction:column;flex-direction:column;font-size:34px !important}ks-cart-deal-group button{margin:5px 0 0 0}}ks-cart-deal-group .large{display:none}@media only screen and (min-width: 1100px){ks-cart-deal-group{-ms-flex-pack:distribute;justify-content:space-around}ks-cart-deal-group .large{display:block}ks-cart-deal-group .small{display:none}ks-cart-deal-group .text{text-align:left;min-width:400px}ks-cart-deal-group .text>.bottom{display:block;font-size:34px;line-height:34px}ks-cart-deal-group button{margin-left:0;padding:15px 30px 17px 30px;border-radius:50px;border-style:none;outline-style:none;font-weight:700;font-size:18px;background-color:#ff3838;color:white}ks-cart-deal-group select{margin:8px 0px 8px 0px;width:auto}}";
-
-class CartDealGroup {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.addDeal = createEvent(this, "addDeal", 7);
-    this.ikey = undefined;
-    this.name = undefined;
-    this.deals = undefined;
-    this.currentDeal = undefined;
-  }
-  componentWillLoad() {
-    this.currentDeal = this.deals[0];
-  }
-  change(target) {
-    const select = target;
-    this.currentDeal = this.deals[select.selectedIndex];
-  }
-  Add() {
-    this.addDeal.emit(this.currentDeal.id);
-  }
-  render() {
-    const translations = common.get('translations');
-    const strings = cart.get('strings');
-    return [
-      hAsync("a", { href: this.currentDeal.link }, hAsync("div", { class: "image" }, hAsync("div", { class: "circle center" }, hAsync("ks-img", { src: this.currentDeal.img, alt: this.name, vertical: true, center: true })), hAsync("svg", { class: "fx fx1 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "80", fill: "transparent", stroke: "white", "stroke-width": "3", "stroke-dasharray": "50, 32" })), hAsync("svg", { class: "fx fx2 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "88", fill: "transparent", stroke: "white", "stroke-width": "3", "stroke-dasharray": "50,59" })), hAsync("svg", { class: "fx fx3 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "96", fill: "transparent", stroke: "white", "stroke-width": "3", "stroke-dasharray": "30,30" })), hAsync("svg", { class: "fx fx4 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "106", fill: "transparent", stroke: "white", "stroke-width": "3", "stroke-dasharray": "70,60" })))),
-      hAsync("div", { class: "text ks-text-decorated" }, hAsync("div", { class: "top" }, hAsync("a", { href: this.currentDeal.link }, this.name), hAsync("div", { class: "variants" }, hAsync("label", null, strings.selectColor), hAsync("select", { class: "ks-text-decorated", onChange: event => this.change(event.target) }, this.deals.map(deal => hAsync("option", null, deal.name))))), hAsync("div", { class: "bottom" }, this.currentDeal.price, hAsync("button", { class: "ks-text-decorated small", onClick: () => this.Add() }, cart.get('loadingDeals') ? hAsync("div", { "uk-spinner": "ratio: 0.8" }) : hAsync("span", null, translations.addToCart)))),
-      hAsync("button", { class: "ks-text-decorated large", onClick: () => this.Add() }, cart.get('loadingDeals') ? hAsync("div", { "uk-spinner": "ratio: 0.8" }) : hAsync("span", null, translations.addToCart))
-    ];
-  }
-  static get style() { return dealGroupCss; }
-  static get cmpMeta() { return {
-    "$flags$": 0,
-    "$tagName$": "ks-cart-deal-group",
-    "$members$": {
-      "ikey": [513],
-      "name": [1],
-      "deals": [16],
-      "currentDeal": [32]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["ikey", "ikey"]]
-  }; }
-}
-
-const cartDiscountCodeCss = "ks-cart-discount-code{display:block}ks-cart-discount-code>form:first-child{display:-ms-flexbox;display:flex}ks-cart-discount-code ks-input-text{display:block;-ms-flex:1;flex:1}ks-cart-discount-code ks-input-text input{height:50px !important}ks-cart-discount-code ks-input-text>div{margin-bottom:3px !important}ks-cart-discount-code button{padding:0 30px !important;height:50px}@media only screen and (max-width: 560px){ks-cart-discount-code>form:first-child{display:block}ks-cart-discount-code button{width:100%}}ks-cart-discount-code .message{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;cursor:pointer;height:100px;margin-top:7px;background-color:#222222;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease}ks-cart-discount-code .message:hover{background-color:#303030}@media only screen and (max-width: 470px){ks-cart-discount-code .message{height:25vw}}";
-
-class CartDiscountCode {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.discountCodeAdd = createEvent(this, "discountCodeAdd", 7);
-    this.placeholder = "";
-    this.image = "";
-    this.loading = false;
-  }
-  discountCodeAddHandler(event) {
-    event.preventDefault();
-    if (!this.loading) {
-      const form = event.target;
-      const input = form.querySelector('input[name="discountCode"]');
-      const value = input.value;
-      if (value) {
-        const valueString = value.toString();
-        if (valueString != "") {
-          this.loading = true;
-          this.discountCodeAdd.emit(valueString);
-        }
-      }
-    }
-  }
-  async ResetLoading() {
-    this.loading = false;
-  }
-  render() {
-    const strings = cart.get("strings");
-    return [
-      hAsync("form", { onSubmit: (e) => this.discountCodeAddHandler(e) }, hAsync("ks-input-text", { emphasis: true, center: true, placeholder: this.placeholder, name: "discountCode" }), hAsync("button", { type: "submit", class: "uk-button uk-button-secondary" }, this.loading ? hAsync("div", { "uk-spinner": true }) : hAsync("span", null, strings.discountCodeActivate))),
-      hAsync("div", { class: "message", onClick: () => { var _a; return (_a = document.querySelector('ks-newsletter-popup-edrone')) === null || _a === void 0 ? void 0 : _a.Show(); } }, hAsync("ks-img", { vertical: true, center: true, src: this.image }))
-    ];
-  }
-  static get style() { return cartDiscountCodeCss; }
-  static get cmpMeta() { return {
-    "$flags$": 0,
-    "$tagName$": "ks-cart-discount-code",
-    "$members$": {
-      "placeholder": [1],
-      "image": [1],
-      "loading": [32],
-      "ResetLoading": [64]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
-
-function priceFormat(value) {
-  if (typeof value === 'undefined' || value === null)
-    return "";
-  if (typeof value === 'string')
-    value = parseFloat(value);
-  const currency = common.get('currency');
-  if (!currency)
-    return value.toString();
-  return priceFormatNoCurrency(value) + ` ${currency.symbol}`;
-}
-function priceFormatNoCurrency(value) {
-  if (typeof value === 'undefined' || value === null)
-    return "";
-  if (typeof value === 'string')
-    value = parseFloat(value);
-  const currency = common.get('currency');
-  if (!currency)
-    return value.toString();
-  return value.toFixed(2).replace('.', currency.separator);
-}
-
-const cartDiscountContainerCss = "ks-cart-discount-container{display:block;min-height:123px}ks-cart-discount-container>.flex{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between}ks-cart-discount-container>.flex>*{width:calc(50% - 4px)}@media only screen and (max-width: 1100px){ks-cart-discount-container>.flex{display:block}ks-cart-discount-container>.flex>*{width:100%;margin-bottom:30px}}";
-
-class CartDiscountContainer {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.codeBanner = "";
-    this.codePlaceholder = "";
-    this.pointsPlaceholder = "";
-    this.pointsMessage = "";
-    this.loginMessage = "";
-    this.infoMessage = "";
-    this.noPointsHeading = "";
-    this.noPointsMessage = "";
-    this.thresholdHeading = "";
-    this.thresholdMessage = "";
-    this.loginUrl = "";
-    this.loggedIn = false;
-    this.disablePoints = false;
-  }
-  render() {
-    var _a;
-    const discount = cart.get("discount");
-    const points = cart.get("points");
-    const pointsForOrder = cart.get("pointsForOrder");
-    const productValue = cart.get("productValue");
-    if (discount && ((_a = Object.keys(discount)) === null || _a === void 0 ? void 0 : _a.length) !== 0) {
-      return (hAsync("nav", { class: "uk-animation-fade" }, hAsync("ks-cart-heading", null, discount.heading), hAsync("ks-cart-discount-ticket", { name: discount.name, value: discount.value })));
-    }
-    const pointsMessage = this.pointsMessage
-      .replace("{available}", points.available.toString())
-      .replace("{value}", priceFormat(points.value))
-      .replace("{points}", pointsForOrder.toFixed(0));
-    const loginMessage = this.loginMessage
-      .replace("{points}", pointsForOrder.toFixed(0));
-    const noPointsMessage = this.noPointsMessage
-      .replace("{points}", pointsForOrder.toFixed(0));
-    const thresholdMessage = this.thresholdMessage
-      .replace("{threshold}", priceFormat(points.threshold))
-      .replace("{points}", pointsForOrder.toFixed(0));
-    const strings = cart.get("strings");
-    return [
-      hAsync("div", { class: `uk-animation-fade ${!this.disablePoints ? "flex" : ""}` }, hAsync("div", null, hAsync("ks-cart-heading", null, strings.discountCodeHeading), hAsync("ks-cart-discount-code", { placeholder: this.codePlaceholder, image: this.codeBanner })), !this.disablePoints ?
-        hAsync("div", null, hAsync("ks-cart-heading", null, strings.discountPointsHeading), this.loggedIn ? (points.available > 0 ?
-          productValue >= points.threshold || points.threshold == 0 ?
-            hAsync("ks-cart-discount-points", { placeholder: this.pointsPlaceholder, message: pointsMessage, points: points.available, orderPoints: pointsForOrder })
-            :
-              hAsync("ks-cart-discount-points-message", { heading: this.thresholdHeading, message: thresholdMessage, points: pointsForOrder })
-          :
-            hAsync("ks-cart-discount-points-message", { heading: this.noPointsHeading, message: noPointsMessage, points: pointsForOrder })) :
-          hAsync("ks-cart-discount-points-login", { message: loginMessage, points: pointsForOrder, "login-url": this.loginUrl }))
-        : null),
-      this.infoMessage != "" ?
-        hAsync("ks-cart-discount-message", null, hAsync("span", null, this.infoMessage))
-        : null
-    ];
-  }
-  get root() { return getElement(this); }
-  static get style() { return cartDiscountContainerCss; }
-  static get cmpMeta() { return {
-    "$flags$": 0,
-    "$tagName$": "ks-cart-discount-container",
-    "$members$": {
-      "codeBanner": [1, "code-banner"],
-      "codePlaceholder": [1, "code-placeholder"],
-      "pointsPlaceholder": [1, "points-placeholder"],
-      "pointsMessage": [1, "points-message"],
-      "loginMessage": [1, "login-message"],
-      "infoMessage": [1, "info-message"],
-      "noPointsHeading": [1, "no-points-heading"],
-      "noPointsMessage": [1, "no-points-message"],
-      "thresholdHeading": [1, "threshold-heading"],
-      "thresholdMessage": [1, "threshold-message"],
-      "loginUrl": [1, "login-url"],
-      "loggedIn": [4, "logged-in"],
-      "disablePoints": [4, "disable-points"]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
-
-const cartDiscountPointsCss = "ks-cart-discount-points{display:block}ks-cart-discount-points>form{display:-ms-flexbox;display:flex}ks-cart-discount-points ks-input-number{display:block;-ms-flex:1;flex:1}ks-cart-discount-points ks-input-number input{height:50px !important}ks-cart-discount-points ks-input-number>div{margin-bottom:3px !important}ks-cart-discount-points button{padding:0 30px !important;height:50px}@media only screen and (max-width: 600px){ks-cart-discount-points>form{display:block}ks-cart-discount-points button{width:100%}}ks-cart-discount-points .messsage{display:-ms-flexbox;display:flex;-ms-flex-direction:row-reverse;flex-direction:row-reverse;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;height:100px;margin-top:7px;background-color:#222222;color:white}ks-cart-discount-points .messsage:hover{color:white;text-decoration:none}ks-cart-discount-points .messsage:visited{color:white;text-decoration:none}ks-cart-discount-points .messsage>.bottom{-ms-flex:1;flex:1;padding:10px 20px;font-size:15px}ks-cart-discount-points .messsage .points{height:100%}ks-cart-discount-points .points>div{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;-webkit-box-sizing:border-box;box-sizing:border-box;padding:6px 30px;height:50%;font-size:26px;font-weight:700}ks-cart-discount-points .points>div>span{-webkit-transform:translateX(-5px);transform:translateX(-5px)}ks-cart-discount-points .points>.top{background-color:#303030}ks-cart-discount-points .points>.bottom{background-color:#ff3c3c}@media only screen and (max-width: 600px){ks-cart-discount-points .messsage{display:block;height:auto;text-align:center}ks-cart-discount-points .messsage .points{display:none}}";
-
-class CartDiscountPoints {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.discountPointsAdd = createEvent(this, "discountPointsAdd", 7);
-    this.placeholder = "";
-    this.message = "";
-    this.points = 1;
-    this.orderPoints = 1;
-    this.loading = false;
-  }
-  discountPointsAddHandler(event) {
-    event.preventDefault();
-    if (!this.loading) {
-      const form = event.target;
-      const input = form.querySelector('input[name="pointCount"]');
-      const value = input.value;
-      if (value) {
-        const valueNumber = parseInt(value.toString());
-        if (valueNumber != NaN) {
-          this.loading = true;
-          this.discountPointsAdd.emit(valueNumber);
-        }
-      }
-    }
-  }
-  async ResetLoading() {
-    this.loading = false;
-  }
-  render() {
-    const strings = cart.get("strings");
-    return [
-      hAsync("form", { onSubmit: (e) => this.discountPointsAddHandler(e), novalidate: true }, hAsync("ks-input-number", { emphasis: true, center: true, placeholder: this.placeholder, min: 1, max: this.points, step: 10, name: "pointCount" }), hAsync("button", { type: "submit", class: "uk-button uk-button-secondary" }, this.loading ? hAsync("div", { "uk-spinner": true }) : hAsync("span", null, strings.discountPointsActivate))),
-      hAsync("div", { class: "messsage" }, hAsync("div", { class: "points ks-text-decorated" }, hAsync("div", { class: "top" }, this.points), hAsync("div", { class: "bottom" }, hAsync("span", null, "+", this.orderPoints))), hAsync("div", { class: "bottom" }, this.message))
-    ];
-  }
-  static get style() { return cartDiscountPointsCss; }
-  static get cmpMeta() { return {
-    "$flags$": 0,
-    "$tagName$": "ks-cart-discount-points",
-    "$members$": {
-      "placeholder": [1],
-      "message": [1],
-      "points": [2],
-      "orderPoints": [2, "order-points"],
-      "loading": [32],
-      "ResetLoading": [64]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
-
-const cartDiscountPointsLoginCss = "ks-cart-discount-points-login{display:block}ks-cart-discount-points-login a{padding:4px 5px !important;height:50px;width:100%;font-size:18px !important;font-weight:700 !important;text-transform:uppercase !important}ks-cart-discount-points-login a:first-child{border-right:1px solid #303030}ks-cart-discount-points-login .messsage{display:-ms-flexbox;display:flex;-ms-flex-direction:row-reverse;flex-direction:row-reverse;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;height:100px;-webkit-box-sizing:border-box;box-sizing:border-box;margin-top:7px;background-color:#222222;color:white}@media only screen and (max-width: 600px){ks-cart-discount-points-login .messsage{display:block;height:auto;text-align:center;font-size:14px}ks-cart-discount-points-login a{font-size:14px !important;font-weight:400 !important;text-transform:none !important}}ks-cart-discount-points-login .messsage>.info{-ms-flex:1;flex:1;padding:10px 20px;font-size:15px}ks-cart-discount-points-login .messsage .points{height:100%}ks-cart-discount-points-login .points{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;-webkit-box-sizing:border-box;box-sizing:border-box;padding:6px 30px;font-size:32px;font-weight:700;background-color:#ff3c3c}ks-cart-discount-points-login .points>span{-webkit-transform:translateX(-5px);transform:translateX(-5px)}@media only screen and (max-width: 600px){ks-cart-discount-points-login .messsage .points{display:none}}";
-
-class CartDiscountPointsLogin {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.message = "";
-    this.loginUrl = "";
-    this.points = 1;
-  }
-  render() {
-    return [
-      hAsync("div", null, hAsync("a", { href: this.loginUrl, class: "uk-button uk-button-secondary ks-text-decorated" }, cart.get("strings").discountPointsLogin)),
-      hAsync("div", { class: "messsage" }, hAsync("div", { class: "points ks-text-decorated" }, hAsync("span", null, "+", this.points)), hAsync("div", { class: "info" }, this.message))
-    ];
-  }
-  static get style() { return cartDiscountPointsLoginCss; }
-  static get cmpMeta() { return {
-    "$flags$": 0,
-    "$tagName$": "ks-cart-discount-points-login",
-    "$members$": {
-      "message": [1],
-      "loginUrl": [1, "login-url"],
-      "points": [2]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
-
-const cartDiscountPointsMessageCss = "ks-cart-discount-points-message{display:block}ks-cart-discount-points-message>div:first-child{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-webkit-box-sizing:border-box;box-sizing:border-box;height:50px;padding:4px 5px !important;background-color:#222222;color:white;font-size:18px !important;font-weight:700 !important;text-transform:uppercase !important}ks-cart-discount-points-message .messsage{display:-ms-flexbox;display:flex;-ms-flex-direction:row-reverse;flex-direction:row-reverse;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;height:100px;font-size:15px;-webkit-box-sizing:border-box;box-sizing:border-box;margin-top:7px;background-color:#222222;color:white}@media only screen and (max-width: 600px){ks-cart-discount-points-message .messsage{display:block;height:auto;text-align:center;font-size:14px}ks-cart-discount-points-message div:first-child{font-size:14px !important;font-weight:400 !important;text-transform:none !important}}ks-cart-discount-points-message .messsage>.info{-ms-flex:1;flex:1;padding:10px 20px;font-size:15px}ks-cart-discount-points-message .messsage .points{height:100%}ks-cart-discount-points-message .points{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;-webkit-box-sizing:border-box;box-sizing:border-box;padding:6px 30px;font-size:32px;font-weight:700;background-color:#ff3c3c}ks-cart-discount-points-message .points>span{-webkit-transform:translateX(-5px);transform:translateX(-5px)}@media only screen and (max-width: 600px){ks-cart-discount-points-message .messsage .points{display:none}}";
-
-class CartDiscountPointsMessage {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.heading = "";
-    this.message = "";
-    this.points = 1;
-  }
-  render() {
-    return [
-      hAsync("div", { class: "ks-text-decorated" }, this.heading),
-      hAsync("div", { class: "messsage" }, hAsync("div", { class: "points ks-text-decorated" }, hAsync("span", null, "+", this.points)), hAsync("div", { class: "info" }, this.message))
-    ];
-  }
-  static get style() { return cartDiscountPointsMessageCss; }
-  static get cmpMeta() { return {
-    "$flags$": 0,
-    "$tagName$": "ks-cart-discount-points-message",
-    "$members$": {
-      "heading": [1],
-      "message": [1],
-      "points": [2]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
-
-const cartDiscountTicketCss$1 = "ks-cart-discount-ticket{display:-ms-flexbox;display:flex;width:100%;min-height:70px;-webkit-box-sizing:border-box;box-sizing:border-box;background-color:#ff3838;color:white;font-size:20px}ks-cart-discount-ticket .content{-ms-flex:1;flex:1;display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-align:center;align-items:center;padding:10px 20px}ks-cart-discount-ticket .name{-ms-flex:1;flex:1;font-weight:700}ks-cart-discount-ticket .remove{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;width:70px;background-color:transparent;-webkit-transition:background-color 0.2s ease;transition:background-color 0.2s ease}ks-cart-discount-ticket .remove:hover{background-color:rgba(0, 0, 0, 0.068)}ks-cart-discount-ticket .remove:active{background-color:rgba(0, 0, 0, 0.137)}@media only screen and (max-width: 560px){ks-cart-discount-ticket .content{display:block}ks-cart-discount-ticket .value{font-size:16px}}";
-
-class CartDiscountTicket$1 {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.name = "";
-  }
-  render() {
-    return [
-      hAsync("div", { style: { margin: "20px 0", color: "#777777", textAlign: "center" } }, hAsync("span", { "uk-icon": "info" }), " ", hAsync("slot", null))
-    ];
-  }
-  static get style() { return cartDiscountTicketCss$1; }
-  static get cmpMeta() { return {
-    "$flags$": 4,
-    "$tagName$": "ks-cart-discount-message",
-    "$members$": {
-      "name": [1]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
-
-const cartDiscountTicketCss = "ks-cart-discount-ticket{display:-ms-flexbox;display:flex;width:100%;min-height:70px;-webkit-box-sizing:border-box;box-sizing:border-box;background-color:#ff3838;color:white;font-size:20px}ks-cart-discount-ticket .content{-ms-flex:1;flex:1;display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-align:center;align-items:center;padding:10px 20px}ks-cart-discount-ticket .name{-ms-flex:1;flex:1;font-weight:700}ks-cart-discount-ticket .remove{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;width:70px;background-color:transparent;-webkit-transition:background-color 0.2s ease;transition:background-color 0.2s ease}ks-cart-discount-ticket .remove:hover{background-color:rgba(0, 0, 0, 0.068)}ks-cart-discount-ticket .remove:active{background-color:rgba(0, 0, 0, 0.137)}@media only screen and (max-width: 560px){ks-cart-discount-ticket .content{display:block}ks-cart-discount-ticket .value{font-size:16px}}";
-
-class CartDiscountTicket {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.discountRemove = createEvent(this, "discountRemove", 7);
-    this.name = "";
-    this.value = "";
-    this.loading = false;
-  }
-  discountRemoveHandler() {
-    this.loading = true;
-    this.discountRemove.emit();
-  }
-  render() {
-    const parsed = parseFloat(this.value);
-    if (!isNaN(parsed))
-      this.value = priceFormat(parsed);
-    return [
-      hAsync("div", { class: "content ks-text-decorated" }, hAsync("div", { class: "name" }, this.name), hAsync("div", { class: "value" }, this.value)),
-      hAsync("div", { class: "remove", onClick: () => this.discountRemoveHandler() }, this.loading ?
-        hAsync("div", { "uk-spinner": true })
-        :
-          hAsync("span", { "uk-icon": "icon: close; ratio: 1.3;" }))
-    ];
-  }
-  static get style() { return cartDiscountTicketCss; }
-  static get cmpMeta() { return {
-    "$flags$": 0,
-    "$tagName$": "ks-cart-discount-ticket",
-    "$members$": {
-      "name": [1],
-      "value": [1],
-      "loading": [32]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
-
-const cartEasyprotectCss = "ks-cart-easyprotect{display:block;padding:30px}ks-cart-easyprotect.hidden{display:none}ks-cart-easyprotect .top{display:-ms-flexbox;display:flex;-ms-flex-align:start;align-items:flex-start;width:100%;position:relative}ks-cart-easyprotect .top .content{-ms-flex:1 1 auto;flex:1 1 auto}ks-cart-easyprotect .top .content h2{font-size:22px;text-transform:uppercase;font-family:var(--font-emphasis);font-weight:700}ks-cart-easyprotect .top ks-img2{max-width:120px;width:100%;margin-left:10px}ks-cart-easyprotect .insured{margin-top:10px}ks-cart-easyprotect .insured .item{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;margin-top:10px;font-family:var(--font-emphasis);background-color:#f2f2f2;padding:5px 10px}ks-cart-easyprotect .insured .item .name{-ms-flex:1 1 auto;flex:1 1 auto;padding:5px;background-color:#f2f2f2;font-size:16px}ks-cart-easyprotect .insured .item .option{margin:0 10px;font-size:17px;font-weight:700}ks-cart-easyprotect .addproducts .content{padding:20px 20px 0 20px}@media (max-width: 960px){ks-cart-easyprotect{padding:15px}}@media (max-width: 640px){ks-cart-easyprotect .top ks-img2{position:absolute;top:-5px;right:0;max-width:40px;max-height:40px}ks-cart-easyprotect .top .content{font-size:15px}}";
-
-class CartEasyprotect {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.image = undefined;
-    this.width = undefined;
-    this.height = undefined;
-    this.insured = undefined;
-    this.enabled = undefined;
-  }
-  componentWillLoad() {
-    const update = () => {
-      this.insured = Object.entries(cart.get("insured"));
-      this.enabled = Object.keys(cart.get("easyprotect")).length > 0;
-    };
-    cart.onChange("insured", update);
-    cart.onChange("easyprotect", update);
-    update();
-  }
-  render() {
-    return hAsync(Host, { class: !this.enabled ? "hidden" : "" }, hAsync("div", { class: "top" }, hAsync("div", { class: "content" }, hAsync("slot", null)), hAsync("ks-img2", { src: this.image, width: this.width, height: this.height })), hAsync("div", { class: "insured" }, this.insured.map(([id, months]) => hAsync("ks-cart-easyprotect-warranty", { insured: true, "product-id": id, active: months }))), hAsync("slot", { name: "bottom" }));
-  }
-  get root() { return getElement(this); }
-  static get style() { return cartEasyprotectCss; }
-  static get cmpMeta() { return {
-    "$flags$": 4,
-    "$tagName$": "ks-cart-easyprotect",
-    "$members$": {
-      "image": [1],
-      "width": [2],
-      "height": [2],
-      "insured": [32],
-      "enabled": [32]
+      "href": [1]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
@@ -13128,7 +12520,7 @@ async function Fetch(url, body = null) {
     return response;
   });
 }
-async function formfetch(url, formProperties) {
+async function formfetch(url, formProperties, signal) {
   let body = null;
   if (formProperties) {
     body = new FormData();
@@ -13136,16 +12528,17 @@ async function formfetch(url, formProperties) {
       body.append(key, value);
     });
   }
-  return internalfetch(url, body);
+  return internalfetch(url, body, signal);
 }
-async function jsonfetch(url, data) {
-  return internalfetch(url, JSON.stringify(data));
+async function jsonfetch(url, data, signal) {
+  return internalfetch(url, JSON.stringify(data), signal);
 }
-async function internalfetch(url, body) {
+async function internalfetch(url, body, signal) {
   const headers = new Headers();
   headers.append('pragma', 'no-cache');
   headers.append('cache-control', 'no-cache');
   return fetch(url, {
+    signal: signal,
     method: 'POST',
     body: body,
     headers: headers,
@@ -13157,82 +12550,307 @@ async function internalfetch(url, body) {
   });
 }
 
-async function removeProduct(id) {
-  const data = await ProductLoadingWrapper(async () => {
-    return fetch$1(cart.get('api').productRemove, { "id": id });
+const commonDynamic = createStore({
+  loaded: false,
+  loggedIn: false,
+  customer: {},
+  cartCount: 0,
+  heartCount: 0,
+  api: {},
+  tracking: {},
+  consent: {}
+});
+
+var DataLayer;
+(function (DataLayer) {
+  var resolvepageview;
+  var pageviewed = new Promise(resolve => {
+    resolvepageview = () => {
+      resolve();
+    };
   });
+  function facebookConversionAPI(dataLayer) {
+    jsonfetch('https://kuchniasklep.pl/api/fbconversion.php', dataLayer);
+  }
+  function customerData() {
+    const customer = commonDynamic.get('customer');
+    const customerDataAvaliable = commonDynamic.get('loggedIn') && customer;
+    return {
+      customerDataAvailable: customerDataAvaliable,
+      customerEmail: customerDataAvaliable ? customer.email : undefined,
+      customerFirstName: customerDataAvaliable ? customer.firstName : undefined,
+      customerLastName: customerDataAvaliable ? customer.lastName : undefined,
+      customerSubscriberStatus: customerDataAvaliable ? (customer.subscriber ? 1 : 0) : undefined,
+      customerCountryISO2: customerDataAvaliable ? customer.countryISO2 : undefined,
+      customerCity: customerDataAvaliable ? customer.city : undefined,
+      customerPhone: customerDataAvaliable ? customer.phone : undefined,
+      customerCurrency: customerDataAvaliable ? customer.currency : undefined,
+    };
+  }
+  async function pageview(eventID) {
+    var _a;
+    // @ts-ignore: Crypto type error
+    eventID = crypto.randomUUID();
+    const data = Object.assign({ event: 'ks.pageview', facebookEventId: eventID }, customerData());
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(data);
+    resolvepageview();
+    facebookConversionAPI(data);
+  }
+  DataLayer.pageview = pageview;
+  async function product(product, eventID = "") {
+    var _a, _b;
+    await pageviewed;
+    // @ts-ignore: Crypto type error
+    eventID = crypto.randomUUID();
+    const categories = product.breadcrumbs;
+    const data = Object.assign(Object.assign({ event: 'ks.product', facebookEventId: eventID }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productImage: (product === null || product === void 0 ? void 0 : product.images.length) > 0 ? relativeToAbsolute(product.images[0].full.url) : undefined, productURL: relativeToAbsolute(document.location.href), productSKU: product.model, productBrand: product.brand.name, productCategory: categories[categories.length - 1].name, productAvailability: product.shippingTime, productQuantity: 1, productCategories: product.categories, ecomm_prodid: product.id, ecomm_pagetype: 'product', ecomm_totalvalue: product.currentPrice, ecommerce: {
+        items: enchancedEcommerceItems([product])
+      }, uaecommerce: { ecommerce: {
+          currencyCode: product.currency,
+          impressions: UAenchancedEcommerceItems([product])
+        } } });
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(data);
+    facebookConversionAPI(data);
+  }
+  DataLayer.product = product;
+  async function listing(listing) {
+    var _a, _b, _c, _d;
+    await pageviewed;
+    const type = listing.type == "category" ? "category" :
+      listing.type == "manufacturer" ? "manufacturer" :
+        listing.type == "search" ? "search" :
+          null;
+    if (!type)
+      return;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: `ks.listing` }, customerData()), { type: type, listingCategories: type == "category" ? listing.breadcrumbs.filter(category => category.id != "0") : undefined, listingProducts: listing.products, ecommerce: {
+        items: enchancedEcommerceItems(listing.products)
+      }, uaecommerce: { ecommerce: {
+          currencyCode: (_d = (_c = listing.products) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.currency,
+          impressions: UAenchancedEcommerceItems(listing.products)
+        } } }));
+  }
+  DataLayer.listing = listing;
+  async function addToCart(product, eventID) {
+    var _a, _b;
+    await pageviewed;
+    // @ts-ignore: Crypto type error
+    eventID = crypto.randomUUID();
+    const data = Object.assign(Object.assign({ event: 'ks.addToCart', facebookEventId: eventID }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
+        items: enchancedEcommerceItems([product])
+      }, uaecommerce: { ecommerce: {
+          currencyCode: product.currency,
+          add: {
+            products: UAenchancedEcommerceItems([product])
+          }
+        } } });
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(data);
+    facebookConversionAPI(data);
+  }
+  DataLayer.addToCart = addToCart;
+  async function removeFromCart(product) {
+    var _a, _b;
+    await pageviewed;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.removeFromCart' }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
+        items: enchancedEcommerceItems([product])
+      }, uaecommerce: { ecommerce: {
+          currencyCode: product.currency,
+          remove: {
+            products: UAenchancedEcommerceItems([product])
+          }
+        } } }));
+  }
+  DataLayer.removeFromCart = removeFromCart;
+  async function addToFavourites(product) {
+    var _a, _b;
+    await pageviewed;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.addToFavourites' }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
+        items: enchancedEcommerceItems([product]),
+        value: product.currentPrice,
+        currency: product.currency
+      } }));
+  }
+  DataLayer.addToFavourites = addToFavourites;
+  async function view_cart(cart) {
+    var _a, _b;
+    await pageviewed;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.viewCart' }, customerData()), { cartCurrency: cart.currency, cartProductValue: cart.productValue, cartValue: cart.totalValue, cartProducts: cart.products, ecomm_prodid: JSON.stringify(Object.values(cart.products).map(product => product.id)), ecomm_pagetype: 'cart', ecomm_totalvalue: cart.productValue, ecommerce: {
+        items: enchancedEcommerceItems(Object.values(cart.products)),
+        value: cart.productValue,
+        currency: cart.currency
+      }, uaecommerce: { ecommerce: {
+          checkout: {
+            actionField: { step: 1 },
+            currencyCode: cart.currency,
+            products: UAenchancedEcommerceItems(Object.values(cart.products))
+          }
+        } } }));
+  }
+  DataLayer.view_cart = view_cart;
+  async function order_checkout(order, eventID) {
+    var _a, _b;
+    await pageviewed;
+    // @ts-ignore: Crypto type error
+    eventID = crypto.randomUUID();
+    const data = Object.assign(Object.assign({ event: 'ks.checkout', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderShippingTime: order.totalShippingTimeDays, orderCoupon: order.coupon, ecommerce: {
+        items: enchancedEcommerceItems(order.products)
+      }, uaecommerce: { ecommerce: {
+          checkout: {
+            actionField: { step: 3 },
+            currencyCode: order.currency,
+            products: UAenchancedEcommerceItems(order.products)
+          }
+        } } });
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(data);
+    facebookConversionAPI(data);
+  }
+  DataLayer.order_checkout = order_checkout;
+  async function order_form(order, eventID) {
+    var _a, _b;
+    await pageviewed;
+    // @ts-ignore: Crypto type error
+    eventID = crypto.randomUUID();
+    const data = Object.assign(Object.assign({ event: 'ks.orderForm', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderShippingTime: order.totalShippingTimeDays, orderCoupon: order.coupon, ecommerce: {
+        items: enchancedEcommerceItems(order.products)
+      }, uaecommerce: { ecommerce: {
+          checkout: {
+            actionField: { step: 2 },
+            currencyCode: order.currency,
+            products: UAenchancedEcommerceItems(order.products)
+          }
+        } } });
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(data);
+    facebookConversionAPI(data);
+  }
+  DataLayer.order_form = order_form;
+  async function order_placed(order, eventID) {
+    var _a, _b;
+    await pageviewed;
+    // @ts-ignore: Crypto type error
+    eventID = crypto.randomUUID();
+    const data = Object.assign(Object.assign({ event: 'ks.order', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderId: order.id, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderShippingTime: order.totalShippingTimeDays, orderCoupon: order.coupon, ecomm_prodid: JSON.stringify(Object.values(order.products).map(product => product.id)), ecomm_pagetype: 'purchase', ecomm_totalvalue: order.productValue, ecommerce: {
+        transaction_id: order.id,
+        value: order.totalValue,
+        currency: order.currency,
+        shipping: order.shippingValue,
+        coupon: order.coupon,
+        items: enchancedEcommerceItems(order.products)
+      }, uaecommerce: { ecommerce: {
+          purchase: {
+            currencyCode: order.currency,
+            actionField: {
+              id: order.id,
+              revenue: order.totalValue,
+              shipping: order.shippingValue,
+              coupon: order.coupon
+            },
+            products: UAenchancedEcommerceItems(order.products)
+          }
+        } } });
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
+    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(data);
+    facebookConversionAPI(data);
+  }
+  DataLayer.order_placed = order_placed;
+  async function search(query) {
+    var _a;
+    await pageviewed;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(Object.assign({ event: 'ks.search', searchQuery: query }, customerData()));
+  }
+  DataLayer.search = search;
+  async function subscribe(subscription) {
+    var _a;
+    await pageviewed;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(Object.assign(Object.assign({ event: 'ks.subscribe' }, customerData()), { subscriptionPlace: subscription.place, subscriptionEmail: subscription.email, subscriptionName: subscription === null || subscription === void 0 ? void 0 : subscription.name, subscriptionStatus: subscription.subscriber ? 1 : 0 }));
+  }
+  DataLayer.subscribe = subscribe;
+  async function recipe(recipe) {
+    var _a;
+    await pageviewed;
+    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(Object.assign(Object.assign({ event: 'ks.recipe' }, customerData()), { recipeName: recipe.title, recipeCategory: recipe.category, recipeCuisine: recipe.cuisine }));
+  }
+  DataLayer.recipe = recipe;
+  function relativeToAbsolute(url) {
+    return url.includes('http') ? url : document.baseURI + url;
+  }
+  function enchancedEcommerceItems(products) {
+    return products.map((product, index) => {
+      const categories = product.breadcrumbs.filter(category => category.name != "Strona główna").map(category => category.name).reverse();
+      return {
+        item_id: product.id,
+        item_name: product.name,
+        currency: product.currency,
+        index: index,
+        price: product.currentPrice,
+        item_brand: product.brandName,
+        item_category: categories === null || categories === void 0 ? void 0 : categories[0],
+        item_category2: categories === null || categories === void 0 ? void 0 : categories[1],
+        item_category3: categories === null || categories === void 0 ? void 0 : categories[2],
+        item_category4: categories === null || categories === void 0 ? void 0 : categories[3],
+        item_category5: categories === null || categories === void 0 ? void 0 : categories[4],
+      };
+    });
+  }
+  function UAenchancedEcommerceItems(products) {
+    return products.map((product, index) => {
+      const categories = product.breadcrumbs.filter(category => category.name != "Strona główna").map(category => category.name);
+      return {
+        name: product.name,
+        id: product.id,
+        price: product.currentPrice,
+        brand: product.brandName,
+        category: categories.join('/'),
+        position: index + 1,
+        quantity: product.quantity
+      };
+    });
+  }
+})(DataLayer || (DataLayer = {}));
+
+async function removeProduct(id) {
+  var _a;
+  const productData = (_a = cart.get("products")) === null || _a === void 0 ? void 0 : _a[id];
+  if (productData)
+    DataLayer.removeFromCart(productData);
+  const data = await fetch$1(cart.get('api').productRemove, { "id": id });
   if (data) {
     if (data.products.length == 0)
       document.location.reload();
     else
       ShowMessageFromData("Błąd usuwania produktu", data, async (cleanedData) => {
         update(cleanedData);
-        if ('discount' in cleanedData == false)
-          this.RemoveDiscount();
       });
   }
   const product = document.querySelector(`ks-cart-product[ikey="${id}"]`);
   if (product)
     product.ResetLoading();
 }
-var lastProductCountCall = {};
-async function productCount(id, count, last) {
-  if (lastProductCountCall[id]) {
-    lastProductCountCall[id] = () => ProductCountCall(id, count, last);
-  }
-  else {
-    lastProductCountCall[id] = () => { };
-    ProductCountCall(id, count, last).then(() => {
-      if (lastProductCountCall[id]) {
-        lastProductCountCall[id]();
-        lastProductCountCall[id] = undefined;
-      }
-    });
-  }
-}
-async function ProductCountCall(id, current, last) {
-  const data = await ProductLoadingWrapper(async () => {
-    return fetch$1(cart.get('api').productCount, {
-      "id": id,
-      "ilosc": current.toString()
-    });
-  });
+var productCountAbortController = new AbortController();
+async function productCount(id, count) {
+  productCountAbortController.abort();
+  productCountAbortController = new AbortController();
+  const data = await fetch$1(cart.get('api').productCount, {
+    "id": id,
+    "ilosc": count.toString()
+  }, productCountAbortController.signal);
   if (data) {
     ShowMessageFromData("Błąd ilości produktu", data, async (cleanedData) => {
-      if ('error' in cleanedData) {
+      if ('error' in cleanedData)
         messagePopup().show("Błąd ilości produktu", cleanedData.error.message);
-        cart.set("products", GetCorrectedProductAmounts(id, cleanedData.error.amount, cleanedData.error.maxAmount));
-      }
       else
-        await update(cleanedData);
+        update(cleanedData);
       if ('discount' in cleanedData == false)
         RemoveDiscount();
     });
   }
-  else {
-    cart.set("products", GetCorrectedProductAmounts(id, last));
-    this.SetAmount(last, `ks-cart-product[ikey="${id}"] ks-cart-spinner`);
-  }
 }
-function GetCorrectedProductAmounts(id, amount, maxAmount) {
-  const products = cart.get("products");
-  products[id].quantity = amount;
-  if (maxAmount)
-    products[id].maxQuantity = maxAmount;
-  return products;
-}
-/*function GetDataWithoutProducts(data: any) {
-    const dataWithoutProducts = data;
-    delete dataWithoutProducts.products;
-    return dataWithoutProducts;
-}
-
-function SetAmount(amount: number, querySelector: string) {
-    console.log("test");
-    const component = document.querySelector(querySelector) as any;
-    if(component && 'SetAmount' in component)
-        component.SetAmount(amount);
-}*/
 async function addDeal(id) {
   cart.set("loadingDeals", true);
   const data = await fetch$1(cart.get('api').addDeal, { "id": id });
@@ -13243,11 +12861,6 @@ async function addDeal(id) {
   }
   else
     await update(data);
-  for (const key in cart.get('products')) {
-    const product = cart.get('products')[key];
-    const spinner = document.querySelector(`ks-cart-product[product-id="${product.id}"] ks-cart-spinner`);
-    spinner === null || spinner === void 0 ? void 0 : spinner.SetAmount(product.quantity);
-  }
 }
 async function countryChange(code) {
   StartLoading(`ks-cart-select-shipping`);
@@ -13330,15 +12943,9 @@ async function ShowMessageFromData(name, data, callback) {
   else
     callback(data);
 }
-async function ProductLoadingWrapper(func) {
-  cart.set("loadingProducts", cart.get("loadingProducts") + 1);
-  const output = await func();
-  cart.set("loadingProducts", cart.get("loadingProducts") - 1);
-  return output;
-}
-async function fetch$1(url, formProperties) {
+async function fetch$1(url, formProperties, signal) {
   loading();
-  return formfetch(url, formProperties)
+  return formfetch(url, formProperties, signal)
     .then(response => response.json())
     .then(json => {
     loaded();
@@ -13346,7 +12953,9 @@ async function fetch$1(url, formProperties) {
   })
     .catch(error => {
     loaded();
-    messageError().show(error);
+    if (error.name != 'AbortError') {
+      messageError().show(error);
+    }
     return {};
   });
 }
@@ -13354,12 +12963,15 @@ function update(data) {
   Object.keys(data).map(key => {
     cart.set(key, data[key]);
   });
+  if ('discount' in data == false)
+    RemoveDiscount();
 }
 function loading() {
   cart.set("loading", cart.get("loading") + 1);
 }
 function loaded() {
-  cart.set("loading", cart.get("loading") - 1);
+  if (cart.get("loading") > 0)
+    cart.set("loading", cart.get("loading") - 1);
 }
 function messagePopup() {
   return document.querySelector('ks-message-popup');
@@ -13368,7 +12980,542 @@ function messageError() {
   return document.querySelector('ks-error-popup');
 }
 
-const cartEasyprotectDialogCss = "ks-cart-easyprotect-dialog{display:block}ks-cart-easyprotect-dialog .hidden{display:none}ks-cart-easyprotect-dialog .content{background-color:var(--card-background);-webkit-box-shadow:var(--big-shadow);box-shadow:var(--big-shadow);color:var(--card-text-color);position:relative;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:720px;width:100%}ks-cart-easyprotect-dialog .content h2{font-size:24px;font-weight:700;text-align:center;margin-top:30px}ks-cart-easyprotect-dialog .content p{text-align:center;margin:10px 10px 20px 10px}ks-cart-easyprotect-dialog .content>.products .items{padding:10px 20px;max-height:320px;overflow-y:auto}ks-cart-easyprotect-dialog .content>.warranty .items{padding:0 20px 0 20px;max-height:270px;overflow-y:auto}ks-cart-easyprotect-dialog .content.hidden{display:none}ks-cart-easyprotect-dialog .content.hide{opacity:0;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-cart-easyprotect-dialog ks-button{z-index:20;position:relative;margin-top:20px;-webkit-box-shadow:0 2px 20px rgba(255, 255, 255, 0.3);box-shadow:0 2px 20px rgba(255, 255, 255, 0.3);border-top:#8057c1 1px solid}ks-cart-easyprotect-dialog ks-button[disabled]{border-top:#bebebe 1px solid}ks-cart-easyprotect-dialog ks-button button{background-color:var(--easyprotect-color);border-color:var(--easyprotect-color)}ks-cart-easyprotect-dialog ks-button button:hover{background-color:var(--easyprotect-color-hover) !important;border-color:var(--easyprotect-color-hover) !important}ks-cart-easyprotect-dialog ks-button button:active{background-color:var(--easyprotect-color-active) !important;border-color:var(--easyprotect-color-active) !important}ks-cart-easyprotect-dialog ks-button[disabled] button{background-color:#e2e2e2 !important;border-color:#e2e2e2 !important;color:#3d3d3d !important;cursor:auto}ks-cart-easyprotect-dialog ks-overlay .content{-webkit-animation:0.4s vertical-swipe-out 1;animation:0.4s vertical-swipe-out 1}ks-cart-easyprotect-dialog ks-overlay.active .content{-webkit-animation:0.4s vertical-swipe-in 1;animation:0.4s vertical-swipe-in 1}@media (max-width: 720px){ks-cart-easyprotect-dialog .content{height:100%}ks-cart-easyprotect-dialog .content>.products,ks-cart-easyprotect-dialog .content>.warranty{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;height:100%;max-height:100%;padding:0}ks-cart-easyprotect-dialog .content>.products>.items,ks-cart-easyprotect-dialog .content>.warranty>.items{padding:0 10px 0 10px;max-height:none}ks-cart-easyprotect-dialog ks-button{margin-top:auto}ks-cart-easyprotect-dialog .content p{margin:5px 10px 15px 10px}}@media (max-width: 420px){ks-cart-easyprotect-dialog .content h2{font-size:20px;margin:20px 10px 10px 10px}ks-cart-easyprotect-dialog .content p{font-size:15px}}ks-cart-easyprotect-dialog .content .close,ks-cart-easyprotect-dialog .content .back{position:absolute;top:20px;z-index:20;border-radius:50px;padding:10px;-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-cart-easyprotect-dialog .content .close:hover,ks-cart-easyprotect-dialog .content .back:hover{background-color:#f2f2f2}ks-cart-easyprotect-dialog .content .close:active,ks-cart-easyprotect-dialog .content .back:active{background-color:#dbdbdb}ks-cart-easyprotect-dialog .content .close{right:20px}ks-cart-easyprotect-dialog .content .back{left:20px}@media (max-width: 420px){ks-cart-easyprotect-dialog .content .close,ks-cart-easyprotect-dialog .content .back{padding:3px;top:17px}ks-cart-easyprotect-dialog .content .close{right:8px}ks-cart-easyprotect-dialog .content .back{left:8px}}ks-cart-easyprotect-dialog .content .loading{position:absolute;top:0;bottom:0;left:0;right:0;z-index:100;background-color:white;-webkit-animation:fade-in 0.3s ease;animation:fade-in 0.3s ease}";
+const cartCountrySelectCss = "ks-cart-country-select{display:-ms-flexbox;display:flex;-ms-flex-pack:end;justify-content:flex-end;-ms-flex-align:center;align-items:center;position:absolute;top:15px;right:15px;height:35px}ks-cart-country-select span:last-of-type{opacity:0.0}ks-cart-country-select select{background:transparent;outline:none;border:none;-moz-appearance:none;-webkit-appearance:none;appearance:none;-moz-text-align-last:right;text-align-last:right;font-size:16px;font-family:'Nunito', sans-serif;color:#151515;-webkit-transition:color 0.3s ease;transition:color 0.3s ease;margin-right:5px}ks-cart-country-select option{font-size:16px}ks-cart-country-select:hover select{color:#606060}ks-cart-country-select span:first-of-type{opacity:0.0 !important}ks-cart-country-select span:last-of-type{opacity:1.0 !important}ks-cart-country-select:hover span:first-of-type{opacity:0.0}ks-cart-country-select:hover span:last-of-type{opacity:1.0}";
+
+class CartCountrySelect {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.heading = undefined;
+  }
+  ChangeHandler(event) {
+    const target = event.target;
+    countryChange(target.value);
+  }
+  render() {
+    return [
+      hAsync("select", { onChange: (ev) => this.ChangeHandler(ev) }, cart.get('countries').map(country => hAsync("option", { value: country.value, selected: country === null || country === void 0 ? void 0 : country.selected }, country.name))),
+      hAsync("ks-icon", { name: "chevron-down" })
+    ];
+  }
+  get root() { return getElement(this); }
+  static get style() { return cartCountrySelectCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-cart-country-select",
+    "$members$": {
+      "heading": [1]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const common = createStore({
+  logo: "",
+  categoryUrl: "",
+  cartLink: "",
+  heartLink: "",
+  accountLink: "",
+  loginLink: "",
+  logoutLink: "",
+  registerLink: "",
+  softwareLink: "",
+  promo: "",
+  promoLink: "",
+  email: "",
+  phone: "",
+  workingHours: "",
+  company: "",
+  address: "",
+  nip: "",
+  newsletterPopup: false,
+  newsletterApi: "",
+  suggestionApi: "",
+  autocompleteApi: "",
+  cookieMessage: "",
+  cookieButton: "",
+  cookieDelay: 1000,
+  categories: [],
+  social: [],
+  reviewers: [],
+  footerLinks: [],
+  translations: {}
+});
+
+const dealCss$1 = ".cart-deal{display:-ms-flexbox;display:flex;overflow:hidden;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;background-color:#ffffff;padding:0 30px;-webkit-box-sizing:border-box;box-sizing:border-box}.cart-deal ks-img3{width:100%;height:100%}.cart-deal .image{position:relative;-webkit-box-sizing:border-box;box-sizing:border-box;width:180px;height:180px;margin-right:20px;-webkit-transform:translateX(-20px);transform:translateX(-20px)}.cart-deal .circle{position:absolute;-webkit-box-sizing:border-box;box-sizing:border-box;overflow:hidden;width:145px;height:145px;padding:10px;border-radius:100%;background-color:white}.cart-deal .fx{position:absolute;width:250px;height:250px;max-width:initial;-webkit-animation-name:rotate;animation-name:rotate;-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite;-webkit-animation-timing-function:linear;animation-timing-function:linear}.cart-deal .fx1{-webkit-animation-duration:50s;animation-duration:50s}.cart-deal .fx2{-webkit-animation-duration:40s;animation-duration:40s;animation-direction:reverse}.cart-deal .fx3{-webkit-animation-duration:40s;animation-duration:40s}.cart-deal .fx4{-webkit-animation-duration:50s;animation-duration:50s;animation-direction:reverse}@-webkit-keyframes rotate{from{-webkit-transform:translate(-50%, -50%) rotate(0deg);transform:translate(-50%, -50%) rotate(0deg)}to{-webkit-transform:translate(-50%, -50%) rotate(360deg);transform:translate(-50%, -50%) rotate(360deg)}}@keyframes rotate{from{-webkit-transform:translate(-50%, -50%) rotate(0deg);transform:translate(-50%, -50%) rotate(0deg)}to{-webkit-transform:translate(-50%, -50%) rotate(360deg);transform:translate(-50%, -50%) rotate(360deg)}}.cart-deal .center{top:50%;left:50%;-webkit-transform:translate(-50%, -50%);transform:translate(-50%, -50%)}.cart-deal .text{font-size:16px;text-align:center}.cart-deal .top>a{display:block;color:#252525;text-decoration:none;margin-bottom:8px}.cart-deal .text>.bottom{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;font-size:34px;font-weight:700;font-family:var(--font-emphasis)}.cart-deal button{position:relative;margin-left:20px;padding:13px 30px 13px 30px;border-radius:50px;border-style:none;outline-style:none;font-weight:700;font-size:18px;width:260px;background-color:#ff3838;color:white;-webkit-transition:background-color 0.3s;transition:background-color 0.3s}.cart-deal button:not(.loading):hover{background-color:#e62c2c}.cart-deal button:not(.loading):active{background-color:#d41e1e;-webkit-transition:background-color 0.1s;transition:background-color 0.1s}.cart-deal button.loading{background-color:#d3d3d3}.cart-deal .variants{margin-bottom:10px}.cart-deal .variants label{display:inline-block;font-size:15px;-ms-flex-negative:0;flex-shrink:0;margin-right:10px}.cart-deal .variants ks-icon{-webkit-transform:translateX(-30px);transform:translateX(-30px);margin-right:-30px;pointer-events:none}.cart-deal select{display:inline-block;padding:8px 40px 10px 10px;height:36px;min-width:200px;font-size:15px;-webkit-appearance:none;-moz-appearance:none;appearance:none;background-color:#ffffff;border:1px solid #d9d9d9;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease}.cart-deal select::-ms-expand{display:none}.cart-deal select:hover{background-color:#e6e6e6}.cart-deal select:focus{outline:none}.cart-deal select option{font-weight:normal}@media only screen and (max-width: 760px){.cart-deal{display:block;padding:20px}.cart-deal .image{-webkit-transform:translateX(0px);transform:translateX(0px);margin:10px auto 30px auto}.cart-deal .variants{-ms-flex-pack:center;justify-content:center}.cart-deal select{max-width:220px;text-align:center;-moz-text-align-last:center;text-align-last:center}}@media only screen and (max-width: 460px){.cart-deal .text>.bottom{-ms-flex-direction:column;flex-direction:column;font-size:34px !important}.cart-deal button{margin:5px 0 0 0}}";
+
+class CartDeal {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.ikey = undefined;
+    this.name = undefined;
+    this.img = undefined;
+    this.link = undefined;
+    this.price = undefined;
+    this.loading = false;
+  }
+  Add() {
+    addDeal(this.ikey);
+  }
+  render() {
+    const translations = common.get('translations');
+    return hAsync(Host, { class: "cart-deal" }, hAsync("a", { href: this.link }, hAsync("div", { class: "image" }, hAsync("div", { class: "circle center" }, hAsync("ks-img3", { height: 125, width: 125, image: this.img, alt: this.name, fit: "contain" })), hAsync("svg", { class: "fx fx1 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "80", fill: "transparent", stroke: "#252525", "stroke-width": "3", "stroke-dasharray": "50, 32" })), hAsync("svg", { class: "fx fx2 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "88", fill: "transparent", stroke: "#252525", "stroke-width": "3", "stroke-dasharray": "50,59" })), hAsync("svg", { class: "fx fx3 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "96", fill: "transparent", stroke: "#252525", "stroke-width": "3", "stroke-dasharray": "30,30" })), hAsync("svg", { class: "fx fx4 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "106", fill: "transparent", stroke: "#252525", "stroke-width": "3", "stroke-dasharray": "70,60" })))), hAsync("div", { class: "text ks-text-decorated" }, hAsync("div", { class: "top" }, this.name), hAsync("div", { class: "bottom" }, this.price, hAsync("button", { onClick: () => this.Add(), disabled: cart.get('loadingDeals'), class: cart.get('loadingDeals') ? "loading" : "" }, cart.get('loadingDeals') ? hAsync("ks-loader", { dark: true, large: true }) : null, hAsync("span", null, translations.addToCart)))));
+  }
+  static get style() { return dealCss$1; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-cart-deal",
+    "$members$": {
+      "ikey": [513],
+      "name": [1],
+      "img": [1],
+      "link": [1],
+      "price": [1],
+      "loading": [32]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": [["ikey", "ikey"]]
+  }; }
+}
+
+const dealContainerCss = "ks-cart-deal-container{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;gap:20px}ks-cart-deal-container.empty{display:none}";
+
+class CartDealContainer {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+  }
+  render() {
+    var _a, _b;
+    const count = ((_a = cart.get("dealGroups")) === null || _a === void 0 ? void 0 : _a.length) + ((_b = cart.get("deals")) === null || _b === void 0 ? void 0 : _b.length);
+    return hAsync(Host, { class: !count ? "empty" : "" }, cart.get("dealGroups").map((group) => hAsync("ks-cart-deal-group", { key: group.name, name: group.name, deals: group.deals })), cart.get("deals").map((product) => hAsync("ks-cart-deal", { key: product.id, ikey: product.id, name: product.name, link: product.link, img: product.img, price: product.price })));
+  }
+  static get style() { return dealContainerCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-cart-deal-container",
+    "$members$": undefined,
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const dealCss = ".cart-deal{display:-ms-flexbox;display:flex;overflow:hidden;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;background-color:#ffffff;padding:0 30px;-webkit-box-sizing:border-box;box-sizing:border-box}.cart-deal ks-img3{width:100%;height:100%}.cart-deal .image{position:relative;-webkit-box-sizing:border-box;box-sizing:border-box;width:180px;height:180px;margin-right:20px;-webkit-transform:translateX(-20px);transform:translateX(-20px)}.cart-deal .circle{position:absolute;-webkit-box-sizing:border-box;box-sizing:border-box;overflow:hidden;width:145px;height:145px;padding:10px;border-radius:100%;background-color:white}.cart-deal .fx{position:absolute;width:250px;height:250px;max-width:initial;-webkit-animation-name:rotate;animation-name:rotate;-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite;-webkit-animation-timing-function:linear;animation-timing-function:linear}.cart-deal .fx1{-webkit-animation-duration:50s;animation-duration:50s}.cart-deal .fx2{-webkit-animation-duration:40s;animation-duration:40s;animation-direction:reverse}.cart-deal .fx3{-webkit-animation-duration:40s;animation-duration:40s}.cart-deal .fx4{-webkit-animation-duration:50s;animation-duration:50s;animation-direction:reverse}@-webkit-keyframes rotate{from{-webkit-transform:translate(-50%, -50%) rotate(0deg);transform:translate(-50%, -50%) rotate(0deg)}to{-webkit-transform:translate(-50%, -50%) rotate(360deg);transform:translate(-50%, -50%) rotate(360deg)}}@keyframes rotate{from{-webkit-transform:translate(-50%, -50%) rotate(0deg);transform:translate(-50%, -50%) rotate(0deg)}to{-webkit-transform:translate(-50%, -50%) rotate(360deg);transform:translate(-50%, -50%) rotate(360deg)}}.cart-deal .center{top:50%;left:50%;-webkit-transform:translate(-50%, -50%);transform:translate(-50%, -50%)}.cart-deal .text{font-size:16px;text-align:center}.cart-deal .top>a{display:block;color:#252525;text-decoration:none;margin-bottom:8px}.cart-deal .text>.bottom{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;font-size:34px;font-weight:700;font-family:var(--font-emphasis)}.cart-deal button{position:relative;margin-left:20px;padding:13px 30px 13px 30px;border-radius:50px;border-style:none;outline-style:none;font-weight:700;font-size:18px;width:260px;background-color:#ff3838;color:white;-webkit-transition:background-color 0.3s;transition:background-color 0.3s}.cart-deal button:not(.loading):hover{background-color:#e62c2c}.cart-deal button:not(.loading):active{background-color:#d41e1e;-webkit-transition:background-color 0.1s;transition:background-color 0.1s}.cart-deal button.loading{background-color:#d3d3d3}.cart-deal .variants{margin-bottom:10px}.cart-deal .variants label{display:inline-block;font-size:15px;-ms-flex-negative:0;flex-shrink:0;margin-right:10px}.cart-deal .variants ks-icon{-webkit-transform:translateX(-30px);transform:translateX(-30px);margin-right:-30px;pointer-events:none}.cart-deal select{display:inline-block;padding:8px 40px 10px 10px;height:36px;min-width:200px;font-size:15px;-webkit-appearance:none;-moz-appearance:none;appearance:none;background-color:#ffffff;border:1px solid #d9d9d9;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease}.cart-deal select::-ms-expand{display:none}.cart-deal select:hover{background-color:#e6e6e6}.cart-deal select:focus{outline:none}.cart-deal select option{font-weight:normal}@media only screen and (max-width: 760px){.cart-deal{display:block;padding:20px}.cart-deal .image{-webkit-transform:translateX(0px);transform:translateX(0px);margin:10px auto 30px auto}.cart-deal .variants{-ms-flex-pack:center;justify-content:center}.cart-deal select{max-width:220px;text-align:center;-moz-text-align-last:center;text-align-last:center}}@media only screen and (max-width: 460px){.cart-deal .text>.bottom{-ms-flex-direction:column;flex-direction:column;font-size:34px !important}.cart-deal button{margin:5px 0 0 0}}";
+
+class CartDealGroup {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.ikey = undefined;
+    this.name = undefined;
+    this.deals = undefined;
+    this.currentDeal = undefined;
+  }
+  componentWillLoad() {
+    this.currentDeal = this.deals[0];
+  }
+  change(target) {
+    const select = target;
+    this.currentDeal = this.deals[select.selectedIndex];
+  }
+  Add() {
+    addDeal(this.currentDeal.id);
+  }
+  render() {
+    const translations = common.get('translations');
+    const strings = cart.get('strings');
+    return hAsync(Host, { class: "cart-deal" }, hAsync("a", { href: this.currentDeal.link }, hAsync("div", { class: "image" }, hAsync("div", { class: "circle center" }, hAsync("ks-img3", { height: 125, width: 125, image: this.currentDeal.img, alt: this.name, fit: "contain" })), hAsync("svg", { class: "fx fx1 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "80", fill: "transparent", stroke: "#252525", "stroke-width": "3", "stroke-dasharray": "50, 32" })), hAsync("svg", { class: "fx fx2 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "88", fill: "transparent", stroke: "#252525", "stroke-width": "3", "stroke-dasharray": "50,59" })), hAsync("svg", { class: "fx fx3 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "96", fill: "transparent", stroke: "#252525", "stroke-width": "3", "stroke-dasharray": "30,30" })), hAsync("svg", { class: "fx fx4 center", width: "250", height: "250" }, hAsync("circle", { cx: "125", cy: "125", r: "106", fill: "transparent", stroke: "#252525", "stroke-width": "3", "stroke-dasharray": "70,60" })))), hAsync("div", { class: "text" }, hAsync("div", { class: "top" }, hAsync("span", null, this.name), hAsync("div", { class: "variants" }, hAsync("label", null, strings.selectColor), hAsync("select", { onChange: event => this.change(event.target) }, this.deals.map(deal => hAsync("option", null, deal.name))), hAsync("ks-icon", { name: "chevron-down" }))), hAsync("div", { class: "bottom" }, this.currentDeal.price, hAsync("button", { onClick: () => this.Add(), disabled: cart.get('loadingDeals'), class: cart.get('loadingDeals') ? "loading" : "" }, cart.get('loadingDeals') ? hAsync("ks-loader", { dark: true, large: true }) : null, hAsync("span", null, translations.addToCart)))));
+  }
+  static get style() { return dealCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-cart-deal-group",
+    "$members$": {
+      "ikey": [513],
+      "name": [1],
+      "deals": [16],
+      "currentDeal": [32]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": [["ikey", "ikey"]]
+  }; }
+}
+
+const cartDiscountCodeCss = "ks-cart-discount-code{display:block}ks-cart-discount-code>form:first-child{display:-ms-flexbox;display:flex}ks-cart-discount-code ks-input-text{display:block;-ms-flex:1;flex:1}ks-cart-discount-code button{padding:0 20px !important;height:40px;width:90px;position:relative;-webkit-appearance:none;-moz-appearance:none;appearance:none;border:none;color:#ffffff;background-color:#242424;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease}ks-cart-discount-code button:hover{background-color:#363636}ks-cart-discount-code button:active{background-color:#464646}ks-cart-discount-code .message{cursor:pointer;margin-top:7px;color:#222222;-webkit-transition:color 0.3s ease;transition:color 0.3s ease}ks-cart-discount-code .message:hover{color:#303030}@media only screen and (max-width: 470px){ks-cart-discount-code .message{height:25vw}}";
+
+class CartDiscountCode {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.placeholder = "";
+    this.image = "";
+    this.loading = false;
+  }
+  discountCodeAddHandler(event) {
+    event.preventDefault();
+    if (!this.loading) {
+      const form = event.target;
+      const input = form.querySelector('input[name="discountCode"]');
+      const value = input.value;
+      if (value) {
+        const valueString = value.toString();
+        if (valueString != "") {
+          this.loading = true;
+          discountCodeAdd(valueString);
+        }
+      }
+    }
+  }
+  async ResetLoading() {
+    this.loading = false;
+  }
+  render() {
+    const strings = cart.get("strings");
+    return [
+      hAsync("form", { onSubmit: (e) => this.discountCodeAddHandler(e) }, hAsync("ks-input-text", { center: true, placeholder: this.placeholder, name: "discountCode" }), hAsync("button", { type: "submit" }, this.loading ? hAsync("ks-loader", null) : hAsync("span", null, strings.discountCodeActivate)))
+    ];
+  }
+  static get style() { return cartDiscountCodeCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-cart-discount-code",
+    "$members$": {
+      "placeholder": [1],
+      "image": [1],
+      "loading": [32],
+      "ResetLoading": [64]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+function priceFormat(value) {
+  if (typeof value === 'undefined' || value === null)
+    return "";
+  if (typeof value === 'string')
+    value = parseFloat(value);
+  const currency = common.get('currency');
+  if (!currency)
+    return value.toString();
+  return priceFormatNoCurrency(value) + ` ${currency.symbol}`;
+}
+function priceFormatNoCurrency(value) {
+  if (typeof value === 'undefined' || value === null)
+    return "";
+  if (typeof value === 'string')
+    value = parseFloat(value);
+  const currency = common.get('currency');
+  if (!currency)
+    return value.toString();
+  return value.toFixed(2).replace('.', currency.separator);
+}
+
+const cartDiscountContainerCss = "ks-cart-discount-container{display:block;margin-bottom:15px}ks-cart-discount-container .ticket,ks-cart-discount-container .code,ks-cart-discount-container .points{margin-top:20px;position:relative}";
+
+class CartDiscountContainer {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.codeBanner = "";
+    this.codePlaceholder = "";
+    this.pointsPlaceholder = "";
+    this.pointsMessage = "";
+    this.loginMessage = "";
+    this.infoMessage = "";
+    this.noPointsHeading = "";
+    this.noPointsMessage = "";
+    this.thresholdHeading = "";
+    this.thresholdMessage = "";
+    this.loginUrl = "";
+    this.loggedIn = false;
+    this.disablePoints = false;
+  }
+  render() {
+    var _a;
+    const discount = cart.get("discount");
+    const points = cart.get("points");
+    const pointsForOrder = cart.get("pointsForOrder");
+    const productValue = cart.get("productValue");
+    if (discount && ((_a = Object.keys(discount)) === null || _a === void 0 ? void 0 : _a.length) !== 0) {
+      return (hAsync("nav", { class: "ticket" }, hAsync("h2", null, discount.heading), hAsync("ks-cart-discount-ticket", { name: discount.name, value: discount.value }), this.infoMessage != "" ?
+        hAsync("ks-cart-discount-message", null, hAsync("span", null, this.infoMessage))
+        : null));
+    }
+    const pointsMessage = this.pointsMessage
+      .replace("{available}", points.available.toString())
+      .replace("{value}", priceFormat(points.value))
+      .replace("{points}", pointsForOrder.toFixed(0));
+    const loginMessage = this.loginMessage
+      .replace("{points}", pointsForOrder.toFixed(0));
+    const noPointsMessage = this.noPointsMessage
+      .replace("{points}", pointsForOrder.toFixed(0));
+    const thresholdMessage = this.thresholdMessage
+      .replace("{threshold}", priceFormat(points.threshold))
+      .replace("{points}", pointsForOrder.toFixed(0));
+    const strings = cart.get("strings");
+    return [
+      hAsync("div", { class: "code" }, hAsync("h2", null, strings.discountCodeHeading), hAsync("ks-cart-discount-code", { placeholder: this.codePlaceholder, image: this.codeBanner })),
+      !this.disablePoints ?
+        hAsync("div", { class: "points" }, hAsync("h2", null, strings.discountPointsHeading), this.loggedIn ? (points.available > 0 ?
+          productValue >= points.threshold || points.threshold == 0 ?
+            hAsync("ks-cart-discount-points", { placeholder: this.pointsPlaceholder, message: pointsMessage, points: points.available, orderPoints: pointsForOrder })
+            :
+              hAsync("ks-cart-discount-points-message", { heading: this.thresholdHeading, message: thresholdMessage, points: pointsForOrder })
+          :
+            hAsync("ks-cart-discount-points-message", { heading: this.noPointsHeading, message: noPointsMessage, points: pointsForOrder })) :
+          hAsync("ks-cart-discount-points-login", { message: loginMessage, points: pointsForOrder, "login-url": this.loginUrl }))
+        : null
+    ];
+  }
+  get root() { return getElement(this); }
+  static get style() { return cartDiscountContainerCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-cart-discount-container",
+    "$members$": {
+      "codeBanner": [1, "code-banner"],
+      "codePlaceholder": [1, "code-placeholder"],
+      "pointsPlaceholder": [1, "points-placeholder"],
+      "pointsMessage": [1, "points-message"],
+      "loginMessage": [1, "login-message"],
+      "infoMessage": [1, "info-message"],
+      "noPointsHeading": [1, "no-points-heading"],
+      "noPointsMessage": [1, "no-points-message"],
+      "thresholdHeading": [1, "threshold-heading"],
+      "thresholdMessage": [1, "threshold-message"],
+      "loginUrl": [1, "login-url"],
+      "loggedIn": [4, "logged-in"],
+      "disablePoints": [4, "disable-points"]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const cartDiscountMessageCss = "ks-cart-discount-message{display:block;margin:10px 0px;color:rgb(165 165 165);text-align:center;font-size:14px}ks-cart-discount-message ks-icon{scale:0.8}";
+
+class CartDiscountMessage {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.text = "";
+  }
+  render() {
+    return [
+      hAsync("ks-icon", { name: "info" }),
+      this.text
+    ];
+  }
+  static get style() { return cartDiscountMessageCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-cart-discount-message",
+    "$members$": {
+      "text": [1]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const cartDiscountPointsCss = "ks-cart-discount-points{display:block}ks-cart-discount-points>form{display:-ms-flexbox;display:flex}ks-cart-discount-points button{padding:0 20px !important;position:relative;height:40px;width:90px;min-width:90px;-webkit-appearance:none;-moz-appearance:none;appearance:none;border:none;color:#ffffff;background-color:#242424;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease}ks-cart-discount-points button:hover{background-color:#363636}ks-cart-discount-points button:active{background-color:#464646}ks-cart-discount-points ks-input-number{width:100%;margin-bottom:0}ks-cart-discount-points>.info-message{text-align:center;font-size:14px;margin-top:10px}ks-cart-discount-points>.points-message{position:absolute;top:-7px;right:0;font-family:var(--font-emphasis);font-size:24px;font-weight:700}";
+
+class CartDiscountPoints {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.placeholder = "";
+    this.message = "";
+    this.points = 1;
+    this.orderPoints = 1;
+    this.loading = false;
+  }
+  discountPointsAddHandler(event) {
+    event.preventDefault();
+    if (!this.loading) {
+      const form = event.target;
+      const input = form.querySelector('input[name="pointCount"]');
+      const value = input.value;
+      if (value) {
+        const valueNumber = parseInt(value.toString());
+        if (!Number.isNaN(valueNumber)) {
+          this.loading = true;
+          discountPointsAdd(valueNumber);
+        }
+      }
+    }
+  }
+  async ResetLoading() {
+    this.loading = false;
+  }
+  render() {
+    const strings = cart.get("strings");
+    return [
+      hAsync("form", { onSubmit: (e) => this.discountPointsAddHandler(e), novalidate: true }, hAsync("ks-input-number", { center: true, min: 1, max: this.points, step: 10, value: this.points, name: "pointCount" }), hAsync("button", { type: "submit" }, this.loading ? hAsync("ks-loader", null) : hAsync("span", null, strings.discountPointsActivate))),
+      hAsync("div", { class: "points-message" }, "+", this.orderPoints),
+      hAsync("div", { class: "info-message" }, this.message)
+    ];
+  }
+  static get style() { return cartDiscountPointsCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-cart-discount-points",
+    "$members$": {
+      "placeholder": [1],
+      "message": [1],
+      "points": [2],
+      "orderPoints": [2, "order-points"],
+      "loading": [32],
+      "ResetLoading": [64]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const cartDiscountPointsLoginCss = "ks-cart-discount-points-login{display:block}ks-cart-discount-points-login>.info-message{text-align:center;font-size:14px;margin-top:10px}ks-cart-discount-points-login>.points-message{position:absolute;top:-7px;right:0;font-family:var(--font-emphasis);font-size:24px;font-weight:700}";
+
+class CartDiscountPointsLogin {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.message = "";
+    this.loginUrl = "";
+    this.points = 1;
+  }
+  render() {
+    return [
+      hAsync("ks-button", { narrow: true, border: true, link: this.loginUrl, name: cart.get("strings").discountPointsLogin }),
+      hAsync("div", { class: "points-message" }, "+", this.points),
+      hAsync("div", { class: "info-message" }, this.message)
+    ];
+  }
+  static get style() { return cartDiscountPointsLoginCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-cart-discount-points-login",
+    "$members$": {
+      "message": [1],
+      "loginUrl": [1, "login-url"],
+      "points": [2]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const cartDiscountPointsMessageCss = "ks-cart-discount-points-message{display:block}ks-cart-discount-points-message .heading{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-webkit-box-sizing:border-box;box-sizing:border-box;height:40px;padding:4px 5px !important;font-family:var(--font-emphasis);background-color:#f8f8f8;border:#dbdbdb solid 1px;color:#858585;font-size:17px !important;font-weight:700 !important}ks-cart-discount-points-message>.info-message{text-align:center;font-size:14px;margin-top:10px}ks-cart-discount-points-message>.points-message{position:absolute;top:-7px;right:0;font-family:var(--font-emphasis);font-size:24px;font-weight:700}";
+
+class CartDiscountPointsMessage {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.heading = "";
+    this.message = "";
+    this.points = 1;
+  }
+  render() {
+    return [
+      hAsync("div", { class: "heading" }, this.heading),
+      hAsync("div", { class: "points-message" }, "+", this.points),
+      hAsync("div", { class: "info-message" }, this.message)
+    ];
+  }
+  static get style() { return cartDiscountPointsMessageCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-cart-discount-points-message",
+    "$members$": {
+      "heading": [1],
+      "message": [1],
+      "points": [2]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const cartDiscountTicketCss = "ks-cart-discount-ticket{display:-ms-flexbox;display:flex;width:100%;min-height:50px;-webkit-box-sizing:border-box;box-sizing:border-box;font-family:var(--font-emphasis);background-color:#ff3838;color:white}ks-cart-discount-ticket .content{-ms-flex:1;flex:1;display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-align:center;align-items:center;padding:10px 20px}ks-cart-discount-ticket .name{-ms-flex:1;flex:1;font-weight:700;font-size:20px}ks-cart-discount-ticket .remove{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;position:relative;width:50px;background-color:rgba(0, 0, 0, 0.068);-webkit-transition:background-color 0.2s ease;transition:background-color 0.2s ease}ks-cart-discount-ticket .remove:hover{background-color:rgba(0, 0, 0, 0.137)}ks-cart-discount-ticket .remove:active{background-color:rgba(0, 0, 0, 0.281)}@media only screen and (max-width: 560px){ks-cart-discount-ticket .content{display:block}ks-cart-discount-ticket .value{font-size:16px}}";
+
+class CartDiscountTicket {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.name = "";
+    this.value = "";
+    this.loading = false;
+  }
+  discountRemoveHandler() {
+    discountRemove();
+  }
+  render() {
+    const parsed = parseFloat(this.value);
+    if (!isNaN(parsed))
+      this.value = priceFormat(parsed);
+    return [
+      hAsync("div", { class: "content ks-text-decorated" }, hAsync("div", { class: "name" }, this.name), hAsync("div", { class: "value" }, this.value)),
+      hAsync("div", { class: "remove", onClick: () => this.discountRemoveHandler() }, this.loading ? hAsync("ks-loader", null) : hAsync("ks-icon", { name: "x" }))
+    ];
+  }
+  static get style() { return cartDiscountTicketCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-cart-discount-ticket",
+    "$members$": {
+      "name": [1],
+      "value": [1],
+      "loading": [32]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const cartEasyprotectCss = "ks-cart-easyprotect{display:block;padding:30px;background-color:#ffffff}ks-cart-easyprotect.hidden{display:none}ks-cart-easyprotect .top{display:-ms-flexbox;display:flex;-ms-flex-align:start;align-items:flex-start;width:100%;position:relative}ks-cart-easyprotect .top .content{-ms-flex:1 1 auto;flex:1 1 auto;font-size:15px;text-align:justify}ks-cart-easyprotect .top .content h2{font-size:22px;text-transform:uppercase;font-family:var(--font-emphasis);font-weight:700}ks-cart-easyprotect .top ks-img2{max-width:120px;width:100%;margin-left:10px}ks-cart-easyprotect .insured{margin-top:10px}ks-cart-easyprotect .insured .item{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;margin-top:10px;font-family:var(--font-emphasis);background-color:#f2f2f2;padding:5px 10px}ks-cart-easyprotect .insured .item .name{-ms-flex:1 1 auto;flex:1 1 auto;padding:5px;background-color:#f2f2f2;font-size:16px}ks-cart-easyprotect .insured .item .option{margin:0 10px;font-size:17px;font-weight:700}ks-cart-easyprotect .addproducts .content{padding:20px 20px 0 20px}@media (max-width: 640px){ks-cart-easyprotect .top ks-img2{position:absolute;top:-5px;right:0;max-width:40px;max-height:40px}ks-cart-easyprotect .top .content{font-size:15px}}";
+
+class CartEasyprotect {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.image = undefined;
+    this.width = undefined;
+    this.height = undefined;
+    this.insured = undefined;
+    this.enabled = undefined;
+  }
+  componentWillLoad() {
+    const update = () => {
+      this.insured = Object.entries(cart.get("insured"));
+      this.enabled = Object.keys(cart.get("easyprotect")).length > 0;
+    };
+    cart.onChange("insured", update);
+    cart.onChange("easyprotect", update);
+    update();
+  }
+  render() {
+    return hAsync(Host, { class: !this.enabled ? "hidden" : "" }, hAsync("div", { class: "top" }, hAsync("div", { class: "content" }, hAsync("slot", null)), hAsync("ks-img2", { src: this.image, width: this.width, height: this.height })), hAsync("div", { class: "insured" }, this.insured.map(([id, months]) => hAsync("ks-cart-easyprotect-warranty", { insured: true, "product-id": id, active: months }))), hAsync("slot", { name: "bottom" }));
+  }
+  get root() { return getElement(this); }
+  static get style() { return cartEasyprotectCss; }
+  static get cmpMeta() { return {
+    "$flags$": 4,
+    "$tagName$": "ks-cart-easyprotect",
+    "$members$": {
+      "image": [1],
+      "width": [2],
+      "height": [2],
+      "insured": [32],
+      "enabled": [32]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const cartEasyprotectDialogCss = "ks-cart-easyprotect-dialog{display:block}ks-cart-easyprotect-dialog .hidden{display:none}ks-cart-easyprotect-dialog .content{background-color:var(--card-background);-webkit-box-shadow:var(--big-shadow);box-shadow:var(--big-shadow);color:var(--card-text-color);position:relative;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:720px;width:100%}ks-cart-easyprotect-dialog .content h2{font-size:24px;font-weight:700;text-align:center;margin-top:30px}ks-cart-easyprotect-dialog .content p{text-align:center;margin:10px 10px 20px 10px}ks-cart-easyprotect-dialog .content>.products .items{padding:10px 20px;max-height:320px;overflow-y:auto}ks-cart-easyprotect-dialog .content>.warranty .items{padding:0 20px 0 20px;max-height:270px;overflow-y:auto}ks-cart-easyprotect-dialog .content.hidden{display:none}ks-cart-easyprotect-dialog .content.hide{opacity:0;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-cart-easyprotect-dialog ks-button{z-index:20;position:relative;margin-top:20px}ks-cart-easyprotect-dialog ks-button[disabled]{border-top:#bebebe 1px solid}ks-cart-easyprotect-dialog ks-button button{background-color:var(--easyprotect-color);border-color:var(--easyprotect-color)}ks-cart-easyprotect-dialog ks-button button:hover{background-color:var(--easyprotect-color-hover) !important;border-color:var(--easyprotect-color-hover) !important}ks-cart-easyprotect-dialog ks-button button:active{background-color:var(--easyprotect-color-active) !important;border-color:var(--easyprotect-color-active) !important}ks-cart-easyprotect-dialog ks-button[disabled] button{background-color:#e2e2e2 !important;border-color:#e2e2e2 !important;color:#3d3d3d !important;cursor:auto}ks-cart-easyprotect-dialog ks-overlay .content{-webkit-animation:0.4s vertical-swipe-out 1;animation:0.4s vertical-swipe-out 1}ks-cart-easyprotect-dialog ks-overlay.active .content{-webkit-animation:0.4s vertical-swipe-in 1;animation:0.4s vertical-swipe-in 1}@media (max-width: 720px){ks-cart-easyprotect-dialog .content{height:100%}ks-cart-easyprotect-dialog .content>.products,ks-cart-easyprotect-dialog .content>.warranty{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;height:100%;max-height:100%;padding:0}ks-cart-easyprotect-dialog .content>.products>.items,ks-cart-easyprotect-dialog .content>.warranty>.items{padding:0 10px 0 10px;max-height:none}ks-cart-easyprotect-dialog ks-button{margin-top:auto}ks-cart-easyprotect-dialog .content p{margin:5px 10px 15px 10px}}@media (max-width: 420px){ks-cart-easyprotect-dialog .content h2{font-size:20px;margin:20px 10px 10px 10px}ks-cart-easyprotect-dialog .content p{font-size:15px}}ks-cart-easyprotect-dialog .content .close,ks-cart-easyprotect-dialog .content .back{position:absolute;top:20px;z-index:20;border-radius:50px;padding:10px;-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-cart-easyprotect-dialog .content .close:hover,ks-cart-easyprotect-dialog .content .back:hover{background-color:#f2f2f2}ks-cart-easyprotect-dialog .content .close:active,ks-cart-easyprotect-dialog .content .back:active{background-color:#dbdbdb}ks-cart-easyprotect-dialog .content .close{right:20px}ks-cart-easyprotect-dialog .content .back{left:20px}@media (max-width: 420px){ks-cart-easyprotect-dialog .content .close,ks-cart-easyprotect-dialog .content .back{padding:3px;top:17px}ks-cart-easyprotect-dialog .content .close{right:8px}ks-cart-easyprotect-dialog .content .back{left:8px}}ks-cart-easyprotect-dialog .content .loading{position:absolute;top:0;bottom:0;left:0;right:0;z-index:100;background-color:white;-webkit-animation:fade-in 0.3s ease;animation:fade-in 0.3s ease}";
 
 class CartEasyprotectDialog {
   constructor(hostRef) {
@@ -13409,8 +13556,8 @@ class CartEasyprotectDialog {
     const warranty = this.eligible.length == 1 || this.step >= 2 ? "" : "hidden";
     const warrantyHide = this.step == 1 ? "hide" : "";
     return [
-      hAsync("ks-button", { tall: true, name: strings.addWarranty, onClick: () => this.show(), class: enabled ? null : "hidden" }),
-      hAsync("ks-overlay", null, hAsync("div", { class: `content ${products} ${productsHide}` }, this.products()), hAsync("div", { class: `content ${warranty} ${warrantyHide}` }, this.warranty()))
+      hAsync("ks-button", { round: true, name: strings.addWarranty, onClick: () => this.show(), class: enabled ? null : "hidden" }),
+      hAsync("ks-overlay", { dark: true }, hAsync("div", { class: `content ${products} ${productsHide}` }, this.products()), hAsync("div", { class: `content ${warranty} ${warrantyHide}` }, this.warranty()))
     ];
   }
   products() {
@@ -13539,7 +13686,7 @@ class CartEasyprotectProduct {
   }; }
 }
 
-const cartEasyprotectWarrantyCss = "ks-cart-easyprotect-warranty{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:justify;justify-content:space-between;background-color:#f2f2f2;margin-bottom:10px}ks-cart-easyprotect-warranty .name{position:relative;margin:8px 15px;max-height:50px;-webkit-box-sizing:border-box;box-sizing:border-box;overflow:hidden;font-family:var(--font-emphasis)}ks-cart-easyprotect-warranty .name:after{content:\"\";position:absolute;top:30px;right:0;width:30%;height:20px;background:-webkit-gradient(linear, left top, right top, from(rgba(255, 255, 255, 0)), color-stop(90%, rgb(242, 242, 242)));background:linear-gradient(to right, rgba(255, 255, 255, 0), rgb(242, 242, 242) 90%)}ks-cart-easyprotect-warranty .control{display:-ms-flexbox;display:flex}ks-cart-easyprotect-warranty .info{min-width:135px;font-family:var(--font-emphasis);font-weight:700;background-color:var(--easyprotect-color)}ks-cart-easyprotect-warranty .price{height:40px;min-width:80px;line-height:40px;text-align:center;background-color:#64419c !important;color:#ffffff}ks-cart-easyprotect-warranty .select{position:relative}ks-cart-easyprotect-warranty .select ks-icon{position:absolute;top:8px;right:5px;color:white;pointer-events:none}ks-cart-easyprotect-warranty ks-input-select div{margin-bottom:0 !important;margin-right:3px}ks-cart-easyprotect-warranty ks-input-select select{background-image:none !important;border:none !important;padding-right:30px !important;margin:0 !important;background-color:transparent !important;color:white !important}ks-cart-easyprotect-warranty:not([product-id]) .select{color:white !important;padding:7px 20px}ks-cart-easyprotect-warranty .close{-ms-flex-item-align:stretch;-ms-grid-row-align:stretch;align-self:stretch;min-width:40px;border-style:none;outline-style:none;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease;background-color:var(--easyprotect-color);color:#ffffff;border-left:#64419c 1px solid}ks-cart-easyprotect-warranty .close ks-icon{line-height:unset !important}ks-cart-easyprotect-warranty .close:hover{background-color:var(--easyprotect-color-hover)}ks-cart-easyprotect-warranty .close:active{background-color:var(--easyprotect-color-active)}@media (min-width: 860px){ks-cart-easyprotect-warranty[insured] .info,ks-cart-easyprotect-warranty:not([product-id]) .info{display:-ms-flexbox;display:flex;min-width:200px}ks-cart-easyprotect-warranty .name{text-overflow:ellipsis;white-space:nowrap;width:100%}ks-cart-easyprotect-warranty .control{-ms-flex:1 0 auto;flex:1 0 auto}}@media (max-width: 420px){ks-cart-easyprotect-warranty{display:inline-block}ks-cart-easyprotect-warranty .info{display:-ms-flexbox;display:flex;width:100%}ks-cart-easyprotect-warranty .select{width:100%}ks-cart-easyprotect-warranty .name{margin:12px 15px}ks-cart-easyprotect-warranty .price{width:50%}}";
+const cartEasyprotectWarrantyCss = "ks-cart-easyprotect-warranty{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:justify;justify-content:space-between;background-color:#f2f2f2;margin-bottom:10px}ks-cart-easyprotect-warranty .name{position:relative;margin:8px 15px;max-height:50px;-webkit-box-sizing:border-box;box-sizing:border-box;overflow:hidden;font-family:var(--font-emphasis)}ks-cart-easyprotect-warranty .name:after{content:\"\";position:absolute;top:30px;right:0;width:30%;height:20px;background:-webkit-gradient(linear, left top, right top, from(rgba(255, 255, 255, 0)), color-stop(90%, rgb(242, 242, 242)));background:linear-gradient(to right, rgba(255, 255, 255, 0), rgb(242, 242, 242) 90%)}ks-cart-easyprotect-warranty .control{display:-ms-flexbox;display:flex}ks-cart-easyprotect-warranty .info{min-width:135px;font-family:var(--font-emphasis);font-weight:700;background-color:var(--easyprotect-color)}ks-cart-easyprotect-warranty .price{height:40px;min-width:80px;line-height:40px;text-align:center;background-color:#64419c !important;color:#ffffff}ks-cart-easyprotect-warranty .warranty-select{position:relative}ks-cart-easyprotect-warranty .warranty-select ks-icon{position:absolute;top:6px;right:5px;color:white;pointer-events:none}ks-cart-easyprotect-warranty select{-webkit-appearance:none;-moz-appearance:none;appearance:none;width:100%;outline:none;border:none;background:none;color:#ffffff;padding:10px 30px 10px 10px}ks-cart-easyprotect-warranty select option{color:#151515}ks-cart-easyprotect-warranty:not([product-id]) .warranty-select{color:white !important;padding:7px 20px}ks-cart-easyprotect-warranty .close{-ms-flex-item-align:stretch;align-self:stretch;min-width:40px;border-style:none;outline-style:none;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease;background-color:var(--easyprotect-color);color:#ffffff;border-left:#64419c 1px solid}ks-cart-easyprotect-warranty .close ks-icon{line-height:unset !important}ks-cart-easyprotect-warranty .close:hover{background-color:var(--easyprotect-color-hover)}ks-cart-easyprotect-warranty .close:active{background-color:var(--easyprotect-color-active)}@media (min-width: 860px){ks-cart-easyprotect-warranty[insured] .info,ks-cart-easyprotect-warranty:not([product-id]) .info{display:-ms-flexbox;display:flex;min-width:200px}ks-cart-easyprotect-warranty .name{text-overflow:ellipsis;white-space:nowrap;width:100%}ks-cart-easyprotect-warranty .control{-ms-flex:1 0 auto;flex:1 0 auto}}@media (max-width: 420px){ks-cart-easyprotect-warranty{display:inline-block}ks-cart-easyprotect-warranty .info{display:-ms-flexbox;display:flex;width:100%}ks-cart-easyprotect-warranty .warranty-select{width:100%;padding-top:3px}ks-cart-easyprotect-warranty .warranty-select ks-icon{top:8px}ks-cart-easyprotect-warranty .name{margin:12px 15px}ks-cart-easyprotect-warranty .price{width:50%}}";
 
 class CartEasyprotectWarranty {
   constructor(hostRef) {
@@ -13577,8 +13724,8 @@ class CartEasyprotectWarranty {
     const price = priceFormat(this.price);
     return [
       hAsync("div", { class: "name", innerHTML: this.name.replace("<br>", " "), title: this.name.replace("<br>", " ").replace(/(<([^>]+)>)/gi, "") }),
-      hAsync("div", { class: "control" }, hAsync("div", { class: "info" }, hAsync("div", { class: "select" }, this.productId ? [
-        hAsync("ks-input-select", { onChange: () => this.change() }, this.entries.map(([months, _]) => hAsync("option", { value: months, selected: this.active == months }, this.months(parseInt(months))))),
+      hAsync("div", { class: "control" }, hAsync("div", { class: "info" }, hAsync("div", { class: "warranty-select" }, this.productId ? [
+        hAsync("select", { onChange: () => this.change() }, this.entries.map(([months, _]) => hAsync("option", { value: months, selected: this.active == months }, this.months(parseInt(months))))),
         hAsync("ks-icon", { name: "chevron-down" })
       ] :
         this.months(this.time)), hAsync("div", { class: "price" }, price)), this.productId && this.insured ?
@@ -13621,35 +13768,6 @@ class CartEasyprotectWarranty {
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": [["productId", "product-id"], ["insured", "insured"], ["active", "active"]]
-  }; }
-}
-
-class CartHeading {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.center = false;
-  }
-  componentDidLoad() {
-    this.root.style.display = "block";
-    this.root.style.marginBottom = "20px";
-    if (this.center)
-      this.root.style.textAlign = "center";
-  }
-  render() {
-    return [
-      hAsync("span", { class: "uk-text-bold ks-text-decorated", style: { fontSize: "22px", textTransform: "uppercase" } }, hAsync("slot", null))
-    ];
-  }
-  get root() { return getElement(this); }
-  static get cmpMeta() { return {
-    "$flags$": 4,
-    "$tagName$": "ks-cart-heading",
-    "$members$": {
-      "center": [4]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
   }; }
 }
 
@@ -13698,13 +13816,11 @@ class CartMessage {
   }; }
 }
 
-const cartProductCss = "ks-cart-product{display:block}ks-cart-product>div{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;font-size:18px}ks-cart-product .description{-ms-flex:1;flex:1}ks-cart-product .description a{color:inherit !important;text-decoration:none !important}ks-cart-product .numbers{font-weight:700}ks-cart-product .price{text-align:center;width:100px}ks-cart-product .amount{text-align:center;width:120px;margin-left:15px}ks-cart-product .product-image{width:150px;height:150px;max-width:150px;max-height:150px;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}ks-cart-product[small] .product-image{width:90px;height:90px;max-width:90px;max-height:90px}@media only screen and (max-width: 959px){ks-cart-product .price{text-align:initial;width:initial;color:#e21334}ks-cart-product .shipping{margin-left:10px}ks-cart-product .amount{text-align:initial;width:initial;margin-left:0px}ks-cart-product ks-cart-spinner{margin-top:10px}}@media only screen and (max-width: 640px){ks-cart-product>div{-ms-flex-direction:column;flex-direction:column;position:relative}ks-cart-product .description{text-align:center}ks-cart-product .shipping{display:block;font-size:16px;margin-bottom:5px;margin-left:0px;margin-top:-3px}ks-cart-product .numbers{margin-top:7px}ks-cart-product .amount{text-align:center}ks-cart-product[small] .amount{font-size:16px}ks-cart-product[small] .shipping{margin-bottom:0px}}";
+const cartProductCss = "ks-cart-product{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;font-size:16px;border-bottom:#ededed 1px solid}ks-cart-product:last-child{border-bottom:none}ks-cart-product .description{display:grid;grid-template-columns:1fr 110px 100px 50px;grid-template-rows:auto auto;gap:0px 5px;grid-template-areas:\"name     price count remove\"\n        \"shipping price count remove\";-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;-ms-flex:1;flex:1;padding:10px 0px}ks-cart-product:not([removable]) .description{grid-template-columns:1fr 110px 100px;grid-template-areas:\"name     price count\"\n        \"shipping price count\"}ks-cart-product:not([removable]) .remove-container{display:none}ks-cart-product .name{grid-area:name;color:inherit !important;text-decoration:none !important}ks-cart-product .price{grid-area:price;font-family:var(--font-emphasis);text-align:center}ks-cart-product .count{grid-area:count}ks-cart-product .amount{text-align:center}ks-cart-product .remove-container{grid-area:remove}ks-cart-product .shipping{grid-area:shipping;font-family:var(--font-emphasis);font-weight:700}ks-cart-product .remove{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-color:transparent;border:#d9d9d9 solid 1px;border-radius:50px;width:40px;height:40px;margin:5px}ks-cart-product .product-image{width:90px;height:90px;max-width:90px;max-height:90px;padding:15px;-webkit-box-sizing:border-box;box-sizing:border-box;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}@media only screen and (max-width: 860px){ks-cart-product .description{grid-template-rows:auto auto;grid-template-columns:auto auto 1fr;gap:5px 5px;grid-template-areas:\"name   name     name  remove\"\n            \"price  shipping count remove\"}ks-cart-product:not([removable]) .description{grid-template-columns:auto auto 1fr;gap:5px 10px;grid-template-areas:\"name     name name\"\n            \"shipping price count\"}ks-cart-product:not([removable]) .amount{text-align:left !important}ks-cart-product .price{text-align:center;font-weight:700;color:#e21334}ks-cart-product .name{margin-bottom:-5px}}@media only screen and (max-width: 640px){ks-cart-product{-ms-flex-direction:column;flex-direction:column;position:relative}ks-cart-product .description{grid-template-rows:auto auto;grid-template-columns:auto auto auto;gap:5px 5px;grid-template-areas:\"name   name\"\n            \"price  shipping\"\n            \"count  count\"\n            \"remove remove\";text-align:center;justify-items:stretch}ks-cart-product:not([removable]) .description{grid-template-rows:auto auto;grid-template-columns:1fr auto 1fr;grid-template-areas:\"name   name     name\"\n            \"price  shipping count\"}ks-cart-product .price{text-align:right}ks-cart-product .count{text-align:center;margin-top:5px}ks-cart-product .shipping{text-align:left}ks-cart-product .remove-container{position:absolute;text-align:right;top:5px;right:0px}ks-cart-product .product-image{width:100%;height:100%;max-width:180px;max-height:180px}}";
 
 class CartProduct {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.removeProduct = createEvent(this, "removeProduct", 7);
-    this.productCount = createEvent(this, "productCount", 7);
     this.productId = undefined;
     this.name = undefined;
     this.img = undefined;
@@ -13717,54 +13833,24 @@ class CartProduct {
     this.maxAmount = undefined;
     this.removable = false;
     this.loading = false;
-    this.mobile = 0;
   }
   onRemoveHandler() {
     this.loading = true;
-    this.removeProduct.emit(this.productId);
-  }
-  onCountHandler(detail) {
-    this.productCount.emit([this.productId, detail.current, detail.last]);
+    removeProduct(this.productId);
   }
   async ResetLoading() {
     this.loading = false;
   }
-  resizeHandler() {
-    this.mobile =
-      window.innerWidth < 959 ?
-        window.innerWidth < 640 ?
-          2 : 1
-        : 0;
-  }
-  componentWillLoad() {
-    this.resizeHandler();
-  }
   render() {
     const price = priceFormat(this.price);
-    const inlineBlockOnMobile = { display: this.removable || this.shippingTime ? "block" : "inline-block" };
     return [
-      hAsync("div", { class: "ks-text-decorated", "uk-grid": true }, hAsync("a", { class: "product-image", href: this.link }, hAsync("ks-img2", { center: true, src: this.img, width: 150, height: 150, alt: "zdj\u0119cie produktu" })), hAsync("div", { class: "description" }, hAsync("a", { href: this.link, innerHTML: this.name }), this.mobile >= 1 ?
-        hAsync("div", { class: "numbers" }, hAsync("div", { style: inlineBlockOnMobile }, hAsync("span", { class: "price" }, price), hAsync("span", { class: "shipping" }, this.shippingTime)), hAsync("div", { style: inlineBlockOnMobile }, this.removable ?
-          hAsync("ks-cart-spinner", { onChanged: (e) => this.onCountHandler(e.detail), "initial-value": this.amount, max: this.maxAmount }) :
-          hAsync("div", { class: "amount" }, this.amount, " ", this.countUnit)))
-        : this.shippingTime != "" ?
-          hAsync("div", { class: "numbers" }, this.shippingTime)
-          : null), this.mobile == 0 ? [
-        hAsync("div", { class: "price" }, price),
-        hAsync("div", { class: "amount" }, this.removable ?
-          hAsync("ks-cart-spinner", { onChanged: (e) => this.onCountHandler(e.detail), "initial-value": this.amount, max: this.maxAmount }) :
-          hAsync("span", null, this.amount, " ", this.countUnit))
-      ] : null, this.removable ?
-        this.mobile == 2 ?
-          this.loading ?
-            hAsync("div", { "uk-spinner": true, class: "uk-position-top-right uk-position-small" }) :
-            hAsync("button", { type: "button", "uk-close": true, class: "uk-close-large uk-position-top-right uk-position-small", onClick: () => this.onRemoveHandler() })
-          :
-            hAsync("nav", { style: { width: "50px" }, class: "uk-text-center" }, this.loading ?
-              hAsync("div", { "uk-spinner": true }) :
-              hAsync("button", { type: "button", "uk-close": true, class: "uk-close-large", onClick: () => this.onRemoveHandler() }))
-        : null),
-      hAsync("hr", null)
+      hAsync("a", { class: "product-image", href: this.link }, hAsync("ks-img3", { fit: 'contain', image: this.img, width: 180, height: 180, alt: "zdj\u0119cie produktu" })),
+      hAsync("div", { class: "description" }, hAsync("a", { class: "name", href: this.link, innerHTML: this.name }), hAsync("span", { class: "price" }, price), hAsync("span", { class: "shipping" }, this.shippingTime), hAsync("div", { class: "count" }, this.removable ?
+        hAsync("ks-cart-spinner", { product: this.productId, value: this.amount, max: this.maxAmount }) :
+        hAsync("div", { class: "amount" }, this.amount, " ", this.countUnit)), hAsync("div", { class: "remove-container" }, this.removable ? this.loading ?
+        hAsync("ks-loader", null) :
+        hAsync("button", { class: "remove", onClick: () => this.onRemoveHandler() }, hAsync("ks-icon", { name: "x" }))
+        : null))
     ];
   }
   static get style() { return cartProductCss; }
@@ -13782,14 +13868,13 @@ class CartProduct {
       "countUnit": [1, "count-unit"],
       "amount": [514],
       "maxAmount": [2, "max-amount"],
-      "removable": [4],
+      "removable": [516],
       "loading": [32],
-      "mobile": [32],
       "ResetLoading": [64]
     },
-    "$listeners$": [[9, "resize", "resizeHandler"]],
+    "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["productId", "product-id"], ["small", "small"], ["amount", "amount"]]
+    "$attrsToReflect$": [["productId", "product-id"], ["small", "small"], ["amount", "amount"], ["removable", "removable"]]
   }; }
 }
 
@@ -13802,8 +13887,7 @@ class CartProductContainer {
     const string = cart.get('strings');
     return [
       hAsync("ks-cart-product-heading", { removable: true, productTableNames: string.productTableNames, productTablePrices: string.productTablePrices, productTableCount: string.productTableCount, productTableRemove: string.productTableRemove }),
-      products.map(([id, product]) => hAsync("ks-cart-product", { removable: true, key: id, "product-id": id, name: product.name, link: product.link, img: product.image, price: product.currentPrice, amount: product.quantity, "max-amount": product.maxQuantity, "shipping-time": product.shippingTime, "count-unit": string.countUnit })),
-      hAsync("ks-cart-product-price", { amount: cart.get("productAmount"), price: cart.get("productValue"), loading: cart.get("loadingProducts"), "shipping-time": cart.get("totalShippingTime"), productTableTotal: string.productTableTotal })
+      products.map(([id, product]) => hAsync("ks-cart-product", { removable: true, key: id, "product-id": id, name: product.name, link: product.link, img: product.image, price: product.currentPrice, amount: product.quantity, "max-amount": product.maxQuantity, "shipping-time": product.shippingTime, "count-unit": string.countUnit }))
     ];
   }
   get root() { return getElement(this); }
@@ -13817,6 +13901,8 @@ class CartProductContainer {
   }; }
 }
 
+const cartProductHeadingCss = "ks-cart-product-heading{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;text-align:center;font-size:18px;border-bottom:#ededed 1px solid;padding-bottom:10px;font-family:var(--font-emphasis);font-weight:700}ks-cart-product-heading .names{text-align:left;width:100%}ks-cart-product-heading .prices{width:110px;-ms-flex:1 0 auto;flex:1 0 auto}ks-cart-product-heading .count{width:110px;-ms-flex:1 0 auto;flex:1 0 auto}ks-cart-product-heading .remove{width:50px;-ms-flex:1 0 auto;flex:1 0 auto}ks-cart-product-heading .remove{width:50px;-ms-flex:1 0 auto;flex:1 0 auto}@media only screen and (max-width: 860px){ks-cart-product-heading .prices{display:none}ks-cart-product-heading .count{display:none}}";
+
 class CartProductHeading {
   constructor(hostRef) {
     registerInstance(this, hostRef);
@@ -13826,18 +13912,16 @@ class CartProductHeading {
     this.productTableCount = "";
     this.productTableRemove = "";
   }
-  componentDidLoad() {
-    this.root.style.display = "block";
-  }
   render() {
     return [
-      hAsync("div", { class: "uk-flex uk-flex-middle ks-text-decorated", "uk-grid": true, style: { fontSize: "18px" } }, hAsync("div", { class: "uk-width-expand uk-text-bold", style: { fontSize: "22px" } }, this.productTableNames), hAsync("div", { style: { width: "100px" }, class: "uk-text-center uk-visible@m" }, this.productTablePrices), hAsync("div", { style: { width: "100px" }, class: "uk-text-center uk-visible@m" }, this.productTableCount), this.removable ?
-        hAsync("div", { style: { width: "50px" }, class: "uk-text-center" }, this.productTableRemove)
-        : null),
-      hAsync("hr", null)
+      hAsync("div", { class: "names" }, this.productTableNames),
+      hAsync("div", { class: "prices" }, this.productTablePrices),
+      hAsync("div", { class: "count" }, this.productTableCount),
+      this.removable ? hAsync("div", { class: "remove" }, this.productTableRemove) : null
     ];
   }
   get root() { return getElement(this); }
+  static get style() { return cartProductHeadingCss; }
   static get cmpMeta() { return {
     "$flags$": 0,
     "$tagName$": "ks-cart-product-heading",
@@ -13854,7 +13938,7 @@ class CartProductHeading {
   }; }
 }
 
-const cartProductMessageCss = "ks-cart-product-message{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}ks-cart-product-message a{display:block;margin:-30px 10px 15px 10px;max-width:600px;padding:10px 30px;border-radius:50px;-webkit-box-sizing:border-box;box-sizing:border-box;text-align:center;text-decoration:none !important;color:white !important;background-color:black;background-size:300% 300%;background-image:linear-gradient(\n            -45deg, \n            #e01515 0%,\n            #da1fb1 100%\n    );-webkit-animation:product-message-bg-animation 4s ease infinite;animation:product-message-bg-animation 4s ease infinite;opacity:1.0;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-cart-product-message a:hover{opacity:0.8}ks-cart-product-message a:active{opacity:0.6}@-webkit-keyframes product-message-bg-animation{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}@keyframes product-message-bg-animation{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}@media screen and (max-width: 959px){ks-cart-product-message a{margin:0 10px 20px 10px}}";
+const cartProductMessageCss = "ks-cart-product-message{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}ks-cart-product-message a{margin-top:20px;border-top:#ededed 1px solid;display:block;max-width:600px;padding:10px 30px;border-radius:50px;-webkit-box-sizing:border-box;box-sizing:border-box;text-align:center;text-decoration:none !important;color:white !important;background-color:black;background-size:300% 300%;background-image:linear-gradient(\n            -45deg, \n            #e01515 0%,\n            #da1fb1 100%\n    );-webkit-animation:product-message-bg-animation 4s ease infinite;animation:product-message-bg-animation 4s ease infinite;opacity:1.0;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-cart-product-message a:hover{opacity:0.8}ks-cart-product-message a:active{opacity:0.6}@-webkit-keyframes product-message-bg-animation{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}@keyframes product-message-bg-animation{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}@media only screen and (max-width: 860px){ks-cart-product-message a{font-size:14px}}";
 
 class CartProductMessage {
   constructor(hostRef) {
@@ -13877,7 +13961,7 @@ class CartProductMessage {
   }; }
 }
 
-const cartProductPriceCss = "ks-cart-product-price{display:block}ks-cart-product-price>div{display:-ms-flexbox;display:flex;-ms-flex-direction:row-reverse;flex-direction:row-reverse;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-cart-product-price .sentence{-ms-flex:1;flex:1;font-size:18px;font-weight:700;text-align:center}ks-cart-product-price .price{color:#e21334}ks-cart-product-price .shipping{display:inline-block;margin-left:15px}ks-cart-product-price .edit{-webkit-box-sizing:border-box;box-sizing:border-box;width:auto;max-width:100%}ks-cart-product-price .edit a{padding:3px 20px}@media only screen and (min-width: 960px){ks-cart-product-price .sentence{text-align:right}}@media only screen and (max-width: 959px){ks-cart-product-price .edit{margin-top:10px;width:100%}}@media only screen and (max-width: 640px){ks-cart-product-price .shipping{display:block;margin-left:0;font-size:16px}}";
+const cartProductPriceCss = "ks-cart-product-price{display:block;margin-top:10px}ks-cart-product-price>div{display:-ms-flexbox;display:flex;-ms-flex-direction:row-reverse;flex-direction:row-reverse;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-cart-product-price .sentence{-ms-flex:1;flex:1;font-size:18px;font-weight:700;text-align:center}ks-cart-product-price .price{color:#e21334}ks-cart-product-price .shipping{display:inline-block;margin-left:15px}ks-cart-product-price .edit{-webkit-box-sizing:border-box;box-sizing:border-box;width:auto;max-width:100%}ks-cart-product-price .edit a{padding:3px 20px}@media only screen and (min-width: 960px){ks-cart-product-price .sentence{text-align:right}}@media only screen and (max-width: 959px){ks-cart-product-price .edit{margin-top:10px;width:100%}}@media only screen and (max-width: 640px){ks-cart-product-price .shipping{display:block;margin-left:0;font-size:16px}}";
 
 class CartProductPrice {
   constructor(hostRef) {
@@ -13943,32 +14027,14 @@ class CartProductPrice {
   }; }
 }
 
-const cartProgressBarCss = "ks-cart-progress-bar{display:block;padding:25px 30px 30px 30px;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease}ks-cart-progress-bar .heading{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;margin-bottom:10px;font-size:20px;text-shadow:0 0 10px rgba(0, 0, 0, 0.25);color:white}ks-cart-progress-bar .progress{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;width:100%;height:35px;border-radius:3px;background-color:rgba(255, 255, 255, 0.219)}ks-cart-progress-bar .progress-fill{height:100%;border-radius:inherit;-webkit-transition:width 0.3s ease;transition:width 0.3s ease;display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-direction:row-reverse;flex-direction:row-reverse;padding:0 15px;-webkit-box-sizing:border-box;box-sizing:border-box;background-color:white}ks-cart-progress-bar .progress-number{color:#252525;font-size:17px;font-weight:700}ks-cart-progress-bar .outside{color:white;font-size:18px;font-weight:400;margin-left:10px}@media only screen and (max-width: 959px){ks-cart-progress-bar{padding:15px 20px 20px 20px}}@media only screen and (max-width: 520px){ks-cart-progress-bar .heading{display:block;text-align:center}ks-cart-progress-bar .heading>div:first-child{display:block;font-weight:700}}";
+const cartProgressBarCss = "ks-cart-progress-bar{display:block;background-color:#ffffff;padding:15px 30px 20px 30px;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease}ks-cart-progress-bar .heading{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;margin-bottom:10px;font-size:20px}ks-cart-progress-bar .progress{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;width:100%;height:35px;border-radius:3px;background-color:rgb(235 235 235)}ks-cart-progress-bar .progress-fill{height:100%;border-radius:inherit;-webkit-transition:width 0.3s ease;transition:width 0.3s ease;display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-direction:row-reverse;flex-direction:row-reverse;padding:0 15px;-webkit-box-sizing:border-box;box-sizing:border-box;background-color:#252525}ks-cart-progress-bar .progress-number{color:#ffffff;font-size:17px;font-weight:700}ks-cart-progress-bar .outside{font-size:18px;font-weight:400;margin-left:10px}@media only screen and (max-width: 959px){ks-cart-progress-bar{padding:15px 20px 20px 20px}}@media only screen and (max-width: 520px){ks-cart-progress-bar .heading{display:block;text-align:center}ks-cart-progress-bar .heading>div:first-child{display:block;font-weight:700}}";
 
 class CartProgressBar {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.numberPlacement = false;
   }
   componentWillLoad() {
     this.shippingProgress = cart.get("shippingProgress");
-    this.resizeHandler();
-    if (!this.shippingProgress) {
-      this.root.hidden = true;
-    }
-    else {
-      this.root.hidden = false;
-      this.root.style.backgroundColor = this.shippingProgress.color;
-    }
-  }
-  resizeHandler() {
-    if (this.shippingProgress) {
-      const barWidth = Math.min(cart.get("productValue") / this.shippingProgress.threshold * 100, 100);
-      this.numberPlacement = (barWidth / 100 * window.innerWidth) > 200;
-    }
-  }
-  componentWillUpdate() {
-    this.componentWillLoad();
   }
   render() {
     const productValue = cart.get("productValue");
@@ -13982,11 +14048,7 @@ class CartProgressBar {
     const strings = cart.get('strings');
     return [
       hAsync("div", { class: "heading ks-text-decorated" }, hAsync("div", null, data.heading), hAsync("div", null, strings.thresholdPrefix, " ", threshold)),
-      hAsync("div", { class: "progress", style: { backgroundColor: thresholdAchieved ? "transparent" : "" } }, hAsync("div", { class: "progress-fill", style: { width: `${barWidth}%` } }, this.numberPlacement ?
-        hAsync("div", { class: "progress-number" }, thresholdAchieved ? hAsync("span", { "uk-icon": "icon: check; ratio: 1.5" }) : current)
-        : null), !this.numberPlacement ?
-        hAsync("div", { class: "progress-number outside" }, thresholdAchieved ? hAsync("span", { "uk-icon": "icon: check; ratio: 1.5" }) : current)
-        : null)
+      hAsync("div", { class: "progress" }, hAsync("div", { class: "progress-fill", style: { width: `${barWidth}%` } }, hAsync("div", { class: "progress-number" }, thresholdAchieved ? hAsync("ks-icon", { name: "check" }) : current)))
     ];
   }
   get root() { return getElement(this); }
@@ -13994,16 +14056,14 @@ class CartProgressBar {
   static get cmpMeta() { return {
     "$flags$": 0,
     "$tagName$": "ks-cart-progress-bar",
-    "$members$": {
-      "numberPlacement": [32]
-    },
-    "$listeners$": [[9, "resize", "resizeHandler"]],
+    "$members$": undefined,
+    "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": []
   }; }
 }
 
-const cartRecycleCss = "ks-cart-recycle{display:block;padding:30px}ks-cart-recycle h2{font-size:22px;text-transform:uppercase;font-family:var(--font-emphasis);font-weight:700;margin-top:20px}ks-cart-recycle.hidden{display:none}@media (max-width: 960px){ks-cart-recycle{padding:15px}}";
+const cartRecycleCss = "ks-cart-recycle{display:block;padding:30px;background-color:#ffffff}ks-cart-recycle h2{font-size:22px;text-transform:uppercase;font-family:var(--font-emphasis);font-weight:700;margin-top:20px}ks-cart-recycle.hidden{display:none}@media (max-width: 960px){ks-cart-recycle{padding:15px}}";
 
 class CartRecycle {
   constructor(hostRef) {
@@ -14048,7 +14108,7 @@ class CartRecycle {
   }; }
 }
 
-const cartSelectItemCss = "ks-cart-select-item{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;height:50px;cursor:pointer;z-index:10;position:relative;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease}ks-cart-select-item .logo{background-color:#252525;height:100%;width:150px;padding:5px;border-top:1px solid rgba(0, 0, 0, 0.1);-webkit-box-sizing:border-box;box-sizing:border-box}@media only screen and (max-width: 720px){ks-cart-select-item .logo{display:none}}ks-cart-select-item .name{-ms-flex:1;flex:1;padding:0 20px;font-size:16px}ks-cart-select-item .price{padding:0 20px;font-size:16px}@media only screen and (max-width: 420px){ks-cart-select-item .name{padding:0 5px 0 20px;font-size:14px}ks-cart-select-item .price{padding:0 10px 0 5px;font-size:14px}}";
+const cartSelectItemCss = ".items ks-cart-select-item{background-color:#252525;color:white;border-bottom:#474747 1px solid}ks-cart-select-item{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;padding:10px 7px;border-bottom:#dbdbdb 1px solid;cursor:pointer;z-index:10;position:relative;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease}ks-cart-select-item .name{font-size:14px}ks-cart-select-item .price{padding:0 6px;font-size:14px}@media only screen and (max-width: 420px){ks-cart-select-item .name{padding:0 5px 0 20px;font-size:14px}ks-cart-select-item .price{padding:0 10px 0 5px;font-size:14px}}";
 
 class CartSelectItem {
   constructor(hostRef) {
@@ -14060,8 +14120,6 @@ class CartSelectItem {
   }
   render() {
     return [
-      this.logo ?
-        hAsync("div", { class: "logo", style: { backgroundColor: this.color } }, hAsync("ks-img", { vertical: true, center: true, src: this.logo, target: "ks-cart-select-shipping, ks-cart-select-payment" })) : null,
       hAsync("div", { class: "name" }, this.name),
       this.price ?
         hAsync("div", { class: "price" }, priceFormat(this.price))
@@ -14085,12 +14143,11 @@ class CartSelectItem {
   }; }
 }
 
-const cartSelectCss$1 = ".ks-cart-select{display:block;position:relative;height:50px}.ks-cart-select .animation{-webkit-animation:start 1.0s ease;animation:start 1.0s ease}@-webkit-keyframes start{from{opacity:0}to{opacity:1}}@keyframes start{from{opacity:0}to{opacity:1}}.ks-cart-select>.center{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;height:50px}.ks-cart-select .select{display:-ms-flexbox;display:flex;background-color:#f8f8f8;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease;outline:1px solid #d2d2d2;outline-offset:-1px}.ks-cart-select .select:hover{background-color:#f2f2f2}.ks-cart-select[error] .select{background-color:#ffc5c5;color:#ff0000;outline-color:#ff0000}.ks-cart-select[error] .select:hover{background-color:#ff8a8a}.ks-cart-select .selectSlot{-ms-flex:1;flex:1}.ks-cart-select .selectIcon{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;z-index:10;width:50px;height:50px;background-color:#252525;color:white;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease}.ks-cart-select .select:hover .selectIcon{background-color:#353535}.ks-cart-select .items{position:absolute;top:50px;left:0;width:100%;z-index:20;background-color:#f8f8f8;-webkit-box-shadow:0px 3px 20px -5px rgba(0, 0, 0, 0.349);box-shadow:0px 3px 20px -5px rgba(0, 0, 0, 0.349)}.ks-cart-select .items .ks-cart-select-item:hover{background-color:#f0f0f0}@media only screen and (max-width: 420px){.ks-cart-select .select .ks-cart-select-item .price{display:none}}";
+const cartSelectCss$1 = ".select{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;margin-bottom:5px}.select>ks-icon{margin-right:10px}.ks-cart-select{display:block;position:relative}.ks-cart-select .animation{-webkit-animation:start 1.0s ease;animation:start 1.0s ease}@-webkit-keyframes start{from{opacity:0}to{opacity:1}}@keyframes start{from{opacity:0}to{opacity:1}}.ks-cart-select>.center{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}.ks-cart-select .select{display:-ms-flexbox;display:flex;height:42px;background-color:#f8f8f8;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease;outline:1px solid #e5e5e5;outline-offset:-1px}.ks-cart-select .select:hover{background-color:#f2f2f2}.ks-cart-select[error] .select{background-color:#ffc5c5;color:#ff0000;outline-color:#ff0000}.ks-cart-select[error] .select:hover{background-color:#ff8a8a}.ks-cart-select .selectSlot{-ms-flex:1;flex:1}.ks-cart-select .selectIcon{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;z-index:10;width:40px;height:40px;background-color:#252525;color:white;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease}.ks-cart-select .select:hover .selectIcon{background-color:#353535}.ks-cart-select .items{position:absolute;top:45px;left:0;width:100%;z-index:20;background-color:#f8f8f8;-webkit-box-shadow:0px 3px 20px -5px rgba(0, 0, 0, 0.349);box-shadow:0px 3px 20px -5px rgba(0, 0, 0, 0.349)}.ks-cart-select .items .ks-cart-select-item:hover{background-color:#f0f0f0}@media only screen and (max-width: 420px){.ks-cart-select .select .ks-cart-select-item .price{display:none}}";
 
 class CartSelectPayment {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.paymentChange = createEvent(this, "paymentChange", 7);
     this.name = "";
     this.valid = false;
     this.error = false;
@@ -14122,7 +14179,7 @@ class CartSelectPayment {
     this.root.classList.add("ks-cart-select");
   }
   ActivateItem(id) {
-    this.paymentChange.emit(id);
+    paymentChange(id);
     this.toggled = false;
     this.active = id;
     this.valid = true;
@@ -14132,7 +14189,7 @@ class CartSelectPayment {
     if (this.valid)
       this.active = cart.get("activePayment");
     if (this.loading)
-      return (hAsync("div", { class: "center" }, hAsync("nav", { "uk-spinner": true })));
+      return (hAsync("div", { class: "center" }, hAsync("ks-loader", null)));
     const activeItem = cart.get("payment").find((value) => {
       return value.id == this.active;
     });
@@ -14145,7 +14202,7 @@ class CartSelectPayment {
             this.toggled = !this.toggled;
         } }, hAsync("div", { class: "selectSlot" }, this.active == -1 ?
         hAsync("ks-cart-select-item", { name: paymentSelect }) :
-        hAsync("ks-cart-select-item", { logo: activeItem.logo, name: activeItem.name, price: activeItem.price })), hAsync("div", { class: "selectIcon" }, hAsync("span", { "uk-icon": "icon: triangle-down; ratio: 1.3" }))),
+        hAsync("ks-cart-select-item", { logo: activeItem.logo, name: activeItem.name, price: activeItem.price })), hAsync("ks-icon", { name: "chevron-down" })),
       hAsync("div", { class: "items", hidden: !this.toggled }, cart.get("payment").map((item) => hAsync("ks-cart-select-item", { key: item.id, logo: item.logo, name: item.name, price: item.price, color: item.color, onClick: () => this.ActivateItem(item.id) })))
     ];
   }
@@ -14172,12 +14229,11 @@ class CartSelectPayment {
   }; }
 }
 
-const cartSelectCss = ".ks-cart-select{display:block;position:relative;height:50px}.ks-cart-select .animation{-webkit-animation:start 1.0s ease;animation:start 1.0s ease}@-webkit-keyframes start{from{opacity:0}to{opacity:1}}@keyframes start{from{opacity:0}to{opacity:1}}.ks-cart-select>.center{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;height:50px}.ks-cart-select .select{display:-ms-flexbox;display:flex;background-color:#f8f8f8;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease;outline:1px solid #d2d2d2;outline-offset:-1px}.ks-cart-select .select:hover{background-color:#f2f2f2}.ks-cart-select[error] .select{background-color:#ffc5c5;color:#ff0000;outline-color:#ff0000}.ks-cart-select[error] .select:hover{background-color:#ff8a8a}.ks-cart-select .selectSlot{-ms-flex:1;flex:1}.ks-cart-select .selectIcon{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;z-index:10;width:50px;height:50px;background-color:#252525;color:white;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease}.ks-cart-select .select:hover .selectIcon{background-color:#353535}.ks-cart-select .items{position:absolute;top:50px;left:0;width:100%;z-index:20;background-color:#f8f8f8;-webkit-box-shadow:0px 3px 20px -5px rgba(0, 0, 0, 0.349);box-shadow:0px 3px 20px -5px rgba(0, 0, 0, 0.349)}.ks-cart-select .items .ks-cart-select-item:hover{background-color:#f0f0f0}@media only screen and (max-width: 420px){.ks-cart-select .select .ks-cart-select-item .price{display:none}}";
+const cartSelectCss = ".select{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;margin-bottom:5px}.select>ks-icon{margin-right:10px}.ks-cart-select{display:block;position:relative}.ks-cart-select .animation{-webkit-animation:start 1.0s ease;animation:start 1.0s ease}@-webkit-keyframes start{from{opacity:0}to{opacity:1}}@keyframes start{from{opacity:0}to{opacity:1}}.ks-cart-select>.center{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}.ks-cart-select .select{display:-ms-flexbox;display:flex;height:42px;background-color:#f8f8f8;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease;outline:1px solid #e5e5e5;outline-offset:-1px}.ks-cart-select .select:hover{background-color:#f2f2f2}.ks-cart-select[error] .select{background-color:#ffc5c5;color:#ff0000;outline-color:#ff0000}.ks-cart-select[error] .select:hover{background-color:#ff8a8a}.ks-cart-select .selectSlot{-ms-flex:1;flex:1}.ks-cart-select .selectIcon{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;z-index:10;width:40px;height:40px;background-color:#252525;color:white;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease}.ks-cart-select .select:hover .selectIcon{background-color:#353535}.ks-cart-select .items{position:absolute;top:45px;left:0;width:100%;z-index:20;background-color:#f8f8f8;-webkit-box-shadow:0px 3px 20px -5px rgba(0, 0, 0, 0.349);box-shadow:0px 3px 20px -5px rgba(0, 0, 0, 0.349)}.ks-cart-select .items .ks-cart-select-item:hover{background-color:#f0f0f0}@media only screen and (max-width: 420px){.ks-cart-select .select .ks-cart-select-item .price{display:none}}";
 
 class CartSelectShipping {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.shippingChange = createEvent(this, "shippingChange", 7);
     this.name = "";
     this.valid = false;
     this.error = false;
@@ -14209,7 +14265,7 @@ class CartSelectShipping {
   }
   ActivateItem(id) {
     if (id != cart.get("activeShipping"))
-      this.shippingChange.emit(id);
+      shippingChange(id);
     this.toggled = false;
     this.active = id;
     this.valid = true;
@@ -14219,7 +14275,7 @@ class CartSelectShipping {
     if (this.valid)
       this.active = cart.get("activeShipping");
     if (this.loading)
-      return (hAsync("div", { class: "center" }, hAsync("nav", { "uk-spinner": true })));
+      return (hAsync("div", { class: "center" }, hAsync("ks-loader", null)));
     const activeItem = cart.get("shipping").find((value) => {
       return value.id == this.active;
     });
@@ -14232,7 +14288,7 @@ class CartSelectShipping {
             this.toggled = !this.toggled;
         } }, hAsync("div", { class: "selectSlot" }, this.active == -1 ?
         hAsync("ks-cart-select-item", { name: shippingSelect }) :
-        hAsync("ks-cart-select-item", { logo: activeItem.logo, name: activeItem.name, price: activeItem.price })), hAsync("div", { class: "selectIcon" }, hAsync("span", { "uk-icon": "icon: triangle-down; ratio: 1.3" }))),
+        hAsync("ks-cart-select-item", { logo: activeItem.logo, name: activeItem.name, price: activeItem.price })), hAsync("ks-icon", { name: "chevron-down" })),
       hAsync("div", { class: "items", hidden: !this.toggled }, cart.get("shipping").map((item) => hAsync("ks-cart-select-item", { key: item.id, logo: item.logo, name: item.name, price: item.price, color: item.color, onClick: () => this.ActivateItem(item.id) })))
     ];
   }
@@ -14302,36 +14358,29 @@ class CartShippingMessage {
   }; }
 }
 
-const cartSpinnerCss = "ks-cart-spinner{display:inline-block;text-align:center}ks-cart-spinner input{width:50px !important;margin:0 !important;font-size:14px !important;text-align:center !important}";
+const cartSpinnerCss = "ks-cart-spinner{display:-ms-inline-flexbox;display:inline-flex;text-align:center}ks-cart-spinner input{-webkit-appearance:none;-moz-appearance:none;appearance:none;border:1px solid #d9d9d9;width:40px !important;height:30px;-webkit-box-sizing:border-box;box-sizing:border-box;margin:0 !important;font-size:14px !important;text-align:center !important}ks-cart-spinner button{-webkit-appearance:none;-moz-appearance:none;appearance:none;border:1px solid #d9d9d9;height:30px;width:30px}ks-cart-spinner button:first-child{border-right:none}ks-cart-spinner button:last-child{border-left:none}@media only screen and (max-width: 640px){ks-cart-spinner input{width:50px;height:35px}ks-cart-spinner button{height:35px;width:35px}}";
 
 class CartSpinner {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.changed = createEvent(this, "changed", 7);
+    this.product = undefined;
     this.name = undefined;
-    this.initialValue = 1;
-    this.max = undefined;
     this.value = 1;
-  }
-  componentWillLoad() {
-    this.value = this.initialValue;
+    this.max = undefined;
   }
   Increment() {
-    const last = this.value;
     if (typeof this.max === "undefined" || this.value < this.max) {
       this.value += 1;
-      this.onChangedHandler(this.value, last);
+      this.onChangedHandler(this.value);
     }
   }
   Decrement() {
-    const last = this.value;
     if (this.value > 1) {
       this.value -= 1;
-      this.onChangedHandler(this.value, last);
+      this.onChangedHandler(this.value);
     }
   }
   Change(e) {
-    const last = this.value;
     const input = e.target;
     const parsed = parseInt(input.value);
     if (!isNaN(parsed) && parsed > 0 && (typeof this.max === "undefined" || parsed <= this.max))
@@ -14344,18 +14393,17 @@ class CartSpinner {
       this.value = 1;
       input.value = "1";
     }
-    this.onChangedHandler(this.value, last);
+    this.onChangedHandler(this.value);
   }
-  onChangedHandler(current, last) {
-    this.changed.emit({ current, last });
-  }
-  async SetAmount(amount) {
-    this.value = amount;
+  onChangedHandler(value) {
+    productCount(this.product, value);
   }
   render() {
-    return (this.max == 1 ?
-      hAsync("div", null, "1 szt.") :
-      hAsync("div", null, hAsync("button", { class: "uk-button uk-button-muted", onClick: () => this.Decrement() }, "-"), hAsync("input", { type: "text", maxlength: "3", value: this.value, name: this.name, onChange: (e) => this.Change(e), class: "uk-input" }), hAsync("button", { class: "uk-button uk-button-muted", onClick: () => this.Increment() }, "+")));
+    return this.max == 1 ? "1 szt." : [
+      hAsync("button", { onClick: () => this.Decrement() }, "-"),
+      hAsync("input", { type: "text", maxlength: "3", value: this.value, name: this.name, onChange: (e) => this.Change(e) }),
+      hAsync("button", { onClick: () => this.Increment() }, "+")
+    ];
   }
   get root() { return getElement(this); }
   static get style() { return cartSpinnerCss; }
@@ -14363,17 +14411,18 @@ class CartSpinner {
     "$flags$": 0,
     "$tagName$": "ks-cart-spinner",
     "$members$": {
+      "product": [1],
       "name": [1],
-      "initialValue": [1538, "initial-value"],
-      "max": [2],
-      "value": [32],
-      "SetAmount": [64]
+      "value": [1538],
+      "max": [2]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["initialValue", "initial-value"]]
+    "$attrsToReflect$": [["value", "value"]]
   }; }
 }
+
+const cartSummaryCss = "ks-cart-summary{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-align:baseline;align-items:baseline;font-size:16px;font-family:var(--font-emphasis)}ks-cart-summary[large]{font-size:20px;font-weight:700}ks-cart-summary[emphasis]{color:var(--color-secondary)}";
 
 class CartSummary {
   constructor(hostRef) {
@@ -14381,45 +14430,32 @@ class CartSummary {
     this.text = undefined;
     this.price = undefined;
     this.large = undefined;
-    this.emphasis = false;
-  }
-  componentDidLoad() {
-    this.root.style.display = "block";
+    this.emphasis = undefined;
   }
   render() {
     const price = priceFormat(this.price);
-    const leaderOptions = "media: 500; fill: .";
-    if (this.large) {
-      const largeStyle = {
-        fontSize: "24px",
-        fontWeight: "700",
-        color: this.emphasis ? "#e21334" : ""
-      };
-      return (hAsync("div", { class: "uk-grid-small uk-flex-bottom uk-margin-small-bottom", style: { fontSize: "18px" }, "uk-grid": true }, hAsync("div", { class: "uk-width-expand", "uk-leader": leaderOptions }, hAsync("span", { class: "ks-text-decorated", style: largeStyle }, this.text)), hAsync("div", { class: "ks-text-decorated", style: largeStyle }, price)));
-    }
-    else {
-      const normalStyle = {
-        fontWeight: this.emphasis ? "700" : "",
-        color: this.emphasis ? "#e21334" : ""
-      };
-      return (hAsync("div", { class: "uk-grid-small uk-flex-bottom uk-margin-small-bottom", style: { fontSize: "18px" }, "uk-grid": true }, hAsync("div", { class: "uk-width-expand", "uk-leader": leaderOptions, style: normalStyle }, this.text), hAsync("div", { style: normalStyle }, price)));
-    }
+    return [
+      hAsync("div", { class: "name" }, this.text),
+      hAsync("div", { class: "price" }, price)
+    ];
   }
-  get root() { return getElement(this); }
+  static get style() { return cartSummaryCss; }
   static get cmpMeta() { return {
     "$flags$": 0,
     "$tagName$": "ks-cart-summary",
     "$members$": {
       "text": [513],
       "price": [2],
-      "large": [4],
-      "emphasis": [4]
+      "large": [516],
+      "emphasis": [516]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["text", "text"]]
+    "$attrsToReflect$": [["text", "text"], ["large", "large"], ["emphasis", "emphasis"]]
   }; }
 }
+
+const cartSummaryContainerCss = "";
 
 class CartSummaryContainer {
   constructor(hostRef) {
@@ -14434,6 +14470,7 @@ class CartSummaryContainer {
     ];
   }
   get root() { return getElement(this); }
+  static get style() { return cartSummaryContainerCss; }
   static get cmpMeta() { return {
     "$flags$": 0,
     "$tagName$": "ks-cart-summary-container",
@@ -14513,53 +14550,6 @@ class Comment {
     "$members$": {
       "author": [1],
       "when": [1]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
-
-class Contact {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.phone = undefined;
-    this.email = undefined;
-  }
-  render() {
-    return (hAsync("div", { class: "uk-text-center uk-text-emphasis", style: { padding: "50px" } }, hAsync("div", { class: "uk-visible@s", style: { height: '20px' } }), hAsync("slot", null), hAsync("ks-contact-buttons", { phone: this.phone, email: this.email })));
-  }
-  static get cmpMeta() { return {
-    "$flags$": 4,
-    "$tagName$": "ks-contact",
-    "$members$": {
-      "phone": [1],
-      "email": [1]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
-
-class ContactButtons {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.phone = "000000000";
-    this.email = undefined;
-  }
-  render() {
-    return [
-      hAsync("a", { href: "tel:" + this.phone, class: "uk-button uk-button-default uk-border-pill", style: { margin: "2px" } }, this.phone),
-      hAsync("a", { href: "mailto:" + this.email, class: "uk-button uk-button-default uk-border-pill", style: { margin: "2px" } }, this.email)
-    ];
-  }
-  static get cmpMeta() { return {
-    "$flags$": 0,
-    "$tagName$": "ks-contact-buttons",
-    "$members$": {
-      "phone": [1],
-      "email": [1]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
@@ -15038,17 +15028,6 @@ class ContentThumbnail {
     "$attrsToReflect$": []
   }; }
 }
-
-const commonDynamic = createStore({
-  loaded: false,
-  loggedIn: false,
-  customer: {},
-  cartCount: 0,
-  heartCount: 0,
-  api: {},
-  tracking: {},
-  consent: {}
-});
 
 const cookiePopupCss = "ks-cookie-popup{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;position:fixed;overflow:hidden;font-family:var(--font-emphasis);bottom:0px;left:0px;right:0px;z-index:10000000;background-color:var(--overlay-dark-background);-webkit-backdrop-filter:var(--overlay-dark-filter);backdrop-filter:var(--overlay-dark-filter);border-top:solid 1px #000000;color:white;transition:-webkit-transform 0.4s ease;-webkit-transition:-webkit-transform 0.4s ease;transition:transform 0.4s ease;transition:transform 0.4s ease, -webkit-transform 0.4s ease}ks-cookie-popup .message{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;height:80px;padding:15px;-webkit-box-sizing:border-box;box-sizing:border-box;text-align:center;font-size:15px;line-height:17px}ks-cookie-popup .message p{margin:0}ks-cookie-popup[requirement] .message p{background-color:#ff4242;border-radius:50px;padding:10px 15px}ks-cookie-popup .settings{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-direction:column;flex-direction:column;overflow-y:auto;height:500px;padding:0px 15px 15px 15px;-webkit-box-sizing:border-box;box-sizing:border-box;font-size:14px;line-height:14px}ks-cookie-popup .settings ks-button{margin-top:10px}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(500px);transform:translateY(500px)}ks-cookie-popup:not([hide])[extend]{-webkit-transform:translateY(0px);transform:translateY(0px)}ks-cookie-popup[hide]{-webkit-transform:translateY(620px);transform:translateY(620px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(620px);transform:translateY(620px);display:none}ks-cookie-popup p{margin:0;max-width:100%}ks-cookie-popup .buttons{display:-ms-flexbox;display:flex}ks-cookie-popup .buttons>*{width:-webkit-max-content;width:-moz-max-content;width:max-content}ks-cookie-popup .buttons>*:first-child{margin-right:5px}ks-cookie-popup .message .buttons{margin:0 0 0 20px}ks-cookie-popup .settings{max-width:800px}ks-cookie-popup .type{margin-bottom:10px}ks-cookie-popup .name{font-size:18px;font-weight:700}ks-cookie-popup .heading{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-align:center;align-items:center;margin-bottom:10px}ks-cookie-popup .check{position:relative;display:inline-block;width:50px;height:26px}ks-cookie-popup .check input{opacity:0;width:0;height:0}ks-cookie-popup .check .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;border-radius:34px;background-color:#ccc;-webkit-transition:.4s;transition:.4s}ks-cookie-popup .check .slider:before{position:absolute;content:\"\";height:20px;width:20px;left:4px;bottom:3px;border-radius:50%;background-color:#242424;-webkit-transition:.4s;transition:.4s}ks-cookie-popup .check input:disabled+.slider:before{background-color:#8d8d8d}ks-cookie-popup .check input:checked+.slider:before{-webkit-transform:translateX(22px);transform:translateX(22px)}ks-cookie-popup[requirement] .type.highlight .check .slider{background-color:#ff6f6f}ks-cookie-popup[requirement] .type.highlight .check .slider:before{background-color:#8d1515}ks-cookie-popup[requirement] .type.highlight .check input:checked+.slider{background-color:#87ff6f}ks-cookie-popup[requirement] .type.highlight .check input:checked+.slider:before{background-color:#198d15}@media (max-width: 700px){ks-cookie-popup .message{-ms-flex-direction:column;flex-direction:column;height:160px;font-size:14px}ks-cookie-popup .message p{margin:0 0 14px 0}ks-cookie-popup .settings{-ms-flex-pack:start;justify-content:flex-start}ks-cookie-popup[hide]{-webkit-transform:translateY(670px);transform:translateY(670px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(600px);transform:translateY(600px)}ks-cookie-popup[requirement] .message{height:120px}ks-cookie-popup[requirement][hide]{-webkit-transform:translateY(560px);transform:translateY(560px)}ks-cookie-popup[requirement]:not([show]){-webkit-transform:translateY(560px);transform:translateY(560px)}}@media (max-height: 700px){ks-cookie-popup .settings{height:400px}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(400px);transform:translateY(400px)}ks-cookie-popup[hide]{-webkit-transform:translateY(520px);transform:translateY(520px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(520px);transform:translateY(520px);display:none}}@media (max-height: 600px){ks-cookie-popup .settings{height:300px}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(300px);transform:translateY(300px)}ks-cookie-popup[hide]{-webkit-transform:translateY(420px);transform:translateY(420px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(420px);transform:translateY(420px)}}";
 
@@ -26849,7 +26828,7 @@ if (typeof window !== "undefined") {
     window.flatpickr = flatpickr;
 }
 
-const flatpickrCss = ".flatpickr-calendar{background:transparent;opacity:0;display:none;text-align:center;visibility:hidden;padding:0;-webkit-animation:none;animation:none;direction:ltr;border:0;font-size:14px;font-family:Lato;line-height:24px;border-radius:5px;position:absolute;width:307.875px;-webkit-box-sizing:border-box;box-sizing:border-box;-ms-touch-action:manipulation;touch-action:manipulation;-webkit-box-shadow:0 3px 13px rgba(0, 0, 0, 0.28);box-shadow:0 3px 13px rgba(0,0,0,0.28)}.flatpickr-calendar.open,.flatpickr-calendar.inline{opacity:1;max-height:640px;visibility:visible}.flatpickr-calendar.open{display:inline-block;z-index:99999}.flatpickr-calendar.animate.open{-webkit-animation:fpFadeInDown 300ms cubic-bezier(0.23, 1, 0.32, 1);animation:fpFadeInDown 300ms cubic-bezier(0.23, 1, 0.32, 1)}.flatpickr-calendar.inline{display:block;position:relative;top:2px}.flatpickr-calendar.static{position:absolute;top:calc(100% + 2px)}.flatpickr-calendar.static.open{z-index:999;display:block}.flatpickr-calendar.multiMonth .flatpickr-days .dayContainer:nth-child(n+1) .flatpickr-day.inRange:nth-child(7n+7){-webkit-box-shadow:none !important;box-shadow:none !important}.flatpickr-calendar.multiMonth .flatpickr-days .dayContainer:nth-child(n+2) .flatpickr-day.inRange:nth-child(7n+1){-webkit-box-shadow:-2px 0 0 #e6e6e6, 5px 0 0 #e6e6e6;box-shadow:-2px 0 0 #e6e6e6, 5px 0 0 #e6e6e6}.flatpickr-calendar .hasWeeks .dayContainer,.flatpickr-calendar .hasTime .dayContainer{border-bottom:0;border-bottom-right-radius:0;border-bottom-left-radius:0}.flatpickr-calendar .hasWeeks .dayContainer{border-left:0}.flatpickr-calendar.showTimeInput.hasTime .flatpickr-time{height:40px;border-top:1px solid rgba(72,72,72,0.2)}.flatpickr-calendar.showTimeInput.hasTime .flatpickr-innerContainer{border-bottom:0}.flatpickr-calendar.showTimeInput.hasTime .flatpickr-time{border:1px solid rgba(72,72,72,0.2)}.flatpickr-calendar.noCalendar.hasTime .flatpickr-time{height:auto}.flatpickr-calendar:before,.flatpickr-calendar:after{position:absolute;display:block;pointer-events:none;border:solid transparent;content:'';height:0;width:0;left:22px}.flatpickr-calendar.rightMost:before,.flatpickr-calendar.rightMost:after{left:auto;right:22px}.flatpickr-calendar:before{border-width:5px;margin:0 -5px}.flatpickr-calendar:after{border-width:4px;margin:0 -4px}.flatpickr-calendar.arrowTop:before,.flatpickr-calendar.arrowTop:after{bottom:100%}.flatpickr-calendar.arrowTop:before{border-bottom-color:rgba(72,72,72,0.2)}.flatpickr-calendar.arrowTop:after{border-bottom-color:#252525}.flatpickr-calendar.arrowBottom:before,.flatpickr-calendar.arrowBottom:after{top:100%}.flatpickr-calendar.arrowBottom:before{border-top-color:rgba(72,72,72,0.2)}.flatpickr-calendar.arrowBottom:after{border-top-color:#252525}.flatpickr-calendar:focus{outline:0}.flatpickr-wrapper{position:relative;display:inline-block}.flatpickr-months{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex}.flatpickr-months .flatpickr-month{border-radius:5px 5px 0 0;background:#252525;color:#fff;fill:#fff;height:28px;line-height:1;text-align:center;position:relative;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;overflow:hidden;-webkit-box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1}.flatpickr-months .flatpickr-prev-month,.flatpickr-months .flatpickr-next-month{text-decoration:none;cursor:pointer;position:absolute;top:0px;line-height:16px;height:28px;padding:10px;z-index:3;color:#fff;fill:#fff}.flatpickr-months .flatpickr-prev-month.disabled,.flatpickr-months .flatpickr-next-month.disabled{display:none}.flatpickr-months .flatpickr-prev-month i,.flatpickr-months .flatpickr-next-month i{position:relative}.flatpickr-months .flatpickr-prev-month.flatpickr-prev-month,.flatpickr-months .flatpickr-next-month.flatpickr-prev-month{left:0;}.flatpickr-months .flatpickr-prev-month.flatpickr-next-month,.flatpickr-months .flatpickr-next-month.flatpickr-next-month{right:0;}.flatpickr-months .flatpickr-prev-month:hover,.flatpickr-months .flatpickr-next-month:hover{color:#bbb}.flatpickr-months .flatpickr-prev-month:hover svg,.flatpickr-months .flatpickr-next-month:hover svg{fill:#f64747}.flatpickr-months .flatpickr-prev-month svg,.flatpickr-months .flatpickr-next-month svg{width:14px;height:14px}.flatpickr-months .flatpickr-prev-month svg path,.flatpickr-months .flatpickr-next-month svg path{-webkit-transition:fill 0.1s;transition:fill 0.1s;fill:inherit}.numInputWrapper{position:relative;height:auto}.numInputWrapper input,.numInputWrapper span{display:inline-block}.numInputWrapper input{width:100%}.numInputWrapper input::-ms-clear{display:none}.numInputWrapper input::-webkit-outer-spin-button,.numInputWrapper input::-webkit-inner-spin-button{margin:0;-webkit-appearance:none}.numInputWrapper span{position:absolute;right:0;width:14px;padding:0 4px 0 2px;height:50%;line-height:50%;opacity:0;cursor:pointer;border:1px solid rgba(72,72,72,0.15);-webkit-box-sizing:border-box;box-sizing:border-box}.numInputWrapper span:hover{background:rgba(0,0,0,0.1)}.numInputWrapper span:active{background:rgba(0,0,0,0.2)}.numInputWrapper span:after{display:block;content:\"\";position:absolute}.numInputWrapper span.arrowUp{top:0;border-bottom:0}.numInputWrapper span.arrowUp:after{border-left:4px solid transparent;border-right:4px solid transparent;border-bottom:4px solid rgba(72,72,72,0.6);top:26%}.numInputWrapper span.arrowDown{top:50%}.numInputWrapper span.arrowDown:after{border-left:4px solid transparent;border-right:4px solid transparent;border-top:4px solid rgba(72,72,72,0.6);top:40%}.numInputWrapper span svg{width:inherit;height:auto}.numInputWrapper span svg path{fill:rgba(255,255,255,0.5)}.numInputWrapper:hover{background:rgba(0,0,0,0.05)}.numInputWrapper:hover span{opacity:1}.flatpickr-current-month{font-size:135%;line-height:inherit;font-weight:300;color:inherit;position:absolute;width:75%;left:12.5%;padding:6.16px 0 0 0;line-height:1;height:28px;display:inline-block;text-align:center;-webkit-transform:translate3d(0px, 0px, 0px);transform:translate3d(0px, 0px, 0px)}.flatpickr-current-month span.cur-month{font-family:inherit;font-weight:700;color:inherit;display:inline-block;margin-left:0.5ch;padding:0}.flatpickr-current-month span.cur-month:hover{background:rgba(0,0,0,0.05)}.flatpickr-current-month .numInputWrapper{width:6ch;width:7ch\\0;display:inline-block}.flatpickr-current-month .numInputWrapper span.arrowUp:after{border-bottom-color:#fff}.flatpickr-current-month .numInputWrapper span.arrowDown:after{border-top-color:#fff}.flatpickr-current-month input.cur-year{background:transparent;-webkit-box-sizing:border-box;box-sizing:border-box;color:inherit;cursor:text;padding:0 0 0 0.5ch;margin:0;display:inline-block;font-size:inherit;font-family:inherit;font-weight:300;line-height:inherit;height:auto;border:0;border-radius:0;vertical-align:initial;-webkit-appearance:textfield;-moz-appearance:textfield;appearance:textfield}.flatpickr-current-month input.cur-year:focus{outline:0}.flatpickr-current-month input.cur-year[disabled],.flatpickr-current-month input.cur-year[disabled]:hover{font-size:100%;color:rgba(255,255,255,0.5);background:transparent;pointer-events:none}.flatpickr-weekdays{background:#252525;text-align:center;overflow:hidden;width:100%;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-align:center;-webkit-align-items:center;-ms-flex-align:center;align-items:center;height:28px}.flatpickr-weekdays .flatpickr-weekdaycontainer{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1}span.flatpickr-weekday{cursor:default;font-size:90%;background:#252525;color:rgba(255, 255, 255, 0.54);line-height:1;margin:0;text-align:center;display:block;-webkit-box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1;font-weight:bold}.dayContainer,.flatpickr-weeks{padding:1px 0 0 0}.flatpickr-days{position:relative;overflow:hidden;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-align:start;-webkit-align-items:flex-start;-ms-flex-align:start;align-items:flex-start;width:307.875px;border-left:1px solid rgba(72,72,72,0.2);border-right:1px solid rgba(72,72,72,0.2)}.flatpickr-days:focus{outline:0}.dayContainer{padding:0;outline:0;text-align:left;width:307.875px;min-width:307.875px;max-width:307.875px;-webkit-box-sizing:border-box;box-sizing:border-box;display:inline-block;display:-ms-flexbox;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;-ms-flex-wrap:wrap;-ms-flex-pack:justify;-webkit-justify-content:space-around;justify-content:space-around;-webkit-transform:translate3d(0px, 0px, 0px);transform:translate3d(0px, 0px, 0px);opacity:1}.dayContainer+.dayContainer{-webkit-box-shadow:-1px 0 0 rgba(72,72,72,0.2);box-shadow:-1px 0 0 rgba(72,72,72,0.2)}.flatpickr-day{background:none;border:1px solid transparent;border-radius:150px;-webkit-box-sizing:border-box;box-sizing:border-box;color:#484848;cursor:pointer;font-weight:400;width:14.2857143%;-webkit-flex-basis:14.2857143%;-ms-flex-preferred-size:14.2857143%;flex-basis:14.2857143%;max-width:39px;height:39px;line-height:39px;margin:0;display:inline-block;position:relative;-webkit-box-pack:center;-webkit-justify-content:center;-ms-flex-pack:center;justify-content:center;text-align:center}.flatpickr-day.inRange,.flatpickr-day.prevMonthDay.inRange,.flatpickr-day.nextMonthDay.inRange,.flatpickr-day.today.inRange,.flatpickr-day.prevMonthDay.today.inRange,.flatpickr-day.nextMonthDay.today.inRange,.flatpickr-day:hover,.flatpickr-day.prevMonthDay:hover,.flatpickr-day.nextMonthDay:hover,.flatpickr-day:focus,.flatpickr-day.prevMonthDay:focus,.flatpickr-day.nextMonthDay:focus{cursor:pointer;outline:0;background:#e2e2e2;border-color:#e2e2e2}.flatpickr-day.today{border-color:#bbb}.flatpickr-day.today:hover,.flatpickr-day.today:focus{border-color:#bbb;background:#bbb;color:#fff}.flatpickr-day.selected,.flatpickr-day.startRange,.flatpickr-day.endRange,.flatpickr-day.selected.inRange,.flatpickr-day.startRange.inRange,.flatpickr-day.endRange.inRange,.flatpickr-day.selected:focus,.flatpickr-day.startRange:focus,.flatpickr-day.endRange:focus,.flatpickr-day.selected:hover,.flatpickr-day.startRange:hover,.flatpickr-day.endRange:hover,.flatpickr-day.selected.prevMonthDay,.flatpickr-day.startRange.prevMonthDay,.flatpickr-day.endRange.prevMonthDay,.flatpickr-day.selected.nextMonthDay,.flatpickr-day.startRange.nextMonthDay,.flatpickr-day.endRange.nextMonthDay{background:#42a5f5;-webkit-box-shadow:none;box-shadow:none;color:#fff;border-color:#42a5f5}.flatpickr-day.selected.startRange,.flatpickr-day.startRange.startRange,.flatpickr-day.endRange.startRange{border-radius:50px 0 0 50px}.flatpickr-day.selected.endRange,.flatpickr-day.startRange.endRange,.flatpickr-day.endRange.endRange{border-radius:0 50px 50px 0}.flatpickr-day.selected.startRange+.endRange:not(:nth-child(7n+1)),.flatpickr-day.startRange.startRange+.endRange:not(:nth-child(7n+1)),.flatpickr-day.endRange.startRange+.endRange:not(:nth-child(7n+1)){-webkit-box-shadow:-10px 0 0 #42a5f5;box-shadow:-10px 0 0 #42a5f5}.flatpickr-day.selected.startRange.endRange,.flatpickr-day.startRange.startRange.endRange,.flatpickr-day.endRange.startRange.endRange{border-radius:50px}.flatpickr-day.inRange{border-radius:0;-webkit-box-shadow:-5px 0 0 #e2e2e2, 5px 0 0 #e2e2e2;box-shadow:-5px 0 0 #e2e2e2, 5px 0 0 #e2e2e2}.flatpickr-day.disabled,.flatpickr-day.disabled:hover,.flatpickr-day.prevMonthDay,.flatpickr-day.nextMonthDay,.flatpickr-day.notAllowed,.flatpickr-day.notAllowed.prevMonthDay,.flatpickr-day.notAllowed.nextMonthDay{color:rgba(72,72,72,0.3);background:transparent;border-color:transparent;cursor:default}.flatpickr-day.disabled,.flatpickr-day.disabled:hover{cursor:not-allowed;color:rgba(72,72,72,0.1)}.flatpickr-day.week.selected{border-radius:0;-webkit-box-shadow:-5px 0 0 #42a5f5, 5px 0 0 #42a5f5;box-shadow:-5px 0 0 #42a5f5, 5px 0 0 #42a5f5}.flatpickr-day.hidden{visibility:hidden}.rangeMode .flatpickr-day{margin-top:1px}.flatpickr-weekwrapper{display:inline-block;float:left}.flatpickr-weekwrapper .flatpickr-weeks{padding:0 12px;border-left:1px solid rgba(72,72,72,0.2)}.flatpickr-weekwrapper .flatpickr-weekday{float:none;width:100%;line-height:28px}.flatpickr-weekwrapper span.flatpickr-day,.flatpickr-weekwrapper span.flatpickr-day:hover{display:block;width:100%;max-width:none;color:rgba(72,72,72,0.3);background:transparent;cursor:default;border:none}.flatpickr-innerContainer{display:block;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-sizing:border-box;box-sizing:border-box;overflow:hidden;background:#fff;border-bottom:1px solid rgba(72,72,72,0.2)}.flatpickr-rContainer{display:inline-block;padding:0;-webkit-box-sizing:border-box;box-sizing:border-box}.flatpickr-time{text-align:center;outline:0;display:block;height:0;line-height:40px;max-height:40px;-webkit-box-sizing:border-box;box-sizing:border-box;overflow:hidden;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;background:#fff;border-radius:0 0 5px 5px}.flatpickr-time:after{content:\"\";display:table;clear:both}.flatpickr-time .numInputWrapper{-webkit-box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1;width:40%;height:40px;float:left}.flatpickr-time .numInputWrapper span.arrowUp:after{border-bottom-color:#484848}.flatpickr-time .numInputWrapper span.arrowDown:after{border-top-color:#484848}.flatpickr-time.hasSeconds .numInputWrapper{width:26%}.flatpickr-time.time24hr .numInputWrapper{width:49%}.flatpickr-time input{background:transparent;-webkit-box-shadow:none;box-shadow:none;border:0;border-radius:0;text-align:center;margin:0;padding:0;height:inherit;line-height:inherit;color:#484848;font-size:14px;position:relative;-webkit-box-sizing:border-box;box-sizing:border-box;-webkit-appearance:textfield;-moz-appearance:textfield;appearance:textfield}.flatpickr-time input.flatpickr-hour{font-weight:bold}.flatpickr-time input.flatpickr-minute,.flatpickr-time input.flatpickr-second{font-weight:400}.flatpickr-time input:focus{outline:0;border:0}.flatpickr-time .flatpickr-time-separator,.flatpickr-time .flatpickr-am-pm{height:inherit;display:inline-block;float:left;line-height:inherit;color:#484848;font-weight:bold;width:2%;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-align-self:center;-ms-flex-item-align:center;-ms-grid-row-align:center;align-self:center}.flatpickr-time .flatpickr-am-pm{outline:0;width:18%;cursor:pointer;text-align:center;font-weight:400}.flatpickr-time input:hover,.flatpickr-time .flatpickr-am-pm:hover,.flatpickr-time input:focus,.flatpickr-time .flatpickr-am-pm:focus{background:#eaeaea}.flatpickr-input[readonly]{cursor:pointer}@-webkit-keyframes fpFadeInDown{from{opacity:0;-webkit-transform:translate3d(0, -20px, 0);transform:translate3d(0, -20px, 0)}to{opacity:1;-webkit-transform:translate3d(0, 0, 0);transform:translate3d(0, 0, 0)}}@keyframes fpFadeInDown{from{opacity:0;-webkit-transform:translate3d(0, -20px, 0);transform:translate3d(0, -20px, 0)}to{opacity:1;-webkit-transform:translate3d(0, 0, 0);transform:translate3d(0, 0, 0)}}";
+const flatpickrCss = ".flatpickr-calendar{background:transparent;opacity:0;display:none;text-align:center;visibility:hidden;padding:0;-webkit-animation:none;animation:none;direction:ltr;border:0;font-size:14px;font-family:Lato;line-height:24px;border-radius:5px;position:absolute;width:307.875px;-webkit-box-sizing:border-box;box-sizing:border-box;-ms-touch-action:manipulation;touch-action:manipulation;-webkit-box-shadow:0 3px 13px rgba(0, 0, 0, 0.28);box-shadow:0 3px 13px rgba(0,0,0,0.28)}.flatpickr-calendar.open,.flatpickr-calendar.inline{opacity:1;max-height:640px;visibility:visible}.flatpickr-calendar.open{display:inline-block;z-index:99999}.flatpickr-calendar.animate.open{-webkit-animation:fpFadeInDown 300ms cubic-bezier(0.23, 1, 0.32, 1);animation:fpFadeInDown 300ms cubic-bezier(0.23, 1, 0.32, 1)}.flatpickr-calendar.inline{display:block;position:relative;top:2px}.flatpickr-calendar.static{position:absolute;top:calc(100% + 2px)}.flatpickr-calendar.static.open{z-index:999;display:block}.flatpickr-calendar.multiMonth .flatpickr-days .dayContainer:nth-child(n+1) .flatpickr-day.inRange:nth-child(7n+7){-webkit-box-shadow:none !important;box-shadow:none !important}.flatpickr-calendar.multiMonth .flatpickr-days .dayContainer:nth-child(n+2) .flatpickr-day.inRange:nth-child(7n+1){-webkit-box-shadow:-2px 0 0 #e6e6e6, 5px 0 0 #e6e6e6;box-shadow:-2px 0 0 #e6e6e6, 5px 0 0 #e6e6e6}.flatpickr-calendar .hasWeeks .dayContainer,.flatpickr-calendar .hasTime .dayContainer{border-bottom:0;border-bottom-right-radius:0;border-bottom-left-radius:0}.flatpickr-calendar .hasWeeks .dayContainer{border-left:0}.flatpickr-calendar.showTimeInput.hasTime .flatpickr-time{height:40px;border-top:1px solid rgba(72,72,72,0.2)}.flatpickr-calendar.showTimeInput.hasTime .flatpickr-innerContainer{border-bottom:0}.flatpickr-calendar.showTimeInput.hasTime .flatpickr-time{border:1px solid rgba(72,72,72,0.2)}.flatpickr-calendar.noCalendar.hasTime .flatpickr-time{height:auto}.flatpickr-calendar:before,.flatpickr-calendar:after{position:absolute;display:block;pointer-events:none;border:solid transparent;content:'';height:0;width:0;left:22px}.flatpickr-calendar.rightMost:before,.flatpickr-calendar.rightMost:after{left:auto;right:22px}.flatpickr-calendar:before{border-width:5px;margin:0 -5px}.flatpickr-calendar:after{border-width:4px;margin:0 -4px}.flatpickr-calendar.arrowTop:before,.flatpickr-calendar.arrowTop:after{bottom:100%}.flatpickr-calendar.arrowTop:before{border-bottom-color:rgba(72,72,72,0.2)}.flatpickr-calendar.arrowTop:after{border-bottom-color:#252525}.flatpickr-calendar.arrowBottom:before,.flatpickr-calendar.arrowBottom:after{top:100%}.flatpickr-calendar.arrowBottom:before{border-top-color:rgba(72,72,72,0.2)}.flatpickr-calendar.arrowBottom:after{border-top-color:#252525}.flatpickr-calendar:focus{outline:0}.flatpickr-wrapper{position:relative;display:inline-block}.flatpickr-months{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex}.flatpickr-months .flatpickr-month{border-radius:5px 5px 0 0;background:#252525;color:#fff;fill:#fff;height:28px;line-height:1;text-align:center;position:relative;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;overflow:hidden;-webkit-box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1}.flatpickr-months .flatpickr-prev-month,.flatpickr-months .flatpickr-next-month{text-decoration:none;cursor:pointer;position:absolute;top:0px;line-height:16px;height:28px;padding:10px;z-index:3;color:#fff;fill:#fff}.flatpickr-months .flatpickr-prev-month.disabled,.flatpickr-months .flatpickr-next-month.disabled{display:none}.flatpickr-months .flatpickr-prev-month i,.flatpickr-months .flatpickr-next-month i{position:relative}.flatpickr-months .flatpickr-prev-month.flatpickr-prev-month,.flatpickr-months .flatpickr-next-month.flatpickr-prev-month{left:0;}.flatpickr-months .flatpickr-prev-month.flatpickr-next-month,.flatpickr-months .flatpickr-next-month.flatpickr-next-month{right:0;}.flatpickr-months .flatpickr-prev-month:hover,.flatpickr-months .flatpickr-next-month:hover{color:#bbb}.flatpickr-months .flatpickr-prev-month:hover svg,.flatpickr-months .flatpickr-next-month:hover svg{fill:#f64747}.flatpickr-months .flatpickr-prev-month svg,.flatpickr-months .flatpickr-next-month svg{width:14px;height:14px}.flatpickr-months .flatpickr-prev-month svg path,.flatpickr-months .flatpickr-next-month svg path{-webkit-transition:fill 0.1s;transition:fill 0.1s;fill:inherit}.numInputWrapper{position:relative;height:auto}.numInputWrapper input,.numInputWrapper span{display:inline-block}.numInputWrapper input{width:100%}.numInputWrapper input::-ms-clear{display:none}.numInputWrapper input::-webkit-outer-spin-button,.numInputWrapper input::-webkit-inner-spin-button{margin:0;-webkit-appearance:none}.numInputWrapper span{position:absolute;right:0;width:14px;padding:0 4px 0 2px;height:50%;line-height:50%;opacity:0;cursor:pointer;border:1px solid rgba(72,72,72,0.15);-webkit-box-sizing:border-box;box-sizing:border-box}.numInputWrapper span:hover{background:rgba(0,0,0,0.1)}.numInputWrapper span:active{background:rgba(0,0,0,0.2)}.numInputWrapper span:after{display:block;content:\"\";position:absolute}.numInputWrapper span.arrowUp{top:0;border-bottom:0}.numInputWrapper span.arrowUp:after{border-left:4px solid transparent;border-right:4px solid transparent;border-bottom:4px solid rgba(72,72,72,0.6);top:26%}.numInputWrapper span.arrowDown{top:50%}.numInputWrapper span.arrowDown:after{border-left:4px solid transparent;border-right:4px solid transparent;border-top:4px solid rgba(72,72,72,0.6);top:40%}.numInputWrapper span svg{width:inherit;height:auto}.numInputWrapper span svg path{fill:rgba(255,255,255,0.5)}.numInputWrapper:hover{background:rgba(0,0,0,0.05)}.numInputWrapper:hover span{opacity:1}.flatpickr-current-month{font-size:135%;line-height:inherit;font-weight:300;color:inherit;position:absolute;width:75%;left:12.5%;padding:6.16px 0 0 0;line-height:1;height:28px;display:inline-block;text-align:center;-webkit-transform:translate3d(0px, 0px, 0px);transform:translate3d(0px, 0px, 0px)}.flatpickr-current-month span.cur-month{font-family:inherit;font-weight:700;color:inherit;display:inline-block;margin-left:0.5ch;padding:0}.flatpickr-current-month span.cur-month:hover{background:rgba(0,0,0,0.05)}.flatpickr-current-month .numInputWrapper{width:6ch;width:7ch\\0;display:inline-block}.flatpickr-current-month .numInputWrapper span.arrowUp:after{border-bottom-color:#fff}.flatpickr-current-month .numInputWrapper span.arrowDown:after{border-top-color:#fff}.flatpickr-current-month input.cur-year{background:transparent;-webkit-box-sizing:border-box;box-sizing:border-box;color:inherit;cursor:text;padding:0 0 0 0.5ch;margin:0;display:inline-block;font-size:inherit;font-family:inherit;font-weight:300;line-height:inherit;height:auto;border:0;border-radius:0;vertical-align:initial;-webkit-appearance:textfield;-moz-appearance:textfield;appearance:textfield}.flatpickr-current-month input.cur-year:focus{outline:0}.flatpickr-current-month input.cur-year[disabled],.flatpickr-current-month input.cur-year[disabled]:hover{font-size:100%;color:rgba(255,255,255,0.5);background:transparent;pointer-events:none}.flatpickr-weekdays{background:#252525;text-align:center;overflow:hidden;width:100%;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-align:center;-webkit-align-items:center;-ms-flex-align:center;align-items:center;height:28px}.flatpickr-weekdays .flatpickr-weekdaycontainer{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1}span.flatpickr-weekday{cursor:default;font-size:90%;background:#252525;color:rgba(255, 255, 255, 0.54);line-height:1;margin:0;text-align:center;display:block;-webkit-box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1;font-weight:bold}.dayContainer,.flatpickr-weeks{padding:1px 0 0 0}.flatpickr-days{position:relative;overflow:hidden;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-align:start;-webkit-align-items:flex-start;-ms-flex-align:start;align-items:flex-start;width:307.875px;border-left:1px solid rgba(72,72,72,0.2);border-right:1px solid rgba(72,72,72,0.2)}.flatpickr-days:focus{outline:0}.dayContainer{padding:0;outline:0;text-align:left;width:307.875px;min-width:307.875px;max-width:307.875px;-webkit-box-sizing:border-box;box-sizing:border-box;display:inline-block;display:-ms-flexbox;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;-ms-flex-wrap:wrap;-ms-flex-pack:justify;-webkit-justify-content:space-around;justify-content:space-around;-webkit-transform:translate3d(0px, 0px, 0px);transform:translate3d(0px, 0px, 0px);opacity:1}.dayContainer+.dayContainer{-webkit-box-shadow:-1px 0 0 rgba(72,72,72,0.2);box-shadow:-1px 0 0 rgba(72,72,72,0.2)}.flatpickr-day{background:none;border:1px solid transparent;border-radius:150px;-webkit-box-sizing:border-box;box-sizing:border-box;color:#484848;cursor:pointer;font-weight:400;width:14.2857143%;-webkit-flex-basis:14.2857143%;-ms-flex-preferred-size:14.2857143%;flex-basis:14.2857143%;max-width:39px;height:39px;line-height:39px;margin:0;display:inline-block;position:relative;-webkit-box-pack:center;-webkit-justify-content:center;-ms-flex-pack:center;justify-content:center;text-align:center}.flatpickr-day.inRange,.flatpickr-day.prevMonthDay.inRange,.flatpickr-day.nextMonthDay.inRange,.flatpickr-day.today.inRange,.flatpickr-day.prevMonthDay.today.inRange,.flatpickr-day.nextMonthDay.today.inRange,.flatpickr-day:hover,.flatpickr-day.prevMonthDay:hover,.flatpickr-day.nextMonthDay:hover,.flatpickr-day:focus,.flatpickr-day.prevMonthDay:focus,.flatpickr-day.nextMonthDay:focus{cursor:pointer;outline:0;background:#e2e2e2;border-color:#e2e2e2}.flatpickr-day.today{border-color:#bbb}.flatpickr-day.today:hover,.flatpickr-day.today:focus{border-color:#bbb;background:#bbb;color:#fff}.flatpickr-day.selected,.flatpickr-day.startRange,.flatpickr-day.endRange,.flatpickr-day.selected.inRange,.flatpickr-day.startRange.inRange,.flatpickr-day.endRange.inRange,.flatpickr-day.selected:focus,.flatpickr-day.startRange:focus,.flatpickr-day.endRange:focus,.flatpickr-day.selected:hover,.flatpickr-day.startRange:hover,.flatpickr-day.endRange:hover,.flatpickr-day.selected.prevMonthDay,.flatpickr-day.startRange.prevMonthDay,.flatpickr-day.endRange.prevMonthDay,.flatpickr-day.selected.nextMonthDay,.flatpickr-day.startRange.nextMonthDay,.flatpickr-day.endRange.nextMonthDay{background:#42a5f5;-webkit-box-shadow:none;box-shadow:none;color:#fff;border-color:#42a5f5}.flatpickr-day.selected.startRange,.flatpickr-day.startRange.startRange,.flatpickr-day.endRange.startRange{border-radius:50px 0 0 50px}.flatpickr-day.selected.endRange,.flatpickr-day.startRange.endRange,.flatpickr-day.endRange.endRange{border-radius:0 50px 50px 0}.flatpickr-day.selected.startRange+.endRange:not(:nth-child(7n+1)),.flatpickr-day.startRange.startRange+.endRange:not(:nth-child(7n+1)),.flatpickr-day.endRange.startRange+.endRange:not(:nth-child(7n+1)){-webkit-box-shadow:-10px 0 0 #42a5f5;box-shadow:-10px 0 0 #42a5f5}.flatpickr-day.selected.startRange.endRange,.flatpickr-day.startRange.startRange.endRange,.flatpickr-day.endRange.startRange.endRange{border-radius:50px}.flatpickr-day.inRange{border-radius:0;-webkit-box-shadow:-5px 0 0 #e2e2e2, 5px 0 0 #e2e2e2;box-shadow:-5px 0 0 #e2e2e2, 5px 0 0 #e2e2e2}.flatpickr-day.disabled,.flatpickr-day.disabled:hover,.flatpickr-day.prevMonthDay,.flatpickr-day.nextMonthDay,.flatpickr-day.notAllowed,.flatpickr-day.notAllowed.prevMonthDay,.flatpickr-day.notAllowed.nextMonthDay{color:rgba(72,72,72,0.3);background:transparent;border-color:transparent;cursor:default}.flatpickr-day.disabled,.flatpickr-day.disabled:hover{cursor:not-allowed;color:rgba(72,72,72,0.1)}.flatpickr-day.week.selected{border-radius:0;-webkit-box-shadow:-5px 0 0 #42a5f5, 5px 0 0 #42a5f5;box-shadow:-5px 0 0 #42a5f5, 5px 0 0 #42a5f5}.flatpickr-day.hidden{visibility:hidden}.rangeMode .flatpickr-day{margin-top:1px}.flatpickr-weekwrapper{display:inline-block;float:left}.flatpickr-weekwrapper .flatpickr-weeks{padding:0 12px;border-left:1px solid rgba(72,72,72,0.2)}.flatpickr-weekwrapper .flatpickr-weekday{float:none;width:100%;line-height:28px}.flatpickr-weekwrapper span.flatpickr-day,.flatpickr-weekwrapper span.flatpickr-day:hover{display:block;width:100%;max-width:none;color:rgba(72,72,72,0.3);background:transparent;cursor:default;border:none}.flatpickr-innerContainer{display:block;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-sizing:border-box;box-sizing:border-box;overflow:hidden;background:#fff;border-bottom:1px solid rgba(72,72,72,0.2)}.flatpickr-rContainer{display:inline-block;padding:0;-webkit-box-sizing:border-box;box-sizing:border-box}.flatpickr-time{text-align:center;outline:0;display:block;height:0;line-height:40px;max-height:40px;-webkit-box-sizing:border-box;box-sizing:border-box;overflow:hidden;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;background:#fff;border-radius:0 0 5px 5px}.flatpickr-time:after{content:\"\";display:table;clear:both}.flatpickr-time .numInputWrapper{-webkit-box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1;width:40%;height:40px;float:left}.flatpickr-time .numInputWrapper span.arrowUp:after{border-bottom-color:#484848}.flatpickr-time .numInputWrapper span.arrowDown:after{border-top-color:#484848}.flatpickr-time.hasSeconds .numInputWrapper{width:26%}.flatpickr-time.time24hr .numInputWrapper{width:49%}.flatpickr-time input{background:transparent;-webkit-box-shadow:none;box-shadow:none;border:0;border-radius:0;text-align:center;margin:0;padding:0;height:inherit;line-height:inherit;color:#484848;font-size:14px;position:relative;-webkit-box-sizing:border-box;box-sizing:border-box;-webkit-appearance:textfield;-moz-appearance:textfield;appearance:textfield}.flatpickr-time input.flatpickr-hour{font-weight:bold}.flatpickr-time input.flatpickr-minute,.flatpickr-time input.flatpickr-second{font-weight:400}.flatpickr-time input:focus{outline:0;border:0}.flatpickr-time .flatpickr-time-separator,.flatpickr-time .flatpickr-am-pm{height:inherit;display:inline-block;float:left;line-height:inherit;color:#484848;font-weight:bold;width:2%;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-align-self:center;-ms-flex-item-align:center;align-self:center}.flatpickr-time .flatpickr-am-pm{outline:0;width:18%;cursor:pointer;text-align:center;font-weight:400}.flatpickr-time input:hover,.flatpickr-time .flatpickr-am-pm:hover,.flatpickr-time input:focus,.flatpickr-time .flatpickr-am-pm:focus{background:#eaeaea}.flatpickr-input[readonly]{cursor:pointer}@-webkit-keyframes fpFadeInDown{from{opacity:0;-webkit-transform:translate3d(0, -20px, 0);transform:translate3d(0, -20px, 0)}to{opacity:1;-webkit-transform:translate3d(0, 0, 0);transform:translate3d(0, 0, 0)}}@keyframes fpFadeInDown{from{opacity:0;-webkit-transform:translate3d(0, -20px, 0);transform:translate3d(0, -20px, 0)}to{opacity:1;-webkit-transform:translate3d(0, 0, 0);transform:translate3d(0, 0, 0)}}";
 
 class InputDate {
   constructor(hostRef) {
@@ -26997,6 +26976,8 @@ class InputDynamic {
   }; }
 }
 
+const inputNumberCss = "ks-input-number{display:block;margin-bottom:15px}ks-input-number label{display:block;margin-bottom:3px;color:#000000;font-size:14px}ks-input-number[invalid] label{color:var(--color-secondary-darker)}ks-input-number input{height:40px;vertical-align:middle;display:inline-block;max-width:100%;width:100%;padding:0 10px;background:#f4f4f4;color:#373737;border:1px solid #e5e5e5;overflow:visible;-webkit-box-sizing:border-box;box-sizing:border-box;border-radius:0;font:inherit}ks-input-number input:focus{outline:none;background-color:#f4f4f4;color:#373737;border-color:#222222}ks-input-number[emphasis] input{border-color:black;background-color:white}ks-input-number[invalid] input{border-color:var(--color-secondary-darker);color:var(--color-secondary-darker)}ks-input-number[center] input{text-align:center !important}ks-input-number[large] input{font-size:17px;height:55px;padding-left:12px;padding-right:12px}ks-input-number[invalid] p{margin-top:5px;color:var(--color-secondary-darker)}ks-input-number[invalid] input::-webkit-input-placeholder{color:var(--color-secondary)}ks-input-number[invalid] input:-ms-input-placeholder{color:var(--color-secondary)}ks-input-number[invalid] input::-moz-placeholder{color:var(--color-secondary)}ks-input-number[invalid] input::-ms-input-placeholder{color:var(--color-secondary)}ks-input-number[invalid] input::placeholder{color:var(--color-secondary)}ks-input-number .wrapper{position:relative}ks-input-number .wrapper input{padding-left:45px}ks-input-number .wrapper ks-icon{position:absolute;top:50%;left:12px;-webkit-transform:translateY(-50%);transform:translateY(-50%)}ks-input-number[value=\"\"] .wrapper ks-icon,ks-input-number:not([value]) .wrapper ks-icon{color:#aaaaaa}ks-input-number[invalid] .wrapper ks-icon{color:var(--color-secondary)}";
+
 class InputNumber {
   constructor(hostRef) {
     registerInstance(this, hostRef);
@@ -27008,7 +26989,8 @@ class InputNumber {
       event.stopImmediatePropagation();
     };
     this.ChangeHandler = (event) => {
-      this.Validate();
+      if (!this.novalidate)
+        this.Validate();
       event.stopImmediatePropagation();
     };
     this.name = undefined;
@@ -27021,22 +27003,27 @@ class InputNumber {
     this.required = undefined;
     this.step = undefined;
     this.value = undefined;
-    this.valid = true;
-    this.validMessage = "";
+    this.nomessage = false;
+    this.novalidate = false;
+    this.message = "";
+    this.invalid = false;
   }
   render() {
-    const valid = this.valid ? "" : "uk-form-danger";
-    const validText = this.valid ? "" : "uk-text-danger";
-    const center = this.center ? " uk-text-center" : "";
-    const emphasis = this.emphasis ? { borderColor: "black", backgroundColor: "white" } : null;
-    return (hAsync("div", { class: "uk-margin" }, this.label ?
-      hAsync("label", { class: "uk-form-label " + validText, style: { marginBottom: "3px", display: "block" } }, this.label)
-      : null, hAsync("input", { class: "uk-input " + valid + center, style: emphasis, name: this.name, type: "number", step: this.step, placeholder: this.placeholder, onInput: this.InputHandler, onChange: this.ChangeHandler, onBlur: this.ChangeHandler }), !this.valid ?
-      hAsync("p", { class: "uk-text-danger", style: { marginTop: "5px" } }, this.validMessage)
-      : null));
+    return [
+      this.label ?
+        hAsync("label", null, this.label)
+        : null,
+      hAsync("input", { name: this.name, type: "number", value: this.value, placeholder: this.placeholder, step: this.step, onInput: this.InputHandler, onChange: this.ChangeHandler, onBlur: this.ChangeHandler }),
+      this.invalid && !this.nomessage ?
+        hAsync("p", null, this.message)
+        : null
+    ];
+  }
+  componentDidLoad() {
+    this.root.querySelector('input').value = this.value.toString();
   }
   async IsValid() {
-    return this.valid;
+    return this.message == "" ? true : false;
   }
   async Validate() {
     const strings = common.get("translations");
@@ -27050,8 +27037,8 @@ class InputNumber {
         message = strings.inputFieldRequired;
       }
     }
-    this.valid = valid;
-    this.validMessage = message;
+    this.invalid = !valid;
+    this.message = message;
     return Promise.resolve();
   }
   ClampInput(input) {
@@ -27063,6 +27050,7 @@ class InputNumber {
     }
   }
   get root() { return getElement(this); }
+  static get style() { return inputNumberCss; }
   static get cmpMeta() { return {
     "$flags$": 0,
     "$tagName$": "ks-input-number",
@@ -27070,21 +27058,23 @@ class InputNumber {
       "name": [1],
       "placeholder": [1],
       "label": [1],
-      "center": [4],
-      "emphasis": [4],
+      "center": [516],
+      "emphasis": [516],
       "min": [2],
       "max": [2],
       "required": [4],
       "step": [2],
       "value": [2],
-      "valid": [32],
-      "validMessage": [32],
+      "nomessage": [4],
+      "novalidate": [1540],
+      "message": [1537],
+      "invalid": [1540],
       "IsValid": [64],
       "Validate": [64]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
+    "$attrsToReflect$": [["center", "center"], ["emphasis", "emphasis"], ["novalidate", "novalidate"], ["message", "message"], ["invalid", "invalid"]]
   }; }
 }
 
@@ -27804,9 +27794,9 @@ class Navbar {
         : null, hAsync("ks-navbar-button", { id: "navbar-button-contact", name: strings.navbarButtonContact, icon: "phone", onClick: () => this.root.querySelector("ks-navbar-contact-panel").Toggle() }), commonDynamic.get('loggedIn') && !commonDynamic.get('guest') ?
         hAsync("ks-navbar-button", { id: "navbar-button-account", name: strings.navbarButtonAccount, link: common.get('accountLink'), icon: "user" })
         : null, hAsync("ks-navbar-button", { id: "navbar-button-fav", name: strings.navbarButtonFav, link: common.get('heartLink'), icon: "star", count: heartCount }), hAsync("ks-navbar-button", { id: "navbar-button-cart", name: strings.navbarButtonCart, link: common.get('cartLink'), icon: "shopping-bag", count: cartCount }), !commonDynamic.get('loggedIn') ?
-        hAsync("ks-navbar-button", { id: "navbar-button-login", name: strings.navbarButtonLogin, link: common.get('loginLink'), icon: "user" })
+        hAsync("ks-navbar-button", { last: true, id: "navbar-button-login", name: strings.navbarButtonLogin, link: common.get('loginLink'), icon: "user" })
         : null, commonDynamic.get('loggedIn') || commonDynamic.get('guest') ?
-        hAsync("ks-navbar-button", { id: "navbar-button-logout", name: strings.navbarButtonLogout, link: common.get('logoutLink'), icon: "log-out" })
+        hAsync("ks-navbar-button", { last: true, id: "navbar-button-logout", name: strings.navbarButtonLogout, link: common.get('logoutLink'), icon: "log-out" })
         : null, hAsync("ks-navbar-button", { id: "navbar-button-menu", name: strings.navbarButtonMenu, icon: "menu", onClick: () => this.root.querySelector("ks-navbar-sidebar").show() })), hAsync("ks-navbar-contact-panel", null), common.get('languages').length > 1 ? hAsync("ks-navbar-language-panel", null) : null),
       hAsync("ks-navbar-categories", null),
       hAsync("ks-navbar-sidebar", null),
@@ -27831,7 +27821,7 @@ class Navbar {
   }; }
 }
 
-const navbarButtonCss = "ks-navbar-button{display:block;position:relative;height:70px}ks-navbar-button>a{outline-style:none;text-decoration:none !important;line-height:70px;min-width:60px;color:var(--navbar-text-color) !important;-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-navbar-button>a:hover{background-color:var(--navbar-color-hover)}ks-navbar-button>a:active{background-color:var(--navbar-color-active)}ks-navbar-button>div{position:absolute;bottom:-28px;z-index:2147483649;width:250%;left:-75%;font-size:14px;text-transform:uppercase;text-align:center;color:var(--navbar-text-color);opacity:0;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;pointer-events:none}ks-navbar-button>a:hover+div{opacity:1}ks-navbar-contact>div ks-navbar-button>div{display:none}@media only screen and (max-width: 1000px){ks-navbar-button>div{display:none}}ks-navbar-button .count{position:absolute;top:0;right:0;min-width:30px;height:30px;padding:0px 0px;margin-top:5px;border-radius:500px;-webkit-box-sizing:border-box;box-sizing:border-box;vertical-align:middle;background:var(--color-secondary);color:var(--navbar-text-color);font-size:16px;display:-ms-inline-flexbox;display:inline-flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}ks-navbar-button>a{display:-ms-flexbox !important;display:flex !important;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;height:100%}ks-navbar-button ks-icon svg.medium{stroke-width:1.2}";
+const navbarButtonCss = "ks-navbar-button{display:block;position:relative;height:70px}ks-navbar-button>a{outline-style:none;text-decoration:none !important;line-height:70px;min-width:60px;color:var(--navbar-text-color) !important;-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-navbar-button>a:hover{background-color:var(--navbar-color-hover)}ks-navbar-button>a:active{background-color:var(--navbar-color-active)}ks-navbar-button>div{position:absolute;bottom:-28px;z-index:2147483649;width:250%;left:-75%;font-size:14px;text-transform:uppercase;text-align:center;color:var(--navbar-text-color);opacity:0;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;pointer-events:none}ks-navbar-button>a:hover+div{opacity:1}ks-navbar-contact>div ks-navbar-button>div{display:none}@media only screen and (max-width: 1000px){ks-navbar-button>div{display:none}}ks-navbar-button .count{position:absolute;top:0;right:0;min-width:30px;height:30px;padding:0px 0px;margin-top:5px;border-radius:500px;-webkit-box-sizing:border-box;box-sizing:border-box;vertical-align:middle;background:var(--color-secondary);color:var(--navbar-text-color);font-size:16px;display:-ms-inline-flexbox;display:inline-flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}ks-navbar-button>a{display:-ms-flexbox !important;display:flex !important;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;height:100%}ks-navbar-button ks-icon svg.medium{stroke-width:1.2}ks-navbar-button[last]>div{width:200px;right:0px;left:unset;text-align:right}";
 
 class NavbarButton {
   constructor(hostRef) {
@@ -27840,6 +27830,7 @@ class NavbarButton {
     this.icon = undefined;
     this.count = undefined;
     this.name = undefined;
+    this.last = false;
   }
   render() {
     return [
@@ -27857,11 +27848,12 @@ class NavbarButton {
       "link": [1],
       "icon": [1],
       "count": [2],
-      "name": [1]
+      "name": [1],
+      "last": [516]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
+    "$attrsToReflect$": [["last", "last"]]
   }; }
 }
 
@@ -28401,259 +28393,6 @@ async function ValidateInput(root) {
   }
   return valid;
 }
-
-var DataLayer;
-(function (DataLayer) {
-  var resolvepageview;
-  var pageviewed = new Promise(resolve => {
-    resolvepageview = () => {
-      resolve();
-    };
-  });
-  function facebookConversionAPI(dataLayer) {
-    jsonfetch('https://kuchniasklep.pl/api/fbconversion.php', dataLayer);
-  }
-  function customerData() {
-    const customer = commonDynamic.get('customer');
-    const customerDataAvaliable = commonDynamic.get('loggedIn') && customer;
-    return {
-      customerDataAvailable: customerDataAvaliable,
-      customerEmail: customerDataAvaliable ? customer.email : undefined,
-      customerFirstName: customerDataAvaliable ? customer.firstName : undefined,
-      customerLastName: customerDataAvaliable ? customer.lastName : undefined,
-      customerSubscriberStatus: customerDataAvaliable ? (customer.subscriber ? 1 : 0) : undefined,
-      customerCountryISO2: customerDataAvaliable ? customer.countryISO2 : undefined,
-      customerCity: customerDataAvaliable ? customer.city : undefined,
-      customerPhone: customerDataAvaliable ? customer.phone : undefined,
-      customerCurrency: customerDataAvaliable ? customer.currency : undefined,
-    };
-  }
-  async function pageview(eventID) {
-    var _a;
-    // @ts-ignore: Crypto type error
-    eventID = crypto.randomUUID();
-    const data = Object.assign({ event: 'ks.pageview', facebookEventId: eventID }, customerData());
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(data);
-    resolvepageview();
-    facebookConversionAPI(data);
-  }
-  DataLayer.pageview = pageview;
-  async function product(product, eventID = "") {
-    var _a, _b;
-    await pageviewed;
-    // @ts-ignore: Crypto type error
-    eventID = crypto.randomUUID();
-    const categories = product.breadcrumbs;
-    const data = Object.assign(Object.assign({ event: 'ks.product', facebookEventId: eventID }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productImage: (product === null || product === void 0 ? void 0 : product.images.length) > 0 ? relativeToAbsolute(product.images[0].full.url) : undefined, productURL: relativeToAbsolute(document.location.href), productSKU: product.model, productBrand: product.brand.name, productCategory: categories[categories.length - 1].name, productAvailability: product.shippingTime, productQuantity: 1, productCategories: product.categories, ecomm_prodid: product.id, ecomm_pagetype: 'product', ecomm_totalvalue: product.currentPrice, ecommerce: {
-        items: enchancedEcommerceItems([product])
-      }, uaecommerce: { ecommerce: {
-          currencyCode: product.currency,
-          impressions: UAenchancedEcommerceItems([product])
-        } } });
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(data);
-    facebookConversionAPI(data);
-  }
-  DataLayer.product = product;
-  async function listing(listing) {
-    var _a, _b, _c, _d;
-    await pageviewed;
-    const type = listing.type == "category" ? "category" :
-      listing.type == "manufacturer" ? "manufacturer" :
-        listing.type == "search" ? "search" :
-          null;
-    if (!type)
-      return;
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: `ks.listing` }, customerData()), { type: type, listingCategories: type == "category" ? listing.breadcrumbs.filter(category => category.id != "0") : undefined, listingProducts: listing.products, ecommerce: {
-        items: enchancedEcommerceItems(listing.products)
-      }, uaecommerce: { ecommerce: {
-          currencyCode: (_d = (_c = listing.products) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.currency,
-          impressions: UAenchancedEcommerceItems(listing.products)
-        } } }));
-  }
-  DataLayer.listing = listing;
-  async function addToCart(product, eventID) {
-    var _a, _b;
-    await pageviewed;
-    // @ts-ignore: Crypto type error
-    eventID = crypto.randomUUID();
-    const data = Object.assign(Object.assign({ event: 'ks.addToCart', facebookEventId: eventID }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
-        items: enchancedEcommerceItems([product])
-      }, uaecommerce: { ecommerce: {
-          currencyCode: product.currency,
-          add: {
-            products: UAenchancedEcommerceItems([product])
-          }
-        } } });
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(data);
-    facebookConversionAPI(data);
-  }
-  DataLayer.addToCart = addToCart;
-  async function removeFromCart(product) {
-    var _a, _b;
-    await pageviewed;
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.removeFromCart' }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
-        items: enchancedEcommerceItems([product])
-      }, uaecommerce: { ecommerce: {
-          currencyCode: product.currency,
-          remove: {
-            products: UAenchancedEcommerceItems([product])
-          }
-        } } }));
-  }
-  DataLayer.removeFromCart = removeFromCart;
-  async function addToFavourites(product) {
-    var _a, _b;
-    await pageviewed;
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.addToFavourites' }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
-        items: enchancedEcommerceItems([product]),
-        value: product.currentPrice,
-        currency: product.currency
-      } }));
-  }
-  DataLayer.addToFavourites = addToFavourites;
-  async function view_cart(cart) {
-    var _a, _b;
-    await pageviewed;
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.viewCart' }, customerData()), { cartCurrency: cart.currency, cartProductValue: cart.productValue, cartValue: cart.totalValue, cartProducts: cart.products, ecomm_prodid: JSON.stringify(Object.values(cart.products).map(product => product.id)), ecomm_pagetype: 'cart', ecomm_totalvalue: cart.productValue, ecommerce: {
-        items: enchancedEcommerceItems(Object.values(cart.products)),
-        value: cart.productValue,
-        currency: cart.currency
-      }, uaecommerce: { ecommerce: {
-          checkout: {
-            actionField: { step: 1 },
-            currencyCode: cart.currency,
-            products: UAenchancedEcommerceItems(Object.values(cart.products))
-          }
-        } } }));
-  }
-  DataLayer.view_cart = view_cart;
-  async function order_checkout(order, eventID) {
-    var _a, _b;
-    await pageviewed;
-    // @ts-ignore: Crypto type error
-    eventID = crypto.randomUUID();
-    const data = Object.assign(Object.assign({ event: 'ks.checkout', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderShippingTime: order.totalShippingTimeDays, orderCoupon: order.coupon, ecommerce: {
-        items: enchancedEcommerceItems(order.products)
-      }, uaecommerce: { ecommerce: {
-          checkout: {
-            actionField: { step: 3 },
-            currencyCode: order.currency,
-            products: UAenchancedEcommerceItems(order.products)
-          }
-        } } });
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(data);
-    facebookConversionAPI(data);
-  }
-  DataLayer.order_checkout = order_checkout;
-  async function order_form(order, eventID) {
-    var _a, _b;
-    await pageviewed;
-    // @ts-ignore: Crypto type error
-    eventID = crypto.randomUUID();
-    const data = Object.assign(Object.assign({ event: 'ks.orderForm', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderShippingTime: order.totalShippingTimeDays, orderCoupon: order.coupon, ecommerce: {
-        items: enchancedEcommerceItems(order.products)
-      }, uaecommerce: { ecommerce: {
-          checkout: {
-            actionField: { step: 2 },
-            currencyCode: order.currency,
-            products: UAenchancedEcommerceItems(order.products)
-          }
-        } } });
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(data);
-    facebookConversionAPI(data);
-  }
-  DataLayer.order_form = order_form;
-  async function order_placed(order, eventID) {
-    var _a, _b;
-    await pageviewed;
-    // @ts-ignore: Crypto type error
-    eventID = crypto.randomUUID();
-    const data = Object.assign(Object.assign({ event: 'ks.order', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderId: order.id, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderShippingTime: order.totalShippingTimeDays, orderCoupon: order.coupon, ecomm_prodid: JSON.stringify(Object.values(order.products).map(product => product.id)), ecomm_pagetype: 'purchase', ecomm_totalvalue: order.productValue, ecommerce: {
-        transaction_id: order.id,
-        value: order.totalValue,
-        currency: order.currency,
-        shipping: order.shippingValue,
-        coupon: order.coupon,
-        items: enchancedEcommerceItems(order.products)
-      }, uaecommerce: { ecommerce: {
-          purchase: {
-            currencyCode: order.currency,
-            actionField: {
-              id: order.id,
-              revenue: order.totalValue,
-              shipping: order.shippingValue,
-              coupon: order.coupon
-            },
-            products: UAenchancedEcommerceItems(order.products)
-          }
-        } } });
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(data);
-    facebookConversionAPI(data);
-  }
-  DataLayer.order_placed = order_placed;
-  async function search(query) {
-    var _a;
-    await pageviewed;
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(Object.assign({ event: 'ks.search', searchQuery: query }, customerData()));
-  }
-  DataLayer.search = search;
-  async function subscribe(subscription) {
-    var _a;
-    await pageviewed;
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(Object.assign(Object.assign({ event: 'ks.subscribe' }, customerData()), { subscriptionPlace: subscription.place, subscriptionEmail: subscription.email, subscriptionName: subscription === null || subscription === void 0 ? void 0 : subscription.name, subscriptionStatus: subscription.subscriber ? 1 : 0 }));
-  }
-  DataLayer.subscribe = subscribe;
-  async function recipe(recipe) {
-    var _a;
-    await pageviewed;
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(Object.assign(Object.assign({ event: 'ks.recipe' }, customerData()), { recipeName: recipe.title, recipeCategory: recipe.category, recipeCuisine: recipe.cuisine }));
-  }
-  DataLayer.recipe = recipe;
-  function relativeToAbsolute(url) {
-    return url.includes('http') ? url : document.baseURI + url;
-  }
-  function enchancedEcommerceItems(products) {
-    return products.map((product, index) => {
-      const categories = product.breadcrumbs.filter(category => category.name != "Strona główna").map(category => category.name).reverse();
-      return {
-        item_id: product.id,
-        item_name: product.name,
-        currency: product.currency,
-        index: index,
-        price: product.currentPrice,
-        item_brand: product.brandName,
-        item_category: categories === null || categories === void 0 ? void 0 : categories[0],
-        item_category2: categories === null || categories === void 0 ? void 0 : categories[1],
-        item_category3: categories === null || categories === void 0 ? void 0 : categories[2],
-        item_category4: categories === null || categories === void 0 ? void 0 : categories[3],
-        item_category5: categories === null || categories === void 0 ? void 0 : categories[4],
-      };
-    });
-  }
-  function UAenchancedEcommerceItems(products) {
-    return products.map((product, index) => {
-      const categories = product.breadcrumbs.filter(category => category.name != "Strona główna").map(category => category.name);
-      return {
-        name: product.name,
-        id: product.id,
-        price: product.currentPrice,
-        brand: product.brandName,
-        category: categories.join('/'),
-        position: index + 1,
-        quantity: product.quantity
-      };
-    });
-  }
-})(DataLayer || (DataLayer = {}));
 
 const newsletterPopupCss = "ks-newsletter-popup{display:block}ks-newsletter-popup form{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:justify;justify-content:space-between;height:100%;width:100%;max-width:720px}ks-newsletter-popup .info{padding:60px 60px 20px 60px;fill:#252525;-ms-flex:1 0 auto;flex:1 0 auto;min-height:10px}ks-newsletter-popup .info .top{width:100%;margin-bottom:10px;font-size:initial;max-height:30px}ks-newsletter-popup .info .heading{width:100%;font-family:var(--font-emphasis);font-size:initial;max-height:80px;margin-bottom:10px}ks-newsletter-popup .info p{text-align:center;margin-top:10px}ks-newsletter-popup .buttons{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;min-height:10px;margin-top:30px}ks-newsletter-popup .buttons>*{-ms-flex:1;flex:1}ks-newsletter-popup .close{color:black !important}ks-newsletter-popup ks-input-check{margin:20px;font-size:13px;line-height:18px}ks-newsletter-popup .email-form{display:-ms-flexbox;display:flex}ks-newsletter-popup .email-form>*{margin-bottom:0px}ks-newsletter-popup .email-form>* input{height:60px}ks-newsletter-popup .email-form>ks-button{width:30%}ks-newsletter-popup .email-form>ks-input-text{width:100%}ks-newsletter-popup .email{-ms-flex:1 0 0px;flex:1 0 0;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;background-color:#e5e5e5;color:black;font-size:18px;min-height:50px}@media (max-width: 720px){ks-newsletter-popup .info .heading{max-height:50px}ks-newsletter-popup .email{font-size:16px}}@media (max-width: 540px){ks-newsletter-popup .info{padding:70px 25px 20px 25px;min-height:180px}ks-newsletter-popup .info .top{display:none}ks-newsletter-popup .info p{font-size:13px}ks-newsletter-popup ks-input-check{font-size:11px;line-height:16px}ks-newsletter-popup .email-form{display:block}ks-newsletter-popup .email-form>ks-button{width:100%}ks-newsletter-popup .buttons{display:block;margin-top:0px}ks-newsletter-popup .buttons>*:first-child{border-bottom:1px solid #3a3a3a}ks-newsletter-popup ks-input-check{margin:15px}ks-newsletter-popup .info .heading{width:100%;max-height:40px}}";
 
@@ -30484,7 +30223,7 @@ class PageBase {
   }; }
 }
 
-const cartCss = "ks-page-cart{-ms-flex:1 1 0px;flex:1 1 0}ks-page-cart ks-nocontent{-ms-flex:1 1 0px;flex:1 1 0}ks-page-cart .card{display:block;padding:0px;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:1200px;width:100%;margin:20px auto;background:var(--card-background);color:var(--card-text-color);-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow)}@media screen and (max-width: 1200px){ks-page-cart .card{margin:0px auto}}ks-page-cart ks-cart-easyprotect-product>.image{padding:5px 0px;max-width:70px;max-height:70px}ks-page-cart ks-cart-discount-code ks-input-text{margin-bottom:0}ks-page-cart ks-cart-discount-code .messsage{padding:8px;-webkit-box-sizing:border-box;box-sizing:border-box}ks-page-cart .paypo-message{display:-ms-flexbox;display:flex;margin:0px 0 10px 0;-ms-flex-pack:end;justify-content:flex-end}@media screen and (max-width: 720px){ks-page-cart .paypo-message{margin:0px 0 40px 0;-ms-flex-pack:center;justify-content:center}}";
+const cartCss = "ks-page-cart .cart-progress-container{max-width:1450px;padding:20px 60px 0px 60px;-webkit-box-sizing:border-box;box-sizing:border-box;width:100%;margin:auto}ks-page-cart .cart-container{display:grid;grid-template-columns:1fr 350px;grid-template-rows:auto 1fr;gap:20px 20px;grid-template-areas:\"cart-products cart-summary\"\n        \"cart-offers cart-summary\";-ms-flex-pack:center;justify-content:center;padding:20px 60px;-webkit-box-sizing:border-box;box-sizing:border-box;width:100%;max-width:1450px;margin:auto}ks-page-cart .cart-products{grid-area:cart-products;max-width:1000px;background-color:#ffffff;padding:20px;-webkit-box-sizing:border-box;box-sizing:border-box}ks-page-cart .cart-offers{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;gap:20px;grid-area:cart-offers;max-width:1000px}ks-page-cart .cart-summary{grid-area:cart-summary;position:relative}ks-page-cart .cart-summary-sticky{position:-webkit-sticky;position:sticky;top:20px;background-color:#ffffff;padding:20px}ks-page-cart h2{font-weight:700}ks-page-cart ks-cart-easyprotect-product>.image{padding:5px 0px;max-width:70px;max-height:70px}ks-page-cart ks-cart-discount-code ks-input-text{margin-bottom:0}ks-page-cart ks-cart-discount-code .messsage{padding:8px;-webkit-box-sizing:border-box;box-sizing:border-box}ks-page-cart .paypo-message{display:block;margin:0 auto}@media screen and (max-width: 1160px){ks-page-cart .cart-container{display:block}ks-page-cart .cart-offers{margin:20px 0px}ks-page-cart .cart-progress-container{padding:20px 60px 0px 60px}}@media screen and (max-width: 860px){ks-page-cart .cart-container{padding:20px 0px 0px 0px}ks-page-cart .cart-container.no-top-padding{padding:0px}ks-page-cart .cart-progress-container{padding:0px}ks-page-cart .cart-progress-container>*,ks-page-cart .cart-products,ks-page-cart .cart-offers ks-cart-deal-container>*,ks-page-cart .cart-offers ks-cart-easyprotect,ks-page-cart .cart-summary>*{padding-right:60px;padding-left:60px}ks-cart-country-select{right:60px !important}}@media screen and (max-width: 640px){ks-page-cart .cart-container{padding:20px 0px 0px 0px}ks-page-cart .cart-progress-container>*,ks-page-cart .cart-products,ks-page-cart .cart-offers ks-cart-deal-container>*,ks-page-cart .cart-offers ks-cart-easyprotect,ks-page-cart .cart-summary>*{padding-right:20px;padding-left:20px}ks-cart-country-select{right:15px !important}}";
 
 class PageCart {
   constructor(hostRef) {
@@ -30500,51 +30239,22 @@ class PageCart {
     update(cartData);
     DataLayer.view_cart(cartData);
   }
-  async RemoveProduct(event) {
-    var _a;
-    const productData = (_a = cart.get("products")) === null || _a === void 0 ? void 0 : _a[event.detail];
-    if (productData)
-      DataLayer.removeFromCart(productData);
-    removeProduct(event.detail);
-  }
-  async ProductCount(event) {
-    productCount(...event.detail);
-  }
-  async AddDeal(event) {
-    addDeal(event.detail);
-  }
-  async CountryChange(event) {
-    countryChange(event.detail);
-  }
-  async ShippingChange(event) {
-    shippingChange(event.detail);
-  }
-  async PaymentChange(event) {
-    paymentChange(event.detail);
-  }
-  async DiscountRemove() {
-    discountRemove();
-  }
-  async DiscountCodeAdd(event) {
-    discountCodeAdd(event.detail);
-  }
-  async DiscountPointsAdd(event) {
-    discountPointsAdd(event.detail);
-  }
-  ;
   render() {
+    var _a;
     const commonStrings = common.get('translations');
     const strings = cart.get('strings');
     const discountStrings = cart.get('discountStrings');
     const easyprotectStrings = cart.get('easyprotectStrings');
-    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, Object.keys(cart === null || cart === void 0 ? void 0 : cart.get('products')).length > 0 ? hAsync("div", { class: "card" }, hAsync("ks-order-progress", { current: 0, cart: strings.orderProgressCart, shipping: strings.orderProgressShipping, confirmation: strings.orderProgressConfirmation }), (cart === null || cart === void 0 ? void 0 : cart.get('progressBar')) ? [
-      hAsync("ks-cart-progress-bar", null),
-      hAsync("br", null)
-    ] : null, hAsync("div", { class: "uk-padding@m uk-padding-small" }, hAsync("ks-cart-product-container", null)), hAsync("ks-cart-product-message", null), hAsync("ks-cart-deal-container", null), easyprotectStrings ?
-      hAsync("ks-cart-easyprotect", { image: easyprotectStrings.image, width: easyprotectStrings.width, height: easyprotectStrings.height }, hAsync("h2", null, easyprotectStrings.heading), hAsync("p", null, easyprotectStrings.description, hAsync("a", { href: easyprotectStrings.pdf, target: "_blank" }, easyprotectStrings.seeMore)), hAsync("ks-cart-easyprotect-dialog", { slot: "bottom" }, hAsync("h2", { slot: "products" }, easyprotectStrings.productsHeading), hAsync("p", { slot: "products" }, easyprotectStrings.productsMessage), hAsync("h2", { slot: "warranty" }, easyprotectStrings.warrantyHeading), hAsync("p", { slot: "warranty" }, easyprotectStrings.warrantyMessage)))
-      : null, hAsync("ks-cart-recycle", { id: "recycle" }, hAsync("h2", null, strings.recycleHeading), hAsync("p", null, strings.recycleParagraph)), hAsync("div", { class: "uk-padding@m uk-padding-small" }, hAsync("ks-cart-country-select", { heading: strings.countrySelectHeading }), hAsync("ks-cart-select-shipping", { name: strings.shippingName }), hAsync("br", null), hAsync("ks-cart-select-payment", { name: strings.paymentName }), hAsync("br", null), hAsync("ks-cart-shipping-message", null), hAsync("a", { href: "/paypo-pm-71.html", class: "paypo-message" }, hAsync("ks-img2", { src: "/images/paypo-message.svg", width: 287, height: 72 })), hAsync("ks-cart-discount-container", { "info-message": discountStrings.infoMessage, "code-banner": discountStrings.codeBanner, "code-placeholder": discountStrings.codePlaceholder, "points-placeholder": discountStrings.pointsPlaceholder, "points-message": discountStrings.pointsMessage, "login-message": discountStrings.pointsLoggedInMessage, "no-points-heading": discountStrings.noPointsHeading, "no-points-message": discountStrings.noPointsMessage, "threshold-heading": discountStrings.thresholdHeading, "threshold-message": discountStrings.thresholdMessage, "login-url": common.get('loginLink'), "logged-in": commonDynamic.get('loggedIn'), "disable-points": !cart.get('points') }), hAsync("br", null)), hAsync("div", { class: "uk-padding@m uk-padding-small" }, hAsync("ks-cart-summary-container", null)), hAsync("ks-cart-buttons", { href: cart.get('api').order }))
-      :
-        hAsync("ks-nocontent", { "link-name": commonStrings.noContentHome, "back-name": commonStrings.noContentBack }, hAsync("h1", null, cart.get('noContentHeading')), hAsync("p", null, cart.get('noContentMessage'))));
+    const progressBar = (cart === null || cart === void 0 ? void 0 : cart.get('progressBar')) && cart.get("productValue") < ((_a = cart.get("shippingProgress")) === null || _a === void 0 ? void 0 : _a.threshold);
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, Object.keys(cart === null || cart === void 0 ? void 0 : cart.get('products')).length > 0 ? [
+      hAsync("div", { class: "cart-progress-container" }, progressBar ? [
+        hAsync("ks-cart-progress-bar", null),
+      ] : null),
+      hAsync("div", { class: "cart-container " + (!progressBar ? "no-top-padding" : "") }, hAsync("div", { class: "cart-products" }, hAsync("ks-cart-product-container", null), hAsync("ks-cart-product-message", null)), hAsync("div", { class: "cart-offers" }, hAsync("ks-cart-deal-container", null), hAsync("ks-cart-recycle", { id: "recycle" }, hAsync("h2", null, strings.recycleHeading), hAsync("p", null, strings.recycleParagraph)), easyprotectStrings ?
+        hAsync("ks-cart-easyprotect", { image: easyprotectStrings.image, width: easyprotectStrings.width, height: easyprotectStrings.height }, hAsync("h2", null, easyprotectStrings.heading), hAsync("p", null, easyprotectStrings.description, hAsync("a", { href: easyprotectStrings.pdf, target: "_blank" }, easyprotectStrings.seeMore)), hAsync("ks-cart-easyprotect-dialog", { slot: "bottom" }, hAsync("h2", { slot: "products" }, easyprotectStrings.productsHeading), hAsync("p", { slot: "products" }, easyprotectStrings.productsMessage), hAsync("h2", { slot: "warranty" }, easyprotectStrings.warrantyHeading), hAsync("p", { slot: "warranty" }, easyprotectStrings.warrantyMessage)))
+        : null, hAsync("a", { href: "/paypo-pm-71.html", class: "paypo-message" }, hAsync("ks-img2", { src: "/images/paypo-message.svg", width: 287, height: 72 }))), hAsync("div", { class: "cart-summary" }, hAsync("div", { class: "cart-summary-sticky" }, hAsync("h2", null, strings.countrySelectHeading), hAsync("ks-cart-country-select", null), hAsync("ks-cart-select-shipping", { name: strings.shippingName }), hAsync("ks-cart-select-payment", { name: strings.paymentName }), hAsync("ks-cart-discount-container", { "info-message": discountStrings.infoMessage, "code-banner": discountStrings.codeBanner, "code-placeholder": discountStrings.codePlaceholder, "points-placeholder": discountStrings.pointsPlaceholder, "points-message": discountStrings.pointsMessage, "login-message": discountStrings.pointsLoggedInMessage, "no-points-heading": discountStrings.noPointsHeading, "no-points-message": discountStrings.noPointsMessage, "threshold-heading": discountStrings.thresholdHeading, "threshold-message": discountStrings.thresholdMessage, "login-url": common.get('loginLink'), "logged-in": commonDynamic.get('loggedIn'), "disable-points": !cart.get('points') }), hAsync("ks-cart-summary-container", null), hAsync("ks-cart-buttons", { href: cart.get('api').order }))))
+    ] :
+      hAsync("ks-nocontent", { "link-name": commonStrings.noContentHome, "back-name": commonStrings.noContentBack }, hAsync("h1", null, cart.get('noContentHeading')), hAsync("p", null, cart.get('noContentMessage'))));
   }
   static get style() { return cartCss; }
   static get cmpMeta() { return {
@@ -30556,7 +30266,7 @@ class PageCart {
       "commonDynamicData": [1, "common-dynamic-data"],
       "cartData": [1, "cart-data"]
     },
-    "$listeners$": [[0, "removeProduct", "RemoveProduct"], [0, "productCount", "ProductCount"], [0, "addDeal", "AddDeal"], [0, "countryChange", "CountryChange"], [0, "shippingChange", "ShippingChange"], [0, "paymentChange", "PaymentChange"], [0, "discountRemove", "DiscountRemove"], [0, "discountCodeAdd", "DiscountCodeAdd"], [0, "discountPointsAdd", "DiscountPointsAdd"]],
+    "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": []
   }; }
@@ -30905,6 +30615,9 @@ class PageProduct {
   }
   track() {
     DataLayer.product(product.state, productDynamic.get("eventId"));
+  }
+  componentDidUpdate() {
+    window.handleInpostIziButtons();
   }
   render() {
     var _a;
@@ -31787,7 +31500,7 @@ class ProductContainer {
   }; }
 }
 
-const productCountCss = "ks-product-count{display:-ms-flexbox;display:flex;max-width:80px;margin-right:8px;overflow:hidden;border-style:solid;border-radius:50px;border-width:1px;border-color:#cacaca;background-color:var(--product-price-count-color)}ks-product-count input{outline-style:none;border-style:none;background-color:transparent;width:52px;height:100%;-webkit-box-sizing:border-box;box-sizing:border-box;padding:10px 8px 10px 13px;font-family:var(--product-price-count-font);font-size:var(--product-price-size-small);line-height:var(--product-price-size-small);text-align:center;vertical-align:middle}ks-product-count input::-webkit-inner-spin-button,ks-product-count input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}ks-product-count input[type=number]{-moz-appearance:textfield}ks-product-count .spinner{width:auto;display:-ms-flexbox;display:flex;-ms-flex-flow:column nowrap;flex-flow:column nowrap}ks-product-count .spinner button{outline-style:none;border-style:none;line-height:0;height:100%;margin:0;width:28px;-webkit-box-sizing:border-box;box-sizing:border-box;background-color:#e4e4e4;-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color);border-left:solid 1px #cacaca}ks-product-count .spinner button:first-child{padding:8px 8px 3px 3px;border-bottom:solid 1px #cacaca}ks-product-count .spinner button:last-child{padding:3px 8px 8px 3px}ks-product-count .spinner button:hover{background-color:#cecece}ks-product-count .spinner button:active{background-color:#a7a7a7}@media (hover: none){ks-product-count{max-width:70px}ks-product-count input{padding:10px}ks-product-count .spinner{display:none}}";
+const productCountCss = "ks-product-count{display:-ms-flexbox;display:flex;max-width:80px;margin-right:8px;overflow:hidden;border-style:solid;border-width:1px;border-color:#cacaca;background-color:var(--product-price-count-color)}ks-product-count input{outline-style:none;border-style:none;background-color:transparent;width:52px;height:100%;-webkit-box-sizing:border-box;box-sizing:border-box;padding:10px 8px 10px 13px;font-family:var(--product-price-count-font);font-size:var(--product-price-size-small);line-height:var(--product-price-size-small);text-align:center;vertical-align:middle}ks-product-count input::-webkit-inner-spin-button,ks-product-count input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}ks-product-count input[type=number]{-moz-appearance:textfield}ks-product-count .spinner{width:auto;display:-ms-flexbox;display:flex;-ms-flex-flow:column nowrap;flex-flow:column nowrap}ks-product-count .spinner button{outline-style:none;border-style:none;line-height:0;height:100%;margin:0;width:28px;-webkit-box-sizing:border-box;box-sizing:border-box;background-color:#e4e4e4;-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color);border-left:solid 1px #cacaca}ks-product-count .spinner button:first-child{padding:8px 8px 3px 3px;border-bottom:solid 1px #cacaca}ks-product-count .spinner button:last-child{padding:3px 8px 8px 3px}ks-product-count .spinner button:hover{background-color:#cecece}ks-product-count .spinner button:active{background-color:#a7a7a7}@media (hover: none){ks-product-count{max-width:70px}ks-product-count input{padding:10px}ks-product-count .spinner{display:none}}";
 
 class ProductCount$1 {
   constructor(hostRef) {
@@ -31964,7 +31677,7 @@ class ProductImages {
   }; }
 }
 
-const productInfoCss = "ks-product-info{display:block;position:relative;-webkit-box-sizing:border-box;box-sizing:border-box;width:100%;background:var(--card-background);color:var(--card-text-color);-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow);padding:30px 30px;min-height:420px}ks-product-info>*{margin:0px auto;width:100%;max-width:700px}ks-product-info .left{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:center;justify-content:center}ks-product-info .buttons{display:-ms-flexbox;display:flex;margin:15px -5px 10px 0px}ks-product-info .bottom{position:relative;padding-bottom:60px}@media only screen and (min-width: 961px){ks-product-info{display:-ms-grid;display:grid;-ms-grid-columns:48% 52%;grid-template-columns:48% 52%;-ms-grid-rows:auto 1fr;grid-template-rows:auto 1fr}ks-product-info>*:nth-child(1){-ms-grid-row:1;-ms-grid-column:1}ks-product-info>*:nth-child(2){-ms-grid-row:1;-ms-grid-column:2}ks-product-info>*:nth-child(3){-ms-grid-row:2;-ms-grid-column:1}ks-product-info>*:nth-child(4){-ms-grid-row:2;-ms-grid-column:2}ks-product-info>.top{-ms-grid-column:2;grid-column:2;-ms-grid-row:1;grid-row:1}ks-product-info>.left{-ms-grid-column:1;grid-column:1;-ms-grid-row:1;-ms-grid-row-span:2;grid-row:1 / 3}ks-product-info>.bottom{-ms-grid-column:2;grid-column:2;-ms-grid-row:2;grid-row:2;padding-bottom:0px}}@media only screen and (min-width: 1200px){ks-product-info{padding:30px 30px}}@media only screen and (max-width: 960px){ks-product-info .bottom{margin-top:30px;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center}ks-product-info .buttons{display:-ms-flexbox;display:flex;margin:15px 0px 10px 0px}}@media only screen and (max-width: 460px){ks-product-info{padding:30px 10px}}";
+const productInfoCss = "ks-product-info{display:block;position:relative;-webkit-box-sizing:border-box;box-sizing:border-box;width:100%;background:var(--card-background);color:var(--card-text-color);-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow);padding:30px 30px;min-height:420px}ks-product-info>*{margin:0px auto;width:100%;max-width:700px}ks-product-info .left{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:center;justify-content:center}ks-product-info .buttons{display:-ms-flexbox;display:flex;margin:15px -5px 10px 0px}ks-product-info .bottom{position:relative;padding-bottom:60px}@media only screen and (min-width: 961px){ks-product-info{display:grid;grid-template-columns:48% 52%;grid-template-rows:auto 1fr}ks-product-info>.top{grid-column:2;grid-row:1}ks-product-info>.left{grid-column:1;grid-row:1 / 3}ks-product-info>.bottom{grid-column:2;grid-row:2;padding-bottom:0px}}@media only screen and (min-width: 1200px){ks-product-info{padding:30px 30px}}@media only screen and (max-width: 960px){ks-product-info .bottom{margin-top:30px;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center}ks-product-info .buttons{display:-ms-flexbox;display:flex;margin:15px 0px 10px 0px}}@media only screen and (max-width: 460px){ks-product-info{padding:30px 10px}}";
 
 class ProductInfo$1 {
   constructor(hostRef) {
@@ -32358,7 +32071,7 @@ class ProductPrice {
   }; }
 }
 
-const productPurchaseCss = "ks-product-purchase{display:-ms-flexbox;display:flex;margin:10px 0 15px 0;width:100%}ks-product-purchase>button{position:relative;overflow:hidden;border-style:none;outline-style:none;border-radius:50px;margin-right:10px;background-color:var(--color-secondary);color:var(--text-color-secondary);font-family:var(--product-price-font);font-size:18px;font-weight:700;-webkit-transition:var(--transition-background-color),\n                var(--transition-color);transition:var(--transition-background-color),\n                var(--transition-color)}ks-product-purchase button:hover{background-color:var(--color-secondary-hover)}ks-product-purchase button:active{background-color:var(--color-secondary-active)}ks-product-purchase button.disabled{background-color:#e4e4e4;color:var(--text-color-faded);font-size:17px;line-height:17px}ks-product-purchase button.disabled:hover{background-color:#cfcfcf}ks-product-purchase button.disabled:active{background-color:#bdbdbd}@media only screen and (max-width: 1200px){ks-product-purchase button{font-family:var(--product-price-font);font-size:var(--product-price-size-small);line-height:var(--product-price-size-small)}}@media only screen and (max-width: 960px){ks-product-purchase{-ms-flex-pack:center;justify-content:center;margin-top:10px;max-width:400px}ks-product-purchase>button.fav{-ms-flex-order:3;order:3;margin-right:0px}ks-product-purchase>ks-product-count{-ms-flex-order:1;order:1}ks-product-purchase>button.cart{-ms-flex-order:2;order:2;max-width:none}}@media only screen and (max-width: 560px){ks-product-purchase{-ms-flex-wrap:wrap;flex-wrap:wrap}}ks-product-purchase>button.cart{max-width:300px;-ms-flex:1 0 auto;flex:1 0 auto}ks-product-purchase>button.fav{-ms-flex:0 0 auto;flex:0 0 auto;padding:13px;line-height:0px;background-color:#e4e4e4;color:var(--text-color-faded)}ks-product-purchase>button.fav ks-icon{-webkit-transform:rotate(0);transform:rotate(0);transition:-webkit-transform 0.1s ease;-webkit-transition:-webkit-transform 0.1s ease;transition:transform 0.1s ease;transition:transform 0.1s ease, -webkit-transform 0.1s ease}ks-product-purchase>button.fav:hover ks-icon{-webkit-transform:rotate(72deg);transform:rotate(72deg)}ks-product-purchase button.loading{color:transparent}ks-product-purchase button ks-loader{opacity:0;-webkit-transition:var(--transition-opacity);transition:var(--transition-opacity)}ks-product-purchase button.loading ks-loader{opacity:1}ks-product-purchase button.fav.completed{color:transparent;background-color:var(--color-secondary) !important}ks-product-purchase button.fav ks-icon.completed{position:absolute;top:50%;left:50%;opacity:0;color:white;-webkit-transform:translate(-50%, -50%);transform:translate(-50%, -50%);-webkit-transition:var(--transition-opacity);transition:var(--transition-opacity);-webkit-transition-delay:0.3s;transition-delay:0.3s}ks-product-purchase button.fav.completed ks-icon.completed{opacity:1}";
+const productPurchaseCss = "ks-product-purchase{display:-ms-flexbox;display:flex;margin:15px 0 0px 0;width:100%}ks-product-purchase>button{position:relative;overflow:hidden;border-style:none;outline-style:none;margin-right:10px;background-color:var(--color-secondary);color:var(--text-color-secondary);font-family:var(--product-price-font);font-size:17px;font-weight:700;-webkit-transition:var(--transition-background-color),\n                var(--transition-color);transition:var(--transition-background-color),\n                var(--transition-color)}ks-product-purchase button:hover{background-color:var(--color-secondary-hover)}ks-product-purchase button:active{background-color:var(--color-secondary-active)}ks-product-purchase button.disabled{background-color:#e4e4e4;color:var(--text-color-faded);font-size:17px;line-height:17px}ks-product-purchase button.disabled:hover{background-color:#cfcfcf}ks-product-purchase button.disabled:active{background-color:#bdbdbd}@media only screen and (max-width: 1200px){ks-product-purchase button{font-family:var(--product-price-font);font-size:var(--product-price-size-small);line-height:var(--product-price-size-small)}}@media only screen and (max-width: 960px){ks-product-purchase{-ms-flex-pack:center;justify-content:center;margin-top:10px;max-width:400px}ks-product-purchase>button.fav{-ms-flex-order:3;order:3;margin-right:0px}ks-product-purchase>ks-product-count{-ms-flex-order:1;order:1}ks-product-purchase>button.cart{-ms-flex-order:2;order:2;max-width:none}}@media only screen and (max-width: 560px){ks-product-purchase{-ms-flex-wrap:wrap;flex-wrap:wrap}}ks-product-purchase>button.cart{max-width:300px;-ms-flex:1 0 auto;flex:1 0 auto}ks-product-purchase>button.fav{-ms-flex:0 0 auto;flex:0 0 auto;padding:13px;line-height:0px;background-color:#e4e4e4;color:var(--text-color-faded)}ks-product-purchase>button.fav ks-icon{-webkit-transform:rotate(0);transform:rotate(0);transition:-webkit-transform 0.1s ease;-webkit-transition:-webkit-transform 0.1s ease;transition:transform 0.1s ease;transition:transform 0.1s ease, -webkit-transform 0.1s ease}ks-product-purchase>button.fav:hover ks-icon{-webkit-transform:rotate(72deg);transform:rotate(72deg)}ks-product-purchase button.loading{color:transparent}ks-product-purchase button ks-loader{opacity:0;-webkit-transition:var(--transition-opacity);transition:var(--transition-opacity)}ks-product-purchase button.loading ks-loader{opacity:1}ks-product-purchase button.fav.completed{color:transparent;background-color:var(--color-secondary) !important}ks-product-purchase button.fav ks-icon.completed{position:absolute;top:50%;left:50%;opacity:0;color:white;-webkit-transform:translate(-50%, -50%);transform:translate(-50%, -50%);-webkit-transition:var(--transition-opacity);transition:var(--transition-opacity);-webkit-transition-delay:0.3s;transition-delay:0.3s}ks-product-purchase button.fav.completed ks-icon.completed{opacity:1}";
 
 class ProductPurchase {
   constructor(hostRef) {
@@ -32427,7 +32140,7 @@ class ProductPurchase {
   }; }
 }
 
-const productShippingCss = "ks-product-shipping{display:block;width:100%}ks-product-shipping .message{font-family:var(--product-shipping-message-font);font-size:15px;color:var(--color-secondary);margin-bottom:15px;border-radius:20px;font-weight:700;max-width:100%}ks-product-shipping .hidden{display:none}@media only screen and (max-width: 960px){ks-product-shipping{display:-ms-flexbox;display:flex;text-align:center;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center}}";
+const productShippingCss = "ks-product-shipping{display:block;width:100%;margin-top:10px}ks-product-shipping .message{font-family:var(--product-shipping-message-font);font-size:15px;color:var(--color-secondary);margin-bottom:15px;border-radius:20px;font-weight:700;max-width:100%}ks-product-shipping .hidden{display:none}@media only screen and (max-width: 960px){ks-product-shipping{display:-ms-flexbox;display:flex;text-align:center;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center}}";
 
 class ProductShipping {
   constructor(hostRef) {
@@ -33096,7 +32809,7 @@ class RecipeInfo {
   }; }
 }
 
-const recipeIngredientCss = "ks-recipe-ingredient{display:-ms-flexbox;display:flex;width:100%;-ms-flex-align:baseline;align-items:baseline;margin-bottom:5px}ks-recipe-ingredient .name,ks-recipe-ingredient .amount{font-size:18px}ks-recipe-ingredient .underline{margin:0 20px;-ms-flex:1;flex:1;border-bottom:solid 1px #dbdbdb}ks-recipe-ingredient label{-ms-flex-item-align:center;-ms-grid-row-align:center;align-self:center;display:block;position:relative;padding-left:35px;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}ks-recipe-ingredient input{position:absolute;opacity:0;cursor:pointer;height:0;width:0}ks-recipe-ingredient .checkmark{position:absolute;bottom:-11px;left:0;height:22px;width:22px;border:2px solid #252525;-webkit-box-sizing:border-box;box-sizing:border-box}ks-recipe-ingredient label:hover input~.checkmark{background-color:#ccc}ks-recipe-ingredient .checkmark:after{content:\"\";position:absolute;display:none}ks-recipe-ingredient label input:checked~.checkmark:after{display:block}ks-recipe-ingredient label .checkmark:after{left:6px;top:3px;width:4px;height:9px;border:solid #252525;border-width:0 2px 2px 0;-webkit-transform:rotate(45deg);-ms-transform:rotate(45deg);transform:rotate(45deg)}@media only screen and (max-width: 520px){ks-recipe-ingredient .name,ks-recipe-ingredient .amount{font-size:16px}ks-recipe-ingredient label{padding-left:28px}}@media only screen and (max-width: 360px){ks-recipe-ingredient .name,ks-recipe-ingredient .amount{font-size:16px}ks-recipe-ingredient label{padding-left:28px}ks-recipe-ingredient .underline{margin:0;-ms-flex:1;flex:1;border-bottom:none}}";
+const recipeIngredientCss = "ks-recipe-ingredient{display:-ms-flexbox;display:flex;width:100%;-ms-flex-align:baseline;align-items:baseline;margin-bottom:5px}ks-recipe-ingredient .name,ks-recipe-ingredient .amount{font-size:18px}ks-recipe-ingredient .underline{margin:0 20px;-ms-flex:1;flex:1;border-bottom:solid 1px #dbdbdb}ks-recipe-ingredient label{-ms-flex-item-align:center;align-self:center;display:block;position:relative;padding-left:35px;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}ks-recipe-ingredient input{position:absolute;opacity:0;cursor:pointer;height:0;width:0}ks-recipe-ingredient .checkmark{position:absolute;bottom:-11px;left:0;height:22px;width:22px;border:2px solid #252525;-webkit-box-sizing:border-box;box-sizing:border-box}ks-recipe-ingredient label:hover input~.checkmark{background-color:#ccc}ks-recipe-ingredient .checkmark:after{content:\"\";position:absolute;display:none}ks-recipe-ingredient label input:checked~.checkmark:after{display:block}ks-recipe-ingredient label .checkmark:after{left:6px;top:3px;width:4px;height:9px;border:solid #252525;border-width:0 2px 2px 0;-webkit-transform:rotate(45deg);-ms-transform:rotate(45deg);transform:rotate(45deg)}@media only screen and (max-width: 520px){ks-recipe-ingredient .name,ks-recipe-ingredient .amount{font-size:16px}ks-recipe-ingredient label{padding-left:28px}}@media only screen and (max-width: 360px){ks-recipe-ingredient .name,ks-recipe-ingredient .amount{font-size:16px}ks-recipe-ingredient label{padding-left:28px}ks-recipe-ingredient .underline{margin:0;-ms-flex:1;flex:1;border-bottom:none}}";
 
 class RecipeIngredient {
   constructor(hostRef) {
@@ -33269,25 +32982,6 @@ class Section {
       "marginTop": [4, "margin-top"],
       "mobileCollapse": [4, "mobile-collapse"]
     },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
-
-class SectionHeading {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-  }
-  render() {
-    return [
-      hAsync("h3", { class: "uk-text-center uk-margin-medium-bottom" }, hAsync("slot", null))
-    ];
-  }
-  static get cmpMeta() { return {
-    "$flags$": 4,
-    "$tagName$": "ks-section-heading",
-    "$members$": undefined,
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": []
@@ -33727,7 +33421,6 @@ class dialog {
 }
 
 registerComponents([
-  Alert$1,
   Alert,
   ArticleCard,
   ArticleContainer,
@@ -33742,16 +33435,15 @@ registerComponents([
   CartDealGroup,
   CartDiscountCode,
   CartDiscountContainer,
+  CartDiscountMessage,
   CartDiscountPoints,
   CartDiscountPointsLogin,
   CartDiscountPointsMessage,
-  CartDiscountTicket$1,
   CartDiscountTicket,
   CartEasyprotect,
   CartEasyprotectDialog,
   CartEasyprotectProduct,
   CartEasyprotectWarranty,
-  CartHeading,
   CartMessage,
   CartProduct,
   CartProductContainer,
@@ -33770,8 +33462,6 @@ registerComponents([
   CartSummaryContainer,
   CartTile,
   Comment,
-  Contact,
-  ContactButtons,
   Container$1,
   Container,
   ContentAbout,
@@ -33925,7 +33615,6 @@ registerComponents([
   RecipeProcedure,
   ReviewProduct,
   Section,
-  SectionHeading,
   SeeMore,
   SidePanel,
   Sorting,
