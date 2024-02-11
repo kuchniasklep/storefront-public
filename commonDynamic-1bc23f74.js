@@ -1,0 +1,1 @@
+import{c as o}from"./index-5a4e318f.js";const t=o({loaded:!1,loggedIn:!1,customer:{},cartCount:0,heartCount:0,api:{},tracking:{},consent:{},compare:[]});export{t as c}
