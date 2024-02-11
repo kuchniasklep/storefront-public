@@ -12173,7 +12173,7 @@ class BannerContainer {
   }; }
 }
 
-const buttonCss$1 = "ks-button{display:block}ks-button>*{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;text-align:center;-webkit-box-sizing:border-box;box-sizing:border-box;font-size:var(--product-button-size);width:100%;padding:12px 20px;outline-style:none;border-style:none;text-decoration:none !important;cursor:pointer;border-radius:0px;font-family:var(--font-regular);font-size:15px;border:1px solid var(--color-dark);background-color:var(--color-dark);color:var(--text-color-dark) !important;-webkit-transition:var(--transition-background-color),\n                var(--transition-border-color);transition:var(--transition-background-color),\n                var(--transition-border-color)}ks-button:not([transitionless])>*:hover{background-color:var(--color-dark-hover)}ks-button:not([transitionless])>*:active{background-color:var(--color-dark-active)}ks-button[round]>*{border-radius:100px}ks-button[narrow]>*{padding:9px 20px}ks-button[narrower]>*{padding:6px 18px}ks-button[tall]>*{padding:18px 20px}ks-button:not([name])>*{padding:12px}ks-button:not([name])[narrow]>*{padding:9px}ks-button:not([name])[narrower]>*{padding:6px}ks-button:not([name])[tall]>*{padding:18px}ks-button[primary]>*{color:var(--text-color-primary) !important;background-color:var(--color-primary) !important;border:1px solid var(--color-primary) !important}ks-button[primary]:not([transitionless])>*:hover{background-color:var(--color-primary-hover)}ks-button[primary]:not([transitionless])>*:active{background-color:var(--color-primary-active)}ks-button[secondary]>*{color:var(--text-color-secondary) !important;background-color:var(--color-secondary) !important;border:1px solid var(--color-secondary) !important}ks-button[secondary]:not([transitionless])>*:hover{background-color:var(--color-secondary-hover)}ks-button[secondary]:not([transitionless])>*:active{background-color:var(--color-secondary-active)}ks-button[border]>*{border:1px solid var(--color-dark);color:var(--color-dark) !important;background-color:rgba(0, 0, 0, 0)}ks-button[border]:not([transitionless])>*:hover{background-color:rgba(0, 0, 0, 0.096)}ks-button[border]:not([transitionless])>*:active{background-color:rgba(0, 0, 0, 0.336)}ks-button[border][light]>*{border:1px solid #ffffff;color:var(--text-color-dark) !important;background-color:rgba(255, 255, 255, 0)}ks-button[border][light]:not([transitionless])>*:hover{background-color:rgba(255, 255, 255, 0.096)}ks-button[border][light]:not([transitionless])>*:active{background-color:rgba(255, 255, 255, 0.336)}ks-button[disabled]>*{background-color:#e2e2e2 !important}ks-button[border][muted]>*{border:1px solid #e5e5e5}ks-button[border][muted]:not([transitionless])>*:hover{border-color:#bebebe;background-color:rgba(255, 255, 255, 0)}ks-button[border][muted]:not([transitionless])>*:active{border-color:#8d8d8d;background-color:rgba(255, 255, 255, 0)}ks-button[name] ks-icon{margin-left:10px}ks-button[left][name] ks-icon{margin-right:10px;margin-left:0}ks-button[transparent]>*{border:none;color:var(--color-dark) !important;background-color:rgba(0, 0, 0, 0)}ks-button[transparent]:not([transitionless])>*:hover{background-color:rgba(0, 0, 0, 0.096)}ks-button[transparent]:not([transitionless])>*:active{background-color:rgba(0, 0, 0, 0.336)}ks-button[icon][name] ks-icon{margin:0 4px}ks-button[light]:not([border])>*{color:black !important;background-color:rgba(255, 255, 255, 1);border:1px solid #ffffff}ks-button[light]:not([border])>*:hover{background-color:rgba(255, 255, 255, 0.692)}ks-button[light]:not([border])>*:active{background-color:rgba(255, 255, 255, 0.452)}";
+const buttonCss$1 = "ks-button{display:block}ks-button>*{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;text-align:center;-webkit-box-sizing:border-box;box-sizing:border-box;font-size:var(--product-button-size);width:100%;padding:12px 20px;outline-style:none;border-style:none;text-decoration:none !important;cursor:pointer;border-radius:0px;font-family:var(--font-regular);font-size:15px;border:1px solid var(--color-dark);background-color:var(--color-dark);color:var(--text-color-dark) !important;-webkit-transition:var(--transition-background-color),\n                var(--transition-border-color);transition:var(--transition-background-color),\n                var(--transition-border-color)}ks-button:not([transitionless])>*:hover{background-color:var(--color-dark-hover)}ks-button:not([transitionless])>*:active{background-color:var(--color-dark-active)}ks-button[round]>*{border-radius:100px}ks-button[narrow]>*{padding:9px 20px}ks-button[narrower]>*{padding:6px 18px}ks-button[tall]>*{padding:18px 20px}ks-button:not([name])>*{padding:12px}ks-button:not([name])[narrow]>*{padding:9px}ks-button:not([name])[narrower]>*{padding:6px}ks-button:not([name])[tall]>*{padding:18px}ks-button[primary]>*{color:var(--text-color-primary) !important;background-color:var(--color-primary) !important;border:1px solid var(--color-primary) !important}ks-button[primary]:not([transitionless])>*:hover{background-color:var(--color-primary-hover)}ks-button[primary]:not([transitionless])>*:active{background-color:var(--color-primary-active)}ks-button[secondary]>*{color:var(--text-color-secondary) !important;background-color:var(--color-secondary) !important;border:1px solid var(--color-secondary) !important}ks-button[secondary]:not([transitionless])>*:hover{background-color:var(--color-secondary-hover)}ks-button[secondary]:not([transitionless])>*:active{background-color:var(--color-secondary-active)}ks-button[border]>*{border:1px solid var(--color-dark);color:var(--color-dark) !important;background-color:rgba(0, 0, 0, 0)}ks-button[border]:not([transitionless])>*:hover{background-color:rgba(0, 0, 0, 0.096)}ks-button[border]:not([transitionless])>*:active{background-color:rgba(0, 0, 0, 0.336)}ks-button[border][light]>*{border:1px solid #ffffff;color:var(--text-color-dark) !important;background-color:rgba(255, 255, 255, 0)}ks-button[border][light]:not([transitionless])>*:hover{background-color:rgba(255, 255, 255, 0.096)}ks-button[border][light]:not([transitionless])>*:active{background-color:rgba(255, 255, 255, 0.336)}ks-button[disabled]>*{background-color:#e2e2e2 !important;border-color:#bbbbbb;color:#959595 !important}ks-button[border][muted]>*{border:1px solid #e5e5e5}ks-button[border][muted]:not([transitionless])>*:hover{border-color:#bebebe;background-color:rgba(255, 255, 255, 0)}ks-button[border][muted]:not([transitionless])>*:active{border-color:#8d8d8d;background-color:rgba(255, 255, 255, 0)}ks-button[name] ks-icon{margin-left:10px}ks-button[left][name] ks-icon{margin-right:10px;margin-left:0}ks-button[transparent]>*{border:none;color:var(--color-dark) !important;background-color:rgba(0, 0, 0, 0)}ks-button[transparent]:not([transitionless])>*:hover{background-color:rgba(0, 0, 0, 0.096)}ks-button[transparent]:not([transitionless])>*:active{background-color:rgba(0, 0, 0, 0.336)}ks-button[icon][name] ks-icon{margin:0 4px}ks-button[light]:not([border])>*{color:black !important;background-color:rgba(255, 255, 255, 1);border:1px solid #ffffff}ks-button[light]:not([border])>*:hover{background-color:rgba(255, 255, 255, 0.692)}ks-button[light]:not([border])>*:active{background-color:rgba(255, 255, 255, 0.452)}";
 
 class Button {
   constructor(hostRef) {
@@ -12558,7 +12558,8 @@ const commonDynamic = createStore({
   heartCount: 0,
   api: {},
   tracking: {},
-  consent: {}
+  consent: {},
+  compare: []
 });
 
 var DataLayer;
@@ -14557,6 +14558,279 @@ class Comment {
   }; }
 }
 
+var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
+function getDefaultExportFromCjs (x) {
+	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
+}
+
+function createCommonjsModule(fn, basedir, module) {
+	return module = {
+		path: basedir,
+		exports: {},
+		require: function (path, base) {
+			return commonjsRequire();
+		}
+	}, fn(module, module.exports), module.exports;
+}
+
+function commonjsRequire () {
+	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
+}
+
+var js_cookie = createCommonjsModule(function (module, exports) {
+(function (global, factory) {
+  module.exports = factory() ;
+})(commonjsGlobal, (function () {
+  /* eslint-disable no-var */
+  function assign (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+      for (var key in source) {
+        target[key] = source[key];
+      }
+    }
+    return target
+  }
+  /* eslint-enable no-var */
+
+  /* eslint-disable no-var */
+  var defaultConverter = {
+    read: function (value) {
+      if (value[0] === '"') {
+        value = value.slice(1, -1);
+      }
+      return value.replace(/(%[\dA-F]{2})+/gi, decodeURIComponent)
+    },
+    write: function (value) {
+      return encodeURIComponent(value).replace(
+        /%(2[346BF]|3[AC-F]|40|5[BDE]|60|7[BCD])/g,
+        decodeURIComponent
+      )
+    }
+  };
+  /* eslint-enable no-var */
+
+  /* eslint-disable no-var */
+
+  function init (converter, defaultAttributes) {
+    function set (name, value, attributes) {
+      if (typeof document === 'undefined') {
+        return
+      }
+
+      attributes = assign({}, defaultAttributes, attributes);
+
+      if (typeof attributes.expires === 'number') {
+        attributes.expires = new Date(Date.now() + attributes.expires * 864e5);
+      }
+      if (attributes.expires) {
+        attributes.expires = attributes.expires.toUTCString();
+      }
+
+      name = encodeURIComponent(name)
+        .replace(/%(2[346B]|5E|60|7C)/g, decodeURIComponent)
+        .replace(/[()]/g, escape);
+
+      var stringifiedAttributes = '';
+      for (var attributeName in attributes) {
+        if (!attributes[attributeName]) {
+          continue
+        }
+
+        stringifiedAttributes += '; ' + attributeName;
+
+        if (attributes[attributeName] === true) {
+          continue
+        }
+
+        // Considers RFC 6265 section 5.2:
+        // ...
+        // 3.  If the remaining unparsed-attributes contains a %x3B (";")
+        //     character:
+        // Consume the characters of the unparsed-attributes up to,
+        // not including, the first %x3B (";") character.
+        // ...
+        stringifiedAttributes += '=' + attributes[attributeName].split(';')[0];
+      }
+
+      return (document.cookie =
+        name + '=' + converter.write(value, name) + stringifiedAttributes)
+    }
+
+    function get (name) {
+      if (typeof document === 'undefined' || (arguments.length && !name)) {
+        return
+      }
+
+      // To prevent the for loop in the first place assign an empty array
+      // in case there are no cookies at all.
+      var cookies = document.cookie ? document.cookie.split('; ') : [];
+      var jar = {};
+      for (var i = 0; i < cookies.length; i++) {
+        var parts = cookies[i].split('=');
+        var value = parts.slice(1).join('=');
+
+        try {
+          var found = decodeURIComponent(parts[0]);
+          jar[found] = converter.read(value, found);
+
+          if (name === found) {
+            break
+          }
+        } catch (e) {}
+      }
+
+      return name ? jar[name] : jar
+    }
+
+    return Object.create(
+      {
+        set,
+        get,
+        remove: function (name, attributes) {
+          set(
+            name,
+            '',
+            assign({}, attributes, {
+              expires: -1
+            })
+          );
+        },
+        withAttributes: function (attributes) {
+          return init(this.converter, assign({}, this.attributes, attributes))
+        },
+        withConverter: function (converter) {
+          return init(assign({}, this.converter, converter), this.attributes)
+        }
+      },
+      {
+        attributes: { value: Object.freeze(defaultAttributes) },
+        converter: { value: Object.freeze(converter) }
+      }
+    )
+  }
+
+  var api = init(defaultConverter, { path: '/' });
+  /* eslint-enable no-var */
+
+  return api;
+
+}));
+});
+
+const comparePopupCss = "ks-compare-popup{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;position:fixed;overflow:hidden;font-family:var(--font-emphasis);bottom:0px;left:0px;right:0px;z-index:1000000;background-color:#f2f2f2;border-top:solid 1px #c2c2c2;transition:-webkit-transform 0.4s ease;-webkit-transition:-webkit-transform 0.4s ease;transition:transform 0.4s ease;transition:transform 0.4s ease, -webkit-transform 0.4s ease}ks-compare-popup .message{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;width:100%;height:65px;padding:15px;-webkit-box-sizing:border-box;box-sizing:border-box;text-align:center;font-size:16px;line-height:17px}ks-compare-popup .message p{margin:0;width:100%}ks-compare-popup .products{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;width:100%;height:80px;padding:0px 15px 15px 15px;gap:5px;-webkit-box-sizing:border-box;box-sizing:border-box;font-size:14px;line-height:14px}ks-compare-popup .products .product{display:-ms-flexbox;display:flex;padding:5px 10px;gap:5px;width:100%;background-color:#ffffff;border:1px solid #e3e3e3;height:60px;border-radius:10px;-ms-flex-align:center;align-items:center;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-sizing:border-box;box-sizing:border-box}ks-compare-popup .products .product.empty{background-color:transparent;border:solid 1px #a7a7a7;opacity:0.2}ks-compare-popup .products .product ks-img3{max-width:50px;max-height:50px}ks-compare-popup .products .product a{color:#151515;text-decoration:none}ks-compare-popup:not([hide]):not([extend]){-webkit-transform:translateY(80px);transform:translateY(80px)}ks-compare-popup:not([hide])[extend]{-webkit-transform:translateY(0px);transform:translateY(0px)}ks-compare-popup[hide]{-webkit-transform:translateY(150px);transform:translateY(150px)}ks-compare-popup:not([show]){-webkit-transform:translateY(150px);transform:translateY(150px);display:none}ks-compare-popup p{margin:0;max-width:100%}ks-compare-popup .buttons{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-align:center;align-items:center;width:100%;gap:5px}ks-compare-popup .buttons>*{width:-webkit-max-content;width:-moz-max-content;width:max-content}ks-compare-popup .buttons>*:first-child{margin-right:5px}ks-compare-popup .type{margin-bottom:10px}ks-compare-popup .name{font-size:18px;font-weight:700}ks-compare-popup[blink] .products{-webkit-animation:blink-animation 0.5s ease-in;animation:blink-animation 0.5s ease-in}@-webkit-keyframes blink-animation{0%{opacity:0.3}100%{opacity:1}}@keyframes blink-animation{0%{opacity:0.3}100%{opacity:1}}@media (max-width: 920px){ks-compare-popup .products{display:block;height:190px}ks-compare-popup .products .product{height:55px;margin-bottom:5px}ks-compare-popup:not([hide]):not([extend]){-webkit-transform:translateY(190px);transform:translateY(190px)}ks-compare-popup[hide],ks-compare-popup:not([show]){-webkit-transform:translateY(260px);transform:translateY(260px)}ks-compare-popup[extend] .buttons p{font-size:14px}}@media (max-width: 420px){ks-compare-popup[extend] .buttons p{content-visibility:hidden}}";
+
+class ComparePopup {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.hide = false;
+    this.show = false;
+    this.extend = true;
+    this.blink = false;
+  }
+  extendpanel() {
+    this.extend = !this.extend;
+  }
+  updateCookie() {
+    const compare = commonDynamic.get('compare');
+    js_cookie.set('product-comparison', JSON.stringify(compare), { expires: 60 });
+  }
+  loadCookie() {
+    const data = JSON.parse(js_cookie.get('product-comparison'));
+    if (data)
+      commonDynamic.set("compare", data);
+    return (data === null || data === void 0 ? void 0 : data.length) > 0;
+  }
+  componentWillLoad() {
+    if (this.loadCookie())
+      this.showpanel(true);
+  }
+  async addProduct(product) {
+    let compare = commonDynamic.get("compare");
+    if (this.hide)
+      this.showpanel();
+    if (!this.extend)
+      this.extendpanel();
+    if (compare.length == 3) {
+      this.animate_blink();
+      return;
+    }
+    commonDynamic.set("compare", [...compare, {
+        id: product.id,
+        image: product.image,
+        link: product.link,
+        name: product.name,
+      }]);
+    this.updateCookie();
+  }
+  deleteProduct(id) {
+    let compare = commonDynamic.get("compare");
+    const index = compare.findIndex(item => item.id == id);
+    if (index >= 0) {
+      compare.splice(index, 1);
+      commonDynamic.set("compare", [...compare]);
+      this.updateCookie();
+      if (compare.length == 0)
+        this.hidepanel();
+    }
+  }
+  cancel() {
+    this.hidepanel();
+    commonDynamic.set("compare", []);
+    this.updateCookie();
+  }
+  async showpanel(init = false) {
+    this.show = true;
+    this.hide = true;
+    setTimeout(() => {
+      this.hide = false;
+    }, init ? common.get('cookieDelay') : 100);
+  }
+  hidepanel() {
+    this.hide = true;
+  }
+  animate_blink() {
+    this.blink = true;
+    setTimeout(() => {
+      this.blink = false;
+    }, 500);
+  }
+  onScroll() {
+    if (window.screen.height < 840)
+      this.extend = false;
+  }
+  render() {
+    if (!Build.isBrowser)
+      return hAsync(Host, null);
+    const compare = commonDynamic.get("compare");
+    return hAsync(Host, { "aria-hidden": this.show ? "false" : "true" }, hAsync("div", { class: "message" }, hAsync("div", { class: "buttons" }, hAsync("ks-button", { round: true, border: true, narrower: true, icon: "x", onClick: () => this.cancel() }), hAsync("p", null, "Por\u00F3wnywanie produkt\u00F3w"), hAsync("ks-button", { round: true, border: true, narrower: true, icon: this.extend ? "chevron-down" : "chevron-up", onClick: () => this.extendpanel() }), this.extend ?
+      hAsync("ks-button", { round: true, narrower: true, name: "Porównaj", onClick: () => this.hidepanel(), disabled: (compare === null || compare === void 0 ? void 0 : compare.length) < 2 })
+      : null)), hAsync("div", { class: "products" }, [0, 1, 2].map(index => hAsync("div", { class: "product" + (compare[index] ? "" : " empty") }, compare[index] ? [
+      hAsync("ks-img3", { image: compare[index].image }),
+      hAsync("a", { href: compare[index].link }, compare[index].name),
+      hAsync("ks-button", { round: true, border: true, narrower: true, icon: "x", onClick: () => this.deleteProduct(compare[index].id) })
+    ] : null))));
+  }
+  get root() { return getElement(this); }
+  static get style() { return comparePopupCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-compare-popup",
+    "$members$": {
+      "hide": [1540],
+      "show": [1540],
+      "extend": [1540],
+      "blink": [1540],
+      "addProduct": [64],
+      "showpanel": [64]
+    },
+    "$listeners$": [[9, "scroll", "onScroll"]],
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": [["hide", "hide"], ["show", "show"], ["extend", "extend"], ["blink", "blink"]]
+  }; }
+}
+
 const containerCss = "ks-container{display:block;padding:0px;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:1200px;width:100%;margin-left:auto;margin-right:auto}ks-container>*{margin:20px 0px}@media only screen and (min-width: 1200px){ks-container~ks-container>*:first-child{margin-top:0px}}@media only screen and (max-width: 1200px){ks-container>*{margin:15px 0px}ks-container>*:first-child,ks-container>*:last-child{margin:0px 0px}ks-container[padding]>*{margin:15px}}";
 
 class Container$1 {
@@ -14856,7 +15130,7 @@ class ContentFeatured {
   }; }
 }
 
-const featuredWithTextCss = "ks-content-featured-with-text{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-content-featured-with-text .featured{-ms-flex:1 1 500px;flex:1 1 500px;position:relative;background-color:#000000;height:500px}ks-content-featured-with-text .featured ks-img3{height:100%;width:100%;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease;opacity:1}ks-content-featured-with-text .featured .overlay{position:absolute;inset:0px;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;max-width:1000px;-webkit-box-sizing:border-box;box-sizing:border-box;margin:auto}ks-content-featured-with-text .featured .overlay.horizontal-left{text-align:left}ks-content-featured-with-text .featured .overlay.horizontal-center{text-align:center}ks-content-featured-with-text .featured .overlay.horizontal-right{text-align:right}ks-content-featured-with-text .featured .overlay.vertical-top{-ms-flex-pack:start;justify-content:flex-start}ks-content-featured-with-text .featured .overlay.vertical-center{-ms-flex-pack:center;justify-content:center}ks-content-featured-with-text .featured .overlay.vertical-bottom{-ms-flex-pack:end;justify-content:flex-end}ks-content-featured-with-text .featured .text{background-color:rgba(0, 0, 0, 0.5);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);padding:10px 20px;font-size:22px;font-family:var(--font-emphasis)}ks-content-featured-with-text .featured .text .aboveText{font-size:16px;margin-bottom:-4px}@media screen and (max-width: 1000px){ks-content-featured-with-text .featured{height:400px}}@media screen and (max-width: 640px){ks-content-featured-with-text .featured{height:300px}ks-content-featured-with-text .featured .text{padding:15px}ks-content-featured-with-text .featured .text .mainText{padding:6px 15px;font-size:18px}ks-content-featured-with-text .featured .text .aboveText{font-size:14px;margin-bottom:-4px}}";
+const featuredWithTextCss = "ks-content-featured-with-text{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-content-featured-with-text .featured{-ms-flex:1 1 500px;flex:1 1 500px;position:relative;background-color:#000000;height:500px}ks-content-featured-with-text .featured ks-img3{height:100%;width:100%;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease;opacity:1}ks-content-featured-with-text .featured .overlay{position:absolute;inset:0px;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;max-width:1000px;-webkit-box-sizing:border-box;box-sizing:border-box;margin:auto}ks-content-featured-with-text .featured .overlay.horizontal-left{text-align:left}ks-content-featured-with-text .featured .overlay.horizontal-center{text-align:center}ks-content-featured-with-text .featured .overlay.horizontal-right{text-align:right}ks-content-featured-with-text .featured .overlay.vertical-top{-ms-flex-pack:start;justify-content:flex-start}ks-content-featured-with-text .featured .overlay.vertical-center{-ms-flex-pack:center;justify-content:center}ks-content-featured-with-text .featured .overlay.vertical-bottom{-ms-flex-pack:end;justify-content:flex-end}ks-content-featured-with-text .featured .content{background-color:rgba(0, 0, 0, 0.5);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);padding:10px 20px;font-size:22px;font-family:var(--font-emphasis);display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-wrap:wrap;flex-wrap:wrap;-ms-flex-align:center;align-items:center}ks-content-featured-with-text .featured .content .aboveText{font-size:16px;margin-bottom:-4px;font-weight:500}@media screen and (max-width: 1000px){ks-content-featured-with-text .featured{height:400px}}@media screen and (max-width: 640px){ks-content-featured-with-text .featured{height:300px}ks-content-featured-with-text .featured .content{padding:15px}ks-content-featured-with-text .featured .content .mainText{padding:6px 15px;font-size:18px}ks-content-featured-with-text .featured .content .aboveText{font-size:14px;margin-bottom:-4px}}@media screen and (max-width: 460px){ks-content-featured-with-text .featured .content{-ms-flex-pack:center;justify-content:center;padding:10px 5px 12px 5px}ks-content-featured-with-text .featured .content .text{text-align:center;width:100%;margin-bottom:5px;font-size:17px;font-weight:700}ks-content-featured-with-text .featured .content ks-button>*{padding:6px 20px}}";
 
 class ContentFeaturedWithText {
   constructor(hostRef) {
@@ -14868,7 +15142,9 @@ class ContentFeaturedWithText {
   }
   featured(item) {
     return hAsync("div", { class: "featured", style: this.bannerStyle(item) }, hAsync("ks-img3", { fit: item.fit, image: item.image, webp: item.webp, alt: item.name, width: item.width, height: item.height }), item.mainText || item.aboveText ?
-      hAsync("div", { class: "overlay " + this.alignmentClass(item) }, hAsync("div", { class: "text" }, item.aboveText ? hAsync("div", { class: "aboveText" }, item.aboveText) : null, item.mainText))
+      hAsync("div", { class: "overlay " + this.alignmentClass(item) }, hAsync("div", { class: "content" }, hAsync("div", { class: "text" }, item.aboveText ? hAsync("div", { class: "aboveText" }, item.aboveText) : null, item.mainText), (item === null || item === void 0 ? void 0 : item.link) ?
+        hAsync("ks-button", { link: item.link, round: true, border: true, light: true, narrow: true, name: "Zobacz wi\u0119cej" })
+        : null))
       : null);
   }
   containerStyle() {
@@ -15249,26 +15525,6 @@ class DescriptionProducts {
     "$lazyBundleId$": "-",
     "$attrsToReflect$": [["kind", "kind"]]
   }; }
-}
-
-var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
-
-function getDefaultExportFromCjs (x) {
-	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
-}
-
-function createCommonjsModule(fn, basedir, module) {
-	return module = {
-		path: basedir,
-		exports: {},
-		require: function (path, base) {
-			return commonjsRequire();
-		}
-	}, fn(module, module.exports), module.exports;
-}
-
-function commonjsRequire () {
-	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
 }
 
 var marked_umd = createCommonjsModule(function (module, exports) {
@@ -27491,7 +27747,7 @@ class Lightbox {
   }; }
 }
 
-const listingFooterCss = "ks-listing-footer{display:block;position:relative;z-index:1;padding:15px;-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow);background-color:white;text-align:center;font-size:0.875rem}ks-listing-footer>*:not([slot=tags]){max-width:1200px;margin:15px auto 15px auto;padding:0 15px;line-height:1.5}ks-listing-footer *[slot=tags]{max-width:1200px;margin:auto}ks-listing-footer *[slot=tags]>*{display:inline-block;padding:3px 10px;margin:2px;margin-bottom:3px;line-height:1.5;background:#222222;color:#ffffff !important;vertical-align:middle;white-space:nowrap;border-radius:2px;text-decoration:none !important}";
+const listingFooterCss = "ks-listing-footer{display:block;position:relative;z-index:1;padding:15px;border-top:#ededed 1px solid;background-color:white;text-align:center;font-size:0.875rem}ks-listing-footer>*:not([slot=tags]){max-width:1200px;margin:15px auto 15px auto;padding:0 15px;line-height:1.5}ks-listing-footer *[slot=tags]{max-width:1200px;margin:auto}ks-listing-footer *[slot=tags]>*{display:inline-block;padding:3px 10px;margin:2px;margin-bottom:3px;line-height:1.5;background:#222222;color:#ffffff !important;vertical-align:middle;white-space:nowrap;border-radius:2px;text-decoration:none !important}";
 
 class ListingFooter {
   constructor(hostRef) {
@@ -27518,7 +27774,7 @@ class ListingFooter {
   }; }
 }
 
-const listingHeaderCss = "ks-listing-header{display:block;position:relative;z-index:1;padding:15px;-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow);background-color:white;text-align:center;font-size:0.875rem}ks-listing-header .title{display:block;margin:0 0 5px 0;font-family:var(--font-emphasis);font-weight:700;font-size:1.3rem;line-height:1.3}@media (max-width: 960px){ks-listing-header .title{font-size:1.105rem}}ks-listing-header .autocorrect{font-size:17px !important;font-weight:500 !important;margin-bottom:0px}ks-listing-header .autocorrect>span{color:#ff3c3c;font-weight:700}ks-listing-header .description{max-width:1200px;margin:0 auto 15px auto;padding:0 15px;line-height:1.5}ks-listing-header .tags{margin-top:5px}ks-listing-header hr{-webkit-box-sizing:content-box;box-sizing:content-box;height:0;overflow:visible;text-align:inherit;margin:15px 0 15px 0;border:0;border-top:1px solid #e5e5e5}";
+const listingHeaderCss = "ks-listing-header{display:block;position:relative;z-index:1;padding:15px;border-bottom:#ededed 1px solid;background-color:white;text-align:center;font-size:0.875rem}ks-listing-header .title{display:block;margin:0 0 5px 0;font-family:var(--font-emphasis);font-weight:700;font-size:1.3rem;line-height:1.3}@media (max-width: 960px){ks-listing-header .title{font-size:1.105rem}}ks-listing-header .autocorrect{font-size:17px !important;font-weight:500 !important;margin-bottom:0px}ks-listing-header .autocorrect>span{color:#ff3c3c;font-weight:700}ks-listing-header .description{max-width:1200px;margin:0 auto 15px auto;padding:0 15px;line-height:1.5}ks-listing-header .tags{margin-top:5px}ks-listing-header hr{-webkit-box-sizing:content-box;box-sizing:content-box;height:0;overflow:visible;text-align:inherit;margin:15px 0 15px 0;border:0;border-top:1px solid #e5e5e5}";
 
 class ListingHeader {
   constructor(hostRef) {
@@ -30272,6 +30528,88 @@ class PageCart {
   }; }
 }
 
+const compare = createStore({});
+
+const compareCss = "ks-page-compare{display:block;background-color:#ffffff}ks-page-compare .compare-products{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;padding:20px 20px 0px 20px}ks-page-compare .compare-attributes{padding:0px 20px 20px 20px}ks-page-compare .compare-products,ks-page-compare .compare-attributes{width:100%;max-width:1400px;-webkit-box-sizing:border-box;box-sizing:border-box;margin:auto;background-color:white}ks-page-compare .compare-products>*{-ms-flex:1;flex:1}ks-page-compare .compare-products .product{text-align:center;position:relative}ks-page-compare .compare-products .product ks-img3{max-width:120px;margin:auto}ks-page-compare .compare-products .product ks-button{position:absolute;top:0;right:0;opacity:0.3}ks-page-compare .compare-products .add{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}ks-page-compare .compare-products .add ks-button{opacity:0.5}ks-page-compare .compare-products * ks-input-check{margin-top:10px;margin-bottom:0px}ks-page-compare .compare-products * h1{margin:0px}ks-page-compare .compare-products * h2{margin:10px 0px 0px 0px}ks-page-compare .compare-products * p{margin:5px 0px 0px 0px}ks-page-compare .compare-attributes .category{position:relative}ks-page-compare .compare-attributes .category>ks-icon{top:18px;right:15px;position:absolute}ks-page-compare .compare-attributes .category h3{border-bottom:1px solid #e7e7e7;padding:18px 5px;margin-bottom:0px}ks-page-compare .compare-attributes .category.interactable h3{cursor:pointer;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease}ks-page-compare .compare-attributes .category.interactable h3:hover{background-color:#f2f2f2}ks-page-compare .compare-attributes .category.interactable h3:active{background-color:#e6e6e6}ks-page-compare table{width:100%;table-layout:fixed;border-spacing:0px}ks-page-compare table th,ks-page-compare table td{text-align:center;width:25%;padding:5px;border-bottom:1px solid #e7e7e7}ks-page-compare table th{text-align:left;font-family:var(--font-emphasis)}ks-page-compare table tr:nth-child(even) td{background-color:#f2f2f2}ks-page-compare table tr td:not(:last-child),ks-page-compare table tr th:not(:last-child){border-right:1px solid #e7e7e7}ks-page-compare[differences] .identical{display:none}ks-page-compare table.hidden{display:none}@media screen and (max-width: 960px){ks-page-compare .compare-products .product ks-img3{max-width:90px}}@media screen and (max-width: 640px){ks-page-compare .compare-products{display:block;margin-bottom:20px}ks-page-compare .compare-products .product{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;text-align:left}ks-page-compare .compare-products .add{display:block;margin-top:15px}ks-page-compare .compare-products .product .text{width:100%}ks-page-compare .compare-products .product ks-button{position:static}ks-page-compare .compare-products .product ks-img3{max-width:60px;margin:0px 10px 0px 0px}ks-page-compare .compare-attributes .category h3{padding:12px 5px}ks-page-compare .compare-attributes .category>ks-icon{top:12px}ks-page-compare .compare-attributes .category td ks-icon{line-height:15px !important}ks-page-compare .compare-attributes .category td ks-icon svg{stroke-width:3;width:15px;height:15px}ks-page-compare .compare-products .info{width:100%;margin-bottom:20px}ks-page-compare .compare-attributes{padding:0px 10px 10px 10px}ks-page-compare .compare-attributes .category{margin-bottom:20px}ks-page-compare table tr{position:relative}ks-page-compare table th{position:absolute;font-size:12px;width:100%;border-bottom:none;top:2px}ks-page-compare table td{width:33.33%;padding:25px 5px 5px 5px;font-size:14px;border-right:none !important}}@media screen and (max-width: 420px){ks-page-compare .compare-products>div:nth-child(n+4),ks-page-compare table td:nth-child(n+4){display:none}ks-page-compare table td{width:50%}}";
+
+class PageCompare {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.skipbase = undefined;
+    this.commonData = undefined;
+    this.commonDynamicData = undefined;
+    this.compareData = undefined;
+    this.differences = false;
+    this.hidden = [];
+  }
+  componentWillLoad() {
+    const compareDataElement = document.getElementById(this.compareData);
+    const compareData = JSON.parse(compareDataElement.innerHTML);
+    Object.keys(compareData).map(key => {
+      compare.set(key, compareData[key]);
+    });
+  }
+  render() {
+    const products = compare.get("products");
+    let product_ids = products.map(product => product.id);
+    if (product_ids.length < 3)
+      product_ids = [...product_ids, ...(new Array(3 - product_ids.length))];
+    let attributes = new Map();
+    products.forEach(product => {
+      product.attributeCategories.forEach(category => {
+        if (!attributes.has(category.name))
+          attributes.set(category.name, new Map());
+        category.attributes.forEach(attribute => {
+          const categoryMap = attributes.get(category.name);
+          if (!categoryMap.has(attribute.name))
+            categoryMap.set(attribute.name, new Map());
+          categoryMap.get(attribute.name).set(product.id, attribute.value);
+        });
+      });
+    });
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("div", { class: "compare-products" }, hAsync("div", { class: "info" }, hAsync("h1", null, "Por\u00F3wnaj modele"), hAsync("ks-input-check", { label: "Poka\u017C tylko r\u00F3\u017Cnice", onChange: e => this.differences = e.target.checked })), product_ids.map(id => {
+      const product = products.find(product => product.id == id);
+      if (!product)
+        return hAsync("div", { class: "add" }, hAsync("ks-button", { border: true, round: true, icon: "plus" }));
+      return hAsync("div", { class: "product" }, hAsync("ks-img3", { image: product.image, fit: 'contain' }), hAsync("div", { class: "text" }, hAsync("h2", null, product.name), hAsync("p", null, product.description)), hAsync("ks-button", { border: true, round: true, narrower: true, icon: "x" }));
+    })), hAsync("div", { class: "compare-attributes" }, hAsync("div", { class: "category" }, hAsync("h3", null, "Informacje Og\u00F3lne"), hAsync("table", null, hAsync("tbody", null, hAsync("tr", null, hAsync("th", null, "Kategoria"), product_ids.map(id => { var _a; return hAsync("td", null, (_a = products.find(product => product.id == id)) === null || _a === void 0 ? void 0 : _a.category); })), hAsync("tr", null, hAsync("th", null, "Cena"), product_ids.map(id => { var _a; return hAsync("td", null, priceFormat((_a = products.find(product => product.id == id)) === null || _a === void 0 ? void 0 : _a.price)); })), hAsync("tr", null, hAsync("th", null, "Czas dostawy"), product_ids.map(id => { var _a; return hAsync("td", null, (_a = products.find(product => product.id == id)) === null || _a === void 0 ? void 0 : _a.shipping); }))))), [...attributes.entries()].map(([category_name, category], index) => hAsync("div", { class: "category interactable " + (this.same_attributes_in_category(category, product_ids) ? "identical " : "") }, hAsync("h3", { onClick: () => this.toggle_hidden(index) }, category_name), hAsync("ks-icon", { name: this.hidden.includes(index) ? "chevron-down" : "chevron-up" }), hAsync("table", { class: (this.hidden.includes(index) ? "hidden" : "") }, hAsync("tbody", null, [...category.entries()].map(([attribute_name, attribute]) => hAsync("tr", { class: this.same_attributes(attribute, product_ids) ? "identical" : "" }, hAsync("th", null, attribute_name), product_ids.map(id => hAsync("td", null, attribute.has(id) ?
+      (attribute.get(id) == "true" ?
+        hAsync("ks-icon", { name: "check" }) : attribute.get(id)) : "-"))))))))));
+  }
+  toggle_hidden(index) {
+    const item_index = this.hidden.indexOf(index);
+    if (item_index != -1) {
+      const array = this.hidden;
+      array.splice(item_index, 1);
+      this.hidden = [...array];
+    }
+    else
+      this.hidden = [...this.hidden, index];
+  }
+  same_attributes(attribute, product_ids) {
+    return [...attribute.values()].every((v, _, arr) => v === arr[0]) && attribute.size == product_ids.length;
+  }
+  same_attributes_in_category(category, product_ids) {
+    return [...category.entries()].map(([_, attribute]) => this.same_attributes(attribute, product_ids)).every(v => v == true);
+  }
+  static get style() { return compareCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-page-compare",
+    "$members$": {
+      "skipbase": [4],
+      "commonData": [1, "common-data"],
+      "commonDynamicData": [1, "common-dynamic-data"],
+      "compareData": [1, "compare-data"],
+      "differences": [1540],
+      "hidden": [32]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": [["differences", "differences"]]
+  }; }
+}
+
 const footerCss = "ks-page-footer{display:block;overflow:hidden;background-color:var(--footer-color);color:var(--footer-text-color);font-size:16px}ks-page-footer .about{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;padding:50px 70px 40px 70px;margin:auto}ks-page-footer .contact>span:first-of-type{display:block;color:var(--footer-heading-color);font-family:var(--font-emphasis);font-weight:700;font-size:18px;margin:0 0 15px 0}ks-page-footer .contact a,ks-page-footer .contact>span{display:block;text-decoration:none !important;font-size:16px;margin-bottom:5px;color:var(--footer-text-color);-webkit-transition:var(--transition-color);transition:var(--transition-color)}ks-page-footer .contact a:hover{color:var(--footer-text-color-hover)}ks-page-footer .contact a:active{color:var(--footer-text-color-active)}ks-page-footer .contact ks-icon{margin-right:5px}ks-page-footer .links{display:-ms-flexbox;display:flex;-ms-flex-pack:start;justify-content:flex-start;min-height:100px}ks-page-footer .newsletter{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-flow:column nowrap;flex-flow:column nowrap;text-align:center;padding:0 0 0 30px;-ms-flex-negative:0;flex-shrink:0}ks-page-footer .newsletter>div{font-family:var(--font-emphasis)}ks-page-footer .newsletter>div:last-of-type{font-size:48px;line-height:40px;font-weight:700;margin:5px 0 20px 0}ks-page-footer .newsletter ks-button{width:100%}ks-page-footer .portals{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;padding:20px;border-top:solid 1px #2b2b2b}ks-page-footer .portals>div{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;padding:10px}ks-page-footer .separator{width:1px;height:35px;margin:0 20px;background-color:#2b2b2b}ks-page-footer .software{background-color:var(--footer-color-darker);color:var(--footer-text-color-darker);font-size:13px;text-align:center;padding:10px}ks-page-footer .software>a{color:var(--footer-text-color-darker)}@media only screen and (max-width: 1060px){ks-page-footer .about{-ms-flex-direction:column;flex-direction:column;padding:50px 30px 40px 30px}ks-page-footer .contact{max-width:220px}ks-page-footer .links{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center}ks-page-footer .newsletter{margin-top:40px;padding:40px 0 0 0;border-top:solid 1px #2b2b2b}ks-page-footer .newsletter ks-button{max-width:290px}}@media only screen and (max-width: 640px){ks-page-footer .about{-ms-flex-direction:column;flex-direction:column;padding:30px}ks-page-footer .links{margin-top:0px;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;text-align:center}ks-page-footer .links>*{margin-top:40px;margin-right:0px;padding:0}ks-page-footer .newsletter>div{font-size:14px}ks-page-footer .newsletter>div:last-of-type{font-size:40px;margin-bottom:10px}}";
 
 class PageFooter {
@@ -30297,6 +30635,103 @@ class PageFooter {
     "$flags$": 0,
     "$tagName$": "ks-page-footer",
     "$members$": undefined,
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const guide = createStore({});
+
+const guideCss = "ks-page-guide{display:block;background-color:#f2f2f2}ks-page-guide .text{max-width:1000px;padding:20px;margin:auto}ks-page-guide .dialog{max-width:1000px;width:100%;padding:20px;margin:auto;-webkit-box-sizing:border-box;box-sizing:border-box;background-color:#ffffff;border:1px solid #e9e9e9;border-radius:10px}ks-page-guide .dialog .buttons{display:-ms-flexbox;display:flex;-ms-flex-pack:end;justify-content:flex-end;gap:10px;margin-top:10px}ks-page-guide .dialog .choices{display:-ms-flexbox;display:flex;gap:10px;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-page-guide .dialog .choice{width:100%;max-width:215px;background-color:#f2f2f2;border-radius:10px;overflow:hidden;position:relative;padding:8px;cursor:pointer}ks-page-guide .dialog .choice ks-img3{height:140px;border-radius:10px;overflow:hidden}ks-page-guide .dialog .choice .description{width:100%;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:center;justify-content:center}ks-page-guide .dialog .choice h3{font-size:17px}ks-page-guide .dialog .choice h3,ks-page-guide .dialog .choice p{padding:10px;margin:0}ks-page-guide .dialog .choice .select{position:absolute;top:4px;right:4px;width:35px;height:35px;background-color:#f2f2f2;border-radius:35px 0 35px 35px}ks-page-guide .dialog .choice .select::before{content:\"\";display:block;width:25px;height:25px;position:absolute;right:5px;top:5px;border-radius:25px;border:1px solid #818181;-webkit-box-sizing:border-box;box-sizing:border-box}ks-page-guide .dialog .choice.active .select::after{content:\"\";display:block;width:17px;height:17px;position:absolute;right:9px;top:9px;border-radius:17px;background-color:#212121}ks-page-guide .dialog .choices.multiple .choice .select{border-radius:0 0 0 8px;top:8px;right:8px;width:30px;height:30px}ks-page-guide .dialog .choices.multiple .choice .select::before{right:0px;top:0px;border-radius:5px}ks-page-guide .dialog .choices.multiple .select::after{right:4px;top:4px;border-radius:3px}ks-page-guide .dialog .navigation{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;margin-bottom:10px}ks-page-guide .dialog .navigation .breadcrumbs{display:-ms-flexbox;display:flex;gap:5px}ks-page-guide .dialog .navigation .breadcrumbs>*{background-color:#dddddd;padding:5px 10px;border-radius:7px;cursor:pointer}ks-page-guide .products{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;-ms-flex-pack:center;justify-content:center;gap:10px;max-width:800px;width:100%;margin:20px auto 0 auto;padding:0 10px;-webkit-box-sizing:border-box;box-sizing:border-box}ks-page-guide .products .product{position:relative;max-width:350px;-ms-flex:1 1 260px;flex:1 1 260px}ks-page-guide .products .product ks-product-card{width:100%;margin-bottom:10px}ks-page-guide .products .product .condition{padding:5px 0}ks-page-guide .products .product .condition ks-icon{margin-right:5px}ks-page-guide .products .product .best{position:absolute;z-index:1;top:10px;left:-5px;background-color:#151515;color:#ffffff;padding:5px 15px;border-radius:5px}ks-page-guide .dialog .choice,ks-page-guide .dialog .navigation .breadcrumbs>*{-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease;opacity:1}ks-page-guide .dialog .navigation .breadcrumbs>*:hover{opacity:0.8}ks-page-guide .dialog .choice:hover{opacity:0.95}ks-page-guide .dialog .choice:hover,ks-page-guide .dialog .navigation .breadcrumbs>*:active{opacity:0.7}@media screen and (max-width: 1010px){ks-page-guide .dialog .choices .choice{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;width:100%;max-width:100%}ks-page-guide .dialog .choice ks-img3{height:50px;width:80px}ks-page-guide .dialog .choice ks-img3.large{height:80px;width:80px}ks-page-guide .dialog .choices .choice .select{position:relative;top:0;right:0}ks-page-guide .dialog .choices.multiple .choice .select{position:relative;top:2.5px}ks-page-guide .product .condition{font-size:14px;padding:2px 0}ks-page-guide .product .condition ks-icon{-webkit-transform:scale(0.9);transform:scale(0.9);margin:0}}";
+
+class PageGuide {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.skipbase = undefined;
+    this.commonData = undefined;
+    this.commonDynamicData = undefined;
+    this.guideData = undefined;
+    this.active = 0;
+    this.choices = [];
+  }
+  componentWillLoad() {
+    const guideDataElement = document.getElementById(this.guideData);
+    const guideData = JSON.parse(guideDataElement.innerHTML);
+    Object.keys(guideData).map(key => {
+      guide.set(key, guideData[key]);
+    });
+  }
+  selectChoice(category, choice) {
+    var _a, _b, _c, _d;
+    let choices = this.choices;
+    const id = (_a = choice === null || choice === void 0 ? void 0 : choice.id) !== null && _a !== void 0 ? _a : null;
+    const multiple = (_c = (_b = guide.get("dialog")) === null || _b === void 0 ? void 0 : _b[category]) === null || _c === void 0 ? void 0 : _c.multiple;
+    console.log(multiple);
+    if (((_d = this.choices) === null || _d === void 0 ? void 0 : _d[category]) !== undefined && this.choices.length == category + 1) {
+      if (multiple) {
+        const pos = choices[category].indexOf(id);
+        if (pos != -1)
+          choices[category].splice(pos, 1);
+        else
+          choices[category].push(id);
+      }
+      else
+        choices[category] = [id];
+    }
+    else if (this.choices.length == category)
+      choices = [...choices, [id]];
+    else if (this.choices.length > category)
+      choices = [...choices.slice(0, category), [id]];
+    else {
+      choices = [];
+      this.active = 0;
+    }
+    this.choices = [...choices];
+    if (choice == null)
+      this.nextCategory();
+  }
+  selectCategory(category) {
+    if (guide.get("dialog").length > category)
+      this.active = category;
+  }
+  async nextCategory() {
+    const data = await jsonfetch(guide.get("api"), {
+      "choices": this.choices,
+      "categories": guide.get("dialog").map(item => item.id)
+    });
+    const guideData = await (data === null || data === void 0 ? void 0 : data.json());
+    if (guideData) {
+      guide.set("dialog", guideData === null || guideData === void 0 ? void 0 : guideData.dialog);
+      guide.set("products", guideData === null || guideData === void 0 ? void 0 : guideData.products);
+    }
+    this.selectCategory(this.active + 1);
+  }
+  render() {
+    var _a;
+    const dialog = guide.get("dialog");
+    const products = guide.get("products");
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("div", { class: "text" }, hAsync("h1", null, "Pralki i suszarki \u2013 znajd\u017A dla siebie odpowiednie urz\u0105dzenie."), hAsync("p", null, "Chcesz kupi\u0107 now\u0105 pralk\u0119 lub suszark\u0119, ale nie wiesz, od czego zacz\u0105\u0107? Skorzystaj z naszego poradnika zakupowego, aby znale\u017A\u0107 urz\u0105dzenie odpowiadaj\u0105ce Twoim potrzebom i oczekiwaniom. Wystarczy odpowiedzie\u0107 na kilka kr\u00F3tkich pyta\u0144.")), hAsync("div", { class: "dialog" }, hAsync("div", { class: "navigation" }, hAsync("div", { class: "breadcrumbs" }, dialog.slice(0, Math.max(this.choices.length, this.active + 1)).map((category, index) => hAsync("div", { onClick: () => this.selectCategory(index) }, category.name))), hAsync("div", null, this.active + 1, " z ", dialog.length)), hAsync("h2", null, dialog[this.active].heading), hAsync("div", { class: ["choices", dialog[this.active].multiple ? "multiple" : null].join(" ") }, dialog[this.active].choices.map(choice => {
+      var _a, _b;
+      return hAsync("div", { class: ["choice", ((_b = (_a = this.choices) === null || _a === void 0 ? void 0 : _a[this.active]) === null || _b === void 0 ? void 0 : _b.includes(choice.id)) ? "active" : null].join(" "), onClick: () => this.selectChoice(this.active, choice) }, hAsync("ks-img3", { fit: 'cover', image: choice.image, class: choice.description ? "large" : null }), hAsync("div", { class: "description" }, hAsync("h3", null, choice.name), choice.description ? hAsync("p", null, choice.description) : null), hAsync("div", { class: "select" }));
+    })), hAsync("div", { class: "buttons" }, hAsync("ks-button", { round: true, border: true, name: "Nie mam preferencji", onClick: () => this.selectChoice(this.active, null) }), ((_a = this.choices) === null || _a === void 0 ? void 0 : _a[this.active]) !== undefined ?
+      hAsync("ks-button", { round: true, name: "Kontynuuj", onClick: () => this.nextCategory() })
+      : null)), products ?
+      hAsync("div", { class: "products" }, products.map((product, index) => hAsync("div", { class: "product" }, index == 0 ? hAsync("div", { class: "best" }, "Najlepszy wyb\u00F3r") : null, hAsync("ks-product-card", { flat: true, linkOnly: true, product: product }), product.conditions.map(category => hAsync("div", { class: "condition" }, hAsync("ks-icon", { name: "check-circle" }), category.category, ": ", category.items.join(", "))))))
+      : null, hAsync("div", { class: "text" }, hAsync("p", null, "Po udzieleniu odpowiedzi na kilka pyta\u0144 dotycz\u0105cych Twoich wymaga\u0144 zwi\u0105zanych z pralk\u0105 lub suszark\u0105, nasz poradnik zakupowy wyszuka dla Ciebie modele, kt\u00F3re b\u0119d\u0105 najlepiej odpowiada\u0107 Twoim indywidualnym potrzebom."), hAsync("p", null, "\u2022 Kt\u00F3re urz\u0105dzenie ma pojemno\u015B\u0107 odpowiedni\u0105 dla Twojego domu? Oferujemy szeroki wyb\u00F3r suszarek, pralek i pralko-suszarek, kt\u00F3re sprostaj\u0105 ka\u017Cdemu wyzwaniu zwi\u0105zanemu z praniem \u2013 niezale\u017Cnie od jego wielko\u015Bci."), hAsync("p", null, "\u2022 Jaki typ pralki lub suszarki jest odpowiedni dla Twojego domu? Czy to pralka i suszarka w s\u0142upku, urz\u0105dzenie do zabudowy, podbudowy czy wolnostoj\u0105ce \u2013 oferujemy modele do ka\u017Cdej przestrzeni. Aby korzystanie z pralki nie sta\u0142o si\u0119 przykrym obowi\u0105zkiem."), hAsync("p", null, "\u2022 Jakie funkcje i specyfikacje s\u0105 dla Ciebie wa\u017Cne? Nasze pralki i suszarki s\u0105 dost\u0119pne w wielu opcjach r\u00F3\u017Cni\u0105cych si\u0119 cyklem prania, klas\u0105 efektywno\u015Bci energetycznej, ilo\u015Bci\u0105 obrot\u00F3w wirowania i maksymaln\u0105 wielko\u015Bci\u0105 za\u0142adunku. Pomo\u017Cemy Ci wybra\u0107 odpowiednie dla Ciebie urz\u0105dzenie. Robienie prania stanie si\u0119 dziecinnie proste.")));
+  }
+  static get style() { return guideCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-page-guide",
+    "$members$": {
+      "skipbase": [4],
+      "commonData": [1, "common-data"],
+      "commonDynamicData": [1, "common-dynamic-data"],
+      "guideData": [1, "guide-data"],
+      "active": [32],
+      "choices": [32]
+    },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": []
@@ -30438,7 +30873,7 @@ class PageListing {
         hAsync("ks-filtering", { "base-url": navigation.base, query: query, filters: filters })
         : null, hAsync("ks-sorting", { post: navigation.paginationBase, current: listing.get('sorting') }), hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.paginationBase, pattern: navigation.pattern }))
       : null, (products === null || products === void 0 ? void 0 : products.length) > 0 ?
-      hAsync("ks-product-container", null, products.map(card => hAsync("ks-product-card", { product: card })))
+      hAsync("ks-product-container", null, products.map(card => hAsync("ks-product-card", { product: card, flat: true, compare: listing.get("compare") })))
       :
         hAsync("ks-nocontent", { "link-name": strings.noContentHome, "back-name": strings.noContentBack }, hAsync("h1", null, listing.get('noContentHeading')), hAsync("p", null, listing.get('noContentMessage'))), navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 ?
       hAsync("ks-listing-navigation", { products: navigation.products }, hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.paginationBase, pattern: navigation.pattern }))
@@ -30450,7 +30885,7 @@ class PageListing {
         : null)
       : !query && navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 && review ?
         hAsync("ks-content-reviews", { content: review })
-        : null);
+        : null, listing.get("compare") ? hAsync("ks-compare-popup", null) : null);
   }
   static get style() { return listingCss; }
   static get cmpMeta() { return {
@@ -30652,6 +31087,8 @@ class PageProduct {
       hAsync("ks-product-tooltip", { message: recycle.message }, hAsync("ks-product-attribute", { icon: "recycle" }, recycle.shortMessage))
       : null, (installments === null || installments === void 0 ? void 0 : installments.attributeMessage) ?
       hAsync("ks-product-attribute", { icon: "dollar-sign" }, installments === null || installments === void 0 ? void 0 : installments.attributeMessage)
+      : null, product.get("energy") && product.get("energyLabel") ?
+      hAsync("ks-product-image-popup", { image: product.get("energyLabel") }, hAsync("ks-product-attribute", { energy: product.get("energy") }, "Klasa energetyczna"))
       : null, model || ean ?
       hAsync("ks-product-attribute", { style: { marginTop: "15px" }, icon: "file", faded: true }, hAsync("span", { style: { marginRight: "15px" } }, model ? hAsync("span", { style: { marginRight: "7px" } }, strings.model, " ", model, " ") : null, ean ? hAsync("span", null, strings.ean, " ", ean) : null))
       : null, hAsync("div", { class: "buttons" }, product.get('negotiateEnabled') ?
@@ -31047,20 +31484,24 @@ class ProductAdmin {
   }; }
 }
 
-const productAttributeCss = "ks-product-attribute{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;margin:5px 0px;font-family:var(--font-emphasis);font-size:15px;line-height:15px}ks-product-attribute[danger]{color:var(--color-secondary);font-weight:700;-webkit-animation:blink 1.5s ease-in-out infinite;animation:blink 1.5s ease-in-out infinite}ks-product-attribute[emphasis]{color:var(--color-secondary);font-weight:700}ks-product-attribute[faded]{color:var(--color-faded)}ks-product-attribute a{color:inherit !important;text-decoration:none !important}ks-product-attribute ks-icon{margin-right:10px}ks-product-attribute ks-icon:nth-child(2){margin-left:10px}@media only screen and (max-width: 540px){ks-product-attribute{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;text-align:center;-ms-flex-align:center;align-items:center;margin:5px auto}}@media only screen and (max-width: 405px){ks-product-attribute{max-width:68%}}";
+const productAttributeCss = "ks-product-attribute{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;margin:5px 0px;font-family:var(--font-emphasis);font-size:15px;line-height:15px}ks-product-attribute[danger]{color:var(--color-secondary);font-weight:700;-webkit-animation:blink 1.5s ease-in-out infinite;animation:blink 1.5s ease-in-out infinite}ks-product-attribute[emphasis]{color:var(--color-secondary);font-weight:700}ks-product-attribute[faded]{color:var(--color-faded)}ks-product-attribute a{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;color:inherit !important;text-decoration:none !important}ks-product-attribute ks-icon{margin-right:10px}ks-product-attribute ks-icon:nth-child(2){margin-left:10px}@media only screen and (max-width: 540px){ks-product-attribute{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;text-align:center;-ms-flex-align:center;align-items:center;margin:5px auto}}@media only screen and (max-width: 405px){ks-product-attribute{max-width:68%}}ks-product-attribute .energy{display:-ms-inline-flexbox;display:inline-flex;-ms-flex-align:center;align-items:center;height:30px;-webkit-box-sizing:border-box;box-sizing:border-box;margin-right:5px}ks-product-attribute .energy .letter{border:solid 1px #000000;border-left:none;border-right:none;height:30px;line-height:26px;-webkit-box-sizing:border-box;box-sizing:border-box;font-family:var(--font-emphasis);font-weight:700;font-weight:700;padding:0 7px 2px 12px}ks-product-attribute .energy .range{padding-right:2px;border:solid 1px #000000;border-right:none}ks-product-attribute .energy .range>.triangle{width:0px;height:0px;border-style:solid;border-width:0 4px 4px 4px;border-color:transparent transparent #000000 transparent;-webkit-transform:rotate(0deg);transform:rotate(0deg);margin-left:1px}ks-product-attribute .energy .range div:not(.triangle){margin-left:1.5px;font-size:11px;line-height:12px}ks-product-attribute .energy>.triangle{width:0px;height:0px;border-style:solid;border-width:15px 0 15px 16px;border-color:transparent transparent transparent #000000;position:relative;-webkit-transform:translateX(-1px);transform:translateX(-1px)}ks-product-attribute .energy .inner-triangle{width:0px;height:0px;border-style:solid;border-width:14px 0 14px 15px;border-color:transparent transparent transparent #ffffff;position:absolute;top:-14px;left:-16px}ks-product-attribute[energy=\"A\"] .energy .inner-triangle{border-left-color:#009640}ks-product-attribute[energy=\"B\"] .energy .inner-triangle{border-left-color:#52ae32}ks-product-attribute[energy=\"C\"] .energy .inner-triangle{border-left-color:#c8d400}ks-product-attribute[energy=\"D\"] .energy .inner-triangle{border-left-color:#ffed00}ks-product-attribute[energy=\"E\"] .energy .inner-triangle{border-left-color:#fbba00}ks-product-attribute[energy=\"F\"] .energy .inner-triangle{border-left-color:#ec6608}ks-product-attribute[energy=\"G\"] .energy .inner-triangle{border-left-color:#e30613}ks-product-attribute[energy=\"A\"] .energy>.letter{background-color:#009640;color:#ffffff}ks-product-attribute[energy=\"B\"] .energy>.letter{background-color:#52ae32;color:#ffffff}ks-product-attribute[energy=\"C\"] .energy>.letter{background-color:#c8d400;color:#000000}ks-product-attribute[energy=\"D\"] .energy>.letter{background-color:#ffed00;color:#000000}ks-product-attribute[energy=\"E\"] .energy>.letter{background-color:#fbba00;color:#000000}ks-product-attribute[energy=\"F\"] .energy>.letter{background-color:#ec6608;color:#ffffff}ks-product-attribute[energy=\"G\"] .energy>.letter{background-color:#e30613;color:#ffffff}";
 
 class ProductAttribute {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.href = "";
     this.icon = "";
+    this.energy = null;
     this.size = 1.0;
     this.danger = false;
     this.emphasis = false;
     this.faded = false;
   }
   render() {
-    const content = [
+    const content = this.energy ? [
+      hAsync("div", { class: "energy" }, hAsync("div", { class: "range" }, hAsync("div", null, "A"), hAsync("div", { class: "triangle" }), hAsync("div", null, "G")), hAsync("div", { class: "letter" }, this.energy), hAsync("div", { class: "triangle" }, hAsync("div", { class: "inner-triangle" }))),
+      hAsync("slot", null)
+    ] : [
       hAsync("ks-icon", { name: this.icon, size: this.size }),
       hAsync("slot", null)
     ];
@@ -31075,6 +31516,7 @@ class ProductAttribute {
     "$members$": {
       "href": [1],
       "icon": [1],
+      "energy": [513],
       "size": [2],
       "danger": [516],
       "emphasis": [516],
@@ -31082,7 +31524,7 @@ class ProductAttribute {
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["danger", "danger"], ["emphasis", "emphasis"], ["faded", "faded"]]
+    "$attrsToReflect$": [["energy", "energy"], ["danger", "danger"], ["emphasis", "emphasis"], ["faded", "faded"]]
   }; }
 }
 
@@ -31301,13 +31743,19 @@ function OpenSuggestions(id, name) {
   suggestions.show(id, name);
 }
 
-const productCardCss = "ks-product-card{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:justify;justify-content:space-between;width:100%;text-align:center;background:var(--card-background);color:var(--card-text-color);-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow)}ks-product-card[flat]{border:#ededed 1px solid;border-radius:6px;overflow:hidden;-webkit-box-shadow:none;box-shadow:none}@media (min-width: 360px){ks-product-card{width:calc(50% - 15px)}}@media (min-width: 640px){ks-product-card{width:228px}}ks-product-card .top{display:block;padding:15px 15px 5px 15px;min-height:200px;color:inherit !important;text-decoration:none !important;font-size:14px}ks-product-card ks-img2{height:auto;margin-bottom:5px;max-width:100%}ks-product-card .price>*{display:block;font-family:var(--font-emphasis)}ks-product-card .price .previous{color:#888888;font-size:15px}ks-product-card[squashed] .price .previous{margin-bottom:-6px}ks-product-card .price .current{color:var(--color-secondary);font-weight:bold;font-size:17px}ks-product-card .bottom{display:-ms-flexbox;display:flex;margin-top:10px}ks-product-card .bottom .unavailable,ks-product-card .bottom .link{display:block;width:100%;padding:10px 10px;font-size:.875rem;text-align:center;text-decoration:none;text-transform:none;color:white;background-color:var(--color-secondary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-product-card .bottom .unavailable{color:#252525;background-color:#f1f1f1}ks-product-card .bottom .link:hover{background-color:var(--color-secondary-hover)}ks-product-card .bottom .link:active{background-color:var(--color-secondary-active)}ks-product-card[unavailable] .top,ks-product-card[unavailable] .price{opacity:0.6}ks-product-card[unavailable] .price .current{color:#252525}@media (max-width: 420px){ks-product-card .top{font-size:13px;padding:8px}ks-product-card .price{line-height:18px}}ks-product-card .cart{position:relative;display:block;width:100%;height:100%;min-height:42px;min-width:44px;padding:1px 10px;font-size:.875rem;line-height:40px;text-align:center;text-decoration:none;text-transform:none;font-family:var(--font-regular);outline:none;border:none;border-radius:0px;color:white;background-color:var(--product-card-primary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-product-card .cart:hover{background-color:var(--product-card-primary-hover)}ks-product-card .cart:active{background-color:var(--product-card-primary-active)}ks-product-card .fav{position:relative;display:block;height:100%;min-height:42px;min-width:44px;padding:1px 10px;font-size:.875rem;line-height:40px;text-align:center;text-decoration:none;text-transform:none;outline:none;border:none;border-radius:0px;color:white;background-color:var(--product-card-secondary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-product-card .fav:hover{background-color:var(--product-card-secondary-hover)}ks-product-card .fav:active{background-color:var(--product-card-secondary-active)}ks-product-card .fav .success{display:-ms-flexbox;display:flex;position:absolute;top:0;left:0;width:100%;height:100%;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;background-color:var(--product-card-secondary);-webkit-animation:fade-in 0.2s 1;animation:fade-in 0.2s 1}ks-product-card .shipping{color:#259325;margin-top:5px}ks-product-card .shipping ks-icon{padding:2px;background-color:#259325;border-radius:15px;color:white}ks-product-card .shipping ks-icon svg{stroke-width:2;-webkit-transform:translateY(0.5px);transform:translateY(0.5px)}";
+function add_product_to_comparison(product) {
+  var _a;
+  (_a = document.querySelector('ks-compare-popup')) === null || _a === void 0 ? void 0 : _a.addProduct(product);
+}
+
+const productCardCss = "ks-product-card{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:justify;justify-content:space-between;width:100%;text-align:center;background:var(--card-background);color:var(--card-text-color);-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow)}ks-product-card[flat]{border:#ededed 1px solid;border-radius:6px;overflow:hidden;-webkit-box-shadow:none;box-shadow:none}@media (min-width: 360px){ks-product-card{width:calc(50% - 15px)}}@media (min-width: 640px){ks-product-card{width:228px}}ks-product-card .top{display:block;padding:15px 15px 5px 15px;min-height:200px;color:inherit !important;text-decoration:none !important;font-size:14px}ks-product-card ks-img2{height:auto;margin-bottom:5px;max-width:100%}ks-product-card .price>*{display:block;font-family:var(--font-emphasis)}ks-product-card .price .previous{color:#888888;font-size:15px}ks-product-card[squashed] .price .previous{margin-bottom:-6px}ks-product-card .price .current{color:var(--color-secondary);font-weight:bold;font-size:17px}ks-product-card .bottom{display:-ms-flexbox;display:flex;margin-top:10px}ks-product-card .bottom .unavailable,ks-product-card .bottom .link{display:block;width:100%;padding:10px 10px;font-size:.875rem;text-align:center;text-decoration:none;text-transform:none;color:white;background-color:var(--color-secondary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-product-card .bottom .unavailable{color:#252525;background-color:#f1f1f1}ks-product-card .bottom .link:hover{background-color:var(--color-secondary-hover)}ks-product-card .bottom .link:active{background-color:var(--color-secondary-active)}ks-product-card[unavailable] .top,ks-product-card[unavailable] .price{opacity:0.6}ks-product-card[unavailable] .price .current{color:#252525}@media (max-width: 420px){ks-product-card .top{font-size:13px;padding:8px}ks-product-card .price{line-height:18px}}ks-product-card .cart{position:relative;display:block;width:100%;height:100%;min-height:42px;min-width:44px;padding:1px 10px;font-size:.875rem;line-height:40px;text-align:center;text-decoration:none;text-transform:none;font-family:var(--font-regular);outline:none;border:none;border-radius:0px;color:white;background-color:var(--product-card-primary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-product-card .cart:hover{background-color:var(--product-card-primary-hover)}ks-product-card .cart:active{background-color:var(--product-card-primary-active)}ks-product-card .fav{position:relative;display:block;height:100%;min-height:42px;min-width:44px;padding:1px 9px;font-size:.875rem;line-height:40px;text-align:center;text-decoration:none;text-transform:none;outline:none;border:none;border-radius:0px;color:white;background-color:var(--product-card-secondary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-product-card .fav:hover{background-color:var(--product-card-secondary-hover)}ks-product-card .fav:active{background-color:var(--product-card-secondary-active)}ks-product-card .fav .success{display:-ms-flexbox;display:flex;position:absolute;top:0;left:0;width:100%;height:100%;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;background-color:var(--product-card-secondary);-webkit-animation:fade-in 0.2s 1;animation:fade-in 0.2s 1}ks-product-card .shipping{color:#259325;margin-top:5px}ks-product-card .compare button{-webkit-appearance:none;-moz-appearance:none;appearance:none;border:none;background-color:transparent;margin-top:10px;cursor:pointer;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-product-card .compare button span{margin-right:5px}ks-product-card .compare button ks-icon{line-height:20px}ks-product-card .compare button ks-icon svg{width:20px;height:20px}ks-product-card .compare button:hover{opacity:0.6}ks-product-card .compare button:active{opacity:0.4}ks-product-card .shipping ks-icon{padding:2px;background-color:#259325;border-radius:15px;color:white}ks-product-card .shipping ks-icon svg{stroke-width:2;-webkit-transform:translateY(0.5px);transform:translateY(0.5px)}";
 
 class ProductCard$1 {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.linkOnly = false;
     this.flat = undefined;
+    this.compare = false;
     this.product = undefined;
     this.cartLoading = false;
     this.favLoading = false;
@@ -31339,6 +31787,9 @@ class ProductCard$1 {
     addToCart(this.productShortData, 1)
       .then(() => this.cartLoading = false);
   }
+  add_to_compare() {
+    add_product_to_comparison(this.product);
+  }
   favourites() {
     if (this.favLoading)
       return;
@@ -31369,6 +31820,7 @@ class ProductCard$1 {
       ((_a = this.product) === null || _a === void 0 ? void 0 : _a.shippingMessage) ?
         hAsync("div", { class: "shipping" }, hAsync("ks-icon", { name: "check", size: 0.6 }), " ", this.product.shippingMessage)
         : null,
+      this.compare ? hAsync("div", { class: "compare" }, hAsync("button", { onClick: () => this.add_to_compare() }, hAsync("span", null, "Por\u00F3wnaj"), hAsync("ks-icon", { name: "columns" }))) : null,
       hAsync("div", { class: "bottom" }, this.product.unavailable ? hAsync("a", { href: this.product.link, class: "unavailable" }, translations.unavailable)
         : this.linkOnly ? hAsync("a", { href: this.product.link, class: "link" }, translations.seeMore)
           : [
@@ -31388,6 +31840,7 @@ class ProductCard$1 {
     "$members$": {
       "linkOnly": [4, "link-only"],
       "flat": [516],
+      "compare": [516],
       "product": [16],
       "squashed": [1540],
       "cartLoading": [32],
@@ -31396,7 +31849,7 @@ class ProductCard$1 {
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["flat", "flat"], ["squashed", "squashed"]]
+    "$attrsToReflect$": [["flat", "flat"], ["compare", "compare"], ["squashed", "squashed"]]
   }; }
 }
 
@@ -31588,6 +32041,36 @@ class ProductCount {
     "$flags$": 0,
     "$tagName$": "ks-product-traits",
     "$members$": undefined,
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const productImagePopupCss = "ks-product-image-popup{display:block;cursor:pointer}ks-product-image-popup .content{display:-ms-flexbox;display:flex;-ms-flex-flow:column nowrap;flex-flow:column nowrap;padding:10px;max-width:95vw;max-height:95vh;-webkit-box-sizing:border-box;box-sizing:border-box;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none}ks-product-image-popup .close{position:absolute;top:15px;right:15px;-webkit-backdrop-filter:var(--lightbox-element-filter);backdrop-filter:var(--lightbox-element-filter);background-color:var(--lightbox-element-color);border-radius:100%;padding:5px;cursor:pointer;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;z-index:1000000;transition:var(--transition-background-color),\n                -webkit-transform 0.1s ease;-webkit-transition:var(--transition-background-color),\n                -webkit-transform 0.1s ease;transition:var(--transition-background-color),\n                transform 0.1s ease;transition:var(--transition-background-color),\n                transform 0.1s ease,\n                -webkit-transform 0.1s ease}ks-product-image-popup .close:hover{background-color:var(--lightbox-element-color-hover);-webkit-transform:scale(1.05, 1.05);transform:scale(1.05, 1.05)}ks-product-image-popup .close:active{background-color:var(--lightbox-element-color-active);-webkit-transform:scale(0.95, 0.95);transform:scale(0.95, 0.95)}@media only screen and (max-width: 720px){ks-product-image-popup .content{padding:0}}";
+
+class ProductImagePopup {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.image = undefined;
+  }
+  showLightbox() {
+    this.root.querySelector("ks-overlay").show();
+  }
+  render() {
+    return [
+      hAsync("div", { onClick: () => this.showLightbox() }, hAsync("slot", null)),
+      hAsync("ks-overlay", { dark: true }, hAsync("div", { class: "content" }, hAsync("ks-img3", { image: this.image, fit: 'contain' }), hAsync("div", { class: "close", onClick: () => this.root.querySelector("ks-overlay").hide() }, hAsync("ks-icon", { name: "x", size: 1.2 }))))
+    ];
+  }
+  get root() { return getElement(this); }
+  static get style() { return productImagePopupCss; }
+  static get cmpMeta() { return {
+    "$flags$": 4,
+    "$tagName$": "ks-product-image-popup",
+    "$members$": {
+      "image": [1]
+    },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": []
@@ -33462,6 +33945,7 @@ registerComponents([
   CartSummaryContainer,
   CartTile,
   Comment,
+  ComparePopup,
   Container$1,
   Container,
   ContentAbout,
@@ -33565,7 +34049,9 @@ registerComponents([
   PageArticles,
   PageBase,
   PageCart,
+  PageCompare,
   PageFooter,
+  PageGuide,
   PageHeader,
   PageHome,
   PageListing,
@@ -33587,6 +34073,7 @@ registerComponents([
   ProductContainer,
   ProductCount$1,
   ProductCount,
+  ProductImagePopup,
   ProductImages,
   ProductInfo$1,
   ProductInfo,
