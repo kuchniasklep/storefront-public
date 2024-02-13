@@ -30619,6 +30619,7 @@ class PageCompare {
       this.hidden = [...this.hidden, index];
   }
   same_attributes(attribute, product_ids) {
+    product_ids = product_ids.filter(item => item !== undefined);
     return [...attribute.values()].every((v, _, arr) => v === arr[0]) && attribute.size == product_ids.length;
   }
   same_attributes_in_category(category, product_ids) {
