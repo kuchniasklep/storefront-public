@@ -14724,6 +14724,7 @@ const comparePopupCss = "ks-compare-popup{display:-ms-flexbox;display:flex;-ms-f
 class ComparePopup {
   constructor(hostRef) {
     registerInstance(this, hostRef);
+    this.init = false;
     this.hide = false;
     this.show = false;
     this.extend = true;
@@ -14744,11 +14745,11 @@ class ComparePopup {
   }
   componentWillLoad() {
     if (this.loadCookie())
-      this.showpanel(true);
+      this.showpanel();
   }
   async addProduct(product) {
     let compare = commonDynamic.get("compare");
-    if (this.hide)
+    if (!this.show || this.hide)
       this.showpanel();
     if (!this.extend)
       this.extendpanel();
@@ -14780,12 +14781,19 @@ class ComparePopup {
     commonDynamic.set("compare", []);
     this.updateCookie();
   }
-  async showpanel(init = false) {
+  compare() {
+    const compare = commonDynamic.get("compare");
+    if (compare.length < 2)
+      return;
+    window.location.href = "/porownaj-" + compare.map(item => item.id).join("-") + ".html";
+  }
+  async showpanel() {
     this.show = true;
     this.hide = true;
     setTimeout(() => {
       this.hide = false;
-    }, init ? common.get('cookieDelay') : 100);
+    }, this.init ? common.get('cookieDelay') : 100);
+    this.init = true;
   }
   hidepanel() {
     this.hide = true;
@@ -14805,7 +14813,7 @@ class ComparePopup {
       return hAsync(Host, null);
     const compare = commonDynamic.get("compare");
     return hAsync(Host, { "aria-hidden": this.show ? "false" : "true" }, hAsync("div", { class: "message" }, hAsync("div", { class: "buttons" }, hAsync("ks-button", { round: true, border: true, narrower: true, icon: "x", onClick: () => this.cancel() }), hAsync("p", null, "Por\u00F3wnywanie produkt\u00F3w"), hAsync("ks-button", { round: true, border: true, narrower: true, icon: this.extend ? "chevron-down" : "chevron-up", onClick: () => this.extendpanel() }), this.extend ?
-      hAsync("ks-button", { round: true, narrower: true, name: "Porównaj", onClick: () => this.hidepanel(), disabled: (compare === null || compare === void 0 ? void 0 : compare.length) < 2 })
+      hAsync("ks-button", { round: true, narrower: true, name: "Porównaj", onClick: () => this.compare(), disabled: (compare === null || compare === void 0 ? void 0 : compare.length) < 2 })
       : null)), hAsync("div", { class: "products" }, [0, 1, 2].map(index => hAsync("div", { class: "product" + (compare[index] ? "" : " empty") }, compare[index] ? [
       hAsync("ks-img3", { image: compare[index].image }),
       hAsync("a", { href: compare[index].link }, compare[index].name),
@@ -30530,7 +30538,7 @@ class PageCart {
 
 const compare = createStore({});
 
-const compareCss = "ks-page-compare{display:block;background-color:#ffffff}ks-page-compare .compare-products{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;padding:20px 20px 0px 20px}ks-page-compare .compare-attributes{padding:0px 20px 20px 20px}ks-page-compare .compare-products,ks-page-compare .compare-attributes{width:100%;max-width:1400px;-webkit-box-sizing:border-box;box-sizing:border-box;margin:auto;background-color:white}ks-page-compare .compare-products>*{-ms-flex:1;flex:1}ks-page-compare .compare-products .product{text-align:center;position:relative}ks-page-compare .compare-products .product ks-img3{max-width:120px;margin:auto}ks-page-compare .compare-products .product ks-button{position:absolute;top:0;right:0;opacity:0.3}ks-page-compare .compare-products .add{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}ks-page-compare .compare-products .add ks-button{opacity:0.5}ks-page-compare .compare-products * ks-input-check{margin-top:10px;margin-bottom:0px}ks-page-compare .compare-products * h1{margin:0px}ks-page-compare .compare-products * h2{margin:10px 0px 0px 0px}ks-page-compare .compare-products * p{margin:5px 0px 0px 0px}ks-page-compare .compare-attributes .category{position:relative}ks-page-compare .compare-attributes .category>ks-icon{top:18px;right:15px;position:absolute}ks-page-compare .compare-attributes .category h3{border-bottom:1px solid #e7e7e7;padding:18px 5px;margin-bottom:0px}ks-page-compare .compare-attributes .category.interactable h3{cursor:pointer;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease}ks-page-compare .compare-attributes .category.interactable h3:hover{background-color:#f2f2f2}ks-page-compare .compare-attributes .category.interactable h3:active{background-color:#e6e6e6}ks-page-compare table{width:100%;table-layout:fixed;border-spacing:0px}ks-page-compare table th,ks-page-compare table td{text-align:center;width:25%;padding:5px;border-bottom:1px solid #e7e7e7}ks-page-compare table th{text-align:left;font-family:var(--font-emphasis)}ks-page-compare table tr:nth-child(even) td{background-color:#f2f2f2}ks-page-compare table tr td:not(:last-child),ks-page-compare table tr th:not(:last-child){border-right:1px solid #e7e7e7}ks-page-compare[differences] .identical{display:none}ks-page-compare table.hidden{display:none}@media screen and (max-width: 960px){ks-page-compare .compare-products .product ks-img3{max-width:90px}}@media screen and (max-width: 640px){ks-page-compare .compare-products{display:block;margin-bottom:20px}ks-page-compare .compare-products .product{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;text-align:left}ks-page-compare .compare-products .add{display:block;margin-top:15px}ks-page-compare .compare-products .product .text{width:100%}ks-page-compare .compare-products .product ks-button{position:static}ks-page-compare .compare-products .product ks-img3{max-width:60px;margin:0px 10px 0px 0px}ks-page-compare .compare-attributes .category h3{padding:12px 5px}ks-page-compare .compare-attributes .category>ks-icon{top:12px}ks-page-compare .compare-attributes .category td ks-icon{line-height:15px !important}ks-page-compare .compare-attributes .category td ks-icon svg{stroke-width:3;width:15px;height:15px}ks-page-compare .compare-products .info{width:100%;margin-bottom:20px}ks-page-compare .compare-attributes{padding:0px 10px 10px 10px}ks-page-compare .compare-attributes .category{margin-bottom:20px}ks-page-compare table tr{position:relative}ks-page-compare table th{position:absolute;font-size:12px;width:100%;border-bottom:none;top:2px}ks-page-compare table td{width:33.33%;padding:25px 5px 5px 5px;font-size:14px;border-right:none !important}}@media screen and (max-width: 420px){ks-page-compare .compare-products>div:nth-child(n+4),ks-page-compare table td:nth-child(n+4){display:none}ks-page-compare table td{width:50%}}";
+const compareCss = "ks-page-compare{display:block;background-color:#ffffff}ks-page-compare .compare-products{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;padding:20px 20px 0px 20px}ks-page-compare .compare-attributes{padding:0px 20px 20px 20px}ks-page-compare .compare-products,ks-page-compare .compare-attributes{width:100%;max-width:1400px;-webkit-box-sizing:border-box;box-sizing:border-box;margin:auto;background-color:white}ks-page-compare .compare-products>*{-ms-flex:1;flex:1}ks-page-compare .compare-products .product{text-align:center;position:relative}ks-page-compare .compare-products .product a{color:#151515;text-decoration:none}ks-page-compare .compare-products .product ks-img3{max-width:120px;max-height:120px;margin:auto}ks-page-compare .compare-products .product ks-button{position:absolute;top:0;right:0;opacity:0.3}ks-page-compare .compare-products .add{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}ks-page-compare .compare-products .add ks-button{opacity:0.5}ks-page-compare .compare-products * ks-input-check{margin-top:10px;margin-bottom:0px}ks-page-compare .compare-products * h1{margin:0px}ks-page-compare .compare-products * h2{margin:10px 0px 0px 0px}ks-page-compare .compare-products * p{margin:5px 0px 0px 0px}ks-page-compare .compare-attributes .category{position:relative}ks-page-compare .compare-attributes .category>ks-icon{top:5px;right:15px;position:absolute}ks-page-compare .compare-attributes .category h3{border-bottom:1px solid #e7e7e7;padding:5px;margin-bottom:0px;margin-top:20px;font-weight:700}ks-page-compare .compare-attributes .category.interactable h3{cursor:pointer;-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease}ks-page-compare .compare-attributes .category.interactable h3:hover{background-color:#f2f2f2}ks-page-compare .compare-attributes .category.interactable h3:active{background-color:#e6e6e6}ks-page-compare table{width:100%;table-layout:fixed;border-spacing:0px}ks-page-compare table th,ks-page-compare table td{text-align:center;width:25%;padding:5px;border-bottom:1px solid #e7e7e7}ks-page-compare table th{text-align:left;font-family:var(--font-emphasis)}ks-page-compare table tr:nth-child(even) td{background-color:#f2f2f2}ks-page-compare table tr td:not(:last-child),ks-page-compare table tr th:not(:last-child){border-right:1px solid #e7e7e7}ks-page-compare[differences] .identical{display:none}ks-page-compare table.hidden{display:none}@media screen and (min-width: 960px){ks-page-compare .compare-products{padding:50px 50px 0px 50px}ks-page-compare .compare-attributes{padding:0px 50px 20px 50px}}@media screen and (max-width: 960px){ks-page-compare .compare-products .product ks-img3{max-width:90px}}@media screen and (max-width: 640px){ks-page-compare .compare-products{display:block;margin-bottom:20px}ks-page-compare .compare-products .product a{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;text-align:left}ks-page-compare .compare-products .add{display:block;margin-top:15px}ks-page-compare .compare-products .product .text{width:100%}ks-page-compare .compare-products .product ks-button{position:static}ks-page-compare .compare-products .product ks-img3{max-width:60px;margin:0px 10px 0px 0px}ks-page-compare .compare-attributes .category h3{padding:12px 5px}ks-page-compare .compare-attributes .category>ks-icon{top:12px}ks-page-compare .compare-attributes .category td ks-icon{line-height:15px !important}ks-page-compare .compare-attributes .category td ks-icon svg{stroke-width:3;width:15px;height:15px}ks-page-compare .compare-products .info{width:100%;margin-bottom:20px}ks-page-compare .compare-attributes{padding:0px 10px 10px 10px}ks-page-compare .compare-attributes .category{margin-bottom:20px}ks-page-compare table tr{position:relative}ks-page-compare table th{position:absolute;font-size:12px;width:100%;border-bottom:none;top:2px}ks-page-compare table td{width:33.33%;padding:25px 5px 5px 5px;font-size:14px;border-right:none !important}}@media screen and (max-width: 420px){ks-page-compare .compare-products>div:nth-child(n+4),ks-page-compare table td:nth-child(n+4){display:none}ks-page-compare table td{width:50%}}";
 
 class PageCompare {
   constructor(hostRef) {
@@ -30548,6 +30556,30 @@ class PageCompare {
     Object.keys(compareData).map(key => {
       compare.set(key, compareData[key]);
     });
+  }
+  removeProduct(id) {
+    const index = compare.get("products").findIndex(product => product.id == id);
+    if (index == -1)
+      return;
+    let products = compare.get("products");
+    products.splice(index, 1);
+    compare.set("products", [...products]);
+    this.removeProductCookie(id);
+    if (products.length == 0)
+      this.addProduct();
+    else
+      window.location.href = "/porownaj-" + products.map(item => item.id).join("-") + ".html";
+  }
+  removeProductCookie(id) {
+    const state = JSON.parse(js_cookie.get('product-comparison'));
+    const index = state === null || state === void 0 ? void 0 : state.findIndex(product => product.id == id);
+    if (index == -1)
+      return;
+    state.splice(index, 1);
+    js_cookie.set('product-comparison', JSON.stringify(state), { expires: 60 });
+  }
+  addProduct() {
+    window.location.href = compare.get("addProductLink");
   }
   render() {
     const products = compare.get("products");
@@ -30570,8 +30602,8 @@ class PageCompare {
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("div", { class: "compare-products" }, hAsync("div", { class: "info" }, hAsync("h1", null, "Por\u00F3wnaj modele"), hAsync("ks-input-check", { label: "Poka\u017C tylko r\u00F3\u017Cnice", onChange: e => this.differences = e.target.checked })), product_ids.map(id => {
       const product = products.find(product => product.id == id);
       if (!product)
-        return hAsync("div", { class: "add" }, hAsync("ks-button", { border: true, round: true, icon: "plus" }));
-      return hAsync("div", { class: "product" }, hAsync("ks-img3", { image: product.image, fit: 'contain' }), hAsync("div", { class: "text" }, hAsync("h2", null, product.name), hAsync("p", null, product.description)), hAsync("ks-button", { border: true, round: true, narrower: true, icon: "x" }));
+        return hAsync("div", { class: "add" }, hAsync("ks-button", { border: true, round: true, icon: "plus", onClick: () => this.addProduct() }));
+      return hAsync("div", { class: "product" }, hAsync("a", { href: product.link }, hAsync("ks-img3", { image: product.image, fit: 'contain' }), hAsync("div", { class: "text" }, hAsync("h2", null, product.name), hAsync("p", null, product.description))), hAsync("ks-button", { border: true, round: true, narrower: true, icon: "x", onClick: () => this.removeProduct(product.id) }));
     })), hAsync("div", { class: "compare-attributes" }, hAsync("div", { class: "category" }, hAsync("h3", null, "Informacje Og\u00F3lne"), hAsync("table", null, hAsync("tbody", null, hAsync("tr", null, hAsync("th", null, "Kategoria"), product_ids.map(id => { var _a; return hAsync("td", null, (_a = products.find(product => product.id == id)) === null || _a === void 0 ? void 0 : _a.category); })), hAsync("tr", null, hAsync("th", null, "Cena"), product_ids.map(id => { var _a; return hAsync("td", null, priceFormat((_a = products.find(product => product.id == id)) === null || _a === void 0 ? void 0 : _a.price)); })), hAsync("tr", null, hAsync("th", null, "Czas dostawy"), product_ids.map(id => { var _a; return hAsync("td", null, (_a = products.find(product => product.id == id)) === null || _a === void 0 ? void 0 : _a.shipping); }))))), [...attributes.entries()].map(([category_name, category], index) => hAsync("div", { class: "category interactable " + (this.same_attributes_in_category(category, product_ids) ? "identical " : "") }, hAsync("h3", { onClick: () => this.toggle_hidden(index) }, category_name), hAsync("ks-icon", { name: this.hidden.includes(index) ? "chevron-down" : "chevron-up" }), hAsync("table", { class: (this.hidden.includes(index) ? "hidden" : "") }, hAsync("tbody", null, [...category.entries()].map(([attribute_name, attribute]) => hAsync("tr", { class: this.same_attributes(attribute, product_ids) ? "identical" : "" }, hAsync("th", null, attribute_name), product_ids.map(id => hAsync("td", null, attribute.has(id) ?
       (attribute.get(id) == "true" ?
         hAsync("ks-icon", { name: "check" }) : attribute.get(id)) : "-"))))))))));
