@@ -18811,7 +18811,7 @@ class FeaturedContainer {
   }; }
 }
 
-const filterCss = "ks-filter{display:block;margin-bottom:10px;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none}ks-filter>div{font-family:var(--font-emphasis);font-size:1.1rem}ks-filter>div>ks-icon{float:right}ks-filter .filter-content{display:none;font-size:1rem;padding:10px 0}ks-filter[active] .filter-content{display:block;-webkit-animation:fade-in 0.3s ease 1;animation:fade-in 0.3s ease 1}";
+const filterCss = "ks-filter{display:block;margin-bottom:10px;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none}ks-filter>div{font-family:var(--font-emphasis);font-size:1rem;font-weight:700}ks-filter>div>ks-icon{float:right}ks-filter .filter-content{display:none;font-size:0.9rem;font-weight:500;padding:10px 0}ks-filter[active] .filter-content{display:block;-webkit-animation:fade-in 0.3s ease 1;animation:fade-in 0.3s ease 1}";
 
 class Filter {
   constructor(hostRef) {
@@ -21381,15 +21381,45 @@ class Filtering {
     window.location.href = url;
     return false;
   }
+  transformFilterCategories() {
+    const uncategorized = this.filters.filter(filter => !filter.category);
+    const categorized = this.filters.filter(filter => filter.category);
+    let categorized_map = {};
+    let transformed = [];
+    for (const filter of categorized) {
+      categorized_map[filter.category] = [];
+    }
+    for (const filter of categorized) {
+      categorized_map[filter.category].push(filter);
+    }
+    for (const category in categorized_map) {
+      if (Object.prototype.hasOwnProperty.call(categorized_map, category)) {
+        const element = categorized_map[category];
+        transformed.push({
+          name: category,
+          category: category,
+          active: element.reduce((previous, current) => previous || current.active, false),
+          items: [].concat.apply([], element.map(filter => filter.items.map(item => {
+            if ("content" in item)
+              item.content = filter.name;
+            return item;
+          }))),
+          type: "checkbox"
+        });
+      }
+    }
+    return [...uncategorized, ...transformed];
+  }
   render() {
     const strings = common.get('translations');
     if (!Build.isBrowser)
       return hAsync(Host, null);
+    const filters = this.transformFilterCategories();
     return [
       hAsync("ks-button", { narrow: true, muted: true, border: true, name: strings.filter, left: true, icon: "filter", onClick: () => this.root.querySelector('ks-sidepanel').show() }),
-      hAsync("ks-sidepanel", { left: true }, hAsync("span", { class: "heading" }, strings.filteringHeader), hAsync("form", { method: "POST", action: this.baseUrl }, hAsync("input", { type: "hidden", name: "postget", value: "tak" }), this.query ?
+      hAsync("ks-sidepanel", { left: true, large: true }, hAsync("span", { class: "heading" }, strings.filteringHeader), hAsync("form", { method: "POST", action: this.baseUrl }, hAsync("input", { type: "hidden", name: "postget", value: "tak" }), this.query ?
         hAsync("input", { type: "hidden", name: "szukaj", value: this.query })
-        : null, this.filters.map(filter => (filter === null || filter === void 0 ? void 0 : filter.items.length) > 0 ?
+        : null, filters.map(filter => (filter === null || filter === void 0 ? void 0 : filter.items.length) > 0 ?
         hAsync("ks-filter", { name: filter.name, active: filter.active }, filter.items.map(item => {
           if (filter.type == "checkbox") {
             item = item;
@@ -33529,13 +33559,14 @@ class SeeMore {
   }; }
 }
 
-const sidepanelCss = "ks-sidepanel{display:block;position:absolute}ks-sidepanel .content{position:absolute;z-index:100000;top:0;right:0;bottom:0;-webkit-box-sizing:border-box;box-sizing:border-box;width:320px;height:100%;padding:15px 30px;overflow-y:auto;color:black;background:#ffffff}ks-sidepanel[left] .content{left:0}ks-sidepanel .content .close{position:absolute;top:15px;right:25px;padding:5px;color:#252525;-webkit-transition:color .1s ease-in-out;transition:color .1s ease-in-out;cursor:pointer;border:none;outline:none;background-color:transparent}@media only screen and (max-width: 640px){ks-sidepanel .content{width:300px;padding:20px}ks-sidepanel .content .close{right:15px}}ks-sidepanel .content{-webkit-transform:translateX(100%);transform:translateX(100%);transition:-webkit-transform 0.3s ease;-webkit-transition:-webkit-transform 0.3s ease;transition:transform 0.3s ease;transition:transform 0.3s ease, -webkit-transform 0.3s ease}ks-sidepanel[left] .content{-webkit-transform:translateX(-100%);transform:translateX(-100%)}ks-sidepanel .visible{-webkit-transform:translateX(0%) !important;transform:translateX(0%) !important}ks-sidepanel .hidden{-webkit-transform:translateX(100%);transform:translateX(100%)}ks-sidepanel[left] .hidden{-webkit-transform:translateX(-100%);transform:translateX(-100%)}";
+const sidepanelCss = "ks-sidepanel{display:block;position:absolute}ks-sidepanel .content{position:absolute;z-index:100000;top:0;right:0;bottom:0;-webkit-box-sizing:border-box;box-sizing:border-box;width:320px;height:100%;padding:15px 30px;overflow-y:auto;color:black;background:#ffffff}ks-sidepanel[large] .content{width:400px}ks-sidepanel[left] .content{left:0}ks-sidepanel .content .close{position:absolute;top:15px;right:25px;padding:5px;color:#252525;-webkit-transition:color .1s ease-in-out;transition:color .1s ease-in-out;cursor:pointer;border:none;outline:none;background-color:transparent}@media only screen and (max-width: 640px){ks-sidepanel .content{width:300px;padding:20px}ks-sidepanel[large] .content{width:360px}ks-sidepanel .content .close{right:15px}}@media only screen and (max-width: 400px){ks-sidepanel .content{width:100%}ks-sidepanel[large] .content{width:100%}}ks-sidepanel .content{-webkit-transform:translateX(100%);transform:translateX(100%);transition:-webkit-transform 0.3s ease;-webkit-transition:-webkit-transform 0.3s ease;transition:transform 0.3s ease;transition:transform 0.3s ease, -webkit-transform 0.3s ease}ks-sidepanel[left] .content{-webkit-transform:translateX(-100%);transform:translateX(-100%)}ks-sidepanel .visible{-webkit-transform:translateX(0%) !important;transform:translateX(0%) !important}ks-sidepanel .hidden{-webkit-transform:translateX(100%);transform:translateX(100%)}ks-sidepanel[left] .hidden{-webkit-transform:translateX(-100%);transform:translateX(-100%)}";
 
 Swiper.use([Pagination$2, Thumbs$1]);
 class SidePanel {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.left = undefined;
+    this.large = undefined;
     this.name = "";
     this.message = "";
     this.stack = "";
@@ -33567,6 +33598,7 @@ class SidePanel {
     "$tagName$": "ks-sidepanel",
     "$members$": {
       "left": [516],
+      "large": [516],
       "name": [32],
       "message": [32],
       "stack": [32],
@@ -33576,7 +33608,7 @@ class SidePanel {
     },
     "$listeners$": [[0, "closed", "onClosed"]],
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["left", "left"]]
+    "$attrsToReflect$": [["left", "left"], ["large", "large"]]
   }; }
 }
 
