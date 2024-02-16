@@ -21408,7 +21408,7 @@ class Filtering {
         });
       }
     }
-    return [...uncategorized, ...transformed];
+    return [...transformed, ...uncategorized];
   }
   render() {
     const strings = common.get('translations');
@@ -24560,6 +24560,43 @@ class InfoBanner {
     "$members$": {
       "content": [16],
       "productBanner": [16]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const infoCardsCss = "ks-info-cards{display:block;width:100%;margin:20px auto 0px auto;overflow:hidden}ks-info-cards .swiper{width:100%;height:100%;position:relative;padding-bottom:30px;margin:auto}ks-info-cards .swiper-slide{text-align:center;background:#ffffff;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:start;justify-content:flex-start;-ms-flex-align:start;align-items:flex-start;font-size:15px;width:300px;max-width:100%;height:auto !important;border:#ededed 1px solid;border-radius:6px;overflow:hidden}ks-info-cards .swiper-slide ks-img3{height:200px;width:100%}ks-info-cards .swiper-slide ks-img3 ks-loader{display:none}ks-info-cards .swiper-slide div{padding:15px 10px}ks-info-cards .swiper-pagination{bottom:0px !important}ks-info-cards .swiper-pagination .swiper-pagination-bullet-active{background:#151515}";
+
+Swiper.use([Pagination$2, Thumbs$1]);
+class InfoCards {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.data = undefined;
+  }
+  componentDidLoad() {
+    this.swiper = new Swiper("ks-info-cards .swiper", {
+      grabCursor: true,
+      slidesPerView: "auto",
+      spaceBetween: 24,
+      loop: true,
+      centeredSlides: true,
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+      }
+    });
+  }
+  render() {
+    return hAsync(Host, null, hAsync("div", { class: "swiper" }, hAsync("div", { class: "swiper-wrapper" }, this.data.map(item => hAsync("div", { class: "swiper-slide" }, hAsync("ks-img3", { sync: true, fit: "cover", image: item.image }), hAsync("div", null, item.text)))), hAsync("div", { class: "swiper-pagination" })));
+  }
+  static get style() { return infoCardsCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-info-cards",
+    "$members$": {
+      "data": [16]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
@@ -30928,6 +30965,7 @@ class PageListing {
     const products = listing.get('products');
     const query = listing.get('query');
     const review = listing.get('reviewAverage');
+    const infocards = listing.get('infocards');
     const strings = common.get('translations');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, infoBanner ?
       hAsync("ks-content-info-banner", { content: infoBanner })
@@ -30940,6 +30978,8 @@ class PageListing {
       :
         hAsync("ks-nocontent", { "link-name": strings.noContentHome, "back-name": strings.noContentBack }, hAsync("h1", null, listing.get('noContentHeading')), hAsync("p", null, listing.get('noContentMessage'))), navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 ?
       hAsync("ks-listing-navigation", { products: navigation.products }, hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.paginationBase, pattern: navigation.pattern }))
+      : null, (infocards === null || infocards === void 0 ? void 0 : infocards.length) > 0 ?
+      hAsync("ks-info-cards", { data: infocards })
       : null, bottomDescription || (tags === null || tags === void 0 ? void 0 : tags.length) > 0 ?
       hAsync("ks-listing-footer", { description: bottomDescription }, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 ?
         hAsync("div", { slot: "tags" }, tags.map(crumb => hAsync("a", { href: crumb.link }, crumb.name)))
@@ -31151,7 +31191,7 @@ class PageProduct {
       : null, (installments === null || installments === void 0 ? void 0 : installments.attributeMessage) ?
       hAsync("ks-product-attribute", { icon: "dollar-sign" }, installments === null || installments === void 0 ? void 0 : installments.attributeMessage)
       : null, product.get("energy") && product.get("energyLabel") ?
-      hAsync("ks-product-image-popup", { image: product.get("energyLabel") }, hAsync("ks-product-attribute", { energy: product.get("energy") }, "Klasa energetyczna"))
+      hAsync("ks-product-image-popup", { image: product.get("energyLabel") }, hAsync("ks-product-attribute", { energyOld: product.get("energyOld"), energy: product.get("energy") }, "Klasa energetyczna"))
       : null, model || ean ?
       hAsync("ks-product-attribute", { style: { marginTop: "15px" }, icon: "file", faded: true }, hAsync("span", { style: { marginRight: "15px" } }, model ? hAsync("span", { style: { marginRight: "7px" } }, strings.model, " ", model, " ") : null, ean ? hAsync("span", null, strings.ean, " ", ean) : null))
       : null, hAsync("div", { class: "buttons" }, product.get('negotiateEnabled') ?
@@ -31547,7 +31587,7 @@ class ProductAdmin {
   }; }
 }
 
-const productAttributeCss = "ks-product-attribute{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;margin:5px 0px;font-family:var(--font-emphasis);font-size:15px;line-height:15px}ks-product-attribute[danger]{color:var(--color-secondary);font-weight:700;-webkit-animation:blink 1.5s ease-in-out infinite;animation:blink 1.5s ease-in-out infinite}ks-product-attribute[emphasis]{color:var(--color-secondary);font-weight:700}ks-product-attribute[faded]{color:var(--color-faded)}ks-product-attribute a{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;color:inherit !important;text-decoration:none !important}ks-product-attribute ks-icon{margin-right:10px}ks-product-attribute ks-icon:nth-child(2){margin-left:10px}@media only screen and (max-width: 540px){ks-product-attribute{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;text-align:center;-ms-flex-align:center;align-items:center;margin:5px auto}}@media only screen and (max-width: 405px){ks-product-attribute{max-width:68%}}ks-product-attribute .energy{display:-ms-inline-flexbox;display:inline-flex;-ms-flex-align:center;align-items:center;height:30px;-webkit-box-sizing:border-box;box-sizing:border-box;margin-right:5px}ks-product-attribute .energy .letter{border:solid 1px #000000;border-left:none;border-right:none;height:30px;line-height:26px;-webkit-box-sizing:border-box;box-sizing:border-box;font-family:var(--font-emphasis);font-weight:700;font-weight:700;padding:0 7px 2px 12px}ks-product-attribute .energy .range{padding-right:2px;border:solid 1px #000000;border-right:none}ks-product-attribute .energy .range>.triangle{width:0px;height:0px;border-style:solid;border-width:0 4px 4px 4px;border-color:transparent transparent #000000 transparent;-webkit-transform:rotate(0deg);transform:rotate(0deg);margin-left:1px}ks-product-attribute .energy .range div:not(.triangle){margin-left:1.5px;font-size:11px;line-height:12px}ks-product-attribute .energy>.triangle{width:0px;height:0px;border-style:solid;border-width:15px 0 15px 16px;border-color:transparent transparent transparent #000000;position:relative;-webkit-transform:translateX(-1px);transform:translateX(-1px)}ks-product-attribute .energy .inner-triangle{width:0px;height:0px;border-style:solid;border-width:14px 0 14px 15px;border-color:transparent transparent transparent #ffffff;position:absolute;top:-14px;left:-16px}ks-product-attribute[energy=\"A\"] .energy .inner-triangle{border-left-color:#009640}ks-product-attribute[energy=\"B\"] .energy .inner-triangle{border-left-color:#52ae32}ks-product-attribute[energy=\"C\"] .energy .inner-triangle{border-left-color:#c8d400}ks-product-attribute[energy=\"D\"] .energy .inner-triangle{border-left-color:#ffed00}ks-product-attribute[energy=\"E\"] .energy .inner-triangle{border-left-color:#fbba00}ks-product-attribute[energy=\"F\"] .energy .inner-triangle{border-left-color:#ec6608}ks-product-attribute[energy=\"G\"] .energy .inner-triangle{border-left-color:#e30613}ks-product-attribute[energy=\"A\"] .energy>.letter{background-color:#009640;color:#ffffff}ks-product-attribute[energy=\"B\"] .energy>.letter{background-color:#52ae32;color:#ffffff}ks-product-attribute[energy=\"C\"] .energy>.letter{background-color:#c8d400;color:#000000}ks-product-attribute[energy=\"D\"] .energy>.letter{background-color:#ffed00;color:#000000}ks-product-attribute[energy=\"E\"] .energy>.letter{background-color:#fbba00;color:#000000}ks-product-attribute[energy=\"F\"] .energy>.letter{background-color:#ec6608;color:#ffffff}ks-product-attribute[energy=\"G\"] .energy>.letter{background-color:#e30613;color:#ffffff}";
+const productAttributeCss = "ks-product-attribute{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;margin:5px 0px;font-family:var(--font-emphasis);font-size:15px;line-height:15px}ks-product-attribute[danger]{color:var(--color-secondary);font-weight:700;-webkit-animation:blink 1.5s ease-in-out infinite;animation:blink 1.5s ease-in-out infinite}ks-product-attribute[emphasis]{color:var(--color-secondary);font-weight:700}ks-product-attribute[faded]{color:var(--color-faded)}ks-product-attribute a{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;color:inherit !important;text-decoration:none !important}ks-product-attribute ks-icon{margin-right:10px}ks-product-attribute ks-icon:nth-child(2){margin-left:10px}@media only screen and (max-width: 540px){ks-product-attribute{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;text-align:center;-ms-flex-align:center;align-items:center;margin:5px auto}}@media only screen and (max-width: 405px){ks-product-attribute{max-width:68%}}ks-product-attribute .energy{display:-ms-inline-flexbox;display:inline-flex;-ms-flex-align:center;align-items:center;height:30px;-webkit-box-sizing:border-box;box-sizing:border-box;margin-right:5px}ks-product-attribute .energy .letter{border:solid 1px #000000;border-left:none;border-right:none;height:30px;line-height:26px;-webkit-box-sizing:border-box;box-sizing:border-box;font-family:var(--font-emphasis);font-weight:700;font-weight:700;padding:0 7px 2px 12px}ks-product-attribute .energy .range{padding-right:2px;border:solid 1px #000000;border-right:none}ks-product-attribute .energy .range>.triangle{width:0px;height:0px;border-style:solid;border-width:0 4px 4px 4px;border-color:transparent transparent #000000 transparent;-webkit-transform:rotate(0deg);transform:rotate(0deg);margin-left:1px}ks-product-attribute .energy .range div:not(.triangle){margin-left:1.5px;font-size:11px;line-height:12px}ks-product-attribute .energy>.triangle{width:0px;height:0px;border-style:solid;border-width:15px 0 15px 16px;border-color:transparent transparent transparent #000000;position:relative;-webkit-transform:translateX(-1px);transform:translateX(-1px)}ks-product-attribute .energy .inner-triangle{width:0px;height:0px;border-style:solid;border-width:14px 0 14px 15px;border-color:transparent transparent transparent #ffffff;position:absolute;top:-14px;left:-16px}ks-product-attribute[energy=\"A\"] .energy .inner-triangle{border-left-color:#009640}ks-product-attribute[energy=\"B\"] .energy .inner-triangle{border-left-color:#52ae32}ks-product-attribute[energy=\"C\"] .energy .inner-triangle{border-left-color:#c8d400}ks-product-attribute[energy=\"D\"] .energy .inner-triangle{border-left-color:#ffed00}ks-product-attribute[energy=\"E\"] .energy .inner-triangle{border-left-color:#fbba00}ks-product-attribute[energy=\"F\"] .energy .inner-triangle{border-left-color:#ec6608}ks-product-attribute[energy=\"G\"] .energy .inner-triangle{border-left-color:#e30613}ks-product-attribute[energy=\"A\"] .energy>.letter{background-color:#009640;color:#ffffff}ks-product-attribute[energy=\"B\"] .energy>.letter{background-color:#52ae32;color:#ffffff}ks-product-attribute[energy=\"C\"] .energy>.letter{background-color:#c8d400;color:#000000}ks-product-attribute[energy=\"D\"] .energy>.letter{background-color:#ffed00;color:#000000}ks-product-attribute[energy=\"E\"] .energy>.letter{background-color:#fbba00;color:#000000}ks-product-attribute[energy=\"F\"] .energy>.letter{background-color:#ec6608;color:#ffffff}ks-product-attribute[energy=\"G\"] .energy>.letter{background-color:#e30613;color:#ffffff}ks-product-attribute[energy-old] .energy .range{display:none}ks-product-attribute[energy-old] .energy .letter{border-left:solid 1px #000000}ks-product-attribute[energy-old][energy=\"A+++\"] .energy .inner-triangle{border-left-color:#00a64f}ks-product-attribute[energy-old][energy=\"A++\"] .energy .inner-triangle{border-left-color:#4cbd35}ks-product-attribute[energy-old][energy=\"A+\"] .energy .inner-triangle{border-left-color:#b0d917}ks-product-attribute[energy-old][energy=\"A\"] .energy .inner-triangle{border-left-color:#fff000}ks-product-attribute[energy-old][energy=\"B\"] .energy .inner-triangle{border-left-color:#f8b00a}ks-product-attribute[energy-old][energy=\"C\"] .energy .inner-triangle{border-left-color:#f35c17}ks-product-attribute[energy-old][energy=\"D\"] .energy .inner-triangle{border-left-color:#eb1923}ks-product-attribute[energy-old][energy=\"A+++\"] .energy>.letter{background-color:#00a64f;color:#ffffff}ks-product-attribute[energy-old][energy=\"A++\"] .energy>.letter{background-color:#4cbd35;color:#ffffff}ks-product-attribute[energy-old][energy=\"A+\"] .energy>.letter{background-color:#b0d917;color:#000000}ks-product-attribute[energy-old][energy=\"A\"] .energy>.letter{background-color:#fff000;color:#000000}ks-product-attribute[energy-old][energy=\"B\"] .energy>.letter{background-color:#f8b00a;color:#ffffff}ks-product-attribute[energy-old][energy=\"C\"] .energy>.letter{background-color:#f35c17;color:#ffffff}ks-product-attribute[energy-old][energy=\"D\"] .energy>.letter{background-color:#eb1923;color:#ffffff}";
 
 class ProductAttribute {
   constructor(hostRef) {
@@ -31555,6 +31595,7 @@ class ProductAttribute {
     this.href = "";
     this.icon = "";
     this.energy = null;
+    this.energyOld = false;
     this.size = 1.0;
     this.danger = false;
     this.emphasis = false;
@@ -31580,6 +31621,7 @@ class ProductAttribute {
       "href": [1],
       "icon": [1],
       "energy": [513],
+      "energyOld": [516, "energy-old"],
       "size": [2],
       "danger": [516],
       "emphasis": [516],
@@ -31587,7 +31629,7 @@ class ProductAttribute {
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["energy", "energy"], ["danger", "danger"], ["emphasis", "emphasis"], ["faded", "faded"]]
+    "$attrsToReflect$": [["energy", "energy"], ["energyOld", "energy-old"], ["danger", "danger"], ["emphasis", "emphasis"], ["faded", "faded"]]
   }; }
 }
 
@@ -34053,6 +34095,7 @@ registerComponents([
   Img2,
   Img3,
   InfoBanner,
+  InfoCards,
   InfoMessage,
   InputCheck,
   InputDate,
