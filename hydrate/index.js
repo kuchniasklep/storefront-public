@@ -24567,6 +24567,43 @@ class InfoBanner {
   }; }
 }
 
+const infoCardsCss = "ks-info-cards{display:block;max-width:1200px;width:100%;margin:20px auto 0px auto}ks-info-cards .swiper{width:100%;height:100%;position:relative;padding-bottom:30px;max-width:100%;width:1200px;margin:auto}ks-info-cards .swiper-slide{text-align:center;background:#ffffff;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:start;justify-content:flex-start;-ms-flex-align:start;align-items:flex-start;font-size:15px;width:300px;max-width:100%;height:auto !important;border:#ededed 1px solid;border-radius:6px;overflow:hidden}ks-info-cards .swiper-slide ks-img3{height:200px;width:100%}ks-info-cards .swiper-slide ks-img3 ks-loader{display:none}ks-info-cards .swiper-slide div{padding:15px 10px}ks-info-cards .swiper-pagination{bottom:0px !important}ks-info-cards .swiper-pagination .swiper-pagination-bullet-active{background:#151515}";
+
+Swiper.use([Pagination$2, Thumbs$1]);
+class InfoCards {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.data = undefined;
+  }
+  componentDidLoad() {
+    this.swiper = new Swiper("ks-info-cards .swiper", {
+      grabCursor: true,
+      slidesPerView: "auto",
+      spaceBetween: 24,
+      loop: true,
+      centeredSlides: true,
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+      }
+    });
+  }
+  render() {
+    return hAsync(Host, null, hAsync("div", { class: "swiper" }, hAsync("div", { class: "swiper-wrapper" }, this.data.map(item => hAsync("div", { class: "swiper-slide" }, hAsync("ks-img3", { sync: true, fit: "cover", image: item.image }), hAsync("div", null, item.text)))), hAsync("div", { class: "swiper-pagination" })));
+  }
+  static get style() { return infoCardsCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-info-cards",
+    "$members$": {
+      "data": [16]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
 const infoMessageCss = "ks-info-message[disabled]{display:none}ks-info-message{display:-ms-flexbox;display:flex;overflow:hidden;background-color:var(--color-secondary);color:#ffffff;max-height:100px;-webkit-transition:max-height 0.3s ease;transition:max-height 0.3s ease}ks-info-message[animating]{max-height:0}ks-info-message .content{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;text-align:center;margin:10px;-ms-flex:1;flex:1}ks-info-message .close{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;padding:10px;color:#ffffff;background-color:rgba(0, 0, 0, 0.12);-webkit-transition:background-color 0.3s ease;transition:background-color 0.3s ease}ks-info-message .close:hover{background-color:rgba(0, 0, 0, 0.06)}@media only screen and (max-width: 639px){ks-info-message .content{font-size:13px}}";
 
 class InfoMessage {
@@ -30928,6 +30965,7 @@ class PageListing {
     const products = listing.get('products');
     const query = listing.get('query');
     const review = listing.get('reviewAverage');
+    const infocards = listing.get('infocards');
     const strings = common.get('translations');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, infoBanner ?
       hAsync("ks-content-info-banner", { content: infoBanner })
@@ -30940,6 +30978,8 @@ class PageListing {
       :
         hAsync("ks-nocontent", { "link-name": strings.noContentHome, "back-name": strings.noContentBack }, hAsync("h1", null, listing.get('noContentHeading')), hAsync("p", null, listing.get('noContentMessage'))), navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 ?
       hAsync("ks-listing-navigation", { products: navigation.products }, hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.paginationBase, pattern: navigation.pattern }))
+      : null, (infocards === null || infocards === void 0 ? void 0 : infocards.length) > 0 ?
+      hAsync("ks-info-cards", { data: infocards })
       : null, bottomDescription || (tags === null || tags === void 0 ? void 0 : tags.length) > 0 ?
       hAsync("ks-listing-footer", { description: bottomDescription }, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 ?
         hAsync("div", { slot: "tags" }, tags.map(crumb => hAsync("a", { href: crumb.link }, crumb.name)))
@@ -34055,6 +34095,7 @@ registerComponents([
   Img2,
   Img3,
   InfoBanner,
+  InfoCards,
   InfoMessage,
   InputCheck,
   InputDate,
