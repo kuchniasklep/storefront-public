@@ -30743,16 +30743,40 @@ class PageFooter {
 
 const guide = createStore({});
 
-const guideCss = "ks-page-guide{display:block;background-color:#f2f2f2}ks-page-guide .text{max-width:1000px;padding:20px;margin:auto}ks-page-guide .dialog{max-width:1000px;width:100%;padding:20px;margin:auto;-webkit-box-sizing:border-box;box-sizing:border-box;background-color:#ffffff;border:1px solid #e9e9e9;border-radius:10px}ks-page-guide .dialog .buttons{display:-ms-flexbox;display:flex;-ms-flex-pack:end;justify-content:flex-end;gap:10px;margin-top:10px}ks-page-guide .dialog .choices{display:-ms-flexbox;display:flex;gap:10px;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-page-guide .dialog .choice{width:100%;max-width:215px;background-color:#f2f2f2;border-radius:10px;overflow:hidden;position:relative;padding:8px;cursor:pointer}ks-page-guide .dialog .choice ks-img3{height:140px;border-radius:10px;overflow:hidden}ks-page-guide .dialog .choice .description{width:100%;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:center;justify-content:center}ks-page-guide .dialog .choice h3{font-size:17px}ks-page-guide .dialog .choice h3,ks-page-guide .dialog .choice p{padding:10px;margin:0}ks-page-guide .dialog .choice .select{position:absolute;top:4px;right:4px;width:35px;height:35px;background-color:#f2f2f2;border-radius:35px 0 35px 35px}ks-page-guide .dialog .choice .select::before{content:\"\";display:block;width:25px;height:25px;position:absolute;right:5px;top:5px;border-radius:25px;border:1px solid #818181;-webkit-box-sizing:border-box;box-sizing:border-box}ks-page-guide .dialog .choice.active .select::after{content:\"\";display:block;width:17px;height:17px;position:absolute;right:9px;top:9px;border-radius:17px;background-color:#212121}ks-page-guide .dialog .choices.multiple .choice .select{border-radius:0 0 0 8px;top:8px;right:8px;width:30px;height:30px}ks-page-guide .dialog .choices.multiple .choice .select::before{right:0px;top:0px;border-radius:5px}ks-page-guide .dialog .choices.multiple .select::after{right:4px;top:4px;border-radius:3px}ks-page-guide .dialog .navigation{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;margin-bottom:10px}ks-page-guide .dialog .navigation .breadcrumbs{display:-ms-flexbox;display:flex;gap:5px}ks-page-guide .dialog .navigation .breadcrumbs>*{background-color:#dddddd;padding:5px 10px;border-radius:7px;cursor:pointer}ks-page-guide .products{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;-ms-flex-pack:center;justify-content:center;gap:10px;max-width:800px;width:100%;margin:20px auto 0 auto;padding:0 10px;-webkit-box-sizing:border-box;box-sizing:border-box}ks-page-guide .products .product{position:relative;max-width:350px;-ms-flex:1 1 260px;flex:1 1 260px}ks-page-guide .products .product ks-product-card{width:100%;margin-bottom:10px}ks-page-guide .products .product .condition{padding:5px 0}ks-page-guide .products .product .condition ks-icon{margin-right:5px}ks-page-guide .products .product .best{position:absolute;z-index:1;top:10px;left:-5px;background-color:#151515;color:#ffffff;padding:5px 15px;border-radius:5px}ks-page-guide .dialog .choice,ks-page-guide .dialog .navigation .breadcrumbs>*{-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease;opacity:1}ks-page-guide .dialog .navigation .breadcrumbs>*:hover{opacity:0.8}ks-page-guide .dialog .choice:hover{opacity:0.95}ks-page-guide .dialog .choice:hover,ks-page-guide .dialog .navigation .breadcrumbs>*:active{opacity:0.7}@media screen and (max-width: 1010px){ks-page-guide .dialog .choices .choice{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;width:100%;max-width:100%}ks-page-guide .dialog .choice ks-img3{height:50px;width:80px}ks-page-guide .dialog .choice ks-img3.large{height:80px;width:80px}ks-page-guide .dialog .choices .choice .select{position:relative;top:0;right:0}ks-page-guide .dialog .choices.multiple .choice .select{position:relative;top:2.5px}ks-page-guide .product .condition{font-size:14px;padding:2px 0}ks-page-guide .product .condition ks-icon{-webkit-transform:scale(0.9);transform:scale(0.9);margin:0}}";
+const guideCss = "ks-page-guide{display:block;background-color:#f2f2f2}ks-page-guide .text{max-width:1000px;padding:20px;margin:auto}ks-page-guide .dialog{max-width:1000px;width:100%;padding:20px;margin:auto;-webkit-box-sizing:border-box;box-sizing:border-box;background-color:#ffffff;border:1px solid #e9e9e9;border-radius:10px;overflow:hidden}ks-page-guide .dialog .buttons{display:-ms-flexbox;display:flex;-ms-flex-pack:end;justify-content:flex-end;gap:10px;margin-top:10px}ks-page-guide .dialog .choices{display:-ms-flexbox;display:flex;gap:10px;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-page-guide .dialog .choice{width:100%;max-width:215px;background-color:#f2f2f2;border-radius:10px;overflow:hidden;position:relative;padding:8px;cursor:pointer}ks-page-guide .dialog .choice ks-img3{height:140px;border-radius:10px;overflow:hidden}ks-page-guide .dialog .choice .description{width:100%;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:center;justify-content:center}ks-page-guide .dialog .choice h3{font-size:17px}ks-page-guide .dialog .choice h3,ks-page-guide .dialog .choice p{padding:10px;margin:0}ks-page-guide .dialog .choice .select{position:absolute;top:4px;right:4px;width:35px;height:35px;background-color:#f2f2f2;border-radius:35px 0 35px 35px}ks-page-guide .dialog .choice .select::before{content:\"\";display:block;width:25px;height:25px;position:absolute;right:5px;top:5px;border-radius:25px;border:1px solid #818181;-webkit-box-sizing:border-box;box-sizing:border-box}ks-page-guide .dialog .choice.active .select::after{content:\"\";display:block;width:17px;height:17px;position:absolute;right:9px;top:9px;border-radius:17px;background-color:#212121}ks-page-guide .dialog .choices.multiple .choice .select{border-radius:0 0 0 8px;top:8px;right:8px;width:30px;height:30px}ks-page-guide .dialog .choices.multiple .choice .select::before{right:0px;top:0px;border-radius:5px}ks-page-guide .dialog .choices.multiple .select::after{right:4px;top:4px;border-radius:3px}ks-page-guide .dialog .navigation{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;margin-bottom:10px}ks-page-guide .dialog .navigation .breadcrumbs{display:-ms-flexbox;display:flex;gap:5px}ks-page-guide .dialog .navigation .breadcrumbs>*{background-color:#dddddd;padding:5px 10px;border-radius:7px;cursor:pointer}ks-page-guide .products{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;-ms-flex-pack:center;justify-content:center;gap:10px;width:100%;margin:20px auto 0 auto;padding:0 10px;-webkit-box-sizing:border-box;box-sizing:border-box}ks-page-guide .products .product{position:relative;max-width:300px;-ms-flex:1 1 260px;flex:1 1 260px}ks-page-guide .products .product ks-product-card{width:100%;margin-bottom:10px}ks-page-guide .products .product .condition{padding:5px 0}ks-page-guide .products .product .condition ks-icon{margin-right:5px}ks-page-guide .products .product .best{position:absolute;z-index:1;top:10px;left:-5px;background-color:#151515;color:#ffffff;padding:5px 15px;border-radius:5px}ks-page-guide .summary>div{margin:0 0 10px 0}ks-page-guide .summary>div>div{display:inline-block;background-color:#dddddd;padding:3px 7px;border-radius:5px;margin:0 3px}ks-page-guide .summary ks-button{margin:20px -20px -20px -20px}ks-page-guide .dialog .choice,ks-page-guide .dialog .navigation .breadcrumbs>*{-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease;opacity:1}ks-page-guide .dialog .navigation .breadcrumbs>*:hover{opacity:0.8}ks-page-guide .dialog .choice:hover{opacity:0.95}ks-page-guide .dialog .choice:hover,ks-page-guide .dialog .navigation .breadcrumbs>*:active{opacity:0.7}@media screen and (max-width: 1010px){ks-page-guide .dialog .choices .choice{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;width:100%;max-width:100%}ks-page-guide .dialog .choice ks-img3{height:50px;width:80px}ks-page-guide .dialog .choice ks-img3.large{height:80px;width:80px}ks-page-guide .dialog .choices .choice .select{position:relative;top:0;right:0}ks-page-guide .dialog .choices.multiple .choice .select{position:relative;top:2.5px}ks-page-guide .product .condition{font-size:14px;padding:2px 0}ks-page-guide .product .condition ks-icon{-webkit-transform:scale(0.9);transform:scale(0.9);margin:0}}";
 
 class PageGuide {
   constructor(hostRef) {
     registerInstance(this, hostRef);
+    this.choices_stage = (dialog) => {
+      var _a;
+      return [
+        hAsync("h2", null, dialog[this.active].heading),
+        hAsync("div", { class: ["choices", dialog[this.active].multiple ? "multiple" : null].join(" ") }, dialog[this.active].choices.map(choice => {
+          var _a, _b;
+          return hAsync("div", { class: ["choice", ((_b = (_a = this.choices) === null || _a === void 0 ? void 0 : _a[this.active]) === null || _b === void 0 ? void 0 : _b.includes(choice.id)) ? "active" : null].join(" "), onClick: () => this.selectChoice(this.active, choice) }, hAsync("ks-img3", { fit: 'cover', image: choice.image, class: choice.description ? "large" : null }), hAsync("div", { class: "description" }, hAsync("h3", null, choice.name), choice.description ? hAsync("p", null, choice.description) : null), hAsync("div", { class: "select" }));
+        })),
+        hAsync("div", { class: "buttons" }, hAsync("ks-button", { round: true, border: true, name: "Nie mam preferencji", onClick: () => this.selectChoice(this.active, null) }), ((_a = this.choices) === null || _a === void 0 ? void 0 : _a[this.active]) !== undefined ?
+          hAsync("ks-button", { round: true, name: "Kontynuuj", onClick: () => this.nextCategory() })
+          : null)
+      ];
+    };
+    this.summary_stage = (dialog) => [
+      hAsync("h2", null, "Dzi\u0119kujemy za Twoj\u0105 opini\u0119!"),
+      hAsync("p", null, "Na podstawie Twoich odpowiedzi mo\u017Cemy poleci\u0107 Ci kilka \u015Bwietnych rozwi\u0105za\u0144. Sprawd\u017A je poni\u017Cej."),
+      hAsync("div", { class: "summary" }, dialog === null || dialog === void 0 ? void 0 :
+        dialog.map((category, index) => {
+          var _a, _b;
+          return hAsync("div", null, category.name, ": ", (_b = (_a = this.choices[index]) === null || _a === void 0 ? void 0 : _a.map(id => { var _a; return (_a = category.choices) === null || _a === void 0 ? void 0 : _a.find(choice => choice.id == id).name; })) === null || _b === void 0 ? void 0 :
+            _b.map(name => hAsync("div", null, name)));
+        }), hAsync("ks-button", { name: "Rozpocznij ponownie", icon: "edit-3", onClick: () => this.reset() }))
+    ];
     this.skipbase = undefined;
     this.commonData = undefined;
     this.commonDynamicData = undefined;
     this.guideData = undefined;
     this.active = 0;
+    this.summary = false;
     this.choices = [];
   }
   componentWillLoad() {
@@ -30767,7 +30791,6 @@ class PageGuide {
     let choices = this.choices;
     const id = (_a = choice === null || choice === void 0 ? void 0 : choice.id) !== null && _a !== void 0 ? _a : null;
     const multiple = (_c = (_b = guide.get("dialog")) === null || _b === void 0 ? void 0 : _b[category]) === null || _c === void 0 ? void 0 : _c.multiple;
-    console.log(multiple);
     if (((_d = this.choices) === null || _d === void 0 ? void 0 : _d[category]) !== undefined && this.choices.length == category + 1) {
       if (multiple) {
         const pos = choices[category].indexOf(id);
@@ -30792,8 +30815,17 @@ class PageGuide {
       this.nextCategory();
   }
   selectCategory(category) {
-    if (guide.get("dialog").length > category)
+    if (guide.get("dialog").length > category) {
       this.active = category;
+      this.summary = false;
+    }
+    else
+      this.summary = true;
+  }
+  reset() {
+    this.summary = false;
+    this.active = 0;
+    this.choices = [];
   }
   async nextCategory() {
     const data = await jsonfetch(guide.get("api"), {
@@ -30808,15 +30840,9 @@ class PageGuide {
     this.selectCategory(this.active + 1);
   }
   render() {
-    var _a;
     const dialog = guide.get("dialog");
     const products = guide.get("products");
-    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("div", { class: "text" }, hAsync("h1", null, "Pralki i suszarki \u2013 znajd\u017A dla siebie odpowiednie urz\u0105dzenie."), hAsync("p", null, "Chcesz kupi\u0107 now\u0105 pralk\u0119 lub suszark\u0119, ale nie wiesz, od czego zacz\u0105\u0107? Skorzystaj z naszego poradnika zakupowego, aby znale\u017A\u0107 urz\u0105dzenie odpowiadaj\u0105ce Twoim potrzebom i oczekiwaniom. Wystarczy odpowiedzie\u0107 na kilka kr\u00F3tkich pyta\u0144.")), hAsync("div", { class: "dialog" }, hAsync("div", { class: "navigation" }, hAsync("div", { class: "breadcrumbs" }, dialog.slice(0, Math.max(this.choices.length, this.active + 1)).map((category, index) => hAsync("div", { onClick: () => this.selectCategory(index) }, category.name))), hAsync("div", null, this.active + 1, " z ", dialog.length)), hAsync("h2", null, dialog[this.active].heading), hAsync("div", { class: ["choices", dialog[this.active].multiple ? "multiple" : null].join(" ") }, dialog[this.active].choices.map(choice => {
-      var _a, _b;
-      return hAsync("div", { class: ["choice", ((_b = (_a = this.choices) === null || _a === void 0 ? void 0 : _a[this.active]) === null || _b === void 0 ? void 0 : _b.includes(choice.id)) ? "active" : null].join(" "), onClick: () => this.selectChoice(this.active, choice) }, hAsync("ks-img3", { fit: 'cover', image: choice.image, class: choice.description ? "large" : null }), hAsync("div", { class: "description" }, hAsync("h3", null, choice.name), choice.description ? hAsync("p", null, choice.description) : null), hAsync("div", { class: "select" }));
-    })), hAsync("div", { class: "buttons" }, hAsync("ks-button", { round: true, border: true, name: "Nie mam preferencji", onClick: () => this.selectChoice(this.active, null) }), ((_a = this.choices) === null || _a === void 0 ? void 0 : _a[this.active]) !== undefined ?
-      hAsync("ks-button", { round: true, name: "Kontynuuj", onClick: () => this.nextCategory() })
-      : null)), products ?
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("div", { class: "text" }, hAsync("h1", null, "Pralki i suszarki \u2013 znajd\u017A dla siebie odpowiednie urz\u0105dzenie."), hAsync("p", null, "Chcesz kupi\u0107 now\u0105 pralk\u0119 lub suszark\u0119, ale nie wiesz, od czego zacz\u0105\u0107? Skorzystaj z naszego poradnika zakupowego, aby znale\u017A\u0107 urz\u0105dzenie odpowiadaj\u0105ce Twoim potrzebom i oczekiwaniom. Wystarczy odpowiedzie\u0107 na kilka kr\u00F3tkich pyta\u0144.")), hAsync("div", { class: "dialog" }, hAsync("div", { class: "navigation" }, hAsync("div", { class: "breadcrumbs" }, dialog.slice(0, Math.max(this.choices.length, this.active + 1)).map((category, index) => hAsync("div", { onClick: () => this.selectCategory(index) }, category.name))), hAsync("div", null, this.active + 1, " z ", dialog.length)), this.summary ? this.summary_stage(dialog) : this.choices_stage(dialog)), products && this.active > 0 ?
       hAsync("div", { class: "products" }, products.map((product, index) => hAsync("div", { class: "product" }, index == 0 ? hAsync("div", { class: "best" }, "Najlepszy wyb\u00F3r") : null, hAsync("ks-product-card", { flat: true, linkOnly: true, product: product }), product.conditions.map(category => hAsync("div", { class: "condition" }, hAsync("ks-icon", { name: "check-circle" }), category.category, ": ", category.items.join(", "))))))
       : null, hAsync("div", { class: "text" }, hAsync("p", null, "Po udzieleniu odpowiedzi na kilka pyta\u0144 dotycz\u0105cych Twoich wymaga\u0144 zwi\u0105zanych z pralk\u0105 lub suszark\u0105, nasz poradnik zakupowy wyszuka dla Ciebie modele, kt\u00F3re b\u0119d\u0105 najlepiej odpowiada\u0107 Twoim indywidualnym potrzebom."), hAsync("p", null, "\u2022 Kt\u00F3re urz\u0105dzenie ma pojemno\u015B\u0107 odpowiedni\u0105 dla Twojego domu? Oferujemy szeroki wyb\u00F3r suszarek, pralek i pralko-suszarek, kt\u00F3re sprostaj\u0105 ka\u017Cdemu wyzwaniu zwi\u0105zanemu z praniem \u2013 niezale\u017Cnie od jego wielko\u015Bci."), hAsync("p", null, "\u2022 Jaki typ pralki lub suszarki jest odpowiedni dla Twojego domu? Czy to pralka i suszarka w s\u0142upku, urz\u0105dzenie do zabudowy, podbudowy czy wolnostoj\u0105ce \u2013 oferujemy modele do ka\u017Cdej przestrzeni. Aby korzystanie z pralki nie sta\u0142o si\u0119 przykrym obowi\u0105zkiem."), hAsync("p", null, "\u2022 Jakie funkcje i specyfikacje s\u0105 dla Ciebie wa\u017Cne? Nasze pralki i suszarki s\u0105 dost\u0119pne w wielu opcjach r\u00F3\u017Cni\u0105cych si\u0119 cyklem prania, klas\u0105 efektywno\u015Bci energetycznej, ilo\u015Bci\u0105 obrot\u00F3w wirowania i maksymaln\u0105 wielko\u015Bci\u0105 za\u0142adunku. Pomo\u017Cemy Ci wybra\u0107 odpowiednie dla Ciebie urz\u0105dzenie. Robienie prania stanie si\u0119 dziecinnie proste.")));
   }
@@ -30830,6 +30856,7 @@ class PageGuide {
       "commonDynamicData": [1, "common-dynamic-data"],
       "guideData": [1, "guide-data"],
       "active": [32],
+      "summary": [32],
       "choices": [32]
     },
     "$listeners$": undefined,
