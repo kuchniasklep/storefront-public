@@ -30767,7 +30767,7 @@ class PageGuide {
       hAsync("div", { class: "summary" }, dialog === null || dialog === void 0 ? void 0 :
         dialog.map((category, index) => {
           var _a, _b;
-          return hAsync("div", null, category.name, ": ", (_b = (_a = this.choices[index]) === null || _a === void 0 ? void 0 : _a.map(id => { var _a; return (_a = category.choices) === null || _a === void 0 ? void 0 : _a.find(choice => choice.id == id).name; })) === null || _b === void 0 ? void 0 :
+          return hAsync("div", null, category.name, ": ", (_b = (_a = this.choices[index]) === null || _a === void 0 ? void 0 : _a.map(id => { var _a, _b; return (_b = (_a = category.choices) === null || _a === void 0 ? void 0 : _a.find(choice => choice.id == id)) === null || _b === void 0 ? void 0 : _b.name; })) === null || _b === void 0 ? void 0 :
             _b.map(name => hAsync("div", null, name)));
         }), hAsync("ks-button", { name: "Rozpocznij ponownie", icon: "edit-3", onClick: () => this.reset() }))
     ];
@@ -30826,6 +30826,7 @@ class PageGuide {
     this.summary = false;
     this.active = 0;
     this.choices = [];
+    this.componentWillLoad();
   }
   async nextCategory() {
     const data = await jsonfetch(guide.get("api"), {
@@ -30842,9 +30843,9 @@ class PageGuide {
   render() {
     const dialog = guide.get("dialog");
     const products = guide.get("products");
-    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("div", { class: "text" }, hAsync("h1", null, "Pralki i suszarki \u2013 znajd\u017A dla siebie odpowiednie urz\u0105dzenie."), hAsync("p", null, "Chcesz kupi\u0107 now\u0105 pralk\u0119 lub suszark\u0119, ale nie wiesz, od czego zacz\u0105\u0107? Skorzystaj z naszego poradnika zakupowego, aby znale\u017A\u0107 urz\u0105dzenie odpowiadaj\u0105ce Twoim potrzebom i oczekiwaniom. Wystarczy odpowiedzie\u0107 na kilka kr\u00F3tkich pyta\u0144.")), hAsync("div", { class: "dialog" }, hAsync("div", { class: "navigation" }, hAsync("div", { class: "breadcrumbs" }, dialog.slice(0, Math.max(this.choices.length, this.active + 1)).map((category, index) => hAsync("div", { onClick: () => this.selectCategory(index) }, category.name))), hAsync("div", null, this.active + 1, " z ", dialog.length)), this.summary ? this.summary_stage(dialog) : this.choices_stage(dialog)), products && this.active > 0 ?
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("div", { class: "text" }, hAsync("h1", null, guide.get("heading")), hAsync("p", null, guide.get("description"))), hAsync("div", { class: "dialog" }, hAsync("div", { class: "navigation" }, hAsync("div", { class: "breadcrumbs" }, dialog.slice(0, Math.max(this.choices.length, this.active + 1)).map((category, index) => hAsync("div", { onClick: () => this.selectCategory(index) }, category === null || category === void 0 ? void 0 : category.name))), hAsync("div", null, this.active + 1, " z ", dialog.length)), this.summary ? this.summary_stage(dialog) : this.choices_stage(dialog)), products && this.active > 0 ?
       hAsync("div", { class: "products" }, products.map((product, index) => hAsync("div", { class: "product" }, index == 0 ? hAsync("div", { class: "best" }, "Najlepszy wyb\u00F3r") : null, hAsync("ks-product-card", { flat: true, linkOnly: true, product: product }), product.conditions.map(category => hAsync("div", { class: "condition" }, hAsync("ks-icon", { name: "check-circle" }), category.category, ": ", category.items.join(", "))))))
-      : null, hAsync("div", { class: "text" }, hAsync("p", null, "Po udzieleniu odpowiedzi na kilka pyta\u0144 dotycz\u0105cych Twoich wymaga\u0144 zwi\u0105zanych z pralk\u0105 lub suszark\u0105, nasz poradnik zakupowy wyszuka dla Ciebie modele, kt\u00F3re b\u0119d\u0105 najlepiej odpowiada\u0107 Twoim indywidualnym potrzebom."), hAsync("p", null, "\u2022 Kt\u00F3re urz\u0105dzenie ma pojemno\u015B\u0107 odpowiedni\u0105 dla Twojego domu? Oferujemy szeroki wyb\u00F3r suszarek, pralek i pralko-suszarek, kt\u00F3re sprostaj\u0105 ka\u017Cdemu wyzwaniu zwi\u0105zanemu z praniem \u2013 niezale\u017Cnie od jego wielko\u015Bci."), hAsync("p", null, "\u2022 Jaki typ pralki lub suszarki jest odpowiedni dla Twojego domu? Czy to pralka i suszarka w s\u0142upku, urz\u0105dzenie do zabudowy, podbudowy czy wolnostoj\u0105ce \u2013 oferujemy modele do ka\u017Cdej przestrzeni. Aby korzystanie z pralki nie sta\u0142o si\u0119 przykrym obowi\u0105zkiem."), hAsync("p", null, "\u2022 Jakie funkcje i specyfikacje s\u0105 dla Ciebie wa\u017Cne? Nasze pralki i suszarki s\u0105 dost\u0119pne w wielu opcjach r\u00F3\u017Cni\u0105cych si\u0119 cyklem prania, klas\u0105 efektywno\u015Bci energetycznej, ilo\u015Bci\u0105 obrot\u00F3w wirowania i maksymaln\u0105 wielko\u015Bci\u0105 za\u0142adunku. Pomo\u017Cemy Ci wybra\u0107 odpowiednie dla Ciebie urz\u0105dzenie. Robienie prania stanie si\u0119 dziecinnie proste.")));
+      : null, hAsync("div", { class: "text", innerHTML: marked_umd.marked.parse(guide.get("bottom_description")) }));
   }
   static get style() { return guideCss; }
   static get cmpMeta() { return {
