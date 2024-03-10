@@ -30817,13 +30817,16 @@ class PageGuide {
   selectCategory(category) {
     if (this.choices.length > category)
       this.choices = [...this.choices.slice(0, category)];
-    this.dynamicResults();
     if (guide.get("dialog").length > category) {
       this.active = category;
       this.summary = false;
     }
     else
       this.summary = true;
+    if (this.active == 0)
+      this.componentWillLoad();
+    else
+      this.dynamicResults();
   }
   reset() {
     this.summary = false;
@@ -30848,7 +30851,7 @@ class PageGuide {
   render() {
     const dialog = guide.get("dialog");
     const products = guide.get("products");
-    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("div", { class: "text" }, hAsync("h1", null, guide.get("heading")), hAsync("p", null, guide.get("description"))), hAsync("div", { class: "dialog" }, hAsync("div", { class: "navigation" }, hAsync("div", { class: "breadcrumbs" }, dialog.slice(0, Math.max(this.choices.length, this.active + 1)).map((category, index) => hAsync("div", { onClick: () => this.selectCategory(index) }, category === null || category === void 0 ? void 0 : category.name))), hAsync("div", null, this.active + 1, " z ", dialog.length)), this.summary ? this.summary_stage(dialog) : this.choices_stage(dialog)), products && this.active > 0 ?
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("div", { class: "text" }, hAsync("h1", null, guide.get("heading")), hAsync("p", null, guide.get("description"))), hAsync("div", { class: "dialog" }, hAsync("div", { class: "navigation" }, hAsync("div", { class: "breadcrumbs" }, dialog.slice(0, Math.max(this.choices.length, this.active + 1)).map((category, index) => hAsync("div", { onClick: () => this.selectCategory(index) }, category === null || category === void 0 ? void 0 : category.name))), hAsync("div", null, this.active + 1, " z ", dialog.length)), this.summary ? this.summary_stage(dialog) : this.choices_stage(dialog)), products && (products === null || products === void 0 ? void 0 : products.length) > 0 && this.active > 0 ?
       hAsync("div", { class: "products" }, products === null || products === void 0 ? void 0 : products.map((product, index) => {
         var _a;
         return hAsync("div", { class: "product" }, index == 0 ? hAsync("div", { class: "best" }, "Najlepszy wyb\u00F3r") : null, hAsync("ks-product-card", { flat: true, linkOnly: true, product: product }), (_a = product === null || product === void 0 ? void 0 : product.conditions) === null || _a === void 0 ? void 0 :
