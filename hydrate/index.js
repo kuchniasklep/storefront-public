@@ -30854,7 +30854,7 @@ class PageGuide {
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("div", { class: "text" }, hAsync("h1", null, guide.get("heading")), hAsync("p", null, guide.get("description"))), hAsync("div", { class: "dialog" }, hAsync("div", { class: "navigation" }, hAsync("div", { class: "breadcrumbs" }, dialog.slice(0, Math.max(this.choices.length, this.active + 1)).map((category, index) => hAsync("div", { onClick: () => this.selectCategory(index) }, category === null || category === void 0 ? void 0 : category.name))), hAsync("div", null, this.active + 1, " z ", dialog.length)), this.summary ? this.summary_stage(dialog) : this.choices_stage(dialog)), products && (products === null || products === void 0 ? void 0 : products.length) > 0 && this.active > 0 ?
       hAsync("div", { class: "products" }, products === null || products === void 0 ? void 0 : products.map((product, index) => {
         var _a;
-        return hAsync("div", { class: "product" }, index == 0 ? hAsync("div", { class: "best" }, "Najlepszy wyb\u00F3r") : null, hAsync("ks-product-card", { flat: true, linkOnly: true, product: product }), (_a = product === null || product === void 0 ? void 0 : product.conditions) === null || _a === void 0 ? void 0 :
+        return hAsync("div", { class: "product", key: product.id }, index == 0 ? hAsync("div", { class: "best" }, "Najlepszy wyb\u00F3r") : null, hAsync("ks-product-card", { flat: true, linkOnly: true, product: product }), (_a = product === null || product === void 0 ? void 0 : product.conditions) === null || _a === void 0 ? void 0 :
           _a.map(category => hAsync("div", { class: "condition" }, hAsync("ks-icon", { name: "check-circle" }), category.category, ": ", category.items.join(", "))));
       }))
       : null, hAsync("div", { class: "text", innerHTML: marked_umd.marked.parse(guide.get("bottom_description")) }));
@@ -31958,7 +31958,7 @@ class ProductCard$1 {
     const currentPrice = priceFormat(this.product.currentPrice);
     const previousPrice = priceFormat(this.product.previousPrice);
     return [
-      hAsync("a", { href: this.product.link, "aria-label": this.product.name, class: "top" }, hAsync("ks-img2", { fill: true, limit: true, center: true, src: this.product.image, webp: this.product.webp, width: 280, height: 280, alt: this.product.name }), hAsync("span", null, this.product.name)),
+      hAsync("a", { href: this.product.link, "aria-label": this.product.name, class: "top" }, hAsync("ks-img2", { key: this.product.id, fill: true, limit: true, center: true, src: this.product.image, webp: this.product.webp, width: 280, height: 280, alt: this.product.name }), hAsync("span", null, this.product.name)),
       hAsync("div", { class: "price" }, this.product.previousPrice ?
         hAsync("s", { class: "previous" }, previousPrice)
         : null, hAsync("span", { class: "current" }, currentPrice)),
