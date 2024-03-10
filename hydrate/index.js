@@ -30823,7 +30823,10 @@ class PageGuide {
     }
     else
       this.summary = true;
-    this.dynamicResults();
+    if (this.active == 0)
+      this.componentWillLoad();
+    else
+      this.dynamicResults();
   }
   reset() {
     this.summary = false;
