@@ -30749,7 +30749,7 @@ class PageGuide {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.choices_stage = (dialog) => {
-      var _a, _b, _c, _d;
+      var _a, _b, _c, _d, _e;
       return [
         hAsync("h2", null, (_a = dialog[this.active]) === null || _a === void 0 ? void 0 : _a.heading),
         hAsync("div", { class: ["choices", ((_b = dialog[this.active]) === null || _b === void 0 ? void 0 : _b.multiple) ? "multiple" : null].join(" ") }, (_c = dialog[this.active]) === null || _c === void 0 ? void 0 :
@@ -30757,7 +30757,9 @@ class PageGuide {
             var _a, _b;
             return hAsync("div", { class: ["choice", ((_b = (_a = this.choices) === null || _a === void 0 ? void 0 : _a[this.active]) === null || _b === void 0 ? void 0 : _b.includes(choice.id)) ? "active" : null].join(" "), onClick: () => this.selectChoice(this.active, choice) }, hAsync("ks-img3", { fit: 'cover', image: choice.image, class: choice.description ? "large" : null }), hAsync("div", { class: "description" }, hAsync("h3", null, choice.name), choice.description ? hAsync("p", null, choice.description) : null), hAsync("div", { class: "select" }));
           }), this.loading),
-        hAsync("div", { class: "buttons" }, hAsync("ks-button", { round: true, border: true, name: "Nie mam preferencji", onClick: () => this.selectChoice(this.active, null) }), ((_d = this.choices) === null || _d === void 0 ? void 0 : _d[this.active]) !== undefined ?
+        hAsync("div", { class: "buttons" }, ((_d = dialog[this.active]) === null || _d === void 0 ? void 0 : _d.nopreference) ?
+          hAsync("ks-button", { round: true, border: true, name: "Nie mam preferencji", onClick: () => this.selectChoice(this.active, null) })
+          : null, ((_e = this.choices) === null || _e === void 0 ? void 0 : _e[this.active]) !== undefined ?
           hAsync("ks-button", { round: true, name: "Kontynuuj", onClick: () => this.nextCategory() })
           : null)
       ];
@@ -30767,9 +30769,10 @@ class PageGuide {
       hAsync("p", null, "Na podstawie Twoich odpowiedzi mo\u017Cemy poleci\u0107 Ci kilka \u015Bwietnych rozwi\u0105za\u0144. Sprawd\u017A je poni\u017Cej."),
       hAsync("div", { class: "summary" }, dialog === null || dialog === void 0 ? void 0 :
         dialog.map((category, index) => {
-          var _a, _b;
-          return hAsync("div", null, category.name, ": ", (_b = (_a = this.choices[index]) === null || _a === void 0 ? void 0 : _a.map(id => { var _a, _b; return (_b = (_a = category.choices) === null || _a === void 0 ? void 0 : _a.find(choice => choice.id == id)) === null || _b === void 0 ? void 0 : _b.name; })) === null || _b === void 0 ? void 0 :
-            _b.map(name => hAsync("div", null, name)));
+          var _a, _b, _c, _d;
+          return ((_b = (_a = this.choices) === null || _a === void 0 ? void 0 : _a[index]) === null || _b === void 0 ? void 0 : _b.includes(null)) ? null :
+            hAsync("div", null, category.name, ": ", (_d = (_c = this.choices[index]) === null || _c === void 0 ? void 0 : _c.map(id => { var _a, _b; return (_b = (_a = category.choices) === null || _a === void 0 ? void 0 : _a.find(choice => choice.id == id)) === null || _b === void 0 ? void 0 : _b.name; })) === null || _d === void 0 ? void 0 :
+              _d.map(name => hAsync("div", null, name)));
         }), hAsync("ks-button", { name: "Rozpocznij ponownie", icon: "edit-3", onClick: () => this.reset() }))
     ];
     this.skipbase = undefined;
@@ -30844,8 +30847,7 @@ class PageGuide {
   async dynamicResults() {
     this.loading = true;
     const data = await jsonfetch(guide.get("api"), {
-      "choices": this.choices,
-      "categories": guide.get("dialog").map(item => item.id)
+      "choices": this.choices
     });
     const guideData = await (data === null || data === void 0 ? void 0 : data.json());
     if (guideData) {
@@ -30857,6 +30859,7 @@ class PageGuide {
   render() {
     const dialog = guide.get("dialog");
     const products = guide.get("products");
+    console.log(this.choices);
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("div", { class: "text" }, hAsync("h1", null, guide.get("heading")), hAsync("p", null, guide.get("description"))), hAsync("div", { class: "dialog" }, hAsync("div", { class: "navigation" }, hAsync("div", { class: "breadcrumbs" }, dialog.slice(0, Math.max(this.choices.length, this.active + 1)).map((category, index) => hAsync("div", { onClick: () => this.selectCategory(index) }, category === null || category === void 0 ? void 0 : category.name))), hAsync("div", { class: "back", onClick: () => this.selectCategory(this.active - 1) }, hAsync("ks-icon", { name: "chevron-left" })), hAsync("div", null, this.active + 1, " z ", dialog.length)), this.summary ? this.summary_stage(dialog) : this.choices_stage(dialog)), products && (products === null || products === void 0 ? void 0 : products.length) > 0 && this.active > 0 ?
       hAsync("div", { class: "products" }, products === null || products === void 0 ? void 0 : products.map((product, index) => {
         var _a;
