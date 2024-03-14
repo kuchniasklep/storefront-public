@@ -24570,7 +24570,7 @@ class InfoBanner {
 const infoCardsCss = "ks-info-cards{display:block;width:100%;margin:20px auto 0px auto;overflow:hidden}ks-info-cards .swiper{width:100%;height:100%;position:relative;padding-bottom:30px;margin:auto}ks-info-cards .swiper-slide{text-align:center;background:#ffffff;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:start;justify-content:flex-start;-ms-flex-align:start;align-items:flex-start;font-size:15px;width:300px;max-width:100%;height:auto !important;border:#ededed 1px solid;border-radius:6px;overflow:hidden}ks-info-cards .swiper-slide ks-img3{height:200px;width:100%}ks-info-cards .swiper-slide ks-img3 ks-loader{display:none}ks-info-cards .swiper-slide div{padding:15px 10px}ks-info-cards .swiper-pagination{bottom:0px !important}ks-info-cards .swiper-pagination .swiper-pagination-bullet-active{background:#151515}";
 
 Swiper.use([Pagination$2, Thumbs$1]);
-class InfoCards {
+class InfoCards$1 {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.data = undefined;
@@ -24595,6 +24595,29 @@ class InfoCards {
   static get cmpMeta() { return {
     "$flags$": 0,
     "$tagName$": "ks-info-cards",
+    "$members$": {
+      "data": [16]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const listingInfoCss = "ks-listing-info{display:-ms-flexbox;display:flex;max-width:1200px;background-color:#151515;color:#fbfbfb;margin:20px auto 0 auto;border-radius:10px;overflow:hidden}ks-listing-info .content{padding:20px;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:center;justify-content:center}ks-listing-info ks-img3{max-width:250px}ks-listing-info ks-button>*{background-color:#232323}ks-listing-info h3{font-size:16px;margin-bottom:5px}ks-listing-info p{font-size:14px;margin:0 0 15px 0}@media screen and (max-width: 1200px){ks-listing-info{border-radius:0;margin:0}}@media screen and (max-width: 640px){ks-listing-info p{font-size:13px}}";
+
+class InfoCards {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.data = undefined;
+  }
+  render() {
+    return hAsync(Host, null, hAsync("ks-img3", { image: this.data.image, webp: this.data.webp, width: this.data.width, height: this.data.height, fit: 'cover' }), hAsync("div", { class: "content" }, hAsync("h3", null, this.data.heading), hAsync("p", null, this.data.paragraph), hAsync("ks-button", { narrow: true, round: true, name: this.data.button, link: this.data.link })));
+  }
+  static get style() { return listingInfoCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-listing-info",
     "$members$": {
       "data": [16]
     },
@@ -31035,10 +31058,11 @@ class PageListing {
     const query = listing.get('query');
     const review = listing.get('reviewAverage');
     const infocards = listing.get('infocards');
+    const info = listing.get('info');
     const strings = common.get('translations');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, infoBanner ?
       hAsync("ks-content-info-banner", { content: infoBanner })
-      : null, hAsync("ks-listing-header", { heading: listing.get('title'), breadcrumbs: listing.get('breadcrumbs'), description: listing.get('description'), categories: listing.get('categories'), query: query, autocorrect: listing.get('autocorrect'), theme: listing.get('theme') }), navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 ?
+      : null, hAsync("ks-listing-header", { heading: listing.get('title'), breadcrumbs: listing.get('breadcrumbs'), description: listing.get('description'), categories: listing.get('categories'), query: query, autocorrect: listing.get('autocorrect'), theme: listing.get('theme') }), info ? hAsync("ks-listing-info", { data: info }) : null, navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 ?
       hAsync("ks-listing-navigation", { products: navigation.products }, (filters === null || filters === void 0 ? void 0 : filters.length) > 0 ?
         hAsync("ks-filtering", { "base-url": navigation.base, query: query, filters: filters })
         : null, hAsync("ks-sorting", { post: navigation.paginationBase, current: listing.get('sorting') }), hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.paginationBase, pattern: navigation.pattern }))
@@ -34164,6 +34188,7 @@ registerComponents([
   Img2,
   Img3,
   InfoBanner,
+  InfoCards$1,
   InfoCards,
   InfoMessage,
   InputCheck,
