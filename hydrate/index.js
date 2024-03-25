@@ -30773,18 +30773,18 @@ const guideCss = "ks-page-guide{display:block;background-color:#f2f2f2}ks-page-g
 class PageGuide {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.choices_stage = (dialog) => {
+    this.choices_stage = () => {
       var _a, _b, _c, _d, _e;
       return [
-        hAsync("h2", null, (_a = dialog[this.active]) === null || _a === void 0 ? void 0 : _a.heading),
-        hAsync("div", { class: ["choices", ((_b = dialog[this.active]) === null || _b === void 0 ? void 0 : _b.multiple) ? "multiple" : null].join(" ") }, (_c = dialog[this.active]) === null || _c === void 0 ? void 0 :
+        hAsync("h2", null, (_a = this.activeCategory()) === null || _a === void 0 ? void 0 : _a.heading),
+        hAsync("div", { class: ["choices", ((_b = this.activeCategory()) === null || _b === void 0 ? void 0 : _b.multiple) ? "multiple" : null].join(" ") }, (_c = this.activeCategory()) === null || _c === void 0 ? void 0 :
           _c.choices.map(choice => {
-            var _a, _b;
-            return hAsync("div", { class: ["choice", ((_b = (_a = this.choices) === null || _a === void 0 ? void 0 : _a[this.active]) === null || _b === void 0 ? void 0 : _b.includes(choice.id)) ? "active" : null].join(" "), onClick: () => this.selectChoice(this.active, choice) }, hAsync("ks-img3", { fit: 'cover', image: choice.image, class: choice.description ? "large" : null }), hAsync("div", { class: "description" }, hAsync("h3", null, choice.name), choice.description ? hAsync("p", null, choice.description) : null), hAsync("div", { class: "select" }));
+            var _a;
+            return hAsync("div", { class: ["choice", ((_a = this.activeCategoryChoices()) === null || _a === void 0 ? void 0 : _a.includes(choice.id)) ? "active" : null].join(" "), onClick: () => this.selectChoice(this.active, choice) }, hAsync("ks-img3", { fit: 'cover', image: choice.image, class: choice.description ? "large" : null }), hAsync("div", { class: "description" }, hAsync("h3", null, choice.name), choice.description ? hAsync("p", null, choice.description) : null), hAsync("div", { class: "select" }));
           }), this.loading),
-        hAsync("div", { class: "buttons" }, ((_d = dialog[this.active]) === null || _d === void 0 ? void 0 : _d.nopreference) ?
+        hAsync("div", { class: "buttons" }, ((_d = this.activeCategory()) === null || _d === void 0 ? void 0 : _d.nopreference) ?
           hAsync("ks-button", { round: true, border: true, name: "Nie mam preferencji", onClick: () => this.selectChoice(this.active, null) })
-          : null, ((_e = this.choices) === null || _e === void 0 ? void 0 : _e[this.active]) !== undefined ?
+          : null, ((_e = this.activeCategoryChoices()) === null || _e === void 0 ? void 0 : _e.length) > 0 ?
           hAsync("ks-button", { round: true, name: "Kontynuuj", onClick: () => this.nextCategory() })
           : null)
       ];
@@ -30793,11 +30793,11 @@ class PageGuide {
       hAsync("h2", null, "Dzi\u0119kujemy za Twoj\u0105 opini\u0119!"),
       hAsync("p", null, "Na podstawie Twoich odpowiedzi mo\u017Cemy poleci\u0107 Ci kilka \u015Bwietnych rozwi\u0105za\u0144. Sprawd\u017A je poni\u017Cej."),
       hAsync("div", { class: "summary" }, dialog === null || dialog === void 0 ? void 0 :
-        dialog.map((category, index) => {
-          var _a, _b, _c, _d;
-          return ((_b = (_a = this.choices) === null || _a === void 0 ? void 0 : _a[index]) === null || _b === void 0 ? void 0 : _b.includes(null)) ? null :
-            hAsync("div", null, category.name, ": ", (_d = (_c = this.choices[index]) === null || _c === void 0 ? void 0 : _c.map(id => { var _a, _b; return (_b = (_a = category.choices) === null || _a === void 0 ? void 0 : _a.find(choice => choice.id == id)) === null || _b === void 0 ? void 0 : _b.name; })) === null || _d === void 0 ? void 0 :
-              _d.map(name => hAsync("div", null, name)));
+        dialog.map((category) => {
+          var _a, _b, _c;
+          return ((_a = this.categoryChoices(category.id)) === null || _a === void 0 ? void 0 : _a.includes(null)) ? null :
+            hAsync("div", null, category.name, ": ", (_c = (_b = this.categoryChoices(category.id)) === null || _b === void 0 ? void 0 : _b.map(id => { var _a, _b; return (_b = (_a = category.choices) === null || _a === void 0 ? void 0 : _a.find(choice => choice.id == id)) === null || _b === void 0 ? void 0 : _b.name; })) === null || _c === void 0 ? void 0 :
+              _c.map(name => hAsync("div", null, name)));
         }), hAsync("ks-button", { name: "Rozpocznij ponownie", icon: "edit-3", onClick: () => this.reset() }))
     ];
     this.skipbase = undefined;
@@ -30805,7 +30805,7 @@ class PageGuide {
     this.commonDynamicData = undefined;
     this.guideData = undefined;
     this.loading = false;
-    this.active = 0;
+    this.active = null;
     this.summary = false;
     this.choices = [];
   }
@@ -30815,47 +30815,85 @@ class PageGuide {
     Object.keys(guideData).map(key => {
       guide.set(key, guideData[key]);
     });
+    this.resetActive();
+  }
+  initialCategory() {
+    var _a, _b;
+    return (_b = (_a = guide.get("dialog")) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.id;
+  }
+  resetActive() {
+    this.active = this.initialCategory();
+  }
+  nextCategory() {
+    this.selectCategoryRelative(1);
+  }
+  previousCategory() {
+    this.selectCategoryRelative(-1);
+  }
+  selectCategoryRelative(distance) {
+    var _a;
+    const category = (_a = guide.get("dialog")) === null || _a === void 0 ? void 0 : _a[this.activeIndex() + distance];
+    this.selectCategory(category === null || category === void 0 ? void 0 : category.id);
+  }
+  activeIndex() {
+    return this.index(this.active);
+  }
+  index(category) {
+    var _a;
+    return (_a = guide.get("dialog")) === null || _a === void 0 ? void 0 : _a.findIndex(item => item.id == category);
+  }
+  activeCategory() {
+    return this.category(this.active);
+  }
+  category(category) {
+    var _a;
+    return (_a = guide.get("dialog")) === null || _a === void 0 ? void 0 : _a.find(item => item.id == category);
+  }
+  activeCategoryChoices() {
+    return this.categoryChoices(this.active);
+  }
+  categoryChoices(category) {
+    var _a;
+    return (_a = this.choices.find(item => item.category == category)) === null || _a === void 0 ? void 0 : _a.choices;
   }
   selectChoice(category, choice) {
-    var _a, _b, _c, _d;
+    var _a, _b;
     let choices = this.choices;
     const id = (_a = choice === null || choice === void 0 ? void 0 : choice.id) !== null && _a !== void 0 ? _a : null;
-    const multiple = (_c = (_b = guide.get("dialog")) === null || _b === void 0 ? void 0 : _b[category]) === null || _c === void 0 ? void 0 : _c.multiple;
-    if (((_d = this.choices) === null || _d === void 0 ? void 0 : _d[category]) !== undefined && this.choices.length == category + 1) {
+    const multiple = (_b = this.category(category)) === null || _b === void 0 ? void 0 : _b.multiple;
+    const current = this.choices.find(item => item.category == category);
+    if (current) {
       if (multiple) {
-        const pos = choices[category].indexOf(id);
+        const pos = current.choices.indexOf(id);
         if (pos != -1)
-          choices[category].splice(pos, 1);
+          current.choices.splice(pos, 1);
         else
-          choices[category].push(id);
+          current.choices.push(id);
       }
       else
-        choices[category] = [id];
+        current.choices = [id];
     }
-    else if (this.choices.length == category)
-      choices = [...choices, [id]];
-    else if (this.choices.length > category)
-      choices = [...choices.slice(0, category), [id]];
     else {
-      choices = [];
-      this.active = 0;
+      this.choices.push({
+        category: category,
+        choices: [id]
+      });
     }
     this.choices = [...choices];
     if (choice == null)
       this.nextCategory();
   }
   selectCategory(category) {
-    if (category < 0)
-      return;
-    if (this.choices.length > category)
-      this.choices = [...this.choices.slice(0, category)];
-    if (guide.get("dialog").length > category) {
+    const index = this.index(category);
+    if (index == -1)
+      this.summary = true;
+    else {
+      if (this.choices.length > index)
+        this.choices = [...this.choices.slice(0, index)];
       this.active = category;
       this.summary = false;
     }
-    else
-      this.summary = true;
-    if (this.active == 0)
+    if (this.active == this.initialCategory())
       this.componentWillLoad();
     else
       this.dynamicResults();
@@ -30878,12 +30916,9 @@ class PageGuide {
   }
   reset() {
     this.summary = false;
-    this.active = 0;
+    this.resetActive();
     this.choices = [];
     this.componentWillLoad();
-  }
-  async nextCategory() {
-    this.selectCategory(this.active + 1);
   }
   async dynamicResults() {
     this.loading = true;
@@ -30901,7 +30936,7 @@ class PageGuide {
     const dialog = guide.get("dialog");
     const products = guide.get("products");
     console.log(this.choices);
-    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("div", { class: "content" }, hAsync("div", { class: "text" }, hAsync("h1", null, guide.get("heading")), hAsync("p", null, guide.get("description"))), hAsync("div", { class: "dialog" }, hAsync("div", { class: "navigation" }, hAsync("div", { class: "breadcrumbs" }, dialog.slice(0, Math.max(this.choices.length, this.active + 1)).map((category, index) => hAsync("div", { onClick: () => this.selectCategory(index) }, category === null || category === void 0 ? void 0 : category.name))), hAsync("div", { class: "back", onClick: () => this.selectCategory(this.active - 1) }, hAsync("ks-icon", { name: "chevron-left" })), hAsync("div", null, this.active + 1, " z ", dialog.length)), this.summary ? this.summary_stage(dialog) : this.choices_stage(dialog)), products && (products === null || products === void 0 ? void 0 : products.length) > 0 && this.active > 0 ?
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("div", { class: "content" }, hAsync("div", { class: "text" }, hAsync("h1", null, guide.get("heading")), hAsync("p", null, guide.get("description"))), hAsync("div", { class: "dialog" }, hAsync("div", { class: "navigation" }, hAsync("div", { class: "breadcrumbs" }, dialog.slice(0, Math.max(this.choices.length, this.activeIndex())).map(category => hAsync("div", { onClick: () => this.selectCategory(category.id) }, category === null || category === void 0 ? void 0 : category.name))), hAsync("div", { class: "back", onClick: () => this.previousCategory() }, hAsync("ks-icon", { name: "chevron-left" })), hAsync("div", null, this.activeIndex() + 1, " z ", dialog.length)), this.summary ? this.summary_stage(dialog) : this.choices_stage()), products && (products === null || products === void 0 ? void 0 : products.length) > 0 && this.activeIndex() > 0 ?
       hAsync("div", { class: "products" }, products === null || products === void 0 ? void 0 : products.map((product, index) => {
         var _a;
         return hAsync("div", { class: "product", key: product.id }, index == 0 ? hAsync("div", { class: "best" }, "Najlepszy wyb\u00F3r") : null, hAsync("ks-product-card", { constheight: true, flat: true, linkOnly: true, product: product }), (_a = product === null || product === void 0 ? void 0 : product.conditions) === null || _a === void 0 ? void 0 :
