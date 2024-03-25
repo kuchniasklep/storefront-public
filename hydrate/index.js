@@ -30768,23 +30768,23 @@ class PageFooter {
 
 const guide = createStore({});
 
-const guideCss = "ks-page-guide{display:block;background-color:#f2f2f2}ks-page-guide .text{max-width:1000px;padding:20px;margin:auto}ks-page-guide .dialog{max-width:1000px;width:100%;padding:20px;margin:auto;-webkit-box-sizing:border-box;box-sizing:border-box;background-color:#ffffff;border:1px solid #e9e9e9;border-radius:10px;overflow:hidden}ks-page-guide .dialog .buttons{display:-ms-flexbox;display:flex;-ms-flex-pack:end;justify-content:flex-end;gap:10px;margin-top:10px}ks-page-guide .dialog .choices{display:-ms-flexbox;display:flex;gap:10px;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-page-guide .dialog .choice{width:100%;max-width:215px;background-color:#f2f2f2;border-radius:10px;overflow:hidden;position:relative;padding:8px;cursor:pointer}ks-page-guide .dialog .choice ks-img3{height:140px;border-radius:10px;overflow:hidden}ks-page-guide .dialog .choice .description{width:100%;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:center;justify-content:center}ks-page-guide .dialog .choice h3{font-size:17px;padding:10px 10px 6px 10px;margin:0}ks-page-guide .dialog .choice p{padding:0px 10px 10px 10px;margin:0;font-size:14px}ks-page-guide .dialog .choice .select{position:absolute;top:4px;right:4px;width:35px;height:35px;background-color:#f2f2f2;border-radius:35px 0 35px 35px}ks-page-guide .dialog .choice .select::before{content:\"\";display:block;width:25px;height:25px;position:absolute;right:5px;top:5px;border-radius:25px;border:1px solid #818181;-webkit-box-sizing:border-box;box-sizing:border-box}ks-page-guide .dialog .choice.active .select::after{content:\"\";display:block;width:17px;height:17px;position:absolute;right:9px;top:9px;border-radius:17px;background-color:#212121}ks-page-guide .dialog .choices.multiple .choice .select{border-radius:0 0 0 8px;top:8px;right:8px;width:30px;height:30px}ks-page-guide .dialog .choices.multiple .choice .select::before{right:0px;top:0px;border-radius:5px}ks-page-guide .dialog .choices.multiple .select::after{right:4px;top:4px;border-radius:3px}ks-page-guide .dialog .navigation{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;margin-bottom:10px}ks-page-guide .dialog .navigation .breadcrumbs{display:-ms-flexbox;display:flex;gap:5px}ks-page-guide .dialog .navigation .breadcrumbs>*{background-color:#dddddd;padding:5px 10px;border-radius:7px;cursor:pointer}ks-page-guide .dialog .navigation .back{background-color:#dddddd;padding:5px 10px;border-radius:7px;cursor:pointer}ks-page-guide .products{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;-ms-flex-pack:center;justify-content:center;gap:10px;width:100%;margin:20px auto 0 auto;padding:0 10px;-webkit-box-sizing:border-box;box-sizing:border-box}ks-page-guide .products .product{position:relative;max-width:300px;-ms-flex:1 1 260px;flex:1 1 260px}ks-page-guide .products .product ks-product-card{width:100%;margin-bottom:10px}ks-page-guide .products .product .condition{padding:5px 0;font-size:14px}ks-page-guide .products .product .condition ks-icon{margin-right:5px}ks-page-guide .products .product .best{position:absolute;z-index:1;top:10px;left:-5px;background-color:#151515;color:#ffffff;padding:5px 15px;border-radius:5px}ks-page-guide .summary>div{margin:0 0 10px 0}ks-page-guide .summary>div>div{display:inline-block;background-color:#dddddd;padding:3px 7px;border-radius:5px;margin:2px}ks-page-guide .summary ks-button{margin:20px -20px -20px -20px}ks-page-guide .dialog .choice,ks-page-guide .dialog .navigation .breadcrumbs>*{-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease;opacity:1}ks-page-guide .dialog .navigation .breadcrumbs>*:hover{opacity:0.8}ks-page-guide .dialog .choice:hover{opacity:0.95}ks-page-guide .dialog .choice:hover,ks-page-guide .dialog .navigation .breadcrumbs>*:active{opacity:0.7}ks-page-guide[loading] .dialog .choices,ks-page-guide[loading] .products{opacity:0;-webkit-transition:none;transition:none}ks-page-guide .dialog .choices,ks-page-guide .products{-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-page-guide .dialog .navigation .back{display:none}@media screen and (max-width: 1010px){ks-page-guide .dialog .navigation .breadcrumbs{display:none}ks-page-guide .dialog .navigation .back{display:block}ks-page-guide .dialog .choices .choice{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;width:100%;max-width:100%}ks-page-guide .dialog .choice ks-img3{height:50px;width:80px}ks-page-guide .dialog .choice ks-img3.large{height:80px;width:80px}ks-page-guide .dialog .choices .choice .select{position:relative;top:0;right:0}ks-page-guide .dialog .choices.multiple .choice .select{position:relative;top:2.5px}ks-page-guide .product .condition{padding:2px 0}ks-page-guide .product .condition ks-icon{-webkit-transform:scale(0.9);transform:scale(0.9);margin:0}}@media screen and (min-width: 701px){ks-page-guide .content{padding:0 40px}}";
+const guideCss = "ks-page-guide{display:block;background-color:#f2f2f2}ks-page-guide .text{max-width:1000px;padding:20px;margin:auto}ks-page-guide .dialog{max-width:1000px;width:100%;padding:20px;margin:auto;-webkit-box-sizing:border-box;box-sizing:border-box;background-color:#ffffff;border:1px solid #e9e9e9;border-radius:10px;overflow:hidden}ks-page-guide .dialog .buttons{display:-ms-flexbox;display:flex;-ms-flex-pack:end;justify-content:flex-end;gap:10px;margin-top:10px}ks-page-guide .dialog .choices{display:-ms-flexbox;display:flex;gap:10px;-ms-flex-wrap:wrap;flex-wrap:wrap}ks-page-guide .dialog .choice{width:100%;max-width:215px;background-color:#f2f2f2;border-radius:10px;overflow:hidden;position:relative;padding:8px;cursor:pointer}ks-page-guide .dialog .choice ks-img3{height:140px;border-radius:10px;overflow:hidden}ks-page-guide .dialog .choice .description{width:100%;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:center;justify-content:center}ks-page-guide .dialog .choice h3{font-size:17px;padding:10px 10px 6px 10px;margin:0}ks-page-guide .dialog .choice p{padding:0px 10px 10px 10px;margin:0;font-size:14px}ks-page-guide .dialog .choice .select{position:absolute;top:4px;right:4px;width:35px;height:35px;background-color:#f2f2f2;border-radius:35px 0 35px 35px}ks-page-guide .dialog .choice .select::before{content:\"\";display:block;width:25px;height:25px;position:absolute;right:5px;top:5px;border-radius:25px;border:1px solid #818181;-webkit-box-sizing:border-box;box-sizing:border-box}ks-page-guide .dialog .choice.active .select::after{content:\"\";display:block;width:17px;height:17px;position:absolute;right:9px;top:9px;border-radius:17px;background-color:#212121}ks-page-guide .dialog .choices.multiple .choice .select{border-radius:0 0 0 8px;top:8px;right:8px;width:30px;height:30px}ks-page-guide .dialog .choices.multiple .choice .select::before{right:0px;top:0px;border-radius:5px}ks-page-guide .dialog .choices.multiple .select::after{right:4px;top:4px;border-radius:3px}ks-page-guide .dialog .navigation{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;margin-bottom:10px}ks-page-guide .dialog .navigation .breadcrumbs{display:-ms-flexbox;display:flex;gap:5px}ks-page-guide .dialog .navigation .breadcrumbs>*{background-color:#dddddd;padding:5px 10px;border-radius:7px;cursor:pointer}ks-page-guide .dialog .navigation .back{background-color:#dddddd;padding:5px 10px;border-radius:7px;cursor:pointer}ks-page-guide .products{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;-ms-flex-pack:center;justify-content:center;gap:10px;width:100%;margin:20px auto 0 auto;padding:0 10px;-webkit-box-sizing:border-box;box-sizing:border-box}ks-page-guide .products .product{position:relative;max-width:300px;-ms-flex:1 1 260px;flex:1 1 260px}ks-page-guide .products .product ks-product-card{width:100%;margin-bottom:10px}ks-page-guide .products .product .condition{padding:5px 0;font-size:14px}ks-page-guide .products .product .condition ks-icon{margin-right:5px}ks-page-guide .products .product .best{position:absolute;z-index:1;top:10px;left:-5px;background-color:#151515;color:#ffffff;padding:5px 15px;border-radius:5px}ks-page-guide .summary>div{margin:0 0 10px 0}ks-page-guide .summary>div>div{display:inline-block;background-color:#dddddd;padding:3px 7px;border-radius:5px;margin:2px}ks-page-guide .summary ks-button{margin:20px -20px -20px -20px}ks-page-guide .dialog .choice,ks-page-guide .dialog .navigation .breadcrumbs>*{-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease;opacity:1}ks-page-guide .dialog .navigation .breadcrumbs>*:hover{opacity:0.8}ks-page-guide .dialog .choice:hover{opacity:0.95}ks-page-guide .dialog .choice:hover,ks-page-guide .dialog .navigation .breadcrumbs>*:active{opacity:0.7}ks-page-guide[loading] .dialog .choices,ks-page-guide[loading] .products{opacity:0;-webkit-transition:none;transition:none}ks-page-guide .dialog .choices,ks-page-guide .products{-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-page-guide .dialog .navigation .back{display:none}@media screen and (max-width: 1010px){ks-page-guide .dialog .navigation .breadcrumbs{display:none}ks-page-guide .dialog .navigation .back{display:block}ks-page-guide .dialog .choices .choice{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;width:100%;max-width:100%}ks-page-guide .dialog .choice ks-img3{height:50px;width:80px}ks-page-guide .dialog .choice ks-img3.large{height:80px;width:80px}ks-page-guide .dialog .choices .choice .select{position:relative;top:0;right:0}ks-page-guide .dialog .choices.multiple .choice .select{position:relative;top:2.5px}ks-page-guide .product .condition{padding:2px 0}ks-page-guide .product .condition ks-icon{-webkit-transform:scale(0.9);transform:scale(0.9);margin:0}}@media screen and (min-width: 701px){ks-page-guide>ks-page-base>.content{padding:0 40px}}";
 
 class PageGuide {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.choices_stage = (dialog) => {
+    this.choices_stage = () => {
       var _a, _b, _c, _d, _e;
       return [
-        hAsync("h2", null, (_a = dialog[this.active]) === null || _a === void 0 ? void 0 : _a.heading),
-        hAsync("div", { class: ["choices", ((_b = dialog[this.active]) === null || _b === void 0 ? void 0 : _b.multiple) ? "multiple" : null].join(" ") }, (_c = dialog[this.active]) === null || _c === void 0 ? void 0 :
+        hAsync("h2", null, (_a = this.activeCategory()) === null || _a === void 0 ? void 0 : _a.heading),
+        hAsync("div", { class: ["choices", ((_b = this.activeCategory()) === null || _b === void 0 ? void 0 : _b.multiple) ? "multiple" : null].join(" ") }, (_c = this.activeCategory()) === null || _c === void 0 ? void 0 :
           _c.choices.map(choice => {
-            var _a, _b;
-            return hAsync("div", { class: ["choice", ((_b = (_a = this.choices) === null || _a === void 0 ? void 0 : _a[this.active]) === null || _b === void 0 ? void 0 : _b.includes(choice.id)) ? "active" : null].join(" "), onClick: () => this.selectChoice(this.active, choice) }, hAsync("ks-img3", { fit: 'cover', image: choice.image, class: choice.description ? "large" : null }), hAsync("div", { class: "description" }, hAsync("h3", null, choice.name), choice.description ? hAsync("p", null, choice.description) : null), hAsync("div", { class: "select" }));
+            var _a;
+            return hAsync("div", { class: ["choice", ((_a = this.activeCategoryChoices()) === null || _a === void 0 ? void 0 : _a.includes(choice.id)) ? "active" : null].join(" "), onClick: () => this.selectChoice(this.active, choice) }, hAsync("ks-img3", { fit: 'cover', image: choice.image, class: choice.description ? "large" : null }), hAsync("div", { class: "description" }, hAsync("h3", null, choice.name), choice.description ? hAsync("p", null, choice.description) : null), hAsync("div", { class: "select" }));
           }), this.loading),
-        hAsync("div", { class: "buttons" }, ((_d = dialog[this.active]) === null || _d === void 0 ? void 0 : _d.nopreference) ?
+        hAsync("div", { class: "buttons" }, ((_d = this.activeCategory()) === null || _d === void 0 ? void 0 : _d.nopreference) ?
           hAsync("ks-button", { round: true, border: true, name: "Nie mam preferencji", onClick: () => this.selectChoice(this.active, null) })
-          : null, ((_e = this.choices) === null || _e === void 0 ? void 0 : _e[this.active]) !== undefined ?
+          : null, ((_e = this.activeCategoryChoices()) === null || _e === void 0 ? void 0 : _e.length) > 0 ?
           hAsync("ks-button", { round: true, name: "Kontynuuj", onClick: () => this.nextCategory() })
           : null)
       ];
@@ -30793,11 +30793,11 @@ class PageGuide {
       hAsync("h2", null, "Dzi\u0119kujemy za Twoj\u0105 opini\u0119!"),
       hAsync("p", null, "Na podstawie Twoich odpowiedzi mo\u017Cemy poleci\u0107 Ci kilka \u015Bwietnych rozwi\u0105za\u0144. Sprawd\u017A je poni\u017Cej."),
       hAsync("div", { class: "summary" }, dialog === null || dialog === void 0 ? void 0 :
-        dialog.map((category, index) => {
-          var _a, _b, _c, _d;
-          return ((_b = (_a = this.choices) === null || _a === void 0 ? void 0 : _a[index]) === null || _b === void 0 ? void 0 : _b.includes(null)) ? null :
-            hAsync("div", null, category.name, ": ", (_d = (_c = this.choices[index]) === null || _c === void 0 ? void 0 : _c.map(id => { var _a, _b; return (_b = (_a = category.choices) === null || _a === void 0 ? void 0 : _a.find(choice => choice.id == id)) === null || _b === void 0 ? void 0 : _b.name; })) === null || _d === void 0 ? void 0 :
-              _d.map(name => hAsync("div", null, name)));
+        dialog.map((category) => {
+          var _a, _b, _c;
+          return ((_a = this.categoryChoices(category.id)) === null || _a === void 0 ? void 0 : _a.includes(null)) ? null :
+            hAsync("div", null, category.name, ": ", (_c = (_b = this.categoryChoices(category.id)) === null || _b === void 0 ? void 0 : _b.map(id => { var _a, _b; return (_b = (_a = category.choices) === null || _a === void 0 ? void 0 : _a.find(choice => choice.id == id)) === null || _b === void 0 ? void 0 : _b.name; })) === null || _c === void 0 ? void 0 :
+              _c.map(name => hAsync("div", null, name)));
         }), hAsync("ks-button", { name: "Rozpocznij ponownie", icon: "edit-3", onClick: () => this.reset() }))
     ];
     this.skipbase = undefined;
@@ -30805,7 +30805,7 @@ class PageGuide {
     this.commonDynamicData = undefined;
     this.guideData = undefined;
     this.loading = false;
-    this.active = 0;
+    this.active = null;
     this.summary = false;
     this.choices = [];
   }
@@ -30815,50 +30815,89 @@ class PageGuide {
     Object.keys(guideData).map(key => {
       guide.set(key, guideData[key]);
     });
+    this.resetActive();
+  }
+  initialCategory() {
+    var _a, _b;
+    return (_b = (_a = guide.get("dialog")) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.id;
+  }
+  resetActive() {
+    this.active = this.initialCategory();
+  }
+  nextCategory() {
+    this.selectCategoryRelative(1);
+  }
+  previousCategory() {
+    this.selectCategoryRelative(-1);
+  }
+  selectCategoryRelative(distance) {
+    var _a;
+    const category = (_a = guide.get("dialog")) === null || _a === void 0 ? void 0 : _a[this.activeIndex() + distance];
+    this.selectCategory(category === null || category === void 0 ? void 0 : category.id);
+  }
+  activeIndex() {
+    return this.index(this.active);
+  }
+  index(category) {
+    var _a;
+    return (_a = guide.get("dialog")) === null || _a === void 0 ? void 0 : _a.findIndex(item => item.id == category);
+  }
+  activeCategory() {
+    return this.category(this.active);
+  }
+  category(category) {
+    var _a;
+    return (_a = guide.get("dialog")) === null || _a === void 0 ? void 0 : _a.find(item => item.id == category);
+  }
+  activeCategoryChoices() {
+    return this.categoryChoices(this.active);
+  }
+  categoryChoices(category) {
+    var _a;
+    return (_a = this.choices.find(item => item.category == category)) === null || _a === void 0 ? void 0 : _a.choices;
   }
   selectChoice(category, choice) {
-    var _a, _b, _c, _d;
+    var _a, _b;
     let choices = this.choices;
     const id = (_a = choice === null || choice === void 0 ? void 0 : choice.id) !== null && _a !== void 0 ? _a : null;
-    const multiple = (_c = (_b = guide.get("dialog")) === null || _b === void 0 ? void 0 : _b[category]) === null || _c === void 0 ? void 0 : _c.multiple;
-    if (((_d = this.choices) === null || _d === void 0 ? void 0 : _d[category]) !== undefined && this.choices.length == category + 1) {
+    const multiple = (_b = this.category(category)) === null || _b === void 0 ? void 0 : _b.multiple;
+    const current = this.choices.find(item => item.category == category);
+    if (current) {
       if (multiple) {
-        const pos = choices[category].indexOf(id);
+        const pos = current.choices.indexOf(id);
         if (pos != -1)
-          choices[category].splice(pos, 1);
+          current.choices.splice(pos, 1);
         else
-          choices[category].push(id);
+          current.choices.push(id);
       }
       else
-        choices[category] = [id];
+        current.choices = [id];
     }
-    else if (this.choices.length == category)
-      choices = [...choices, [id]];
-    else if (this.choices.length > category)
-      choices = [...choices.slice(0, category), [id]];
     else {
-      choices = [];
-      this.active = 0;
+      this.choices.push({
+        category: category,
+        choices: [id]
+      });
     }
     this.choices = [...choices];
     if (choice == null)
       this.nextCategory();
   }
   selectCategory(category) {
-    if (category < 0)
-      return;
-    if (this.choices.length > category)
-      this.choices = [...this.choices.slice(0, category)];
-    if (guide.get("dialog").length > category) {
+    const previousIndex = this.activeIndex();
+    const index = this.index(category);
+    if (index == -1)
+      this.summary = true;
+    else {
+      if (this.choices.length > index)
+        this.choices = [...this.choices.slice(0, index)];
       this.active = category;
       this.summary = false;
     }
-    else
-      this.summary = true;
-    if (this.active == 0)
+    if (this.active == this.initialCategory())
       this.componentWillLoad();
     else
-      this.dynamicResults();
+      this.dynamicResults(previousIndex);
     this.scroll();
   }
   scroll() {
@@ -30878,14 +30917,12 @@ class PageGuide {
   }
   reset() {
     this.summary = false;
-    this.active = 0;
+    this.resetActive();
     this.choices = [];
     this.componentWillLoad();
   }
-  async nextCategory() {
-    this.selectCategory(this.active + 1);
-  }
-  async dynamicResults() {
+  async dynamicResults(previousIndex) {
+    var _a;
     this.loading = true;
     const data = await jsonfetch(guide.get("api"), {
       "choices": this.choices
@@ -30896,12 +30933,18 @@ class PageGuide {
       guide.set("products", guideData === null || guideData === void 0 ? void 0 : guideData.products);
     }
     this.loading = false;
+    if (!this.activeCategory()) {
+      const category = (_a = guide.get("dialog")) === null || _a === void 0 ? void 0 : _a[previousIndex + 1];
+      if (category)
+        this.active = category.id;
+      else
+        this.summary = true;
+    }
   }
   render() {
     const dialog = guide.get("dialog");
     const products = guide.get("products");
-    console.log(this.choices);
-    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("div", { class: "content" }, hAsync("div", { class: "text" }, hAsync("h1", null, guide.get("heading")), hAsync("p", null, guide.get("description"))), hAsync("div", { class: "dialog" }, hAsync("div", { class: "navigation" }, hAsync("div", { class: "breadcrumbs" }, dialog.slice(0, Math.max(this.choices.length, this.active + 1)).map((category, index) => hAsync("div", { onClick: () => this.selectCategory(index) }, category === null || category === void 0 ? void 0 : category.name))), hAsync("div", { class: "back", onClick: () => this.selectCategory(this.active - 1) }, hAsync("ks-icon", { name: "chevron-left" })), hAsync("div", null, this.active + 1, " z ", dialog.length)), this.summary ? this.summary_stage(dialog) : this.choices_stage(dialog)), products && (products === null || products === void 0 ? void 0 : products.length) > 0 && this.active > 0 ?
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("div", { class: "content" }, hAsync("div", { class: "text" }, hAsync("h1", null, guide.get("heading")), hAsync("p", null, guide.get("description"))), hAsync("div", { class: "dialog" }, hAsync("div", { class: "navigation" }, hAsync("div", { class: "breadcrumbs" }, dialog.slice(0, Math.max(this.choices.length, this.activeIndex())).map(category => hAsync("div", { onClick: () => this.selectCategory(category.id) }, category === null || category === void 0 ? void 0 : category.name))), hAsync("div", { class: "back", onClick: () => this.previousCategory() }, hAsync("ks-icon", { name: "chevron-left" })), hAsync("div", null, this.summary ? dialog.length : this.activeIndex() + 1, " z ", dialog.length)), this.summary ? this.summary_stage(dialog) : this.choices_stage()), products && (products === null || products === void 0 ? void 0 : products.length) > 0 && (this.activeIndex() > 0 || this.summary) ?
       hAsync("div", { class: "products" }, products === null || products === void 0 ? void 0 : products.map((product, index) => {
         var _a;
         return hAsync("div", { class: "product", key: product.id }, index == 0 ? hAsync("div", { class: "best" }, "Najlepszy wyb\u00F3r") : null, hAsync("ks-product-card", { constheight: true, flat: true, linkOnly: true, product: product }), (_a = product === null || product === void 0 ? void 0 : product.conditions) === null || _a === void 0 ? void 0 :
