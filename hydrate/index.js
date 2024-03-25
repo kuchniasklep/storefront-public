@@ -30884,6 +30884,7 @@ class PageGuide {
       this.nextCategory();
   }
   selectCategory(category) {
+    const previousIndex = this.activeIndex();
     const index = this.index(category);
     if (index == -1)
       this.summary = true;
@@ -30896,7 +30897,7 @@ class PageGuide {
     if (this.active == this.initialCategory())
       this.componentWillLoad();
     else
-      this.dynamicResults();
+      this.dynamicResults(previousIndex);
     this.scroll();
   }
   scroll() {
@@ -30920,7 +30921,8 @@ class PageGuide {
     this.choices = [];
     this.componentWillLoad();
   }
-  async dynamicResults() {
+  async dynamicResults(previousIndex) {
+    var _a;
     this.loading = true;
     const data = await jsonfetch(guide.get("api"), {
       "choices": this.choices
@@ -30931,8 +30933,13 @@ class PageGuide {
       guide.set("products", guideData === null || guideData === void 0 ? void 0 : guideData.products);
     }
     this.loading = false;
-    if (!this.activeCategory())
-      this.summary = true;
+    if (!this.activeCategory()) {
+      const category = (_a = guide.get("dialog")) === null || _a === void 0 ? void 0 : _a[previousIndex + 1];
+      if (category)
+        this.active = category.id;
+      else
+        this.summary = true;
+    }
   }
   render() {
     const dialog = guide.get("dialog");
