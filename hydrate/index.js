@@ -30897,6 +30897,8 @@ class PageGuide {
       this.componentWillLoad();
     else
       this.dynamicResults();
+    if (this.index(category) == -1)
+      this.summary = true;
     this.scroll();
   }
   scroll() {
@@ -30936,6 +30938,7 @@ class PageGuide {
     const dialog = guide.get("dialog");
     const products = guide.get("products");
     console.log(this.choices);
+    console.log(this.active);
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("div", { class: "content" }, hAsync("div", { class: "text" }, hAsync("h1", null, guide.get("heading")), hAsync("p", null, guide.get("description"))), hAsync("div", { class: "dialog" }, hAsync("div", { class: "navigation" }, hAsync("div", { class: "breadcrumbs" }, dialog.slice(0, Math.max(this.choices.length, this.activeIndex())).map(category => hAsync("div", { onClick: () => this.selectCategory(category.id) }, category === null || category === void 0 ? void 0 : category.name))), hAsync("div", { class: "back", onClick: () => this.previousCategory() }, hAsync("ks-icon", { name: "chevron-left" })), hAsync("div", null, this.activeIndex() + 1, " z ", dialog.length)), this.summary ? this.summary_stage(dialog) : this.choices_stage()), products && (products === null || products === void 0 ? void 0 : products.length) > 0 && this.activeIndex() > 0 ?
       hAsync("div", { class: "products" }, products === null || products === void 0 ? void 0 : products.map((product, index) => {
         var _a;
