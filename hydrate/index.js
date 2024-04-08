@@ -12559,7 +12559,169 @@ const commonDynamic = createStore({
   api: {},
   tracking: {},
   consent: {},
-  compare: []
+  compare: [],
+  testing_group: null
+});
+
+var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
+function getDefaultExportFromCjs (x) {
+	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
+}
+
+function createCommonjsModule(fn, basedir, module) {
+	return module = {
+		path: basedir,
+		exports: {},
+		require: function (path, base) {
+			return commonjsRequire();
+		}
+	}, fn(module, module.exports), module.exports;
+}
+
+function commonjsRequire () {
+	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
+}
+
+var js_cookie = createCommonjsModule(function (module, exports) {
+(function (global, factory) {
+  module.exports = factory() ;
+})(commonjsGlobal, (function () {
+  /* eslint-disable no-var */
+  function assign (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+      for (var key in source) {
+        target[key] = source[key];
+      }
+    }
+    return target
+  }
+  /* eslint-enable no-var */
+
+  /* eslint-disable no-var */
+  var defaultConverter = {
+    read: function (value) {
+      if (value[0] === '"') {
+        value = value.slice(1, -1);
+      }
+      return value.replace(/(%[\dA-F]{2})+/gi, decodeURIComponent)
+    },
+    write: function (value) {
+      return encodeURIComponent(value).replace(
+        /%(2[346BF]|3[AC-F]|40|5[BDE]|60|7[BCD])/g,
+        decodeURIComponent
+      )
+    }
+  };
+  /* eslint-enable no-var */
+
+  /* eslint-disable no-var */
+
+  function init (converter, defaultAttributes) {
+    function set (name, value, attributes) {
+      if (typeof document === 'undefined') {
+        return
+      }
+
+      attributes = assign({}, defaultAttributes, attributes);
+
+      if (typeof attributes.expires === 'number') {
+        attributes.expires = new Date(Date.now() + attributes.expires * 864e5);
+      }
+      if (attributes.expires) {
+        attributes.expires = attributes.expires.toUTCString();
+      }
+
+      name = encodeURIComponent(name)
+        .replace(/%(2[346B]|5E|60|7C)/g, decodeURIComponent)
+        .replace(/[()]/g, escape);
+
+      var stringifiedAttributes = '';
+      for (var attributeName in attributes) {
+        if (!attributes[attributeName]) {
+          continue
+        }
+
+        stringifiedAttributes += '; ' + attributeName;
+
+        if (attributes[attributeName] === true) {
+          continue
+        }
+
+        // Considers RFC 6265 section 5.2:
+        // ...
+        // 3.  If the remaining unparsed-attributes contains a %x3B (";")
+        //     character:
+        // Consume the characters of the unparsed-attributes up to,
+        // not including, the first %x3B (";") character.
+        // ...
+        stringifiedAttributes += '=' + attributes[attributeName].split(';')[0];
+      }
+
+      return (document.cookie =
+        name + '=' + converter.write(value, name) + stringifiedAttributes)
+    }
+
+    function get (name) {
+      if (typeof document === 'undefined' || (arguments.length && !name)) {
+        return
+      }
+
+      // To prevent the for loop in the first place assign an empty array
+      // in case there are no cookies at all.
+      var cookies = document.cookie ? document.cookie.split('; ') : [];
+      var jar = {};
+      for (var i = 0; i < cookies.length; i++) {
+        var parts = cookies[i].split('=');
+        var value = parts.slice(1).join('=');
+
+        try {
+          var found = decodeURIComponent(parts[0]);
+          jar[found] = converter.read(value, found);
+
+          if (name === found) {
+            break
+          }
+        } catch (e) {}
+      }
+
+      return name ? jar[name] : jar
+    }
+
+    return Object.create(
+      {
+        set,
+        get,
+        remove: function (name, attributes) {
+          set(
+            name,
+            '',
+            assign({}, attributes, {
+              expires: -1
+            })
+          );
+        },
+        withAttributes: function (attributes) {
+          return init(this.converter, assign({}, this.attributes, attributes))
+        },
+        withConverter: function (converter) {
+          return init(assign({}, this.converter, converter), this.attributes)
+        }
+      },
+      {
+        attributes: { value: Object.freeze(defaultAttributes) },
+        converter: { value: Object.freeze(converter) }
+      }
+    )
+  }
+
+  var api = init(defaultConverter, { path: '/' });
+  /* eslint-enable no-var */
+
+  return api;
+
+}));
 });
 
 var DataLayer;
@@ -12576,6 +12738,7 @@ var DataLayer;
   function customerData() {
     const customer = commonDynamic.get('customer');
     const customerDataAvaliable = commonDynamic.get('loggedIn') && customer;
+    const testingGroup = js_cookie.get("cookie_banner_testing_group");
     return {
       customerDataAvailable: customerDataAvaliable,
       customerEmail: customerDataAvaliable ? customer.email : undefined,
@@ -12586,6 +12749,7 @@ var DataLayer;
       customerCity: customerDataAvaliable ? customer.city : undefined,
       customerPhone: customerDataAvaliable ? customer.phone : undefined,
       customerCurrency: customerDataAvaliable ? customer.currency : undefined,
+      testingGroup: testingGroup ? testingGroup : undefined
     };
   }
   async function pageview(eventID) {
@@ -14558,167 +14722,6 @@ class Comment {
   }; }
 }
 
-var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
-
-function getDefaultExportFromCjs (x) {
-	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
-}
-
-function createCommonjsModule(fn, basedir, module) {
-	return module = {
-		path: basedir,
-		exports: {},
-		require: function (path, base) {
-			return commonjsRequire();
-		}
-	}, fn(module, module.exports), module.exports;
-}
-
-function commonjsRequire () {
-	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
-}
-
-var js_cookie = createCommonjsModule(function (module, exports) {
-(function (global, factory) {
-  module.exports = factory() ;
-})(commonjsGlobal, (function () {
-  /* eslint-disable no-var */
-  function assign (target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-      for (var key in source) {
-        target[key] = source[key];
-      }
-    }
-    return target
-  }
-  /* eslint-enable no-var */
-
-  /* eslint-disable no-var */
-  var defaultConverter = {
-    read: function (value) {
-      if (value[0] === '"') {
-        value = value.slice(1, -1);
-      }
-      return value.replace(/(%[\dA-F]{2})+/gi, decodeURIComponent)
-    },
-    write: function (value) {
-      return encodeURIComponent(value).replace(
-        /%(2[346BF]|3[AC-F]|40|5[BDE]|60|7[BCD])/g,
-        decodeURIComponent
-      )
-    }
-  };
-  /* eslint-enable no-var */
-
-  /* eslint-disable no-var */
-
-  function init (converter, defaultAttributes) {
-    function set (name, value, attributes) {
-      if (typeof document === 'undefined') {
-        return
-      }
-
-      attributes = assign({}, defaultAttributes, attributes);
-
-      if (typeof attributes.expires === 'number') {
-        attributes.expires = new Date(Date.now() + attributes.expires * 864e5);
-      }
-      if (attributes.expires) {
-        attributes.expires = attributes.expires.toUTCString();
-      }
-
-      name = encodeURIComponent(name)
-        .replace(/%(2[346B]|5E|60|7C)/g, decodeURIComponent)
-        .replace(/[()]/g, escape);
-
-      var stringifiedAttributes = '';
-      for (var attributeName in attributes) {
-        if (!attributes[attributeName]) {
-          continue
-        }
-
-        stringifiedAttributes += '; ' + attributeName;
-
-        if (attributes[attributeName] === true) {
-          continue
-        }
-
-        // Considers RFC 6265 section 5.2:
-        // ...
-        // 3.  If the remaining unparsed-attributes contains a %x3B (";")
-        //     character:
-        // Consume the characters of the unparsed-attributes up to,
-        // not including, the first %x3B (";") character.
-        // ...
-        stringifiedAttributes += '=' + attributes[attributeName].split(';')[0];
-      }
-
-      return (document.cookie =
-        name + '=' + converter.write(value, name) + stringifiedAttributes)
-    }
-
-    function get (name) {
-      if (typeof document === 'undefined' || (arguments.length && !name)) {
-        return
-      }
-
-      // To prevent the for loop in the first place assign an empty array
-      // in case there are no cookies at all.
-      var cookies = document.cookie ? document.cookie.split('; ') : [];
-      var jar = {};
-      for (var i = 0; i < cookies.length; i++) {
-        var parts = cookies[i].split('=');
-        var value = parts.slice(1).join('=');
-
-        try {
-          var found = decodeURIComponent(parts[0]);
-          jar[found] = converter.read(value, found);
-
-          if (name === found) {
-            break
-          }
-        } catch (e) {}
-      }
-
-      return name ? jar[name] : jar
-    }
-
-    return Object.create(
-      {
-        set,
-        get,
-        remove: function (name, attributes) {
-          set(
-            name,
-            '',
-            assign({}, attributes, {
-              expires: -1
-            })
-          );
-        },
-        withAttributes: function (attributes) {
-          return init(this.converter, assign({}, this.attributes, attributes))
-        },
-        withConverter: function (converter) {
-          return init(assign({}, this.converter, converter), this.attributes)
-        }
-      },
-      {
-        attributes: { value: Object.freeze(defaultAttributes) },
-        converter: { value: Object.freeze(converter) }
-      }
-    )
-  }
-
-  var api = init(defaultConverter, { path: '/' });
-  /* eslint-enable no-var */
-
-  return api;
-
-}));
-});
-
 const comparePopupCss = "ks-compare-popup{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;position:fixed;overflow:hidden;font-family:var(--font-emphasis);bottom:0px;left:0px;right:0px;z-index:1000000;background-color:#f2f2f2;border-top:solid 1px #c2c2c2;transition:-webkit-transform 0.4s ease;-webkit-transition:-webkit-transform 0.4s ease;transition:transform 0.4s ease;transition:transform 0.4s ease, -webkit-transform 0.4s ease}ks-compare-popup .message{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;width:100%;height:65px;padding:15px;-webkit-box-sizing:border-box;box-sizing:border-box;text-align:center;font-size:16px;line-height:17px}ks-compare-popup .message p{margin:0;width:100%}ks-compare-popup .products{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;width:100%;height:80px;padding:0px 15px 15px 15px;gap:5px;-webkit-box-sizing:border-box;box-sizing:border-box;font-size:14px;line-height:14px}ks-compare-popup .products .product{display:-ms-flexbox;display:flex;padding:5px 10px;gap:5px;width:100%;background-color:#ffffff;border:1px solid #e3e3e3;height:60px;border-radius:10px;-ms-flex-align:center;align-items:center;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-sizing:border-box;box-sizing:border-box}ks-compare-popup .products .product.empty{background-color:transparent;border:solid 1px #a7a7a7;opacity:0.2}ks-compare-popup .products .product ks-img3{max-width:50px;max-height:50px}ks-compare-popup .products .product a{color:#151515;text-decoration:none}ks-compare-popup:not([hide]):not([extend]){-webkit-transform:translateY(80px);transform:translateY(80px)}ks-compare-popup:not([hide])[extend]{-webkit-transform:translateY(0px);transform:translateY(0px)}ks-compare-popup[hide]{-webkit-transform:translateY(150px);transform:translateY(150px)}ks-compare-popup:not([show]){-webkit-transform:translateY(150px);transform:translateY(150px);display:none}ks-compare-popup p{margin:0;max-width:100%}ks-compare-popup .buttons{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-align:center;align-items:center;width:100%;gap:5px}ks-compare-popup .buttons>*{width:-webkit-max-content;width:-moz-max-content;width:max-content}ks-compare-popup .buttons>*:first-child{margin-right:5px}ks-compare-popup .type{margin-bottom:10px}ks-compare-popup .name{font-size:18px;font-weight:700}ks-compare-popup[blink] .products{-webkit-animation:blink-animation 0.5s ease-in;animation:blink-animation 0.5s ease-in}@-webkit-keyframes blink-animation{0%{opacity:0.3}100%{opacity:1}}@keyframes blink-animation{0%{opacity:0.3}100%{opacity:1}}@media (max-width: 920px){ks-compare-popup .products{display:block;height:190px}ks-compare-popup .products .product{height:55px;margin-bottom:5px}ks-compare-popup:not([hide]):not([extend]){-webkit-transform:translateY(190px);transform:translateY(190px)}ks-compare-popup[hide],ks-compare-popup:not([show]){-webkit-transform:translateY(260px);transform:translateY(260px)}ks-compare-popup[extend] .buttons p{font-size:14px}}@media (max-width: 420px){ks-compare-popup[extend] .buttons p{content-visibility:hidden}}";
 
 class ComparePopup {
@@ -15313,7 +15316,7 @@ class ContentThumbnail {
   }; }
 }
 
-const cookiePopupCss = "ks-cookie-popup{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;position:fixed;overflow:hidden;font-family:var(--font-emphasis);bottom:0px;left:0px;right:0px;z-index:10000000;background-color:var(--overlay-dark-background);-webkit-backdrop-filter:var(--overlay-dark-filter);backdrop-filter:var(--overlay-dark-filter);border-top:solid 1px #000000;color:white;transition:-webkit-transform 0.4s ease;-webkit-transition:-webkit-transform 0.4s ease;transition:transform 0.4s ease;transition:transform 0.4s ease, -webkit-transform 0.4s ease}ks-cookie-popup .message{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;height:80px;padding:15px;-webkit-box-sizing:border-box;box-sizing:border-box;text-align:center;font-size:15px;line-height:17px}ks-cookie-popup .message p{margin:0}ks-cookie-popup[requirement] .message p{background-color:#ff4242;border-radius:50px;padding:10px 15px}ks-cookie-popup .settings{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-direction:column;flex-direction:column;overflow-y:auto;height:500px;padding:0px 15px 15px 15px;-webkit-box-sizing:border-box;box-sizing:border-box;font-size:14px;line-height:14px}ks-cookie-popup .settings ks-button{margin-top:10px}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(500px);transform:translateY(500px)}ks-cookie-popup:not([hide])[extend]{-webkit-transform:translateY(0px);transform:translateY(0px)}ks-cookie-popup[hide]{-webkit-transform:translateY(620px);transform:translateY(620px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(620px);transform:translateY(620px);display:none}ks-cookie-popup p{margin:0;max-width:100%}ks-cookie-popup .buttons{display:-ms-flexbox;display:flex}ks-cookie-popup .buttons>*{width:-webkit-max-content;width:-moz-max-content;width:max-content}ks-cookie-popup .buttons>*:first-child{margin-right:5px}ks-cookie-popup .message .buttons{margin:0 0 0 20px}ks-cookie-popup .settings{max-width:800px}ks-cookie-popup .type{margin-bottom:10px}ks-cookie-popup .name{font-size:18px;font-weight:700}ks-cookie-popup .heading{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-align:center;align-items:center;margin-bottom:10px}ks-cookie-popup .check{position:relative;display:inline-block;width:50px;height:26px}ks-cookie-popup .check input{opacity:0;width:0;height:0}ks-cookie-popup .check .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;border-radius:34px;background-color:#ccc;-webkit-transition:.4s;transition:.4s}ks-cookie-popup .check .slider:before{position:absolute;content:\"\";height:20px;width:20px;left:4px;bottom:3px;border-radius:50%;background-color:#242424;-webkit-transition:.4s;transition:.4s}ks-cookie-popup .check input:disabled+.slider:before{background-color:#8d8d8d}ks-cookie-popup .check input:checked+.slider:before{-webkit-transform:translateX(22px);transform:translateX(22px)}ks-cookie-popup[requirement] .type.highlight .check .slider{background-color:#ff6f6f}ks-cookie-popup[requirement] .type.highlight .check .slider:before{background-color:#8d1515}ks-cookie-popup[requirement] .type.highlight .check input:checked+.slider{background-color:#87ff6f}ks-cookie-popup[requirement] .type.highlight .check input:checked+.slider:before{background-color:#198d15}@media (max-width: 700px){ks-cookie-popup .message{-ms-flex-direction:column;flex-direction:column;height:160px;font-size:14px}ks-cookie-popup .message p{margin:0 0 14px 0}ks-cookie-popup .settings{-ms-flex-pack:start;justify-content:flex-start}ks-cookie-popup[hide]{-webkit-transform:translateY(670px);transform:translateY(670px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(600px);transform:translateY(600px)}ks-cookie-popup[requirement] .message{height:120px}ks-cookie-popup[requirement][hide]{-webkit-transform:translateY(560px);transform:translateY(560px)}ks-cookie-popup[requirement]:not([show]){-webkit-transform:translateY(560px);transform:translateY(560px)}}@media (max-height: 700px){ks-cookie-popup .settings{height:400px}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(400px);transform:translateY(400px)}ks-cookie-popup[hide]{-webkit-transform:translateY(520px);transform:translateY(520px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(520px);transform:translateY(520px);display:none}}@media (max-height: 600px){ks-cookie-popup .settings{height:300px}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(300px);transform:translateY(300px)}ks-cookie-popup[hide]{-webkit-transform:translateY(420px);transform:translateY(420px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(420px);transform:translateY(420px)}}";
+const cookiePopupCss = "ks-cookie-popup{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;position:fixed;overflow:hidden;font-family:var(--font-emphasis);bottom:0px;left:0px;right:0px;z-index:10000000;background-color:var(--overlay-dark-background);-webkit-backdrop-filter:var(--overlay-dark-filter);backdrop-filter:var(--overlay-dark-filter);border-top:solid 1px #000000;color:white;transition:-webkit-transform 0.4s ease;-webkit-transition:-webkit-transform 0.4s ease;transition:transform 0.4s ease;transition:transform 0.4s ease, -webkit-transform 0.4s ease}ks-cookie-popup .message{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;height:80px;padding:15px;-webkit-box-sizing:border-box;box-sizing:border-box;text-align:center;font-size:15px;line-height:17px}ks-cookie-popup .message p{margin:0}ks-cookie-popup[requirement] .message p{background-color:#ff4242;border-radius:50px;padding:10px 15px}ks-cookie-popup .settings{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-direction:column;flex-direction:column;overflow-y:auto;height:500px;padding:0px 15px 15px 15px;-webkit-box-sizing:border-box;box-sizing:border-box;font-size:14px;line-height:14px}ks-cookie-popup .settings ks-button{margin-top:10px}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(500px);transform:translateY(500px)}ks-cookie-popup:not([hide])[extend]{-webkit-transform:translateY(0px);transform:translateY(0px)}ks-cookie-popup[hide]{-webkit-transform:translateY(620px);transform:translateY(620px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(620px);transform:translateY(620px);display:none}ks-cookie-popup p{margin:0;max-width:100%}ks-cookie-popup .buttons{display:-ms-flexbox;display:flex}ks-cookie-popup .buttons>*{width:-webkit-max-content;width:-moz-max-content;width:max-content}ks-cookie-popup .buttons>*:first-child{margin-right:5px}ks-cookie-popup .message .buttons{margin:0 0 0 20px}ks-cookie-popup .settings{max-width:800px}ks-cookie-popup .type{margin-bottom:10px}ks-cookie-popup .name{font-size:18px;font-weight:700}ks-cookie-popup .heading{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-align:center;align-items:center;margin-bottom:10px}ks-cookie-popup .check{position:relative;display:inline-block;width:50px;height:26px}ks-cookie-popup .check input{opacity:0;width:0;height:0}ks-cookie-popup .check .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;border-radius:34px;background-color:#ccc;-webkit-transition:.4s;transition:.4s}ks-cookie-popup .check .slider:before{position:absolute;content:\"\";height:20px;width:20px;left:4px;bottom:3px;border-radius:50%;background-color:#242424;-webkit-transition:.4s;transition:.4s}ks-cookie-popup .check input:disabled+.slider:before{background-color:#8d8d8d}ks-cookie-popup .check input:checked+.slider:before{-webkit-transform:translateX(22px);transform:translateX(22px)}ks-cookie-popup[requirement] .type.highlight .check .slider{background-color:#ff6f6f}ks-cookie-popup[requirement] .type.highlight .check .slider:before{background-color:#8d1515}ks-cookie-popup[requirement] .type.highlight .check input:checked+.slider{background-color:#87ff6f}ks-cookie-popup[requirement] .type.highlight .check input:checked+.slider:before{background-color:#198d15}@media (max-width: 700px){ks-cookie-popup .message{-ms-flex-direction:column;flex-direction:column;height:160px;font-size:14px}ks-cookie-popup .message p{margin:0 0 14px 0}ks-cookie-popup .settings{-ms-flex-pack:start;justify-content:flex-start}ks-cookie-popup[hide]{-webkit-transform:translateY(670px);transform:translateY(670px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(600px);transform:translateY(600px)}ks-cookie-popup[requirement] .message{height:120px}ks-cookie-popup[requirement][hide]{-webkit-transform:translateY(560px);transform:translateY(560px)}ks-cookie-popup[requirement]:not([show]){-webkit-transform:translateY(560px);transform:translateY(560px)}}@media (max-height: 700px){ks-cookie-popup .settings{height:400px}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(400px);transform:translateY(400px)}ks-cookie-popup[hide]{-webkit-transform:translateY(520px);transform:translateY(520px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(520px);transform:translateY(520px);display:none}}@media (max-height: 600px){ks-cookie-popup .settings{height:300px}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(300px);transform:translateY(300px)}ks-cookie-popup[hide]{-webkit-transform:translateY(420px);transform:translateY(420px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(420px);transform:translateY(420px)}}ks-cookie-popup[large]{top:50%;-webkit-transform:translateY(-50%) !important;transform:translateY(-50%) !important;bottom:unset;left:10px;right:10px;border:1px solid white;border-radius:7px;-webkit-box-shadow:0px 0px 30px rgb(0 0 0 / 83%);box-shadow:0px 0px 30px rgb(0 0 0 / 83%);max-width:800px;max-height:96vh;margin:auto;padding:10px}@media (max-width: 600px){ks-cookie-popup[large]{bottom:10px;top:unset;-webkit-transform:none !important;transform:none !important;padding:unset}ks-cookie-popup[large][extend]{top:10px}}ks-cookie-popup[large] .message{-ms-flex-direction:column;flex-direction:column;height:200px;gap:15px}ks-cookie-popup[large][extend] .message{height:unset;padding-top:20px;padding-bottom:0}ks-cookie-popup[large]:not([extend]) .settings{display:none}ks-cookie-popup[large] .settings{height:unset;padding-top:15px;padding-bottom:20px}";
 
 class CookiePopup {
   constructor(hostRef) {
@@ -15322,6 +15325,7 @@ class CookiePopup {
     this.show = false;
     this.extend = false;
     this.requirement = false;
+    this.large = false;
     this.requirementMessage = undefined;
   }
   extendpanel() {
@@ -15363,6 +15367,8 @@ class CookiePopup {
     this.setStateFromCookie();
     if (document.cookie.indexOf('akceptCookie=tak') == -1 || document.cookie.indexOf(commonDynamic.get('consent').cookie) == -1)
       this.showpanel(true);
+    if (js_cookie.get("cookie_banner_testing_group") == "B")
+      this.large = true;
   }
   async showpanel(init = false) {
     this.setStateFromCookie();
@@ -15450,13 +15456,14 @@ class CookiePopup {
       "show": [1540],
       "extend": [1540],
       "requirement": [1540],
+      "large": [1540],
       "requirementMessage": [32],
       "showpanel": [64],
       "requireconsent": [64]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["hide", "hide"], ["show", "show"], ["extend", "extend"], ["requirement", "requirement"]]
+    "$attrsToReflect$": [["hide", "hide"], ["show", "show"], ["extend", "extend"], ["requirement", "requirement"], ["large", "large"]]
   }; }
 }
 
