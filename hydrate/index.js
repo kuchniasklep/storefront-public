@@ -15365,8 +15365,10 @@ class CookiePopup {
   }
   componentWillLoad() {
     this.setStateFromCookie();
-    if (document.cookie.indexOf('akceptCookie=tak') == -1 || document.cookie.indexOf(commonDynamic.get('consent').cookie) == -1)
+    if (!js_cookie.get("akceptCookie"))
       this.showpanel(true);
+    // if(document.cookie.indexOf('akceptCookie=tak') == -1 || document.cookie.indexOf(commonDynamic.get('consent').cookie) == -1)
+    //     this.showpanel(true);
     if (js_cookie.get("cookie_banner_testing_group") == "B")
       this.large = true;
   }
@@ -15379,6 +15381,7 @@ class CookiePopup {
     }, init ? common.get('cookieDelay') : 100);
   }
   async requireconsent(requirementName) {
+    console.log("Require consent");
     this.checkconsentpromise = undefined;
     if (this.checkconsent(requirementName))
       return true;
