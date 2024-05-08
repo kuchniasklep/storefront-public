@@ -12999,6 +12999,7 @@ async function removeProduct(id) {
 }
 var productCountAbortController = new AbortController();
 async function productCount(id, count) {
+  let maxCount = null;
   productCountAbortController.abort();
   productCountAbortController = new AbortController();
   const data = await fetch$1(cart.get('api').productCount, {
@@ -13007,14 +13008,18 @@ async function productCount(id, count) {
   }, productCountAbortController.signal);
   if (data) {
     ShowMessageFromData("Błąd ilości produktu", data, async (cleanedData) => {
-      if ('error' in cleanedData)
+      var _a, _b;
+      if ('error' in cleanedData) {
         messagePopup().show("Błąd ilości produktu", cleanedData.error.message);
+        maxCount = (_b = (_a = cleanedData === null || cleanedData === void 0 ? void 0 : cleanedData.error) === null || _a === void 0 ? void 0 : _a.maxCount) !== null && _b !== void 0 ? _b : null;
+      }
       else
         update(cleanedData);
       if ('discount' in cleanedData == false)
         RemoveDiscount();
     });
   }
+  return maxCount;
 }
 async function addDeal(id) {
   cart.set("loadingDeals", true);
@@ -14561,8 +14566,11 @@ class CartSpinner {
     this.onChangedHandler(this.value);
   }
   onChangedHandler(value) {
-    productCount(this.product, value).then(() => {
+    productCount(this.product, value).then(maxCount => {
       setTimeout(() => {
+        if (!maxCount)
+          return;
+        this.max = maxCount;
         const input = this.root.querySelector('input');
         const parsed = parseInt(input.value);
         if (parsed > this.max) {
