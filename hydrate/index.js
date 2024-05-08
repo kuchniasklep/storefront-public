@@ -14561,7 +14561,16 @@ class CartSpinner {
     this.onChangedHandler(this.value);
   }
   onChangedHandler(value) {
-    productCount(this.product, value);
+    productCount(this.product, value).then(() => {
+      setTimeout(() => {
+        const input = this.root.querySelector('input');
+        const parsed = parseInt(input.value);
+        if (parsed > this.max) {
+          this.value = this.max;
+          input.value = this.max.toString();
+        }
+      }, 200);
+    });
   }
   render() {
     return this.max == 1 ? "1 szt." : [
