@@ -14581,10 +14581,10 @@ class CartSpinner {
     });
   }
   render() {
-    return this.max == 1 ? "1 szt." : [
-      hAsync("button", { onClick: () => this.Decrement() }, "-"),
+    return [
+      hAsync("button", { onClick: () => this.Decrement(), disabled: this.value <= 1 }, "-"),
       hAsync("input", { type: "text", maxlength: "3", value: this.value, name: this.name, onChange: (e) => this.Change(e) }),
-      hAsync("button", { onClick: () => this.Increment() }, "+")
+      hAsync("button", { onClick: () => this.Increment(), disabled: (this.value + 1) > this.max }, "+")
     ];
   }
   get root() { return getElement(this); }
