@@ -12744,7 +12744,7 @@ var DataLayer;
       customerEmail: customerDataAvaliable ? customer.email : undefined,
       customerFirstName: customerDataAvaliable ? customer.firstName : undefined,
       customerLastName: customerDataAvaliable ? customer.lastName : undefined,
-      customerSubscriberStatus: customerDataAvaliable ? (customer.subscriber ? 1 : 0) : undefined,
+      customerSubscriberStatus: customerDataAvaliable ? (customer.subscriber ? 1 : undefined) : undefined,
       customerCountryISO2: customerDataAvaliable ? customer.countryISO2 : undefined,
       customerCity: customerDataAvaliable ? customer.city : undefined,
       customerPhone: customerDataAvaliable ? customer.phone : undefined,
