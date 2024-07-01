@@ -12563,167 +12563,6 @@ const commonDynamic = createStore({
   testing_group: null
 });
 
-var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
-
-function getDefaultExportFromCjs (x) {
-	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
-}
-
-function createCommonjsModule(fn, basedir, module) {
-	return module = {
-		path: basedir,
-		exports: {},
-		require: function (path, base) {
-			return commonjsRequire();
-		}
-	}, fn(module, module.exports), module.exports;
-}
-
-function commonjsRequire () {
-	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
-}
-
-var js_cookie = createCommonjsModule(function (module, exports) {
-(function (global, factory) {
-  module.exports = factory() ;
-})(commonjsGlobal, (function () {
-  /* eslint-disable no-var */
-  function assign (target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-      for (var key in source) {
-        target[key] = source[key];
-      }
-    }
-    return target
-  }
-  /* eslint-enable no-var */
-
-  /* eslint-disable no-var */
-  var defaultConverter = {
-    read: function (value) {
-      if (value[0] === '"') {
-        value = value.slice(1, -1);
-      }
-      return value.replace(/(%[\dA-F]{2})+/gi, decodeURIComponent)
-    },
-    write: function (value) {
-      return encodeURIComponent(value).replace(
-        /%(2[346BF]|3[AC-F]|40|5[BDE]|60|7[BCD])/g,
-        decodeURIComponent
-      )
-    }
-  };
-  /* eslint-enable no-var */
-
-  /* eslint-disable no-var */
-
-  function init (converter, defaultAttributes) {
-    function set (name, value, attributes) {
-      if (typeof document === 'undefined') {
-        return
-      }
-
-      attributes = assign({}, defaultAttributes, attributes);
-
-      if (typeof attributes.expires === 'number') {
-        attributes.expires = new Date(Date.now() + attributes.expires * 864e5);
-      }
-      if (attributes.expires) {
-        attributes.expires = attributes.expires.toUTCString();
-      }
-
-      name = encodeURIComponent(name)
-        .replace(/%(2[346B]|5E|60|7C)/g, decodeURIComponent)
-        .replace(/[()]/g, escape);
-
-      var stringifiedAttributes = '';
-      for (var attributeName in attributes) {
-        if (!attributes[attributeName]) {
-          continue
-        }
-
-        stringifiedAttributes += '; ' + attributeName;
-
-        if (attributes[attributeName] === true) {
-          continue
-        }
-
-        // Considers RFC 6265 section 5.2:
-        // ...
-        // 3.  If the remaining unparsed-attributes contains a %x3B (";")
-        //     character:
-        // Consume the characters of the unparsed-attributes up to,
-        // not including, the first %x3B (";") character.
-        // ...
-        stringifiedAttributes += '=' + attributes[attributeName].split(';')[0];
-      }
-
-      return (document.cookie =
-        name + '=' + converter.write(value, name) + stringifiedAttributes)
-    }
-
-    function get (name) {
-      if (typeof document === 'undefined' || (arguments.length && !name)) {
-        return
-      }
-
-      // To prevent the for loop in the first place assign an empty array
-      // in case there are no cookies at all.
-      var cookies = document.cookie ? document.cookie.split('; ') : [];
-      var jar = {};
-      for (var i = 0; i < cookies.length; i++) {
-        var parts = cookies[i].split('=');
-        var value = parts.slice(1).join('=');
-
-        try {
-          var found = decodeURIComponent(parts[0]);
-          jar[found] = converter.read(value, found);
-
-          if (name === found) {
-            break
-          }
-        } catch (e) {}
-      }
-
-      return name ? jar[name] : jar
-    }
-
-    return Object.create(
-      {
-        set,
-        get,
-        remove: function (name, attributes) {
-          set(
-            name,
-            '',
-            assign({}, attributes, {
-              expires: -1
-            })
-          );
-        },
-        withAttributes: function (attributes) {
-          return init(this.converter, assign({}, this.attributes, attributes))
-        },
-        withConverter: function (converter) {
-          return init(assign({}, this.converter, converter), this.attributes)
-        }
-      },
-      {
-        attributes: { value: Object.freeze(defaultAttributes) },
-        converter: { value: Object.freeze(converter) }
-      }
-    )
-  }
-
-  var api = init(defaultConverter, { path: '/' });
-  /* eslint-enable no-var */
-
-  return api;
-
-}));
-});
-
 var DataLayer;
 (function (DataLayer) {
   var resolvepageview;
@@ -12738,7 +12577,6 @@ var DataLayer;
   function customerData() {
     const customer = commonDynamic.get('customer');
     const customerDataAvaliable = commonDynamic.get('loggedIn') && customer;
-    const testingGroup = js_cookie.get("cookie_banner_testing_group");
     return {
       customerDataAvailable: customerDataAvaliable,
       customerEmail: customerDataAvaliable ? customer.email : undefined,
@@ -12748,8 +12586,7 @@ var DataLayer;
       customerCountryISO2: customerDataAvaliable ? customer.countryISO2 : undefined,
       customerCity: customerDataAvaliable ? customer.city : undefined,
       customerPhone: customerDataAvaliable ? customer.phone : undefined,
-      customerCurrency: customerDataAvaliable ? customer.currency : undefined,
-      testingGroup: testingGroup ? testingGroup : undefined
+      customerCurrency: customerDataAvaliable ? customer.currency : undefined
     };
   }
   async function pageview(eventID) {
@@ -14739,6 +14576,167 @@ class Comment {
   }; }
 }
 
+var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
+function getDefaultExportFromCjs (x) {
+	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
+}
+
+function createCommonjsModule(fn, basedir, module) {
+	return module = {
+		path: basedir,
+		exports: {},
+		require: function (path, base) {
+			return commonjsRequire();
+		}
+	}, fn(module, module.exports), module.exports;
+}
+
+function commonjsRequire () {
+	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
+}
+
+var js_cookie = createCommonjsModule(function (module, exports) {
+(function (global, factory) {
+  module.exports = factory() ;
+})(commonjsGlobal, (function () {
+  /* eslint-disable no-var */
+  function assign (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+      for (var key in source) {
+        target[key] = source[key];
+      }
+    }
+    return target
+  }
+  /* eslint-enable no-var */
+
+  /* eslint-disable no-var */
+  var defaultConverter = {
+    read: function (value) {
+      if (value[0] === '"') {
+        value = value.slice(1, -1);
+      }
+      return value.replace(/(%[\dA-F]{2})+/gi, decodeURIComponent)
+    },
+    write: function (value) {
+      return encodeURIComponent(value).replace(
+        /%(2[346BF]|3[AC-F]|40|5[BDE]|60|7[BCD])/g,
+        decodeURIComponent
+      )
+    }
+  };
+  /* eslint-enable no-var */
+
+  /* eslint-disable no-var */
+
+  function init (converter, defaultAttributes) {
+    function set (name, value, attributes) {
+      if (typeof document === 'undefined') {
+        return
+      }
+
+      attributes = assign({}, defaultAttributes, attributes);
+
+      if (typeof attributes.expires === 'number') {
+        attributes.expires = new Date(Date.now() + attributes.expires * 864e5);
+      }
+      if (attributes.expires) {
+        attributes.expires = attributes.expires.toUTCString();
+      }
+
+      name = encodeURIComponent(name)
+        .replace(/%(2[346B]|5E|60|7C)/g, decodeURIComponent)
+        .replace(/[()]/g, escape);
+
+      var stringifiedAttributes = '';
+      for (var attributeName in attributes) {
+        if (!attributes[attributeName]) {
+          continue
+        }
+
+        stringifiedAttributes += '; ' + attributeName;
+
+        if (attributes[attributeName] === true) {
+          continue
+        }
+
+        // Considers RFC 6265 section 5.2:
+        // ...
+        // 3.  If the remaining unparsed-attributes contains a %x3B (";")
+        //     character:
+        // Consume the characters of the unparsed-attributes up to,
+        // not including, the first %x3B (";") character.
+        // ...
+        stringifiedAttributes += '=' + attributes[attributeName].split(';')[0];
+      }
+
+      return (document.cookie =
+        name + '=' + converter.write(value, name) + stringifiedAttributes)
+    }
+
+    function get (name) {
+      if (typeof document === 'undefined' || (arguments.length && !name)) {
+        return
+      }
+
+      // To prevent the for loop in the first place assign an empty array
+      // in case there are no cookies at all.
+      var cookies = document.cookie ? document.cookie.split('; ') : [];
+      var jar = {};
+      for (var i = 0; i < cookies.length; i++) {
+        var parts = cookies[i].split('=');
+        var value = parts.slice(1).join('=');
+
+        try {
+          var found = decodeURIComponent(parts[0]);
+          jar[found] = converter.read(value, found);
+
+          if (name === found) {
+            break
+          }
+        } catch (e) {}
+      }
+
+      return name ? jar[name] : jar
+    }
+
+    return Object.create(
+      {
+        set,
+        get,
+        remove: function (name, attributes) {
+          set(
+            name,
+            '',
+            assign({}, attributes, {
+              expires: -1
+            })
+          );
+        },
+        withAttributes: function (attributes) {
+          return init(this.converter, assign({}, this.attributes, attributes))
+        },
+        withConverter: function (converter) {
+          return init(assign({}, this.converter, converter), this.attributes)
+        }
+      },
+      {
+        attributes: { value: Object.freeze(defaultAttributes) },
+        converter: { value: Object.freeze(converter) }
+      }
+    )
+  }
+
+  var api = init(defaultConverter, { path: '/' });
+  /* eslint-enable no-var */
+
+  return api;
+
+}));
+});
+
 const comparePopupCss = "ks-compare-popup{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;position:fixed;overflow:hidden;font-family:var(--font-emphasis);bottom:0px;left:0px;right:0px;z-index:1000000;background-color:#f2f2f2;border-top:solid 1px #c2c2c2;transition:-webkit-transform 0.4s ease;-webkit-transition:-webkit-transform 0.4s ease;transition:transform 0.4s ease;transition:transform 0.4s ease, -webkit-transform 0.4s ease}ks-compare-popup .message{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;width:100%;height:65px;padding:15px;-webkit-box-sizing:border-box;box-sizing:border-box;text-align:center;font-size:16px;line-height:17px}ks-compare-popup .message p{margin:0;width:100%}ks-compare-popup .products{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;width:100%;height:80px;padding:0px 15px 15px 15px;gap:5px;-webkit-box-sizing:border-box;box-sizing:border-box;font-size:14px;line-height:14px}ks-compare-popup .products .product{display:-ms-flexbox;display:flex;padding:5px 10px;gap:5px;width:100%;background-color:#ffffff;border:1px solid #e3e3e3;height:60px;border-radius:10px;-ms-flex-align:center;align-items:center;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-sizing:border-box;box-sizing:border-box}ks-compare-popup .products .product.empty{background-color:transparent;border:solid 1px #a7a7a7;opacity:0.2}ks-compare-popup .products .product ks-img3{max-width:50px;max-height:50px}ks-compare-popup .products .product a{color:#151515;text-decoration:none}ks-compare-popup:not([hide]):not([extend]){-webkit-transform:translateY(80px);transform:translateY(80px)}ks-compare-popup:not([hide])[extend]{-webkit-transform:translateY(0px);transform:translateY(0px)}ks-compare-popup[hide]{-webkit-transform:translateY(150px);transform:translateY(150px)}ks-compare-popup:not([show]){-webkit-transform:translateY(150px);transform:translateY(150px);display:none}ks-compare-popup p{margin:0;max-width:100%}ks-compare-popup .buttons{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-align:center;align-items:center;width:100%;gap:5px}ks-compare-popup .buttons>*{width:-webkit-max-content;width:-moz-max-content;width:max-content}ks-compare-popup .buttons>*:first-child{margin-right:5px}ks-compare-popup .type{margin-bottom:10px}ks-compare-popup .name{font-size:18px;font-weight:700}ks-compare-popup[blink] .products{-webkit-animation:blink-animation 0.5s ease-in;animation:blink-animation 0.5s ease-in}@-webkit-keyframes blink-animation{0%{opacity:0.3}100%{opacity:1}}@keyframes blink-animation{0%{opacity:0.3}100%{opacity:1}}@media (max-width: 920px){ks-compare-popup .products{display:block;height:190px}ks-compare-popup .products .product{height:55px;margin-bottom:5px}ks-compare-popup:not([hide]):not([extend]){-webkit-transform:translateY(190px);transform:translateY(190px)}ks-compare-popup[hide],ks-compare-popup:not([show]){-webkit-transform:translateY(260px);transform:translateY(260px)}ks-compare-popup[extend] .buttons p{font-size:14px}}@media (max-width: 420px){ks-compare-popup[extend] .buttons p{content-visibility:hidden}}";
 
 class ComparePopup {
@@ -15330,232 +15328,6 @@ class ContentThumbnail {
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
     "$attrsToReflect$": []
-  }; }
-}
-
-const cookiePopupCss = "ks-cookie-popup{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;position:fixed;overflow:hidden;font-family:var(--font-emphasis);bottom:0px;left:0px;right:0px;z-index:10000000;background-color:var(--overlay-dark-background);-webkit-backdrop-filter:var(--overlay-dark-filter);backdrop-filter:var(--overlay-dark-filter);border-top:solid 1px #000000;color:white;transition:-webkit-transform 0.4s ease;-webkit-transition:-webkit-transform 0.4s ease;transition:transform 0.4s ease;transition:transform 0.4s ease, -webkit-transform 0.4s ease}ks-cookie-popup .message{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;height:80px;padding:15px;-webkit-box-sizing:border-box;box-sizing:border-box;text-align:center;font-size:15px;line-height:17px}ks-cookie-popup .message p{margin:0}ks-cookie-popup[requirement] .message p{background-color:#ff4242;border-radius:50px;padding:10px 15px}ks-cookie-popup .settings{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-direction:column;flex-direction:column;overflow-y:auto;height:500px;padding:0px 15px 15px 15px;-webkit-box-sizing:border-box;box-sizing:border-box;font-size:14px;line-height:14px}ks-cookie-popup .settings ks-button{margin-top:10px}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(500px);transform:translateY(500px)}ks-cookie-popup:not([hide])[extend]{-webkit-transform:translateY(0px);transform:translateY(0px)}ks-cookie-popup[hide]{-webkit-transform:translateY(620px);transform:translateY(620px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(620px);transform:translateY(620px);display:none}ks-cookie-popup p{margin:0;max-width:100%}ks-cookie-popup .buttons{display:-ms-flexbox;display:flex}ks-cookie-popup .buttons>*{width:-webkit-max-content;width:-moz-max-content;width:max-content}ks-cookie-popup .buttons>*:first-child{margin-right:5px}ks-cookie-popup .message .buttons{margin:0 0 0 20px}ks-cookie-popup .settings{max-width:800px}ks-cookie-popup .type{margin-bottom:10px}ks-cookie-popup .name{font-size:18px;font-weight:700}ks-cookie-popup .heading{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-align:center;align-items:center;margin-bottom:10px}ks-cookie-popup .check{position:relative;display:inline-block;width:50px;height:26px}ks-cookie-popup .check input{opacity:0;width:0;height:0}ks-cookie-popup .check .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;border-radius:34px;background-color:#ccc;-webkit-transition:.4s;transition:.4s}ks-cookie-popup .check .slider:before{position:absolute;content:\"\";height:20px;width:20px;left:4px;bottom:3px;border-radius:50%;background-color:#242424;-webkit-transition:.4s;transition:.4s}ks-cookie-popup .check input:disabled+.slider:before{background-color:#8d8d8d}ks-cookie-popup .check input:checked+.slider:before{-webkit-transform:translateX(22px);transform:translateX(22px)}ks-cookie-popup[requirement] .type.highlight .check .slider{background-color:#ff6f6f}ks-cookie-popup[requirement] .type.highlight .check .slider:before{background-color:#8d1515}ks-cookie-popup[requirement] .type.highlight .check input:checked+.slider{background-color:#87ff6f}ks-cookie-popup[requirement] .type.highlight .check input:checked+.slider:before{background-color:#198d15}@media (max-width: 700px){ks-cookie-popup .message{-ms-flex-direction:column;flex-direction:column;height:160px;font-size:14px}ks-cookie-popup .message p{margin:0 0 14px 0}ks-cookie-popup .settings{-ms-flex-pack:start;justify-content:flex-start}ks-cookie-popup[hide]{-webkit-transform:translateY(670px);transform:translateY(670px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(600px);transform:translateY(600px)}ks-cookie-popup[requirement] .message{height:120px}ks-cookie-popup[requirement][hide]{-webkit-transform:translateY(560px);transform:translateY(560px)}ks-cookie-popup[requirement]:not([show]){-webkit-transform:translateY(560px);transform:translateY(560px)}}@media (max-height: 700px){ks-cookie-popup .settings{height:400px}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(400px);transform:translateY(400px)}ks-cookie-popup[hide]{-webkit-transform:translateY(520px);transform:translateY(520px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(520px);transform:translateY(520px);display:none}}@media (max-height: 600px){ks-cookie-popup .settings{height:300px}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(300px);transform:translateY(300px)}ks-cookie-popup[hide]{-webkit-transform:translateY(420px);transform:translateY(420px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(420px);transform:translateY(420px)}}ks-cookie-popup[large]{top:50%;-webkit-transform:translateY(-50%) !important;transform:translateY(-50%) !important;bottom:unset;left:10px;right:10px;border:1px solid white;border-radius:7px;-webkit-box-shadow:0px 0px 30px rgb(0 0 0 / 83%);box-shadow:0px 0px 30px rgb(0 0 0 / 83%);max-width:800px;max-height:96vh;margin:auto;padding:10px}@media (max-width: 600px){ks-cookie-popup[large]{bottom:10px;top:unset;-webkit-transform:none !important;transform:none !important;padding:unset}ks-cookie-popup[large][extend]{top:10px}}ks-cookie-popup[large] .message{-ms-flex-direction:column;flex-direction:column;height:200px;gap:15px}ks-cookie-popup[large][extend] .message{height:unset;padding-top:20px;padding-bottom:0}ks-cookie-popup[large]:not([extend]) .settings{display:none}ks-cookie-popup[large] .settings{height:unset;padding-top:15px;padding-bottom:20px}ks-cookie-popup[large][hide]{display:none}";
-
-class CookiePopup {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.hide = false;
-    this.show = false;
-    this.extend = false;
-    this.requirement = false;
-    this.large = false;
-    this.requirementMessage = undefined;
-  }
-  extendpanel() {
-    this.extend = !this.extend;
-  }
-  cookie(consent) {
-    var expiration = "";
-    var expirationDate = new Date();
-    expirationDate.setMonth(expirationDate.getMonth() + 12 * 2);
-    expiration = "expires=" + expirationDate.toUTCString() + "; ";
-    document.cookie = "akceptCookie=tak; " + expiration + "path=/";
-    const cookieName = commonDynamic.get('consent').cookie;
-    document.cookie = `${cookieName}=${JSON.stringify(consent)};${expiration}path=/`;
-  }
-  getCookie(cookieName) {
-    let cookie = {};
-    document.cookie.split(';').forEach(function (el) {
-      let [key, value] = el.split('=');
-      cookie[key.trim()] = value;
-    });
-    if (cookie[cookieName])
-      return JSON.parse(cookie[cookieName]);
-    return false;
-  }
-  setStateFromCookie() {
-    var _a;
-    let consent = commonDynamic.get('consent');
-    const consentCookie = this.getCookie(consent.cookie);
-    consent.items = (_a = consent === null || consent === void 0 ? void 0 : consent.items) === null || _a === void 0 ? void 0 : _a.map(item => {
-      var _a;
-      if (item.disabled)
-        return item;
-      item.checked = !!((_a = consentCookie === null || consentCookie === void 0 ? void 0 : consentCookie.find) === null || _a === void 0 ? void 0 : _a.call(consentCookie, value => value == item.inputname));
-      return item;
-    });
-    commonDynamic.set("consent", consent);
-  }
-  componentWillLoad() {
-    this.setStateFromCookie();
-    if (document.cookie.indexOf('akceptCookie=tak') == -1 || document.cookie.indexOf(commonDynamic.get('consent').cookie) == -1)
-      this.showpanel(true);
-    if (js_cookie.get("cookie_banner_testing_group") == "B")
-      this.large = true;
-  }
-  async showpanel(init = false) {
-    this.setStateFromCookie();
-    this.show = true;
-    this.hide = true;
-    setTimeout(() => {
-      this.hide = false;
-    }, init ? common.get('cookieDelay') : 100);
-  }
-  async requireconsent(requirementName) {
-    this.checkconsentpromise = undefined;
-    if (this.checkconsent(requirementName))
-      return true;
-    let consent = commonDynamic.get("consent");
-    const requirement = consent.requirements.find(entry => entry.name = requirementName);
-    consent.items.forEach((entry, index) => {
-      const consentRequired = requirement.consents.includes(entry.inputname);
-      consent.items[index].highlighted = consentRequired;
-    });
-    this.requirement = true;
-    this.extend = true;
-    this.requirementMessage = requirement.message;
-    commonDynamic.set("consent", consent);
-    return new Promise((resolve) => {
-      this.showpanel();
-      this.checkconsentpromise = () => resolve(this.checkconsent(requirementName));
-    });
-  }
-  checkconsent(requirementName) {
-    let requirementsMet = true;
-    let consent = commonDynamic.get("consent");
-    const requirement = consent.requirements.find(entry => entry.name = requirementName);
-    consent.items.forEach((entry, index) => {
-      const consentRequired = requirement.consents.includes(entry.inputname);
-      if (consentRequired && !consent.items[index].checked)
-        requirementsMet = false;
-    });
-    return requirementsMet;
-  }
-  hidepanel(all) {
-    var _a;
-    this.hide = true;
-    const consent = this.consent(all);
-    this.cookie(consent);
-    this.setStateFromCookie();
-    (_a = this.checkconsentpromise) === null || _a === void 0 ? void 0 : _a.call(this);
-    this.registerGTMCallback(consent);
-    setTimeout(() => {
-      this.show = false;
-      this.hide = false;
-      this.requirement = false;
-    }, 400);
-  }
-  registerGTMCallback(consent) {
-    window.googleConsentListeners.forEach((callback) => {
-      callback(consent);
-    });
-  }
-  consent(all = false) {
-    if (all)
-      return commonDynamic.get("consent").items.map(entry => entry.inputname);
-    const inputs = document.querySelectorAll("ks-cookie-popup input[type=checkbox]");
-    return Array.from(inputs)
-      .map(input => input.checked ? input.name : null)
-      .filter(value => value);
-  }
-  render() {
-    var _a, _b;
-    if (!Build.isBrowser)
-      return hAsync(Host, null);
-    const consent = commonDynamic.get('consent');
-    return hAsync(Host, { "aria-hidden": this.show ? "false" : "true" }, hAsync("div", { class: "message" }, hAsync("p", null, this.requirement ? this.requirementMessage : common.get('cookieMessage')), this.requirement ? null : hAsync("div", { class: "buttons" }, hAsync("ks-button", { round: true, border: true, light: true, name: consent.buttons.settings, onClick: () => this.extendpanel() }), hAsync("ks-button", { round: true, light: true, name: consent.buttons.acceptall, onClick: () => this.hidepanel(true) }))), hAsync("div", { class: "settings" }, (_b = (_a = consent === null || consent === void 0 ? void 0 : consent.items) === null || _a === void 0 ? void 0 : _a.map) === null || _b === void 0 ? void 0 :
-      _b.call(_a, item => this.type(item)), hAsync("div", { class: "buttons" }, hAsync("ks-button", { round: true, border: true, light: true, name: consent.buttons.save, onClick: () => this.hidepanel(false) }), this.requirement ? hAsync("ks-button", { round: true, light: true, name: consent.buttons.acceptall, onClick: () => this.hidepanel(true) }) : null)));
-  }
-  type(item) {
-    return hAsync("div", { class: "type" + (item.highlighted ? " highlight" : "") }, hAsync("div", { class: "heading" }, hAsync("div", { class: "name" }, item.name), hAsync("label", { class: "check" }, hAsync("input", { type: "checkbox", checked: item.checked, disabled: item.disabled, name: item.inputname }), hAsync("span", { class: "slider" }))), hAsync("div", null, item.description));
-  }
-  get root() { return getElement(this); }
-  static get style() { return cookiePopupCss; }
-  static get cmpMeta() { return {
-    "$flags$": 0,
-    "$tagName$": "ks-cookie-popup",
-    "$members$": {
-      "hide": [1540],
-      "show": [1540],
-      "extend": [1540],
-      "requirement": [1540],
-      "large": [1540],
-      "requirementMessage": [32],
-      "showpanel": [64],
-      "requireconsent": [64]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["hide", "hide"], ["show", "show"], ["extend", "extend"], ["requirement", "requirement"], ["large", "large"]]
-  }; }
-}
-
-const descriptionHtmlCss = "ks-description-html{display:block}";
-
-class DescriptionHTML {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.html = undefined;
-  }
-  render() {
-    return hAsync("div", { innerHTML: this.html });
-  }
-  static get style() { return descriptionHtmlCss; }
-  static get cmpMeta() { return {
-    "$flags$": 0,
-    "$tagName$": "ks-description-html",
-    "$members$": {
-      "html": [1]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
-
-const descriptionImageCss = "ks-description-image{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;margin-bottom:20px}ks-description-image .image{max-width:100%}";
-
-class DescriptionImage {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.image = undefined;
-    this.width = undefined;
-  }
-  render() {
-    return hAsync("div", { class: "image", style: { maxWidth: `min(100%,${this.width}px)` } }, hAsync("ks-img2", { src: this.image }));
-  }
-  static get style() { return descriptionImageCss; }
-  static get cmpMeta() { return {
-    "$flags$": 0,
-    "$tagName$": "ks-description-image",
-    "$members$": {
-      "image": [1],
-      "width": [2]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": []
-  }; }
-}
-
-const descriptionProductsCss = "ks-description-products{display:-ms-flexbox;display:flex;-ms-flex-flow:row wrap;flex-flow:row wrap;-ms-flex-pack:center;justify-content:center;-ms-flex-align:stretch;align-items:stretch;gap:10px;border-top:#f2f2f2 solid 1px;border-bottom:#eeeeee solid 1px;padding:10px 10px 20px 10px}ks-description-products>*{width:100%;-webkit-box-sizing:border-box;box-sizing:border-box}ks-description-products[kind='standard']{border:none}ks-description-products[kind='simple']{margin-bottom:20px}@media screen and (max-width: 640px){ks-description-products>*{width:228px}ks-description-products[kind='simple']{margin-bottom:20px}}@media (min-width: 360px) and (max-width: 640px){ks-description-products>*{width:48% !important}}";
-
-class DescriptionProducts {
-  constructor(hostRef) {
-    registerInstance(this, hostRef);
-    this.products = undefined;
-    this.kind = undefined;
-  }
-  render() {
-    return this.products.map(product => this.kind == "standard" ?
-      hAsync("ks-product-card", { flat: true, product: product }) :
-      hAsync("ks-product-simple", { name: product.name, img: product.image, link: product.link, currentPrice: product.currentPrice, previousPrice: product.previousPrice }));
-  }
-  static get style() { return descriptionProductsCss; }
-  static get cmpMeta() { return {
-    "$flags$": 0,
-    "$tagName$": "ks-description-products",
-    "$members$": {
-      "products": [16],
-      "kind": [513]
-    },
-    "$listeners$": undefined,
-    "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["kind", "kind"]]
   }; }
 }
 
@@ -18629,6 +18401,260 @@ var marked_umd = createCommonjsModule(function (module, exports) {
 
 }));
 });
+
+const cookiePopupCss = "ks-cookie-popup{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;position:fixed;overflow:hidden;font-family:var(--font-emphasis);bottom:0px;left:0px;right:0px;z-index:10000000;max-width:100vw;background-color:rgba(0, 0, 0, 0.90);-webkit-backdrop-filter:var(--overlay-dark-filter);backdrop-filter:var(--overlay-dark-filter);border-top:solid 1px #000000;color:white;transition:-webkit-transform 0.4s ease;-webkit-transition:-webkit-transform 0.4s ease;transition:transform 0.4s ease;transition:transform 0.4s ease, -webkit-transform 0.4s ease}ks-cookie-popup .message{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;height:160px;padding:15px;-webkit-box-sizing:border-box;box-sizing:border-box;text-align:center;font-size:15px;line-height:17px}ks-cookie-popup .message a{text-decoration:underline;color:white !important}ks-cookie-popup .message p{margin:0 0 14px 0}ks-cookie-popup[requirement] .message p{background-color:#ff4242;border-radius:50px;padding:10px 15px}ks-cookie-popup .settings{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;-ms-flex-direction:column;flex-direction:column;overflow-y:auto;overflow-x:hidden;height:500px;max-width:800px;padding:0px 15px 15px 15px;-webkit-box-sizing:border-box;box-sizing:border-box;font-size:14px;line-height:14px}ks-cookie-popup .settings ks-button{margin-top:10px}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(500px);transform:translateY(500px)}ks-cookie-popup:not([hide])[extend]{-webkit-transform:translateY(0px);transform:translateY(0px)}ks-cookie-popup[hide]{-webkit-transform:translateY(670px);transform:translateY(670px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(600px);transform:translateY(600px);display:none}ks-cookie-popup p{margin:0;max-width:100%}ks-cookie-popup .buttons{display:-ms-flexbox;display:flex;gap:5px;-ms-flex-wrap:wrap;flex-wrap:wrap;-ms-flex-pack:center;justify-content:center}ks-cookie-popup .buttons>*{width:-webkit-max-content;width:-moz-max-content;width:max-content}ks-cookie-popup .message .buttons{margin:0 0 0 20px}ks-cookie-popup .settings{max-width:800px}ks-cookie-popup .type{margin-bottom:10px}ks-cookie-popup .name{font-size:18px;font-weight:700}ks-cookie-popup .heading{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-align:center;align-items:center;margin-bottom:10px}ks-cookie-popup .check{position:relative;display:inline-block;width:50px;height:26px}ks-cookie-popup .check input{opacity:0;width:0;height:0}ks-cookie-popup .check .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;border-radius:34px;background-color:#ccc;-webkit-transition:.4s;transition:.4s}ks-cookie-popup .check .slider:before{position:absolute;content:\"\";height:20px;width:20px;left:4px;bottom:3px;border-radius:50%;background-color:#242424;-webkit-transition:.4s;transition:.4s}ks-cookie-popup .check input:disabled+.slider:before{background-color:#8d8d8d}ks-cookie-popup .check input:checked+.slider:before{-webkit-transform:translateX(22px);transform:translateX(22px)}ks-cookie-popup[requirement] .type.highlight .check .slider{background-color:#ff6f6f}ks-cookie-popup[requirement] .type.highlight .check .slider:before{background-color:#8d1515}ks-cookie-popup[requirement] .type.highlight .check input:checked+.slider{background-color:#87ff6f}ks-cookie-popup[requirement] .type.highlight .check input:checked+.slider:before{background-color:#198d15}@media (max-width: 700px){ks-cookie-popup .message{font-size:14px}ks-cookie-popup .message .buttons{margin:0}ks-cookie-popup .settings{-ms-flex-pack:start;justify-content:flex-start;max-width:100vw}ks-cookie-popup[requirement] .message{height:120px}ks-cookie-popup[requirement][hide]{-webkit-transform:translateY(560px);transform:translateY(560px)}ks-cookie-popup[requirement]:not([show]){-webkit-transform:translateY(560px);transform:translateY(560px)}}@media (max-height: 700px){ks-cookie-popup .settings{height:400px;-ms-flex-pack:start;justify-content:flex-start}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(400px);transform:translateY(400px)}ks-cookie-popup[hide]{-webkit-transform:translateY(520px);transform:translateY(520px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(520px);transform:translateY(520px);display:none}}@media (max-height: 600px){ks-cookie-popup .settings{height:300px}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(300px);transform:translateY(300px)}ks-cookie-popup[hide]{-webkit-transform:translateY(420px);transform:translateY(420px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(420px);transform:translateY(420px)}}@media (max-height: 540px){ks-cookie-popup .settings{height:200px}ks-cookie-popup:not([hide]):not([extend]){-webkit-transform:translateY(200px);transform:translateY(200px)}ks-cookie-popup[hide]{-webkit-transform:translateY(320px);transform:translateY(320px)}ks-cookie-popup:not([show]){-webkit-transform:translateY(320px);transform:translateY(320px)}}@media (max-width: 460px){ks-cookie-popup .buttons>*{-ms-flex:1 0 40%;flex:1 0 40%}ks-cookie-popup .message{height:240px}ks-cookie-popup[requirement][hide]{-webkit-transform:translateY(440px);transform:translateY(440px)}ks-cookie-popup[requirement]:not([show]){-webkit-transform:translateY(440px);transform:translateY(440px)}}";
+
+class CookiePopup$1 {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.hide = false;
+    this.show = false;
+    this.extend = false;
+    this.requirement = false;
+    this.requirementMessage = undefined;
+  }
+  extendpanel() {
+    this.extend = !this.extend;
+  }
+  cookie(consent) {
+    var expiration = "";
+    var expirationDate = new Date();
+    expirationDate.setMonth(expirationDate.getMonth() + 12 * 2);
+    expiration = "expires=" + expirationDate.toUTCString() + "; ";
+    document.cookie = "akceptCookie=tak; " + expiration + "path=/";
+    const cookieName = commonDynamic.get('consent').cookie;
+    document.cookie = `${cookieName}=${JSON.stringify(consent)};${expiration}path=/`;
+  }
+  getCookie(cookieName) {
+    let cookie = {};
+    document.cookie.split(';').forEach(function (el) {
+      let [key, value] = el.split('=');
+      cookie[key.trim()] = value;
+    });
+    if (cookie[cookieName])
+      return JSON.parse(cookie[cookieName]);
+    return false;
+  }
+  setStateFromCookie() {
+    var _a;
+    let consent = commonDynamic.get('consent');
+    const consentCookie = this.getCookie(consent.cookie);
+    consent.items = (_a = consent === null || consent === void 0 ? void 0 : consent.items) === null || _a === void 0 ? void 0 : _a.map(item => {
+      var _a;
+      if (item.disabled)
+        return item;
+      item.checked = !!((_a = consentCookie === null || consentCookie === void 0 ? void 0 : consentCookie.find) === null || _a === void 0 ? void 0 : _a.call(consentCookie, value => value == item.inputname));
+      return item;
+    });
+    commonDynamic.set("consent", consent);
+  }
+  componentWillLoad() {
+    this.setStateFromCookie();
+    if (document.cookie.indexOf('akceptCookie=tak') == -1 || document.cookie.indexOf(commonDynamic.get('consent').cookie) == -1)
+      this.showpanel(true);
+  }
+  async showpanel(init = false) {
+    this.setStateFromCookie();
+    this.show = true;
+    this.hide = true;
+    setTimeout(() => {
+      this.hide = false;
+    }, init ? common.get('cookieDelay') : 100);
+  }
+  async requireconsent(requirementName) {
+    this.checkconsentpromise = undefined;
+    if (this.checkconsent(requirementName))
+      return true;
+    let consent = commonDynamic.get("consent");
+    const requirement = consent.requirements.find(entry => entry.name = requirementName);
+    consent.items.forEach((entry, index) => {
+      const consentRequired = requirement.consents.includes(entry.inputname);
+      consent.items[index].highlighted = consentRequired;
+    });
+    this.requirement = true;
+    this.extend = true;
+    this.requirementMessage = requirement.message;
+    commonDynamic.set("consent", consent);
+    return new Promise((resolve) => {
+      this.showpanel();
+      this.checkconsentpromise = () => resolve(this.checkconsent(requirementName));
+    });
+  }
+  checkconsent(requirementName) {
+    let requirementsMet = true;
+    let consent = commonDynamic.get("consent");
+    const requirement = consent.requirements.find(entry => entry.name = requirementName);
+    consent.items.forEach((entry, index) => {
+      const consentRequired = requirement.consents.includes(entry.inputname);
+      if (consentRequired && !consent.items[index].checked)
+        requirementsMet = false;
+    });
+    return requirementsMet;
+  }
+  hidepanel(all) {
+    var _a;
+    this.hide = true;
+    const consent = this.consent(all);
+    this.cookie(consent);
+    this.setStateFromCookie();
+    (_a = this.checkconsentpromise) === null || _a === void 0 ? void 0 : _a.call(this);
+    this.registerGTMCallback(consent);
+    setTimeout(() => {
+      this.show = false;
+      this.hide = false;
+      this.requirement = false;
+    }, 400);
+  }
+  registerGTMCallback(consent) {
+    window.googleConsentListeners.forEach((callback) => {
+      callback(consent);
+    });
+  }
+  consent(all = false) {
+    if (all)
+      return commonDynamic.get("consent").items.map(entry => entry.inputname);
+    const inputs = document.querySelectorAll("ks-cookie-popup input[type=checkbox]");
+    return Array.from(inputs)
+      .map(input => input.checked ? input.name : null)
+      .filter(value => value);
+  }
+  async showinfo() {
+    const details = document.querySelector("#cookie-popup-details");
+    details.show();
+  }
+  render() {
+    var _a, _b;
+    if (!Build.isBrowser)
+      return hAsync(Host, null);
+    const consent = commonDynamic.get('consent');
+    const cookieMessage = marked_umd.marked(this.requirement ? this.requirementMessage : common.get('cookieMessage'));
+    return hAsync(Host, { "aria-hidden": this.show ? "false" : "true" }, hAsync("div", { class: "message" }, hAsync("div", { innerHTML: cookieMessage }), this.requirement ? null : hAsync("div", { class: "buttons" }, hAsync("ks-button", { round: true, border: true, light: true, name: consent.buttons.details, onClick: () => this.showinfo() }), hAsync("ks-button", { round: true, border: true, light: true, name: consent.buttons.settings, onClick: () => this.extendpanel() }), hAsync("ks-button", { round: true, light: true, name: consent.buttons.acceptall, onClick: () => this.hidepanel(true) }))), hAsync("div", { class: "settings" }, (_b = (_a = consent === null || consent === void 0 ? void 0 : consent.items) === null || _a === void 0 ? void 0 : _a.map) === null || _b === void 0 ? void 0 :
+      _b.call(_a, item => this.type(item)), hAsync("div", { class: "buttons" }, hAsync("ks-button", { round: true, border: true, light: true, name: consent.buttons.save, onClick: () => this.hidepanel(false) }), this.requirement ? hAsync("ks-button", { round: true, light: true, name: consent.buttons.acceptall, onClick: () => this.hidepanel(true) }) : null)));
+  }
+  type(item) {
+    return hAsync("div", { class: "type" + (item.highlighted ? " highlight" : "") }, hAsync("div", { class: "heading" }, hAsync("div", { class: "name" }, item.name), hAsync("label", { class: "check" }, hAsync("input", { type: "checkbox", checked: item.checked, disabled: item.disabled, name: item.inputname }), hAsync("span", { class: "slider" }))), hAsync("div", null, item.description));
+  }
+  get root() { return getElement(this); }
+  static get style() { return cookiePopupCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-cookie-popup",
+    "$members$": {
+      "hide": [1540],
+      "show": [1540],
+      "extend": [1540],
+      "requirement": [1540],
+      "requirementMessage": [32],
+      "showpanel": [64],
+      "requireconsent": [64],
+      "showinfo": [64]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": [["hide", "hide"], ["show", "show"], ["extend", "extend"], ["requirement", "requirement"]]
+  }; }
+}
+
+const cookiePopupDetailsCss = "ks-cookie-popup-details .close{color:#101010 !important}ks-cookie-popup-details .content{width:100%}ks-cookie-popup-details h1,ks-cookie-popup-details h2,ks-cookie-popup-details h3{text-align:left}ks-cookie-popup-details ks-overlay{z-index:100000000}";
+
+class CookiePopup {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+  }
+  render() {
+    var _a;
+    if (!Build.isBrowser)
+      return hAsync(Host, null);
+    const consent = commonDynamic.get('consent');
+    const details = marked_umd.marked((_a = consent.details) !== null && _a !== void 0 ? _a : "");
+    return hAsync(Host, null, hAsync("ks-dialog", { id: "cookie-popup-details", dark: true }, hAsync("div", { class: "details", innerHTML: details })));
+  }
+  get root() { return getElement(this); }
+  static get style() { return cookiePopupDetailsCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-cookie-popup-details",
+    "$members$": undefined,
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const descriptionHtmlCss = "ks-description-html{display:block}";
+
+class DescriptionHTML {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.html = undefined;
+  }
+  render() {
+    return hAsync("div", { innerHTML: this.html });
+  }
+  static get style() { return descriptionHtmlCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-description-html",
+    "$members$": {
+      "html": [1]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const descriptionImageCss = "ks-description-image{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;margin-bottom:20px}ks-description-image .image{max-width:100%}";
+
+class DescriptionImage {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.image = undefined;
+    this.width = undefined;
+  }
+  render() {
+    return hAsync("div", { class: "image", style: { maxWidth: `min(100%,${this.width}px)` } }, hAsync("ks-img2", { src: this.image }));
+  }
+  static get style() { return descriptionImageCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-description-image",
+    "$members$": {
+      "image": [1],
+      "width": [2]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": []
+  }; }
+}
+
+const descriptionProductsCss = "ks-description-products{display:-ms-flexbox;display:flex;-ms-flex-flow:row wrap;flex-flow:row wrap;-ms-flex-pack:center;justify-content:center;-ms-flex-align:stretch;align-items:stretch;gap:10px;border-top:#f2f2f2 solid 1px;border-bottom:#eeeeee solid 1px;padding:10px 10px 20px 10px}ks-description-products>*{width:100%;-webkit-box-sizing:border-box;box-sizing:border-box}ks-description-products[kind='standard']{border:none}ks-description-products[kind='simple']{margin-bottom:20px}@media screen and (max-width: 640px){ks-description-products>*{width:228px}ks-description-products[kind='simple']{margin-bottom:20px}}@media (min-width: 360px) and (max-width: 640px){ks-description-products>*{width:48% !important}}";
+
+class DescriptionProducts {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.products = undefined;
+    this.kind = undefined;
+  }
+  render() {
+    return this.products.map(product => this.kind == "standard" ?
+      hAsync("ks-product-card", { flat: true, product: product }) :
+      hAsync("ks-product-simple", { name: product.name, img: product.image, link: product.link, currentPrice: product.currentPrice, previousPrice: product.previousPrice }));
+  }
+  static get style() { return descriptionProductsCss; }
+  static get cmpMeta() { return {
+    "$flags$": 0,
+    "$tagName$": "ks-description-products",
+    "$members$": {
+      "products": [16],
+      "kind": [513]
+    },
+    "$listeners$": undefined,
+    "$lazyBundleId$": "-",
+    "$attrsToReflect$": [["kind", "kind"]]
+  }; }
+}
 
 const descriptionTextCss = "ks-description-text{display:block;margin:0 auto 30px auto;max-width:1200px}ks-description-text.left{text-align:left}ks-description-text.center{text-align:center}ks-description-text.right{text-align:right}ks-description-text.nomargin{margin:0 auto}";
 
@@ -30585,7 +30611,7 @@ class PageBase {
       loadCommonData(this.commonData, this.commonDynamicData, Build);
   }
   render() {
-    return hAsync(Host, null, !this.skipbase && hAsync("ks-page-header", null), hAsync("slot", null), !this.skipbase && hAsync("ks-page-footer", null), hAsync("ks-newsletter-popup-edrone", { displayOnLoad: common.get('newsletterPopup') }), common.get('newsletterSideButton') ? hAsync("ks-newsletter-side-button", null) : null, hAsync("ks-product-suggestions", null), hAsync("ks-error-popup", null), hAsync("ks-message-popup", null), hAsync("ks-cookie-popup", null));
+    return hAsync(Host, null, !this.skipbase && hAsync("ks-page-header", null), hAsync("slot", null), !this.skipbase && hAsync("ks-page-footer", null), hAsync("ks-newsletter-popup-edrone", { displayOnLoad: common.get('newsletterPopup') }), common.get('newsletterSideButton') ? hAsync("ks-newsletter-side-button", null) : null, hAsync("ks-product-suggestions", null), hAsync("ks-error-popup", null), hAsync("ks-message-popup", null), hAsync("ks-cookie-popup", null), hAsync("ks-cookie-popup-details", null));
   }
   static get style() { return baseCss; }
   static get cmpMeta() { return {
@@ -34228,6 +34254,7 @@ registerComponents([
   ContentSeparator,
   ContentTags,
   ContentThumbnail,
+  CookiePopup$1,
   CookiePopup,
   DescriptionHTML,
   DescriptionImage,
