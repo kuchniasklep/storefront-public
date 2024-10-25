@@ -13037,6 +13037,7 @@ const common = createStore({
   address: "",
   address2: "",
   nip: "",
+  mapAddress: "",
   newsletterPopup: false,
   newsletterApi: "",
   suggestionApi: "",
@@ -28470,9 +28471,14 @@ class NavbarContactPanel {
     }
   }
   render() {
+    const address = common.get('address');
+    const address2 = common.get('address2');
+    const nip = common.get('nip');
+    const workingHours = common.get('workingHours');
+    const mapAddress = encodeURIComponent(common.get('mapAddress'));
     return hAsync(Host, { class: this.visible }, hAsync("div", { class: "navbar", style: { width: `${this.menuWidth}px` } }, hAsync("ks-navbar-button", { icon: "x", onClick: () => this.Toggle() })), hAsync("div", { class: "content" }, this.initialized ?
-      hAsync("div", { class: "map" }, hAsync("iframe", { frameborder: "0", height: this.height, width: this.width, src: "https://maps.google.pl/maps?ie=UTF8&q=Podwale%2025%2C%2058-500%20Jelenia%20G%C3%B3ra&gl=PL&\nhl=pl&t=m&iwloc=A&output=embed" }))
-      : null, hAsync("div", { class: "info ks-text-decorated" }, hAsync("div", { class: "address" }, common.get('company'), " ", hAsync("br", null), common.get('address'), " ", hAsync("br", null), common.get('address2') && [common.get('address2'), hAsync("br", null)], common.get('nip'), " ", hAsync("br", null), hAsync("br", null), common.get('workingHours'), " ", hAsync("br", null)), hAsync("div", { class: "buttons" }, hAsync("div", { class: "margin" }, hAsync("a", { href: "tel:" + common.get('phone') }, common.get('phone')), hAsync("br", null), hAsync("a", { href: "mailto:" + common.get('email') }, common.get('email')))))));
+      hAsync("div", { class: "map" }, hAsync("iframe", { frameborder: "0", height: this.height, width: this.width, src: `https://maps.google.pl/maps?ie=UTF8&q=${mapAddress}&gl=PL&hl=pl&t=m&iwloc=A&output=embed` }))
+      : null, hAsync("div", { class: "info ks-text-decorated" }, hAsync("div", { class: "address" }, common.get('company'), " ", hAsync("br", null), address && [address, hAsync("br", null)], address2 && [address2, hAsync("br", null)], nip && [nip, hAsync("br", null)], workingHours && [hAsync("br", null), workingHours]), hAsync("div", { class: "buttons" }, hAsync("div", { class: "margin" }, hAsync("a", { href: "tel:" + common.get('phone') }, common.get('phone')), hAsync("br", null), hAsync("a", { href: "mailto:" + common.get('email') }, common.get('email')))))));
   }
   get root() { return getElement(this); }
   static get style() { return navbarContactPanelCss; }
