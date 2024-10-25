@@ -13035,6 +13035,7 @@ const common = createStore({
   workingHours: "",
   company: "",
   address: "",
+  address2: "",
   nip: "",
   newsletterPopup: false,
   newsletterApi: "",
@@ -28470,8 +28471,8 @@ class NavbarContactPanel {
   }
   render() {
     return hAsync(Host, { class: this.visible }, hAsync("div", { class: "navbar", style: { width: `${this.menuWidth}px` } }, hAsync("ks-navbar-button", { icon: "x", onClick: () => this.Toggle() })), hAsync("div", { class: "content" }, this.initialized ?
-      hAsync("div", { class: "map" }, hAsync("iframe", { frameborder: "0", height: this.height, width: this.width, src: "https://maps.google.pl/maps?ie=UTF8&q=Jana%20III%20Sobieskiego%2047%2C%2058-500%20Jelenia%20G%C3%B3ra&gl=PL&\nhl=pl&t=m&iwloc=A&output=embed" }))
-      : null, hAsync("div", { class: "info ks-text-decorated" }, hAsync("div", { class: "address" }, common.get('company'), " ", hAsync("br", null), common.get('address'), " ", hAsync("br", null), common.get('nip'), " ", hAsync("br", null), hAsync("br", null), common.get('workingHours'), " ", hAsync("br", null)), hAsync("div", { class: "buttons" }, hAsync("div", { class: "margin" }, hAsync("a", { href: "tel:" + common.get('phone') }, common.get('phone')), hAsync("br", null), hAsync("a", { href: "mailto:" + common.get('email') }, common.get('email')))))));
+      hAsync("div", { class: "map" }, hAsync("iframe", { frameborder: "0", height: this.height, width: this.width, src: "https://maps.google.pl/maps?ie=UTF8&q=Podwale%2025%2C%2058-500%20Jelenia%20G%C3%B3ra&gl=PL&\nhl=pl&t=m&iwloc=A&output=embed" }))
+      : null, hAsync("div", { class: "info ks-text-decorated" }, hAsync("div", { class: "address" }, common.get('company'), " ", hAsync("br", null), common.get('address'), " ", hAsync("br", null), common.get('address2') && [common.get('address2'), hAsync("br", null)], common.get('nip'), " ", hAsync("br", null), hAsync("br", null), common.get('workingHours'), " ", hAsync("br", null)), hAsync("div", { class: "buttons" }, hAsync("div", { class: "margin" }, hAsync("a", { href: "tel:" + common.get('phone') }, common.get('phone')), hAsync("br", null), hAsync("a", { href: "mailto:" + common.get('email') }, common.get('email')))))));
   }
   get root() { return getElement(this); }
   static get style() { return navbarContactPanelCss; }
@@ -30797,10 +30798,11 @@ class PageFooter {
     const time = common.get('workingHours');
     const company = common.get('company');
     const address = common.get('address');
+    const address2 = common.get('address2');
     const softwareLink = common.get('softwareLink');
     const strings = common.get('translations');
     return [
-      hAsync("div", { class: "about" }, hAsync("div", { class: "links" }, common.get('footerLinks').map(section => hAsync("ks-footer-links", { heading: section.name }, section.items.map(item => hAsync("li", null, hAsync("a", { href: item.link }, item.name))))), hAsync("div", { class: "contact" }, hAsync("span", null, strings.footerContact), hAsync("a", { style: { "display": "none" } }), hAsync("a", { href: `tel:${phone}` }, hAsync("ks-icon", { name: "phone" }), hAsync("span", null, phone)), hAsync("a", { href: `mailto:${email}` }, hAsync("ks-icon", { name: "mail" }), hAsync("span", null, Build.isBrowser ? email : "")), hAsync("span", null, hAsync("ks-icon", { name: "clock", size: 0.9 }), " ", time), hAsync("span", null, hAsync("ks-icon", { name: "home", size: 0.9 }), " ", company), hAsync("span", null, hAsync("ks-icon", { name: "map-pin", size: 0.9 }), " ", address))), hAsync("div", { class: "newsletter" }, hAsync("div", null, strings.footerNewsletterSmall), hAsync("div", null, strings.footerNewsletterLarge), hAsync("ks-button", { light: true, border: true, name: strings.footerNewsletterSubmit, onClick: () => { var _a; return (_a = document.querySelector('ks-newsletter-popup-edrone')) === null || _a === void 0 ? void 0 : _a.Show(); } }))),
+      hAsync("div", { class: "about" }, hAsync("div", { class: "links" }, common.get('footerLinks').map(section => hAsync("ks-footer-links", { heading: section.name }, section.items.map(item => hAsync("li", null, hAsync("a", { href: item.link }, item.name))))), hAsync("div", { class: "contact" }, hAsync("span", null, strings.footerContact), hAsync("a", { style: { "display": "none" } }), hAsync("a", { href: `tel:${phone}` }, hAsync("ks-icon", { name: "phone" }), hAsync("span", null, phone)), hAsync("a", { href: `mailto:${email}` }, hAsync("ks-icon", { name: "mail" }), hAsync("span", null, Build.isBrowser ? email : "")), hAsync("span", null, hAsync("ks-icon", { name: "clock", size: 0.9 }), " ", time), hAsync("span", null, hAsync("ks-icon", { name: "home", size: 0.9 }), " ", company), hAsync("span", null, hAsync("ks-icon", { name: "map-pin", size: 0.9 }), " ", address), address2 && hAsync("span", null, hAsync("ks-icon", { name: "map-pin", size: 0.9 }), " ", address2))), hAsync("div", { class: "newsletter" }, hAsync("div", null, strings.footerNewsletterSmall), hAsync("div", null, strings.footerNewsletterLarge), hAsync("ks-button", { light: true, border: true, name: strings.footerNewsletterSubmit, onClick: () => { var _a; return (_a = document.querySelector('ks-newsletter-popup-edrone')) === null || _a === void 0 ? void 0 : _a.Show(); } }))),
       hAsync("div", { class: "portals" }, hAsync("div", null, common.get('social').map(social => hAsync("ks-footer-button", { width: social.width, height: social.height, href: social.link, image: social.image }))), hAsync("div", null, common.get('reviewers').map(reviewer => hAsync("ks-footer-button", { width: reviewer.width, height: reviewer.height, href: reviewer.link, image: reviewer.image })))),
       hAsync("div", { class: "software" }, hAsync("a", { href: softwareLink, rel: "nofollow" }, strings.footerSoftware))
     ];
