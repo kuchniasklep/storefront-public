@@ -28951,22 +28951,22 @@ class NewsletterPopupEdrone {
     if (!await ValidateInput(this.root.querySelector('form')))
       return;
     this.dialog.showLoading();
-    document.querySelector('ks-cookie-popup').requireconsent('newsletter').then(consentGranted => {
-      const strings = common.get('translations');
-      if (!consentGranted) {
-        this.dialog.showFailure(strings.newsletterPopupFailureHeading, strings.newsletterPopupFailureMessage);
-        return;
-      }
-      const target = event.target;
-      const data = new FormData(target);
-      const email = data.get('email');
-      const newsletterAPI = commonDynamic.get('api').newsletter;
-      // Server side call
-      formfetch(newsletterAPI, { "email": email.toString() });
-      this.track(data.get('email'), data.get('name'));
-      this.dialog.showSuccess(strings.newsletterPopupSuccessHeading, strings.newsletterPopupSuccessMessage);
-      this.success = true;
-    });
+    //document.querySelector('ks-cookie-popup').requireconsent('newsletter').then(consentGranted => {
+    const strings = common.get('translations');
+    // if(!consentGranted) {
+    //     this.dialog.showFailure(strings.newsletterPopupFailureHeading, strings.newsletterPopupFailureMessage);
+    //     return;
+    // }
+    const target = event.target;
+    const data = new FormData(target);
+    const email = data.get('email');
+    const newsletterAPI = commonDynamic.get('api').newsletter;
+    // Server side call
+    formfetch(newsletterAPI, { "email": email.toString() });
+    this.track(data.get('email'), data.get('name'));
+    this.dialog.showSuccess(strings.newsletterPopupSuccessHeading, strings.newsletterPopupSuccessMessage);
+    this.success = true;
+    //});
   }
   track(email, name) {
     const data = {
