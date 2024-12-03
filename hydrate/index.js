@@ -12183,6 +12183,7 @@ class Button {
     this.submit = undefined;
     this.link = undefined;
     this.nofollow = undefined;
+    this.newtab = undefined;
     this.disabled = undefined;
     this.left = undefined;
     this.narrow = undefined;
@@ -12201,7 +12202,7 @@ class Button {
     if (this.submit)
       return hAsync("input", { type: "submit", value: this.name });
     if (this.link)
-      return hAsync("a", { href: this.link, rel: this.nofollow ? "nofollow" : null }, this.name);
+      return hAsync("a", { href: this.link, rel: this.nofollow ? "nofollow" : null, target: this.newtab ? "_blank" : null }, this.name);
     return hAsync("button", { disabled: this.disabled }, this.icon && this.left ? hAsync("ks-icon", { name: this.icon, size: 0.9 }) : null, this.name, this.icon && !this.left ? hAsync("ks-icon", { name: this.icon, size: 0.9 }) : null);
   }
   get root() { return getElement(this); }
@@ -12215,6 +12216,7 @@ class Button {
       "submit": [4],
       "link": [1],
       "nofollow": [4],
+      "newtab": [4],
       "disabled": [516],
       "left": [516],
       "narrow": [516],
@@ -31352,7 +31354,7 @@ class PageProduct {
     window.handleInpostIziButtons();
   }
   render() {
-    var _a;
+    var _a, _b;
     if (!(product === null || product === void 0 ? void 0 : product.get('name')))
       return false;
     const infoBanner = product.get("infoBanner");
@@ -31362,7 +31364,12 @@ class PageProduct {
     const installments = product.get('installments');
     const tags = product.get('tags');
     const variants = product.get('variants');
-    const tabs = product.get('tabs');
+    const gspr = product.get("gspr");
+    const tabs = [
+      ...product.get('tabs'),
+      ...((gspr === null || gspr === void 0 ? void 0 : gspr.name) || (gspr === null || gspr === void 0 ? void 0 : gspr.info) || ((_a = gspr === null || gspr === void 0 ? void 0 : gspr.files) === null || _a === void 0 ? void 0 : _a.length) > 0 ?
+        [{ name: "Kontakt i bezpieczeństwo", gspr: gspr }] : [])
+    ];
     const youtube = product.get('youtube');
     const similar = product.get('similar');
     const accessories = product.get('accessories');
@@ -31405,8 +31412,8 @@ class PageProduct {
         hAsync("ks-product-variants", null)
         : null)
       : null, (tabs === null || tabs === void 0 ? void 0 : tabs.length) > 0 ?
-      hAsync("ks-container", null, hAsync("ks-product-tabs", { names: tabs.map(tab => tab.name).join(", ") }, tabs.map((tab, index) => hAsync("ks-product-tab", { name: tab.name, open: index == 0, main: index == 0, content: tab.content }))))
-      : null, ((_a = product.get('reviewProducts')) === null || _a === void 0 ? void 0 : _a.length) > 0 ?
+      hAsync("ks-container", null, hAsync("ks-product-tabs", { names: tabs.map(tab => tab.name).join(", ") }, tabs.map((tab, index) => hAsync("ks-product-tab", { name: tab.name, open: index == 0, main: index == 0, content: tab.content, gspr: tab.gspr }))))
+      : null, ((_b = product.get('reviewProducts')) === null || _b === void 0 ? void 0 : _b.length) > 0 ?
       hAsync("ks-container", null, hAsync("ks-review-product", null))
       : null, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 && (variants === null || variants === void 0 ? void 0 : variants.length) > 0 ?
       hAsync("ks-container", { padding: true }, hAsync("ks-product-tags", null))
@@ -33077,7 +33084,7 @@ class ProductSuggestions {
   }; }
 }
 
-const productTabCss = "ks-product-tab{display:block}@media only screen and (min-width: 960px){ks-product-tab .accordion{display:none}}ks-product-tab>button{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;background-color:transparent;color:#151515;width:100%;border:none;outline:none;padding:10px 0px 20px 0px;margin:0;-webkit-transition:color 0.3s ease;transition:color 0.3s ease}ks-product-tab>button:hover{color:#606060}ks-product-tab:not([open])>button>ks-icon{-webkit-transform:rotate(0deg);transform:rotate(0deg);transition:-webkit-transform 0.3s ease;-webkit-transition:-webkit-transform 0.3s ease;transition:transform 0.3s ease;transition:transform 0.3s ease, -webkit-transform 0.3s ease}ks-product-tab:not([open])>button:hover>ks-icon{-webkit-transform:rotate(90deg);transform:rotate(90deg)}ks-product-tab>.tab-content{display:none;max-width:100%}@media only screen and (min-width: 960px){ks-product-tab[main]>.tab-content{display:block}}@media only screen and (max-width: 960px){ks-product-tab[open]>.tab-content{display:block}}";
+const productTabCss = "ks-product-tab{display:block}@media only screen and (min-width: 960px){ks-product-tab .accordion{display:none}}ks-product-tab>button{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;background-color:transparent;color:#151515;width:100%;border:none;outline:none;padding:10px 0px 20px 0px;margin:0;-webkit-transition:color 0.3s ease;transition:color 0.3s ease}ks-product-tab>button:hover{color:#606060}ks-product-tab:not([open])>button>ks-icon{-webkit-transform:rotate(0deg);transform:rotate(0deg);transition:-webkit-transform 0.3s ease;-webkit-transition:-webkit-transform 0.3s ease;transition:transform 0.3s ease;transition:transform 0.3s ease, -webkit-transform 0.3s ease}ks-product-tab:not([open])>button:hover>ks-icon{-webkit-transform:rotate(90deg);transform:rotate(90deg)}ks-product-tab>.tab-content{display:none;max-width:100%}ks-product-tab .files{margin-top:40px}ks-product-tab .file{max-width:300px}@media only screen and (min-width: 960px){ks-product-tab[main]>.tab-content{display:block}}@media only screen and (max-width: 960px){ks-product-tab[open]>.tab-content{display:block}}";
 
 class ProductTab {
   constructor(hostRef) {
@@ -33086,11 +33093,21 @@ class ProductTab {
     this.open = undefined;
     this.name = undefined;
     this.content = undefined;
+    this.gspr = undefined;
   }
   render() {
+    var _a, _b;
     return [
       hAsync("button", { class: "accordion", onClick: () => this.onOpen() }, this.name, hAsync("ks-icon", { name: this.open ? "minus" : "plus" })),
-      hAsync("div", { class: "tab-content", innerHTML: this.content })
+      hAsync("div", { class: "tab-content", innerHTML: this.content }, this.gspr && [
+        (this.gspr.name || this.gspr.info) && hAsync("h3", null, "Informacje kontaktowe producenta"),
+        this.gspr.name && hAsync("p", null, (_a = this.gspr) === null || _a === void 0 ? void 0 : _a.name),
+        this.gspr.info && hAsync("p", { innerHTML: this.gspr.info.replace(/(?:\r\n|\r|\n)/g, '<br>') }),
+        ((_b = this.gspr.files) === null || _b === void 0 ? void 0 : _b.length) > 0 && [
+          hAsync("h3", { class: "files" }, "Zasoby dotycz\u0105ce bezpiecze\u0144stwa"),
+          this.gspr.files.map(file => hAsync("ks-button", { class: "file", round: true, newtab: true, nofollow: true, link: file.url, name: file.name }))
+        ]
+      ])
     ];
   }
   onOpen() {
@@ -33112,7 +33129,8 @@ class ProductTab {
       "main": [1540],
       "open": [1540],
       "name": [1],
-      "content": [1]
+      "content": [1],
+      "gspr": [16]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
