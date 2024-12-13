@@ -5868,9 +5868,8 @@ class Banner {
     this.theme = undefined;
   }
   Newsletter(name) {
-    var _a;
     if (name == "Newsletter")
-      (_a = document.querySelector('ks-newsletter-popup')) === null || _a === void 0 ? void 0 : _a.Show();
+      document.querySelector('ks-newsletter-popup')?.Show();
   }
   render() {
     const theme = (this.active && this.theme) ? `:root {
@@ -12592,34 +12591,56 @@ var DataLayer;
     };
   }
   async function pageview(eventID) {
-    var _a;
     // @ts-ignore: Crypto type error
     eventID = crypto.randomUUID();
-    const data = Object.assign({ event: 'ks.pageview', facebookEventId: eventID }, customerData());
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(data);
+    const data = {
+      event: 'ks.pageview',
+      facebookEventId: eventID,
+      ...customerData()
+    };
+    window.dataLayer?.push(data);
     resolvepageview();
     facebookConversionAPI(data);
   }
   DataLayer.pageview = pageview;
   async function product(product, eventID = "") {
-    var _a, _b;
     await pageviewed;
     // @ts-ignore: Crypto type error
     eventID = crypto.randomUUID();
     const categories = product.breadcrumbs;
-    const data = Object.assign(Object.assign({ event: 'ks.product', facebookEventId: eventID }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productImage: (product === null || product === void 0 ? void 0 : product.images.length) > 0 ? relativeToAbsolute(product.images[0].full.url) : undefined, productURL: relativeToAbsolute(document.location.href), productSKU: product.model, productBrand: product.brand.name, productCategory: categories[categories.length - 1].name, productAvailability: product.shippingTime, productQuantity: 1, productCategories: product.categories, ecomm_prodid: product.id, ecomm_pagetype: 'product', ecomm_totalvalue: product.currentPrice, ecommerce: {
+    const data = {
+      event: 'ks.product',
+      facebookEventId: eventID,
+      ...customerData(),
+      productId: product.id,
+      productName: product.name,
+      productPrice: product.currentPrice,
+      productCurrency: product.currency,
+      productImage: product?.images.length > 0 ? relativeToAbsolute(product.images[0].full.url) : undefined,
+      productURL: relativeToAbsolute(document.location.href),
+      productSKU: product.model,
+      productBrand: product.brand.name,
+      productCategory: categories[categories.length - 1].name,
+      productAvailability: product.shippingTime,
+      productQuantity: 1,
+      productCategories: product.categories,
+      ecomm_prodid: product.id,
+      ecomm_pagetype: 'product',
+      ecomm_totalvalue: product.currentPrice,
+      ecommerce: {
         items: enchancedEcommerceItems([product])
-      }, uaecommerce: { ecommerce: {
+      },
+      uaecommerce: { ecommerce: {
           currencyCode: product.currency,
           impressions: UAenchancedEcommerceItems([product])
-        } } });
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(data);
+        } }
+    };
+    window.dataLayer?.push({ ecommerce: null });
+    window.dataLayer?.push(data);
     facebookConversionAPI(data);
   }
   DataLayer.product = product;
   async function listing(listing) {
-    var _a, _b, _c, _d;
     await pageviewed;
     const type = listing.type == "category" ? "category" :
       listing.type == "manufacturer" ? "manufacturer" :
@@ -12627,126 +12648,223 @@ var DataLayer;
           null;
     if (!type)
       return;
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: `ks.listing` }, customerData()), { type: type, listingCategories: type == "category" ? listing.breadcrumbs.filter(category => category.id != "0") : undefined, listingProducts: listing.products, ecommerce: {
+    window.dataLayer?.push({ ecommerce: null });
+    window.dataLayer?.push({
+      event: `ks.listing`,
+      ...customerData(),
+      type: type,
+      listingCategories: type == "category" ? listing.breadcrumbs.filter(category => category.id != "0") : undefined,
+      listingProducts: listing.products,
+      ecommerce: {
         items: enchancedEcommerceItems(listing.products)
-      }, uaecommerce: { ecommerce: {
-          currencyCode: (_d = (_c = listing.products) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.currency,
+      },
+      uaecommerce: { ecommerce: {
+          currencyCode: listing.products?.[0]?.currency,
           impressions: UAenchancedEcommerceItems(listing.products)
-        } } }));
+        } }
+    });
   }
   DataLayer.listing = listing;
   async function addToCart(product, eventID) {
-    var _a, _b;
     await pageviewed;
     // @ts-ignore: Crypto type error
     eventID = crypto.randomUUID();
-    const data = Object.assign(Object.assign({ event: 'ks.addToCart', facebookEventId: eventID }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
+    const data = {
+      event: 'ks.addToCart',
+      facebookEventId: eventID,
+      ...customerData(),
+      productId: product.id,
+      productName: product.name,
+      productPrice: product.currentPrice,
+      productCurrency: product.currency,
+      productQuantity: product.quantity,
+      productImage: relativeToAbsolute(product.imageFull),
+      productURL: relativeToAbsolute(product.link),
+      productSKU: product.sku,
+      productCategories: product.categories,
+      ecommerce: {
         items: enchancedEcommerceItems([product])
-      }, uaecommerce: { ecommerce: {
+      },
+      uaecommerce: { ecommerce: {
           currencyCode: product.currency,
           add: {
             products: UAenchancedEcommerceItems([product])
           }
-        } } });
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(data);
+        } }
+    };
+    window.dataLayer?.push({ ecommerce: null });
+    window.dataLayer?.push(data);
     facebookConversionAPI(data);
   }
   DataLayer.addToCart = addToCart;
   async function removeFromCart(product) {
-    var _a, _b;
     await pageviewed;
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.removeFromCart' }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
+    window.dataLayer?.push({ ecommerce: null });
+    window.dataLayer?.push({
+      event: 'ks.removeFromCart',
+      ...customerData(),
+      productId: product.id,
+      productName: product.name,
+      productPrice: product.currentPrice,
+      productCurrency: product.currency,
+      productQuantity: product.quantity,
+      productImage: relativeToAbsolute(product.imageFull),
+      productURL: relativeToAbsolute(product.link),
+      productSKU: product.sku,
+      productCategories: product.categories,
+      ecommerce: {
         items: enchancedEcommerceItems([product])
-      }, uaecommerce: { ecommerce: {
+      },
+      uaecommerce: { ecommerce: {
           currencyCode: product.currency,
           remove: {
             products: UAenchancedEcommerceItems([product])
           }
-        } } }));
+        } }
+    });
   }
   DataLayer.removeFromCart = removeFromCart;
   async function addToFavourites(product) {
-    var _a, _b;
     await pageviewed;
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.addToFavourites' }, customerData()), { productId: product.id, productName: product.name, productPrice: product.currentPrice, productCurrency: product.currency, productQuantity: product.quantity, productImage: relativeToAbsolute(product.imageFull), productURL: relativeToAbsolute(product.link), productSKU: product.sku, productCategories: product.categories, ecommerce: {
+    window.dataLayer?.push({ ecommerce: null });
+    window.dataLayer?.push({
+      event: 'ks.addToFavourites',
+      ...customerData(),
+      productId: product.id,
+      productName: product.name,
+      productPrice: product.currentPrice,
+      productCurrency: product.currency,
+      productQuantity: product.quantity,
+      productImage: relativeToAbsolute(product.imageFull),
+      productURL: relativeToAbsolute(product.link),
+      productSKU: product.sku,
+      productCategories: product.categories,
+      ecommerce: {
         items: enchancedEcommerceItems([product]),
         value: product.currentPrice,
         currency: product.currency
-      } }));
+      }
+    });
   }
   DataLayer.addToFavourites = addToFavourites;
   async function view_cart(cart) {
-    var _a, _b;
     await pageviewed;
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(Object.assign(Object.assign({ event: 'ks.viewCart' }, customerData()), { cartCurrency: cart.currency, cartProductValue: cart.productValue, cartValue: cart.totalValue, cartProducts: cart.products, ecomm_prodid: JSON.stringify(Object.values(cart.products).map(product => product.id)), ecomm_pagetype: 'cart', ecomm_totalvalue: cart.productValue, ecommerce: {
+    window.dataLayer?.push({ ecommerce: null });
+    window.dataLayer?.push({
+      event: 'ks.viewCart',
+      ...customerData(),
+      cartCurrency: cart.currency,
+      cartProductValue: cart.productValue,
+      cartValue: cart.totalValue,
+      cartProducts: cart.products,
+      ecomm_prodid: JSON.stringify(Object.values(cart.products).map(product => product.id)),
+      ecomm_pagetype: 'cart',
+      ecomm_totalvalue: cart.productValue,
+      ecommerce: {
         items: enchancedEcommerceItems(Object.values(cart.products)),
         value: cart.productValue,
         currency: cart.currency
-      }, uaecommerce: { ecommerce: {
+      },
+      uaecommerce: { ecommerce: {
           checkout: {
             actionField: { step: 1 },
             currencyCode: cart.currency,
             products: UAenchancedEcommerceItems(Object.values(cart.products))
           }
-        } } }));
+        } }
+    });
   }
   DataLayer.view_cart = view_cart;
   async function order_checkout(order, eventID) {
-    var _a, _b;
     await pageviewed;
     // @ts-ignore: Crypto type error
     eventID = crypto.randomUUID();
-    const data = Object.assign(Object.assign({ event: 'ks.checkout', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderShippingTime: order.totalShippingTimeDays, orderCoupon: order.coupon, ecommerce: {
+    const data = {
+      event: 'ks.checkout',
+      facebookEventId: eventID,
+      ...customerData(),
+      orderProducts: order.products,
+      orderValue: order.totalValue,
+      orderProductValue: order.productValue,
+      orderCurrency: order.currency,
+      orderShipping: order.shippingValue,
+      orderShippingTime: order.totalShippingTimeDays,
+      orderCoupon: order.coupon,
+      ecommerce: {
         items: enchancedEcommerceItems(order.products)
-      }, uaecommerce: { ecommerce: {
+      },
+      uaecommerce: { ecommerce: {
           checkout: {
             actionField: { step: 3 },
             currencyCode: order.currency,
             products: UAenchancedEcommerceItems(order.products)
           }
-        } } });
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(data);
+        } }
+    };
+    window.dataLayer?.push({ ecommerce: null });
+    window.dataLayer?.push(data);
     facebookConversionAPI(data);
   }
   DataLayer.order_checkout = order_checkout;
   async function order_form(order, eventID) {
-    var _a, _b;
     await pageviewed;
     // @ts-ignore: Crypto type error
     eventID = crypto.randomUUID();
-    const data = Object.assign(Object.assign({ event: 'ks.orderForm', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderShippingTime: order.totalShippingTimeDays, orderCoupon: order.coupon, ecommerce: {
+    const data = {
+      event: 'ks.orderForm',
+      facebookEventId: eventID,
+      ...customerData(),
+      orderProducts: order.products,
+      orderValue: order.totalValue,
+      orderProductValue: order.productValue,
+      orderCurrency: order.currency,
+      orderShipping: order.shippingValue,
+      orderShippingTime: order.totalShippingTimeDays,
+      orderCoupon: order.coupon,
+      ecommerce: {
         items: enchancedEcommerceItems(order.products)
-      }, uaecommerce: { ecommerce: {
+      },
+      uaecommerce: { ecommerce: {
           checkout: {
             actionField: { step: 2 },
             currencyCode: order.currency,
             products: UAenchancedEcommerceItems(order.products)
           }
-        } } });
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(data);
+        } }
+    };
+    window.dataLayer?.push({ ecommerce: null });
+    window.dataLayer?.push(data);
     facebookConversionAPI(data);
   }
   DataLayer.order_form = order_form;
   async function order_placed(order, eventID) {
-    var _a, _b;
     await pageviewed;
     // @ts-ignore: Crypto type error
     eventID = crypto.randomUUID();
-    const data = Object.assign(Object.assign({ event: 'ks.order', facebookEventId: eventID }, customerData()), { orderProducts: order.products, orderId: order.id, orderValue: order.totalValue, orderProductValue: order.productValue, orderCurrency: order.currency, orderShipping: order.shippingValue, orderShippingTime: order.totalShippingTimeDays, orderCoupon: order.coupon, ecomm_prodid: JSON.stringify(Object.values(order.products).map(product => product.id)), ecomm_pagetype: 'purchase', ecomm_totalvalue: order.productValue, ecommerce: {
+    const data = {
+      event: 'ks.order',
+      facebookEventId: eventID,
+      ...customerData(),
+      orderProducts: order.products,
+      orderId: order.id,
+      orderValue: order.totalValue,
+      orderProductValue: order.productValue,
+      orderCurrency: order.currency,
+      orderShipping: order.shippingValue,
+      orderShippingTime: order.totalShippingTimeDays,
+      orderCoupon: order.coupon,
+      ecomm_prodid: JSON.stringify(Object.values(order.products).map(product => product.id)),
+      ecomm_pagetype: 'purchase',
+      ecomm_totalvalue: order.productValue,
+      ecommerce: {
         transaction_id: order.id,
         value: order.totalValue,
         currency: order.currency,
         shipping: order.shippingValue,
         coupon: order.coupon,
         items: enchancedEcommerceItems(order.products)
-      }, uaecommerce: { ecommerce: {
+      },
+      uaecommerce: { ecommerce: {
           purchase: {
             currencyCode: order.currency,
             actionField: {
@@ -12757,28 +12875,43 @@ var DataLayer;
             },
             products: UAenchancedEcommerceItems(order.products)
           }
-        } } });
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push({ ecommerce: null });
-    (_b = window.dataLayer) === null || _b === void 0 ? void 0 : _b.push(data);
+        } }
+    };
+    window.dataLayer?.push({ ecommerce: null });
+    window.dataLayer?.push(data);
     facebookConversionAPI(data);
   }
   DataLayer.order_placed = order_placed;
   async function search(query) {
-    var _a;
     await pageviewed;
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(Object.assign({ event: 'ks.search', searchQuery: query }, customerData()));
+    window.dataLayer?.push({
+      event: 'ks.search',
+      searchQuery: query,
+      ...customerData(),
+    });
   }
   DataLayer.search = search;
   async function subscribe(subscription) {
-    var _a;
     await pageviewed;
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(Object.assign(Object.assign({ event: 'ks.subscribe' }, customerData()), { subscriptionPlace: subscription.place, subscriptionEmail: subscription.email, subscriptionName: subscription === null || subscription === void 0 ? void 0 : subscription.name, subscriptionStatus: subscription.subscriber ? 1 : 0 }));
+    window.dataLayer?.push({
+      event: 'ks.subscribe',
+      ...customerData(),
+      subscriptionPlace: subscription.place,
+      subscriptionEmail: subscription.email,
+      subscriptionName: subscription?.name,
+      subscriptionStatus: subscription.subscriber ? 1 : 0
+    });
   }
   DataLayer.subscribe = subscribe;
   async function recipe(recipe) {
-    var _a;
     await pageviewed;
-    (_a = window.dataLayer) === null || _a === void 0 ? void 0 : _a.push(Object.assign(Object.assign({ event: 'ks.recipe' }, customerData()), { recipeName: recipe.title, recipeCategory: recipe.category, recipeCuisine: recipe.cuisine }));
+    window.dataLayer?.push({
+      event: 'ks.recipe',
+      ...customerData(),
+      recipeName: recipe.title,
+      recipeCategory: recipe.category,
+      recipeCuisine: recipe.cuisine
+    });
   }
   DataLayer.recipe = recipe;
   function relativeToAbsolute(url) {
@@ -12794,11 +12927,11 @@ var DataLayer;
         index: index,
         price: product.currentPrice,
         item_brand: product.brandName,
-        item_category: categories === null || categories === void 0 ? void 0 : categories[0],
-        item_category2: categories === null || categories === void 0 ? void 0 : categories[1],
-        item_category3: categories === null || categories === void 0 ? void 0 : categories[2],
-        item_category4: categories === null || categories === void 0 ? void 0 : categories[3],
-        item_category5: categories === null || categories === void 0 ? void 0 : categories[4],
+        item_category: categories?.[0],
+        item_category2: categories?.[1],
+        item_category3: categories?.[2],
+        item_category4: categories?.[3],
+        item_category5: categories?.[4],
       };
     });
   }
@@ -12819,8 +12952,7 @@ var DataLayer;
 })(DataLayer || (DataLayer = {}));
 
 async function removeProduct(id) {
-  var _a;
-  const productData = (_a = cart.get("products")) === null || _a === void 0 ? void 0 : _a[id];
+  const productData = cart.get("products")?.[id];
   if (productData)
     DataLayer.removeFromCart(productData);
   const data = await fetch$1(cart.get('api').productRemove, { "id": id });
@@ -12847,10 +12979,9 @@ async function productCount(id, count) {
   }, productCountAbortController.signal);
   if (data) {
     ShowMessageFromData("Błąd ilości produktu", data, async (cleanedData) => {
-      var _a, _b;
       if ('error' in cleanedData) {
         messagePopup().show("Błąd ilości produktu", cleanedData.error.message);
-        maxCount = (_b = (_a = cleanedData === null || cleanedData === void 0 ? void 0 : cleanedData.error) === null || _a === void 0 ? void 0 : _a.maxCount) !== null && _b !== void 0 ? _b : null;
+        maxCount = cleanedData?.error?.maxCount ?? null;
       }
       else
         update(cleanedData);
@@ -13002,7 +13133,7 @@ class CartCountrySelect {
   }
   render() {
     return [
-      hAsync("select", { onChange: (ev) => this.ChangeHandler(ev) }, cart.get('countries').map(country => hAsync("option", { value: country.value, selected: country === null || country === void 0 ? void 0 : country.selected }, country.name))),
+      hAsync("select", { onChange: (ev) => this.ChangeHandler(ev) }, cart.get('countries').map(country => hAsync("option", { value: country.value, selected: country?.selected }, country.name))),
       hAsync("ks-icon", { name: "chevron-down" })
     ];
   }
@@ -13098,8 +13229,7 @@ class CartDealContainer {
     registerInstance(this, hostRef);
   }
   render() {
-    var _a, _b;
-    const count = ((_a = cart.get("dealGroups")) === null || _a === void 0 ? void 0 : _a.length) + ((_b = cart.get("deals")) === null || _b === void 0 ? void 0 : _b.length);
+    const count = cart.get("dealGroups")?.length + cart.get("deals")?.length;
     return hAsync(Host, { class: !count ? "empty" : "" }, cart.get("dealGroups").map((group) => hAsync("ks-cart-deal-group", { key: group.name, name: group.name, deals: group.deals })), cart.get("deals").map((product) => hAsync("ks-cart-deal", { key: product.id, ikey: product.id, name: product.name, link: product.link, img: product.img, price: product.price })));
   }
   static get style() { return dealContainerCss; }
@@ -13244,12 +13374,11 @@ class CartDiscountContainer {
     this.disablePoints = false;
   }
   render() {
-    var _a;
     const discount = cart.get("discount");
     const points = cart.get("points");
     const pointsForOrder = cart.get("pointsForOrder");
     const productValue = cart.get("productValue");
-    if (discount && ((_a = Object.keys(discount)) === null || _a === void 0 ? void 0 : _a.length) !== 0) {
+    if (discount && Object.keys(discount)?.length !== 0) {
       return (hAsync("nav", { class: "ticket" }, hAsync("h2", null, discount.heading), hAsync("ks-cart-discount-ticket", { name: discount.name, value: discount.value }), this.infoMessage != "" ?
         hAsync("ks-cart-discount-message", null, hAsync("span", null, this.infoMessage))
         : null));
@@ -14763,7 +14892,7 @@ class ComparePopup {
     const data = JSON.parse(js_cookie.get('product-comparison'));
     if (data)
       commonDynamic.set("compare", data);
-    return (data === null || data === void 0 ? void 0 : data.length) > 0;
+    return data?.length > 0;
   }
   componentWillLoad() {
     if (this.loadCookie())
@@ -14835,7 +14964,7 @@ class ComparePopup {
       return hAsync(Host, null);
     const compare = commonDynamic.get("compare");
     return hAsync(Host, { "aria-hidden": this.show ? "false" : "true" }, hAsync("div", { class: "message" }, hAsync("div", { class: "buttons" }, hAsync("ks-button", { round: true, border: true, narrower: true, icon: "x", onClick: () => this.cancel() }), hAsync("p", null, "Por\u00F3wnywanie produkt\u00F3w"), hAsync("ks-button", { round: true, border: true, narrower: true, icon: this.extend ? "chevron-down" : "chevron-up", onClick: () => this.extendpanel() }), this.extend ?
-      hAsync("ks-button", { round: true, narrower: true, name: "Porównaj", onClick: () => this.compare(), disabled: (compare === null || compare === void 0 ? void 0 : compare.length) < 2 })
+      hAsync("ks-button", { round: true, narrower: true, name: "Porównaj", onClick: () => this.compare(), disabled: compare?.length < 2 })
       : null)), hAsync("div", { class: "products" }, [0, 1, 2].map(index => hAsync("div", { class: "product" + (compare[index] ? "" : " empty") }, compare[index] ? [
       hAsync("ks-img3", { image: compare[index].image }),
       hAsync("a", { href: compare[index].link }, compare[index].name),
@@ -15172,7 +15301,7 @@ class ContentFeaturedWithText {
   }
   featured(item) {
     return hAsync("div", { class: "featured", style: this.bannerStyle(item) }, hAsync("ks-img3", { fit: item.fit, image: item.image, webp: item.webp, alt: item.name, width: item.width, height: item.height }), item.mainText || item.aboveText ?
-      hAsync("div", { class: "overlay " + this.alignmentClass(item) }, hAsync("div", { class: "content" }, hAsync("div", { class: "text" }, item.aboveText ? hAsync("div", { class: "aboveText" }, item.aboveText) : null, item.mainText), (item === null || item === void 0 ? void 0 : item.link) ?
+      hAsync("div", { class: "overlay " + this.alignmentClass(item) }, hAsync("div", { class: "content" }, hAsync("div", { class: "text" }, item.aboveText ? hAsync("div", { class: "aboveText" }, item.aboveText) : null, item.mainText), item?.link ?
         hAsync("ks-button", { link: item.link, round: true, border: true, light: true, narrow: true, name: "Zobacz wi\u0119cej" })
         : null))
       : null);
@@ -18440,14 +18569,12 @@ class CookiePopup$1 {
     return false;
   }
   setStateFromCookie() {
-    var _a;
     let consent = commonDynamic.get('consent');
     const consentCookie = this.getCookie(consent.cookie);
-    consent.items = (_a = consent === null || consent === void 0 ? void 0 : consent.items) === null || _a === void 0 ? void 0 : _a.map(item => {
-      var _a;
+    consent.items = consent?.items?.map(item => {
       if (item.disabled)
         return item;
-      item.checked = !!((_a = consentCookie === null || consentCookie === void 0 ? void 0 : consentCookie.find) === null || _a === void 0 ? void 0 : _a.call(consentCookie, value => value == item.inputname));
+      item.checked = !!consentCookie?.find?.(value => value == item.inputname);
       return item;
     });
     commonDynamic.set("consent", consent);
@@ -18496,12 +18623,11 @@ class CookiePopup$1 {
     return requirementsMet;
   }
   hidepanel(all) {
-    var _a;
     this.hide = true;
     const consent = this.consent(all);
     this.cookie(consent);
     this.setStateFromCookie();
-    (_a = this.checkconsentpromise) === null || _a === void 0 ? void 0 : _a.call(this);
+    this.checkconsentpromise?.();
     this.registerGTMCallback(consent);
     setTimeout(() => {
       this.show = false;
@@ -18527,13 +18653,11 @@ class CookiePopup$1 {
     details.show();
   }
   render() {
-    var _a, _b;
     if (!Build.isBrowser)
       return hAsync(Host, null);
     const consent = commonDynamic.get('consent');
     const cookieMessage = marked_umd.marked(this.requirement ? this.requirementMessage : common.get('cookieMessage'));
-    return hAsync(Host, { "aria-hidden": this.show ? "false" : "true" }, hAsync("div", { class: "message" }, hAsync("div", { innerHTML: cookieMessage }), this.requirement ? null : hAsync("div", { class: "buttons" }, hAsync("ks-button", { round: true, border: true, light: true, name: consent.buttons.details, onClick: () => this.showinfo() }), hAsync("ks-button", { round: true, border: true, light: true, name: consent.buttons.settings, onClick: () => this.extendpanel() }), hAsync("ks-button", { round: true, light: true, name: consent.buttons.acceptall, onClick: () => this.hidepanel(true) }))), hAsync("div", { class: "settings" }, (_b = (_a = consent === null || consent === void 0 ? void 0 : consent.items) === null || _a === void 0 ? void 0 : _a.map) === null || _b === void 0 ? void 0 :
-      _b.call(_a, item => this.type(item)), hAsync("div", { class: "buttons" }, hAsync("ks-button", { round: true, border: true, light: true, name: consent.buttons.save, onClick: () => this.hidepanel(false) }), this.requirement ? hAsync("ks-button", { round: true, light: true, name: consent.buttons.acceptall, onClick: () => this.hidepanel(true) }) : null)));
+    return hAsync(Host, { "aria-hidden": this.show ? "false" : "true" }, hAsync("div", { class: "message" }, hAsync("div", { innerHTML: cookieMessage }), this.requirement ? null : hAsync("div", { class: "buttons" }, hAsync("ks-button", { round: true, border: true, light: true, name: consent.buttons.details, onClick: () => this.showinfo() }), hAsync("ks-button", { round: true, border: true, light: true, name: consent.buttons.settings, onClick: () => this.extendpanel() }), hAsync("ks-button", { round: true, light: true, name: consent.buttons.acceptall, onClick: () => this.hidepanel(true) }))), hAsync("div", { class: "settings" }, consent?.items?.map?.(item => this.type(item)), hAsync("div", { class: "buttons" }, hAsync("ks-button", { round: true, border: true, light: true, name: consent.buttons.save, onClick: () => this.hidepanel(false) }), this.requirement ? hAsync("ks-button", { round: true, light: true, name: consent.buttons.acceptall, onClick: () => this.hidepanel(true) }) : null)));
   }
   type(item) {
     return hAsync("div", { class: "type" + (item.highlighted ? " highlight" : "") }, hAsync("div", { class: "heading" }, hAsync("div", { class: "name" }, item.name), hAsync("label", { class: "check" }, hAsync("input", { type: "checkbox", checked: item.checked, disabled: item.disabled, name: item.inputname }), hAsync("span", { class: "slider" }))), hAsync("div", null, item.description));
@@ -18566,11 +18690,10 @@ class CookiePopup {
     registerInstance(this, hostRef);
   }
   render() {
-    var _a;
     if (!Build.isBrowser)
       return hAsync(Host, null);
     const consent = commonDynamic.get('consent');
-    const details = marked_umd.marked((_a = consent.details) !== null && _a !== void 0 ? _a : "");
+    const details = marked_umd.marked(consent.details ?? "");
     return hAsync(Host, null, hAsync("ks-dialog", { id: "cookie-popup-details", dark: true }, hAsync("div", { class: "details", innerHTML: details })));
   }
   get root() { return getElement(this); }
@@ -21473,7 +21596,7 @@ class Filtering {
       hAsync("ks-button", { narrow: true, muted: true, border: true, name: strings.filter, left: true, icon: "filter", onClick: () => this.root.querySelector('ks-sidepanel').show() }),
       hAsync("ks-sidepanel", { left: true, large: true }, hAsync("span", { class: "heading" }, strings.filteringHeader), hAsync("form", { method: "POST", action: this.baseUrl }, hAsync("input", { type: "hidden", name: "postget", value: "tak" }), this.query ?
         hAsync("input", { type: "hidden", name: "szukaj", value: this.query })
-        : null, filters.map(filter => (filter === null || filter === void 0 ? void 0 : filter.items.length) > 0 ?
+        : null, filters.map(filter => filter?.items.length > 0 ?
         hAsync("ks-filter", { name: filter.name, active: filter.active }, filter.items.map(item => {
           if (filter.type == "checkbox") {
             item = item;
@@ -24380,8 +24503,7 @@ class Img2 {
     this.loaded = false;
   }
   loadHandler(e) {
-    var _a;
-    if (e.target instanceof HTMLElement && !((_a = e.target.getAttribute("src")) === null || _a === void 0 ? void 0 : _a.includes('data:image'))) {
+    if (e.target instanceof HTMLElement && !e.target.getAttribute("src")?.includes('data:image')) {
       this.loaded = true;
       this.lazyLoaded.emit();
     }
@@ -24405,13 +24527,12 @@ class Img2 {
     this.source = this.root.querySelector('source');
     const target = this.target ? this.root.closest(this.target) : this.root.parentElement;
     const onIntersection = (entries) => {
-      var _a;
       for (const entry of entries) {
         if (entry.isIntersecting) {
           if (this.observer) {
             this.observer.disconnect();
           }
-          if ((_a = this.source) === null || _a === void 0 ? void 0 : _a.getAttribute('data-srcSet')) {
+          if (this.source?.getAttribute('data-srcSet')) {
             this.source.setAttribute('srcSet', this.source.getAttribute('data-srcSet'));
             this.source.removeAttribute('data-srcSet');
           }
@@ -24494,8 +24615,7 @@ class Img3 {
     this.loaded = false;
   }
   loadHandler(e) {
-    var _a;
-    if (e.target instanceof HTMLElement && !((_a = e.target.getAttribute("src")) === null || _a === void 0 ? void 0 : _a.includes('data:image'))) {
+    if (e.target instanceof HTMLElement && !e.target.getAttribute("src")?.includes('data:image')) {
       this.loaded = true;
       this.lazyLoaded.emit();
     }
@@ -24519,13 +24639,12 @@ class Img3 {
     this.source = this.root.querySelector('source');
     const target = this.target ? this.root.closest(this.target) : this.root.parentElement;
     const onIntersection = (entries) => {
-      var _a;
       for (const entry of entries) {
         if (entry.isIntersecting) {
           if (this.observer) {
             this.observer.disconnect();
           }
-          if ((_a = this.source) === null || _a === void 0 ? void 0 : _a.getAttribute('data-srcSet')) {
+          if (this.source?.getAttribute('data-srcSet')) {
             this.source.setAttribute('srcSet', this.source.getAttribute('data-srcSet'));
             this.source.removeAttribute('data-srcSet');
           }
@@ -24592,8 +24711,7 @@ class InfoBanner {
     this.productBanner = undefined;
   }
   render() {
-    var _a;
-    const theme = (_a = this.content) === null || _a === void 0 ? void 0 : _a.theme;
+    const theme = this.content?.theme;
     const themeStyle = theme ? `:root {
       --navbar-color: ${theme.navbarColor} !important;
       --navbar-color-hover: ${theme.navbarColorHover} !important;
@@ -27846,7 +27964,6 @@ class Lightbox {
   }
   async show(index = 0) {
     this.overlay.show().then(() => {
-      var _a;
       if (this.carousel == undefined) {
         this.thumbs = new Swiper('.lightbox-thumb', {
           observer: true,
@@ -27874,7 +27991,7 @@ class Lightbox {
           },
         });
       }
-      (_a = this.carousel) === null || _a === void 0 ? void 0 : _a.slideTo(index, 0, false);
+      this.carousel?.slideTo(index, 0, false);
     });
   }
   async hide() {
@@ -27941,22 +28058,21 @@ class ListingHeader {
     this.theme = undefined;
   }
   render() {
-    var _a, _b, _c, _d, _e;
-    const autocorrect = (_a = this.autocorrect) === null || _a === void 0 ? void 0 : _a.split('{}');
+    const autocorrect = this.autocorrect?.split('{}');
     return [
       hAsync("h1", { class: "title" }, this.heading),
-      ((autocorrect === null || autocorrect === void 0 ? void 0 : autocorrect.length) == 2 && this.query) ?
+      (autocorrect?.length == 2 && this.query) ?
         hAsync("h2", { class: "autocorrect" }, autocorrect[0], hAsync("span", null, this.query), autocorrect[1])
         : null,
-      ((_b = this.breadcrumbs) === null || _b === void 0 ? void 0 : _b.length) > 0 ?
+      this.breadcrumbs?.length > 0 ?
         hAsync("ks-content-breadcrumbs", { items: this.breadcrumbs })
         : null,
-      this.description || ((_c = this.categories) === null || _c === void 0 ? void 0 : _c.length) > 0 ? hAsync("hr", null) : null,
+      this.description || this.categories?.length > 0 ? hAsync("hr", null) : null,
       this.description ? hAsync("div", { class: "description", innerHTML: this.description }) : null,
-      ((_d = this.categories) === null || _d === void 0 ? void 0 : _d.length) > 0 ?
+      this.categories?.length > 0 ?
         hAsync("ks-content-tags", { items: this.categories })
         : null,
-      ((_e = this.tags) === null || _e === void 0 ? void 0 : _e.length) > 0 ?
+      this.tags?.length > 0 ?
         hAsync("ks-content-tags", { class: "tags", items: this.tags })
         : null
     ];
@@ -28726,9 +28842,8 @@ class NavbarSearch {
     this.inputElement = this.root.querySelector('input[name=szukaj]');
   }
   render() {
-    var _a;
     return (hAsync("form", { method: "post", action: "szukaj.html", onSubmit: e => this.submit(e) }, hAsync("a", { onClick: e => this.submit(e) }, hAsync("ks-icon", { name: "search", size: 1.1 })), hAsync("input", { "aria-label": "Szukaj produkt\u00F3w", name: "szukaj", type: "search", autocomplete: "off", required: true, onFocus: () => this.focus(), onBlur: () => this.blur(), onInput: () => this.input(), onKeyDown: e => this.key(e) }), hAsync("input", { type: "hidden", name: "postget", value: "tak" }), this.active && this.items && this.items.length > 0 ?
-      hAsync("div", { class: "list" }, (_a = this.items) === null || _a === void 0 ? void 0 : _a.map((item, index) => hAsync("a", { href: item.url, class: index == this.select ? "active" : "" }, item.name, hAsync("ks-icon", { name: item.type == "category" ? "layers" : "bookmark", size: 0.9 }))))
+      hAsync("div", { class: "list" }, this.items?.map((item, index) => hAsync("a", { href: item.url, class: index == this.select ? "active" : "" }, item.name, hAsync("ks-icon", { name: item.type == "category" ? "layers" : "bookmark", size: 0.9 }))))
       : null));
   }
   get root() { return getElement(this); }
@@ -29020,8 +29135,7 @@ class NewsletterSideButton {
     registerInstance(this, hostRef);
   }
   clickHandler() {
-    var _a;
-    (_a = document.querySelector('ks-newsletter-popup-edrone')) === null || _a === void 0 ? void 0 : _a.Show();
+    document.querySelector('ks-newsletter-popup-edrone')?.Show();
   }
   render() {
     const strings = common.get('translations');
@@ -29390,7 +29504,7 @@ class OrderDPD {
     this.initialized = true;
   }
   hide(event) {
-    event === null || event === void 0 ? void 0 : event.preventDefault();
+    event?.preventDefault();
     this.overlay.hide();
   }
   async Validate() {
@@ -29693,7 +29807,7 @@ class OrderForm {
         else {
           const email = form.querySelector('input[type=email]');
           const subscription = form.querySelector('input[name=biuletyn]');
-          this.track(email === null || email === void 0 ? void 0 : email.value, subscription === null || subscription === void 0 ? void 0 : subscription.checked);
+          this.track(email?.value, subscription?.checked);
           window.location.href = this.destination;
         }
       })
@@ -30222,7 +30336,10 @@ class OrderProgress {
       color: "white",
       borderLeft: "1px solid #404040"
     };
-    const active = Object.assign(Object.assign({}, tile), { backgroundColor: "#404040", borderLeft: "1px solid #404040" });
+    const active = { ...tile,
+      backgroundColor: "#404040",
+      borderLeft: "1px solid #404040"
+    };
     if (this.mobile)
       return tile;
     if (step == this.current)
@@ -30472,7 +30589,7 @@ class PageArticle {
     });
   }
   renderDescription(content, type) {
-    return content === null || content === void 0 ? void 0 : content.map(entry => {
+    return content?.map(entry => {
       switch (entry.type) {
         case "ComponentContentText":
           return hAsync("ks-description-text", { text: entry.text, align: entry.align, nomargin: entry.nomargin });
@@ -30563,9 +30680,9 @@ class PageArticles {
     const cards = articles.get('articles');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("h1", null, articles.get('heading')), navigation && navigation.count > 1 ?
       hAsync("ks-listing-navigation", null, hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.paginationBase, pattern: navigation.pattern }))
-      : null, (cards === null || cards === void 0 ? void 0 : cards.length) > 0 ?
+      : null, cards?.length > 0 ?
       hAsync("ks-article-container", null, cards.map(card => hAsync("ks-article-card", { link: card.link, heading: card.heading, image: card.image, webp: card.webp, date: card.date, views: card.views }, hAsync("p", null, card.description))))
-      : null, navigation && (cards === null || cards === void 0 ? void 0 : cards.length) > 0 ?
+      : null, navigation && cards?.length > 0 ?
       hAsync("ks-listing-navigation", null, hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.paginationBase, pattern: navigation.pattern }))
       : null);
   }
@@ -30655,13 +30772,12 @@ class PageCart {
     DataLayer.view_cart(cartData);
   }
   render() {
-    var _a;
     const commonStrings = common.get('translations');
     const strings = cart.get('strings');
     const discountStrings = cart.get('discountStrings');
     const easyprotectStrings = cart.get('easyprotectStrings');
-    const progressBar = (cart === null || cart === void 0 ? void 0 : cart.get('progressBar')) && cart.get("productValue") < ((_a = cart.get("shippingProgress")) === null || _a === void 0 ? void 0 : _a.threshold);
-    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, Object.keys(cart === null || cart === void 0 ? void 0 : cart.get('products')).length > 0 ? [
+    const progressBar = cart?.get('progressBar') && cart.get("productValue") < cart.get("shippingProgress")?.threshold;
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, Object.keys(cart?.get('products')).length > 0 ? [
       hAsync("div", { class: "cart-progress-container" }, progressBar ? [
         hAsync("ks-cart-progress-bar", null),
       ] : null),
@@ -30723,7 +30839,7 @@ class PageCompare {
   }
   removeProductCookie(id) {
     const state = JSON.parse(js_cookie.get('product-comparison'));
-    const index = state === null || state === void 0 ? void 0 : state.findIndex(product => product.id == id);
+    const index = state?.findIndex(product => product.id == id);
     if (index == -1)
       return;
     state.splice(index, 1);
@@ -30755,7 +30871,7 @@ class PageCompare {
       if (!product)
         return hAsync("div", { class: "add" }, hAsync("ks-button", { border: true, round: true, icon: "plus", onClick: () => this.addProduct() }));
       return hAsync("div", { class: "product" }, hAsync("a", { href: product.link }, hAsync("ks-img3", { image: product.image, fit: 'contain' }), hAsync("div", { class: "text" }, hAsync("h2", null, product.name), hAsync("p", null, product.description))), hAsync("ks-button", { border: true, round: true, narrower: true, icon: "x", onClick: () => this.removeProduct(product.id) }));
-    })), hAsync("div", { class: "compare-attributes" }, hAsync("div", { class: "category" }, hAsync("h3", null, "Informacje Og\u00F3lne"), hAsync("table", null, hAsync("tbody", null, hAsync("tr", null, hAsync("th", null, "Kategoria"), product_ids.map(id => { var _a; return hAsync("td", null, (_a = products.find(product => product.id == id)) === null || _a === void 0 ? void 0 : _a.category); })), hAsync("tr", null, hAsync("th", null, "Cena"), product_ids.map(id => { var _a; return hAsync("td", null, priceFormat((_a = products.find(product => product.id == id)) === null || _a === void 0 ? void 0 : _a.price)); })), hAsync("tr", null, hAsync("th", null, "Czas dostawy"), product_ids.map(id => { var _a; return hAsync("td", null, (_a = products.find(product => product.id == id)) === null || _a === void 0 ? void 0 : _a.shipping); }))))), [...attributes.entries()].map(([category_name, category], index) => hAsync("div", { class: "category interactable " + (this.same_attributes_in_category(category, product_ids) ? "identical " : "") }, hAsync("h3", { onClick: () => this.toggle_hidden(index) }, category_name), hAsync("ks-icon", { name: this.hidden.includes(index) ? "chevron-down" : "chevron-up" }), hAsync("table", { class: (this.hidden.includes(index) ? "hidden" : "") }, hAsync("tbody", null, [...category.entries()].map(([attribute_name, attribute]) => hAsync("tr", { class: this.same_attributes(attribute, product_ids) ? "identical" : "" }, hAsync("th", null, attribute_name), product_ids.map(id => hAsync("td", null, attribute.has(id) ?
+    })), hAsync("div", { class: "compare-attributes" }, hAsync("div", { class: "category" }, hAsync("h3", null, "Informacje Og\u00F3lne"), hAsync("table", null, hAsync("tbody", null, hAsync("tr", null, hAsync("th", null, "Kategoria"), product_ids.map(id => hAsync("td", null, products.find(product => product.id == id)?.category))), hAsync("tr", null, hAsync("th", null, "Cena"), product_ids.map(id => hAsync("td", null, priceFormat(products.find(product => product.id == id)?.price)))), hAsync("tr", null, hAsync("th", null, "Czas dostawy"), product_ids.map(id => hAsync("td", null, products.find(product => product.id == id)?.shipping)))))), [...attributes.entries()].map(([category_name, category], index) => hAsync("div", { class: "category interactable " + (this.same_attributes_in_category(category, product_ids) ? "identical " : "") }, hAsync("h3", { onClick: () => this.toggle_hidden(index) }, category_name), hAsync("ks-icon", { name: this.hidden.includes(index) ? "chevron-down" : "chevron-up" }), hAsync("table", { class: (this.hidden.includes(index) ? "hidden" : "") }, hAsync("tbody", null, [...category.entries()].map(([attribute_name, attribute]) => hAsync("tr", { class: this.same_attributes(attribute, product_ids) ? "identical" : "" }, hAsync("th", null, attribute_name), product_ids.map(id => hAsync("td", null, attribute.has(id) ?
       (attribute.get(id) == "true" ?
         hAsync("ks-icon", { name: "check" }) : attribute.get(id)) : "-"))))))))));
   }
@@ -30810,7 +30926,7 @@ class PageFooter {
     const softwareLink = common.get('softwareLink');
     const strings = common.get('translations');
     return [
-      hAsync("div", { class: "about" }, hAsync("div", { class: "links" }, common.get('footerLinks').map(section => hAsync("ks-footer-links", { heading: section.name }, section.items.map(item => hAsync("li", null, hAsync("a", { href: item.link }, item.name))))), hAsync("div", { class: "contact" }, hAsync("span", null, strings.footerContact), hAsync("a", { style: { "display": "none" } }), hAsync("a", { href: `tel:${phone}` }, hAsync("ks-icon", { name: "phone" }), hAsync("span", null, phone)), hAsync("a", { href: `mailto:${email}` }, hAsync("ks-icon", { name: "mail" }), hAsync("span", null, Build.isBrowser ? email : "")), hAsync("span", null, hAsync("ks-icon", { name: "clock", size: 0.9 }), " ", time), hAsync("span", null, hAsync("ks-icon", { name: "home", size: 0.9 }), " ", company), hAsync("span", null, hAsync("ks-icon", { name: "map-pin", size: 0.9 }), " ", address), address2 && hAsync("span", null, hAsync("ks-icon", { name: "map-pin", size: 0.9 }), " ", address2))), hAsync("div", { class: "newsletter" }, hAsync("div", null, strings.footerNewsletterSmall), hAsync("div", null, strings.footerNewsletterLarge), hAsync("ks-button", { light: true, border: true, name: strings.footerNewsletterSubmit, onClick: () => { var _a; return (_a = document.querySelector('ks-newsletter-popup-edrone')) === null || _a === void 0 ? void 0 : _a.Show(); } }))),
+      hAsync("div", { class: "about" }, hAsync("div", { class: "links" }, common.get('footerLinks').map(section => hAsync("ks-footer-links", { heading: section.name }, section.items.map(item => hAsync("li", null, hAsync("a", { href: item.link }, item.name))))), hAsync("div", { class: "contact" }, hAsync("span", null, strings.footerContact), hAsync("a", { style: { "display": "none" } }), hAsync("a", { href: `tel:${phone}` }, hAsync("ks-icon", { name: "phone" }), hAsync("span", null, phone)), hAsync("a", { href: `mailto:${email}` }, hAsync("ks-icon", { name: "mail" }), hAsync("span", null, Build.isBrowser ? email : "")), hAsync("span", null, hAsync("ks-icon", { name: "clock", size: 0.9 }), " ", time), hAsync("span", null, hAsync("ks-icon", { name: "home", size: 0.9 }), " ", company), hAsync("span", null, hAsync("ks-icon", { name: "map-pin", size: 0.9 }), " ", address), address2 && hAsync("span", null, hAsync("ks-icon", { name: "map-pin", size: 0.9 }), " ", address2))), hAsync("div", { class: "newsletter" }, hAsync("div", null, strings.footerNewsletterSmall), hAsync("div", null, strings.footerNewsletterLarge), hAsync("ks-button", { light: true, border: true, name: strings.footerNewsletterSubmit, onClick: () => document.querySelector('ks-newsletter-popup-edrone')?.Show() }))),
       hAsync("div", { class: "portals" }, hAsync("div", null, common.get('social').map(social => hAsync("ks-footer-button", { width: social.width, height: social.height, href: social.link, image: social.image }))), hAsync("div", null, common.get('reviewers').map(reviewer => hAsync("ks-footer-button", { width: reviewer.width, height: reviewer.height, href: reviewer.link, image: reviewer.image })))),
       hAsync("div", { class: "software" }, hAsync("a", { href: softwareLink, rel: "nofollow" }, strings.footerSoftware))
     ];
@@ -30833,32 +30949,20 @@ const guideCss = "ks-page-guide{display:block;background-color:#f2f2f2}ks-page-g
 class PageGuide {
   constructor(hostRef) {
     registerInstance(this, hostRef);
-    this.choices_stage = () => {
-      var _a, _b, _c, _d, _e;
-      return [
-        hAsync("h2", null, (_a = this.activeCategory()) === null || _a === void 0 ? void 0 : _a.heading),
-        hAsync("div", { class: ["choices", ((_b = this.activeCategory()) === null || _b === void 0 ? void 0 : _b.multiple) ? "multiple" : null].join(" ") }, (_c = this.activeCategory()) === null || _c === void 0 ? void 0 :
-          _c.choices.map(choice => {
-            var _a;
-            return hAsync("div", { class: ["choice", ((_a = this.activeCategoryChoices()) === null || _a === void 0 ? void 0 : _a.includes(choice.id)) ? "active" : null].join(" "), onClick: () => this.selectChoice(this.active, choice) }, hAsync("ks-img3", { fit: 'cover', image: choice.image, class: choice.description ? "large" : null }), hAsync("div", { class: "description" }, hAsync("h3", null, choice.name), choice.description ? hAsync("p", null, choice.description) : null), hAsync("div", { class: "select" }));
-          }), this.loading),
-        hAsync("div", { class: "buttons" }, ((_d = this.activeCategory()) === null || _d === void 0 ? void 0 : _d.nopreference) ?
-          hAsync("ks-button", { round: true, border: true, name: "Nie mam preferencji", onClick: () => this.selectChoice(this.active, null) })
-          : null, ((_e = this.activeCategoryChoices()) === null || _e === void 0 ? void 0 : _e.length) > 0 ?
-          hAsync("ks-button", { round: true, name: "Kontynuuj", onClick: () => this.nextCategory() })
-          : null)
-      ];
-    };
+    this.choices_stage = () => [
+      hAsync("h2", null, this.activeCategory()?.heading),
+      hAsync("div", { class: ["choices", this.activeCategory()?.multiple ? "multiple" : null].join(" ") }, this.activeCategory()?.choices.map(choice => hAsync("div", { class: ["choice", this.activeCategoryChoices()?.includes(choice.id) ? "active" : null].join(" "), onClick: () => this.selectChoice(this.active, choice) }, hAsync("ks-img3", { fit: 'cover', image: choice.image, class: choice.description ? "large" : null }), hAsync("div", { class: "description" }, hAsync("h3", null, choice.name), choice.description ? hAsync("p", null, choice.description) : null), hAsync("div", { class: "select" }))), this.loading),
+      hAsync("div", { class: "buttons" }, this.activeCategory()?.nopreference ?
+        hAsync("ks-button", { round: true, border: true, name: "Nie mam preferencji", onClick: () => this.selectChoice(this.active, null) })
+        : null, this.activeCategoryChoices()?.length > 0 ?
+        hAsync("ks-button", { round: true, name: "Kontynuuj", onClick: () => this.nextCategory() })
+        : null)
+    ];
     this.summary_stage = (dialog) => [
       hAsync("h2", null, "Dzi\u0119kujemy za Twoj\u0105 opini\u0119!"),
       hAsync("p", null, "Na podstawie Twoich odpowiedzi mo\u017Cemy poleci\u0107 Ci kilka \u015Bwietnych rozwi\u0105za\u0144. Sprawd\u017A je poni\u017Cej."),
-      hAsync("div", { class: "summary" }, dialog === null || dialog === void 0 ? void 0 :
-        dialog.map((category) => {
-          var _a, _b, _c;
-          return ((_a = this.categoryChoices(category.id)) === null || _a === void 0 ? void 0 : _a.includes(null)) ? null :
-            hAsync("div", null, category.name, ": ", (_c = (_b = this.categoryChoices(category.id)) === null || _b === void 0 ? void 0 : _b.map(id => { var _a, _b; return (_b = (_a = category.choices) === null || _a === void 0 ? void 0 : _a.find(choice => choice.id == id)) === null || _b === void 0 ? void 0 : _b.name; })) === null || _c === void 0 ? void 0 :
-              _c.map(name => hAsync("div", null, name)));
-        }), hAsync("ks-button", { name: "Rozpocznij ponownie", icon: "edit-3", onClick: () => this.reset() }))
+      hAsync("div", { class: "summary" }, dialog?.map((category) => this.categoryChoices(category.id)?.includes(null) ? null :
+        hAsync("div", null, category.name, ": ", this.categoryChoices(category.id)?.map(id => category.choices?.find(choice => choice.id == id)?.name)?.map(name => hAsync("div", null, name)))), hAsync("ks-button", { name: "Rozpocznij ponownie", icon: "edit-3", onClick: () => this.reset() }))
     ];
     this.skipbase = undefined;
     this.commonData = undefined;
@@ -30878,8 +30982,7 @@ class PageGuide {
     this.resetActive();
   }
   initialCategory() {
-    var _a, _b;
-    return (_b = (_a = guide.get("dialog")) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.id;
+    return guide.get("dialog")?.[0]?.id;
   }
   resetActive() {
     this.active = this.initialCategory();
@@ -30891,36 +30994,31 @@ class PageGuide {
     this.selectCategoryRelative(-1);
   }
   selectCategoryRelative(distance) {
-    var _a;
-    const category = (_a = guide.get("dialog")) === null || _a === void 0 ? void 0 : _a[this.activeIndex() + distance];
-    this.selectCategory(category === null || category === void 0 ? void 0 : category.id);
+    const category = guide.get("dialog")?.[this.activeIndex() + distance];
+    this.selectCategory(category?.id);
   }
   activeIndex() {
     return this.index(this.active);
   }
   index(category) {
-    var _a;
-    return (_a = guide.get("dialog")) === null || _a === void 0 ? void 0 : _a.findIndex(item => item.id == category);
+    return guide.get("dialog")?.findIndex(item => item.id == category);
   }
   activeCategory() {
     return this.category(this.active);
   }
   category(category) {
-    var _a;
-    return (_a = guide.get("dialog")) === null || _a === void 0 ? void 0 : _a.find(item => item.id == category);
+    return guide.get("dialog")?.find(item => item.id == category);
   }
   activeCategoryChoices() {
     return this.categoryChoices(this.active);
   }
   categoryChoices(category) {
-    var _a;
-    return (_a = this.choices.find(item => item.category == category)) === null || _a === void 0 ? void 0 : _a.choices;
+    return this.choices.find(item => item.category == category)?.choices;
   }
   selectChoice(category, choice) {
-    var _a, _b;
     let choices = this.choices;
-    const id = (_a = choice === null || choice === void 0 ? void 0 : choice.id) !== null && _a !== void 0 ? _a : null;
-    const multiple = (_b = this.category(category)) === null || _b === void 0 ? void 0 : _b.multiple;
+    const id = choice?.id ?? null;
+    const multiple = this.category(category)?.multiple;
     const current = this.choices.find(item => item.category == category);
     if (current) {
       if (multiple) {
@@ -30961,17 +31059,15 @@ class PageGuide {
     this.scroll();
   }
   scroll() {
-    var _a;
     const dialog = this.root.querySelector(".dialog");
-    const nav_rect = (_a = dialog.querySelector(".navigation")) === null || _a === void 0 ? void 0 : _a.getBoundingClientRect();
+    const nav_rect = dialog.querySelector(".navigation")?.getBoundingClientRect();
     const in_view = nav_rect.top >= 0 &&
       nav_rect.left >= 0 &&
       nav_rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
       nav_rect.right <= (window.innerWidth || document.documentElement.clientWidth);
     if (!in_view)
       setTimeout(() => {
-        var _a;
-        const y = ((_a = dialog === null || dialog === void 0 ? void 0 : dialog.getBoundingClientRect()) === null || _a === void 0 ? void 0 : _a.top) + window.scrollY;
+        const y = dialog?.getBoundingClientRect()?.top + window.scrollY;
         window.scroll({ top: y, behavior: 'smooth' });
       }, 300);
   }
@@ -30982,19 +31078,18 @@ class PageGuide {
     this.componentWillLoad();
   }
   async dynamicResults(previousIndex) {
-    var _a;
     this.loading = true;
     const data = await jsonfetch(guide.get("api"), {
       "choices": this.choices
     });
-    const guideData = await (data === null || data === void 0 ? void 0 : data.json());
+    const guideData = await data?.json();
     if (guideData) {
-      guide.set("dialog", guideData === null || guideData === void 0 ? void 0 : guideData.dialog);
-      guide.set("products", guideData === null || guideData === void 0 ? void 0 : guideData.products);
+      guide.set("dialog", guideData?.dialog);
+      guide.set("products", guideData?.products);
     }
     this.loading = false;
     if (!this.activeCategory()) {
-      const category = (_a = guide.get("dialog")) === null || _a === void 0 ? void 0 : _a[previousIndex + 1];
+      const category = guide.get("dialog")?.[previousIndex + 1];
       if (category)
         this.active = category.id;
       else
@@ -31004,12 +31099,8 @@ class PageGuide {
   render() {
     const dialog = guide.get("dialog");
     const products = guide.get("products");
-    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("div", { class: "content" }, hAsync("div", { class: "text" }, hAsync("h1", null, guide.get("heading")), hAsync("p", null, guide.get("description"))), hAsync("div", { class: "dialog" }, hAsync("div", { class: "navigation" }, hAsync("div", { class: "breadcrumbs" }, dialog.slice(0, Math.max(this.choices.length, this.activeIndex())).map(category => hAsync("div", { onClick: () => this.selectCategory(category.id) }, category === null || category === void 0 ? void 0 : category.name))), hAsync("div", { class: "back", onClick: () => this.previousCategory() }, hAsync("ks-icon", { name: "chevron-left" })), hAsync("div", null, this.summary ? dialog.length : this.activeIndex() + 1, " z ", dialog.length)), this.summary ? this.summary_stage(dialog) : this.choices_stage()), products && (products === null || products === void 0 ? void 0 : products.length) > 0 && (this.activeIndex() > 0 || this.summary) ?
-      hAsync("div", { class: "products" }, products === null || products === void 0 ? void 0 : products.map((product, index) => {
-        var _a;
-        return hAsync("div", { class: "product", key: product.id }, index == 0 ? hAsync("div", { class: "best" }, "Najlepszy wyb\u00F3r") : null, hAsync("ks-product-card", { constheight: true, flat: true, linkOnly: true, product: product }), (_a = product === null || product === void 0 ? void 0 : product.conditions) === null || _a === void 0 ? void 0 :
-          _a.map(category => hAsync("div", { class: "condition" }, hAsync("ks-icon", { name: "check-circle" }), category.category, ": ", category.items.join(", "))));
-      }))
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("div", { class: "content" }, hAsync("div", { class: "text" }, hAsync("h1", null, guide.get("heading")), hAsync("p", null, guide.get("description"))), hAsync("div", { class: "dialog" }, hAsync("div", { class: "navigation" }, hAsync("div", { class: "breadcrumbs" }, dialog.slice(0, Math.max(this.choices.length, this.activeIndex())).map(category => hAsync("div", { onClick: () => this.selectCategory(category.id) }, category?.name))), hAsync("div", { class: "back", onClick: () => this.previousCategory() }, hAsync("ks-icon", { name: "chevron-left" })), hAsync("div", null, this.summary ? dialog.length : this.activeIndex() + 1, " z ", dialog.length)), this.summary ? this.summary_stage(dialog) : this.choices_stage()), products && products?.length > 0 && (this.activeIndex() > 0 || this.summary) ?
+      hAsync("div", { class: "products" }, products?.map((product, index) => hAsync("div", { class: "product", key: product.id }, index == 0 ? hAsync("div", { class: "best" }, "Najlepszy wyb\u00F3r") : null, hAsync("ks-product-card", { constheight: true, flat: true, linkOnly: true, product: product }), product?.conditions?.map(category => hAsync("div", { class: "condition" }, hAsync("ks-icon", { name: "check-circle" }), category.category, ": ", category.items.join(", "))))))
       : null, hAsync("div", { class: "text", innerHTML: marked_umd.marked.parse(guide.get("bottom_description")) })));
   }
   get root() { return getElement(this); }
@@ -31150,7 +31241,7 @@ class PageListing {
     }
   }
   render() {
-    if (!(listing === null || listing === void 0 ? void 0 : listing.get('title')))
+    if (!listing?.get('title'))
       return false;
     const bottomDescription = listing.get('bottomDescription');
     const infoBanner = listing.get("infoBanner");
@@ -31165,24 +31256,24 @@ class PageListing {
     const strings = common.get('translations');
     return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, infoBanner ?
       hAsync("ks-content-info-banner", { content: infoBanner })
-      : null, hAsync("ks-listing-header", { heading: listing.get('title'), breadcrumbs: listing.get('breadcrumbs'), description: listing.get('description'), categories: listing.get('categories'), query: query, autocorrect: listing.get('autocorrect'), theme: listing.get('theme') }), info ? hAsync("ks-listing-info", { data: info }) : null, navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 ?
-      hAsync("ks-listing-navigation", { products: navigation.products }, (filters === null || filters === void 0 ? void 0 : filters.length) > 0 ?
+      : null, hAsync("ks-listing-header", { heading: listing.get('title'), breadcrumbs: listing.get('breadcrumbs'), description: listing.get('description'), categories: listing.get('categories'), query: query, autocorrect: listing.get('autocorrect'), theme: listing.get('theme') }), info ? hAsync("ks-listing-info", { data: info }) : null, navigation && products?.length > 0 ?
+      hAsync("ks-listing-navigation", { products: navigation.products }, filters?.length > 0 ?
         hAsync("ks-filtering", { "base-url": navigation.base, query: query, filters: filters })
         : null, hAsync("ks-sorting", { post: navigation.paginationBase, current: listing.get('sorting') }), hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.paginationBase, pattern: navigation.pattern }))
-      : null, (products === null || products === void 0 ? void 0 : products.length) > 0 ?
+      : null, products?.length > 0 ?
       hAsync("ks-product-container", null, products.map(card => hAsync("ks-product-card", { product: card, flat: true, compare: listing.get("compare") })))
       :
-        hAsync("ks-nocontent", { "link-name": strings.noContentHome, "back-name": strings.noContentBack }, hAsync("h1", null, listing.get('noContentHeading')), hAsync("p", null, listing.get('noContentMessage'))), navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 ?
+        hAsync("ks-nocontent", { "link-name": strings.noContentHome, "back-name": strings.noContentBack }, hAsync("h1", null, listing.get('noContentHeading')), hAsync("p", null, listing.get('noContentMessage'))), navigation && products?.length > 0 ?
       hAsync("ks-listing-navigation", { products: navigation.products }, hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.paginationBase, pattern: navigation.pattern }))
-      : null, (infocards === null || infocards === void 0 ? void 0 : infocards.length) > 0 ?
+      : null, infocards?.length > 0 ?
       hAsync("ks-info-cards", { data: infocards })
-      : null, bottomDescription || (tags === null || tags === void 0 ? void 0 : tags.length) > 0 ?
-      hAsync("ks-listing-footer", { description: bottomDescription }, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 ?
+      : null, bottomDescription || tags?.length > 0 ?
+      hAsync("ks-listing-footer", { description: bottomDescription }, tags?.length > 0 ?
         hAsync("div", { slot: "tags" }, tags.map(crumb => hAsync("a", { href: crumb.link }, crumb.name)))
-        : null, !query && navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 && review ?
+        : null, !query && navigation && products?.length > 0 && review ?
         hAsync("ks-content-reviews", { content: review, slot: "comments", grey: true })
         : null)
-      : !query && navigation && (products === null || products === void 0 ? void 0 : products.length) > 0 && review ?
+      : !query && navigation && products?.length > 0 && review ?
         hAsync("ks-content-reviews", { content: review })
         : null, listing.get("compare") ? hAsync("ks-compare-popup", null) : null);
   }
@@ -31340,7 +31431,7 @@ class PageProduct {
     }
   }
   setDefaultTrait() {
-    if (!(product === null || product === void 0 ? void 0 : product.get("traits")))
+    if (!product?.get("traits"))
       return;
     const traits = product.get("traits").reduce((accumulator, trait) => {
       return accumulator + "x" + trait.id + "-" + trait.items[0].id;
@@ -31354,8 +31445,7 @@ class PageProduct {
     window.handleInpostIziButtons();
   }
   render() {
-    var _a, _b;
-    if (!(product === null || product === void 0 ? void 0 : product.get('name')))
+    if (!product?.get('name'))
       return false;
     const infoBanner = product.get("infoBanner");
     const productBanner = product.get("productBanner");
@@ -31367,7 +31457,7 @@ class PageProduct {
     const gspr = product.get("gspr");
     const tabs = [
       ...product.get('tabs'),
-      ...((gspr === null || gspr === void 0 ? void 0 : gspr.name) || (gspr === null || gspr === void 0 ? void 0 : gspr.info) || ((_a = gspr === null || gspr === void 0 ? void 0 : gspr.files) === null || _a === void 0 ? void 0 : _a.length) > 0 ?
+      ...(gspr?.name || gspr?.info || gspr?.files?.length > 0 ?
         [{ name: "Kontakt i bezpieczeństwo", gspr: gspr }] : [])
     ];
     const youtube = product.get('youtube');
@@ -31389,8 +31479,8 @@ class PageProduct {
       hAsync("ks-product-tooltip", { message: points.message }, hAsync("ks-product-attribute", { icon: "gift" }, points.shortMessage))
       : null, recycle ?
       hAsync("ks-product-tooltip", { message: recycle.message }, hAsync("ks-product-attribute", { icon: "recycle" }, recycle.shortMessage))
-      : null, (installments === null || installments === void 0 ? void 0 : installments.attributeMessage) ?
-      hAsync("ks-product-attribute", { icon: "dollar-sign" }, installments === null || installments === void 0 ? void 0 : installments.attributeMessage)
+      : null, installments?.attributeMessage ?
+      hAsync("ks-product-attribute", { icon: "dollar-sign" }, installments?.attributeMessage)
       : null, product.get("energy") && product.get("energyLabel") ?
       hAsync("ks-product-image-popup", { image: product.get("energyLabel") }, hAsync("ks-product-attribute", { energyOld: product.get("energyOld"), energy: product.get("energy") }, "Klasa energetyczna"))
       : null, model || ean ?
@@ -31403,27 +31493,27 @@ class PageProduct {
         : null, installments.caParameters ?
         hAsync("ks-product-calculator-ca", { price: product.get("currentPrice"), parameters: installments.caParameters }, hAsync("ks-product-button", { icon: installments.caIcon }))
         : null)
-      : null), hAsync("ks-product-brand", { slot: "brand" }))), productBanner && (productBanner === null || productBanner === void 0 ? void 0 : productBanner.image) ?
+      : null), hAsync("ks-product-brand", { slot: "brand" }))), productBanner && productBanner?.image ?
       hAsync("ks-container", null, hAsync("ks-content-info-banner", { productBanner: productBanner }))
-      : null, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 || (variants === null || variants === void 0 ? void 0 : variants.length) > 0 ?
-      hAsync("ks-container", { padding: true }, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 && !((variants === null || variants === void 0 ? void 0 : variants.length) > 0) ?
+      : null, tags?.length > 0 || variants?.length > 0 ?
+      hAsync("ks-container", { padding: true }, tags?.length > 0 && !(variants?.length > 0) ?
         hAsync("ks-product-tags", null)
-        : null, (variants === null || variants === void 0 ? void 0 : variants.length) > 0 ?
+        : null, variants?.length > 0 ?
         hAsync("ks-product-variants", null)
         : null)
-      : null, (tabs === null || tabs === void 0 ? void 0 : tabs.length) > 0 ?
+      : null, tabs?.length > 0 ?
       hAsync("ks-container", null, hAsync("ks-product-tabs", { names: tabs.map(tab => tab.name).join(", ") }, tabs.map((tab, index) => hAsync("ks-product-tab", { name: tab.name, open: index == 0, main: index == 0, content: tab.content, gspr: tab.gspr }))))
-      : null, ((_b = product.get('reviewProducts')) === null || _b === void 0 ? void 0 : _b.length) > 0 ?
+      : null, product.get('reviewProducts')?.length > 0 ?
       hAsync("ks-container", null, hAsync("ks-review-product", null))
-      : null, (tags === null || tags === void 0 ? void 0 : tags.length) > 0 && (variants === null || variants === void 0 ? void 0 : variants.length) > 0 ?
+      : null, tags?.length > 0 && variants?.length > 0 ?
       hAsync("ks-container", { padding: true }, hAsync("ks-product-tags", null))
       : null, youtube ?
       hAsync("ks-container", null, youtube.map(id => hAsync("ks-product-youtube", { "video-id": id })))
-      : null, (similar === null || similar === void 0 ? void 0 : similar.length) > 0 ? [
+      : null, similar?.length > 0 ? [
       hAsync("h3", null, strings.similarHeading),
       hAsync("ks-product-container", null, similar.map(card => hAsync("ks-product-card", { product: card })))
     ]
-      : null, (accessories === null || accessories === void 0 ? void 0 : accessories.length) > 0 ? [
+      : null, accessories?.length > 0 ? [
       hAsync("h3", null, strings.accessoriesHeading),
       hAsync("ks-product-container", null, accessories.map(card => hAsync("ks-product-card", { product: card })))
     ] : null, review ?
@@ -31508,8 +31598,8 @@ class PageRecipe$1 {
   render() {
     const products = favourites.get('products');
     const descriptions = favourites.get('descriptions');
-    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("ks-container", null, (products === null || products === void 0 ? void 0 : products.length) > 0 ?
-      hAsync("div", { class: "favourites-container" }, hAsync("div", { class: "favourites-header" }, hAsync("span", { class: "valueString" }, favourites.get('valueString')), hAsync("span", { class: "value" }, priceFormat(favourites.get('value'))), hAsync("div", { class: "removeAll" }, hAsync("button", { class: "fav", onClick: () => this.removeAll() }, this.removeAllLoading ? hAsync("ks-loader", null) : favourites.get('removeAllString')))), hAsync("hr", null), hAsync("div", { class: "product-container" }, products === null || products === void 0 ? void 0 : products.map(card => hAsync("ks-product-fav-card", { summary: descriptions[card.id], product: card }))))
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("ks-container", null, products?.length > 0 ?
+      hAsync("div", { class: "favourites-container" }, hAsync("div", { class: "favourites-header" }, hAsync("span", { class: "valueString" }, favourites.get('valueString')), hAsync("span", { class: "value" }, priceFormat(favourites.get('value'))), hAsync("div", { class: "removeAll" }, hAsync("button", { class: "fav", onClick: () => this.removeAll() }, this.removeAllLoading ? hAsync("ks-loader", null) : favourites.get('removeAllString')))), hAsync("hr", null), hAsync("div", { class: "product-container" }, products?.map(card => hAsync("ks-product-fav-card", { summary: descriptions[card.id], product: card }))))
       :
         hAsync("div", { class: "empty" }, hAsync("h1", null, favourites.get('emptyHeading')), hAsync("ks-button", { round: true, border: true, name: favourites.get('emptyButton'), link: "/" }))));
   }
@@ -31554,19 +31644,13 @@ class PageRecipe {
     DataLayer.recipe(recipe.state);
   }
   render() {
-    var _a, _b, _c, _d;
     const nutrition = recipe.get('nutrition');
-    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("ks-container", null, hAsync("div", { class: "recipe-container" }, hAsync("ks-recipe-info", { image: recipe.get('image'), time: recipe.get('time'), yield: recipe.get('yield'), cuisine: recipe.get('cuisine'), "cuisine-link": recipe.get('cuisineLink'), category: recipe.get('category'), "category-link": recipe.get('categoryLink') }, hAsync("h1", { slot: "heading" }, recipe.get('title')), hAsync("p", { slot: "summary" }, recipe.get('summary')), hAsync("ks-recipe-nutrition", { type: 'kalorie', value: nutrition.calories, slot: 'nutrition' }), hAsync("ks-recipe-nutrition", { type: 't\u0142uszcze', value: nutrition.fats, slot: 'nutrition' }), hAsync("ks-recipe-nutrition", { type: 'nasycone', value: nutrition.saturatedFats, slot: 'nutrition' }), hAsync("ks-recipe-nutrition", { type: 'cukry', value: nutrition.sugars, slot: 'nutrition' }), hAsync("ks-recipe-nutrition", { type: 's\u00F3l', value: nutrition.salt, slot: 'nutrition' }), hAsync("ks-recipe-nutrition", { type: 'bia\u0142ka', value: nutrition.protein, slot: 'nutrition' }), hAsync("ks-recipe-nutrition", { type: 'w\u0119glowodany', value: nutrition.carbohydrates, slot: 'nutrition' })), hAsync("ks-recipe-procedure", null, (_a = recipe === null || recipe === void 0 ? void 0 : recipe.get("ingredients")) === null || _a === void 0 ? void 0 :
-      _a.map(ingredient => hAsync("ks-recipe-ingredient", { name: ingredient.name, amount: ingredient.amount, slot: 'ingredients' })), (_b = recipe === null || recipe === void 0 ? void 0 : recipe.get("preparation")) === null || _b === void 0 ? void 0 :
-      _b.map(section => {
-        var _a;
-        return [
-          hAsync("h2", { slot: 'preparation' }, section.name),
-          hAsync("p", { slot: 'preparation' }, (_a = section === null || section === void 0 ? void 0 : section.steps) === null || _a === void 0 ? void 0 : _a.join(' '))
-        ];
-      })))), ((_c = recipe === null || recipe === void 0 ? void 0 : recipe.get('suggestions')) === null || _c === void 0 ? void 0 : _c.length) > 0 ? [
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("ks-container", null, hAsync("div", { class: "recipe-container" }, hAsync("ks-recipe-info", { image: recipe.get('image'), time: recipe.get('time'), yield: recipe.get('yield'), cuisine: recipe.get('cuisine'), "cuisine-link": recipe.get('cuisineLink'), category: recipe.get('category'), "category-link": recipe.get('categoryLink') }, hAsync("h1", { slot: "heading" }, recipe.get('title')), hAsync("p", { slot: "summary" }, recipe.get('summary')), hAsync("ks-recipe-nutrition", { type: 'kalorie', value: nutrition.calories, slot: 'nutrition' }), hAsync("ks-recipe-nutrition", { type: 't\u0142uszcze', value: nutrition.fats, slot: 'nutrition' }), hAsync("ks-recipe-nutrition", { type: 'nasycone', value: nutrition.saturatedFats, slot: 'nutrition' }), hAsync("ks-recipe-nutrition", { type: 'cukry', value: nutrition.sugars, slot: 'nutrition' }), hAsync("ks-recipe-nutrition", { type: 's\u00F3l', value: nutrition.salt, slot: 'nutrition' }), hAsync("ks-recipe-nutrition", { type: 'bia\u0142ka', value: nutrition.protein, slot: 'nutrition' }), hAsync("ks-recipe-nutrition", { type: 'w\u0119glowodany', value: nutrition.carbohydrates, slot: 'nutrition' })), hAsync("ks-recipe-procedure", null, recipe?.get("ingredients")?.map(ingredient => hAsync("ks-recipe-ingredient", { name: ingredient.name, amount: ingredient.amount, slot: 'ingredients' })), recipe?.get("preparation")?.map(section => [
+      hAsync("h2", { slot: 'preparation' }, section.name),
+      hAsync("p", { slot: 'preparation' }, section?.steps?.join(' '))
+    ])))), recipe?.get('suggestions')?.length > 0 ? [
       hAsync("h3", { class: "suggested-heading" }, "Produkty Polecane"),
-      hAsync("ks-product-container", null, (_d = recipe === null || recipe === void 0 ? void 0 : recipe.get('suggestions')) === null || _d === void 0 ? void 0 : _d.map(card => hAsync("ks-product-card", { product: card })))
+      hAsync("ks-product-container", null, recipe?.get('suggestions')?.map(card => hAsync("ks-product-card", { product: card })))
     ] : null);
   }
   static get style() { return recipeCss; }
@@ -31607,11 +31691,11 @@ class PageRecipes {
   render() {
     const navigation = recipes.get('navigation');
     const cards = recipes.get('recipes');
-    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("ks-listing-header", { heading: recipes.get('title'), breadcrumbs: recipes.get('breadcrumbs'), description: recipes.get('description'), categories: recipes.get('categories'), tags: recipes.get('tags') }), navigation && (cards === null || cards === void 0 ? void 0 : cards.length) > 0 ?
+    return hAsync("ks-page-base", { skipbase: this.skipbase, commonData: this.commonData, commonDynamicData: this.commonDynamicData }, hAsync("ks-listing-header", { heading: recipes.get('title'), breadcrumbs: recipes.get('breadcrumbs'), description: recipes.get('description'), categories: recipes.get('categories'), tags: recipes.get('tags') }), navigation && cards?.length > 0 ?
       hAsync("ks-listing-navigation", null, hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.paginationBase, pattern: navigation.pattern }))
-      : null, (cards === null || cards === void 0 ? void 0 : cards.length) > 0 ?
+      : null, cards?.length > 0 ?
       hAsync("ks-article-container", null, cards.map(card => hAsync("ks-recipe-card", { heading: card.heading, link: card.link, cuisine: card.cuisine, "cuisine-link": card.cuisineLink, category: card.category, "category-link": card.categoryLink, image: card.image, width: card.width, height: card.height })))
-      : null, navigation && (cards === null || cards === void 0 ? void 0 : cards.length) > 0 ?
+      : null, navigation && cards?.length > 0 ?
       hAsync("ks-listing-navigation", null, hAsync("ks-pagination", { count: navigation.count, current: navigation.current, base: navigation.paginationBase, pattern: navigation.pattern }))
       : null);
   }
@@ -31730,12 +31814,11 @@ class ProductAdmin {
     this.enabled = false;
   }
   render() {
-    var _a;
     const admin = productDynamic.get("adminBar");
     this.enabled = !!productDynamic.get("loaded") && !!Object.keys(admin).length;
     if (!this.enabled)
       return null;
-    const isSet = ((_a = admin === null || admin === void 0 ? void 0 : admin.set) === null || _a === void 0 ? void 0 : _a.length) > 0;
+    const isSet = admin?.set?.length > 0;
     return [
       hAsync("div", { class: "bar" }, this.currentSettings(admin), hAsync("div", { class: "links" }, hAsync("a", { class: "button", href: admin.link }, hAsync("ks-icon", { name: "edit" })), this.hasDistributors(admin) || isSet ?
         hAsync("button", { class: "button", onClick: () => this.expanded = !this.expanded }, hAsync("ks-icon", { name: this.expanded ? "chevron-up" : "chevron-down" }))
@@ -31750,14 +31833,11 @@ class ProductAdmin {
     ];
   }
   hasDistributors(obj) {
-    var _a;
-    return ((_a = obj === null || obj === void 0 ? void 0 : obj.distributors) === null || _a === void 0 ? void 0 : _a.length) > 0;
+    return obj?.distributors?.length > 0;
   }
   distributors(obj) {
-    var _a;
     return this.hasDistributors(obj) ?
-      hAsync("div", { class: "distributors", hidden: !this.expanded }, hAsync("tr", null, hAsync("th", null, "Dystrybutor"), hAsync("th", null, "Czas wysy\u0142ki"), hAsync("th", null, "Stan zewn\u0119trzny"), hAsync("th", null, "Tryb niedost\u0119pno\u015Bci"), hAsync("th", null, "Komunikaty")), (_a = obj === null || obj === void 0 ? void 0 : obj.distributors) === null || _a === void 0 ? void 0 :
-        _a.map(distributor => hAsync("tr", { class: distributor.overwrite && "overwrite" }, hAsync("td", null, distributor.name), hAsync("td", null, distributor.time), hAsync("td", null, distributor.quantity), hAsync("td", null, distributor.unavailableMode), hAsync("td", null, distributor.warning))))
+      hAsync("div", { class: "distributors", hidden: !this.expanded }, hAsync("tr", null, hAsync("th", null, "Dystrybutor"), hAsync("th", null, "Czas wysy\u0142ki"), hAsync("th", null, "Stan zewn\u0119trzny"), hAsync("th", null, "Tryb niedost\u0119pno\u015Bci"), hAsync("th", null, "Komunikaty")), obj?.distributors?.map(distributor => hAsync("tr", { class: distributor.overwrite && "overwrite" }, hAsync("td", null, distributor.name), hAsync("td", null, distributor.time), hAsync("td", null, distributor.quantity), hAsync("td", null, distributor.unavailableMode), hAsync("td", null, distributor.warning))))
       : null;
   }
   currentSettings(item) {
@@ -32050,8 +32130,7 @@ function OpenSuggestions(id, name) {
 }
 
 function add_product_to_comparison(product) {
-  var _a;
-  (_a = document.querySelector('ks-compare-popup')) === null || _a === void 0 ? void 0 : _a.addProduct(product);
+  document.querySelector('ks-compare-popup')?.addProduct(product);
 }
 
 const productCardCss = "ks-product-card{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:justify;justify-content:space-between;width:100%;text-align:center;background:var(--card-background);color:var(--card-text-color);-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow)}ks-product-card[flat]{border:#ededed 1px solid;border-radius:6px;overflow:hidden;-webkit-box-shadow:none;box-shadow:none}@media (min-width: 476px){ks-product-card{width:calc(50% - 15px)}}@media (min-width: 640px){ks-product-card{width:228px}}ks-product-card .top{display:-ms-flexbox;display:flex;height:100%;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:space-evenly;justify-content:space-evenly;padding:15px 15px 5px 15px;position:relative;min-height:200px;color:inherit !important;text-decoration:none !important;font-size:14px}ks-product-card ks-img3{height:auto;margin:0 auto 5px auto;max-width:280px;aspect-ratio:1 / 1}ks-product-card .price>*{display:block;font-family:var(--font-emphasis)}ks-product-card .price .previous{color:#888888;font-size:15px}ks-product-card[squashed] .price .previous{margin-bottom:-6px}ks-product-card .price .current{color:var(--color-secondary);font-weight:bold;font-size:17px}ks-product-card .lastPrice{margin:7px 0 -4px 0;color:#171717;font-family:var(--font-regular)}ks-product-card .lastPrice div{margin-bottom:-3px;font-size:13px}ks-product-card .bottom{display:-ms-flexbox;display:flex;margin-top:10px}ks-product-card .bottom .unavailable,ks-product-card .bottom .link{display:block;width:100%;padding:10px 10px;font-size:.875rem;text-align:center;text-decoration:none;text-transform:none;color:white;background-color:var(--color-secondary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-product-card .bottom .unavailable{color:#252525;background-color:#f1f1f1}ks-product-card .bottom .link:hover{background-color:var(--color-secondary-hover)}ks-product-card .bottom .link:active{background-color:var(--color-secondary-active)}ks-product-card[unavailable] .top,ks-product-card[unavailable] .price{opacity:0.6}ks-product-card[unavailable] .price .current{color:#252525}@media (max-width: 420px){ks-product-card .top{font-size:13px;padding:8px}ks-product-card .price{line-height:18px}}ks-product-card .cart{position:relative;display:block;width:100%;height:100%;min-height:42px;min-width:44px;padding:1px 10px;font-size:.875rem;line-height:40px;text-align:center;text-decoration:none;text-transform:none;font-family:var(--font-regular);outline:none;border:none;border-radius:0px;color:white;background-color:var(--product-card-primary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-product-card .cart:hover{background-color:var(--product-card-primary-hover)}ks-product-card .cart:active{background-color:var(--product-card-primary-active)}ks-product-card .fav{position:relative;display:block;height:100%;min-height:42px;min-width:44px;padding:1px 9px;font-size:.875rem;line-height:40px;text-align:center;text-decoration:none;text-transform:none;outline:none;border:none;border-radius:0px;color:white;background-color:var(--product-card-secondary);-webkit-transition:var(--transition-background-color);transition:var(--transition-background-color)}ks-product-card .fav:hover{background-color:var(--product-card-secondary-hover)}ks-product-card .fav:active{background-color:var(--product-card-secondary-active)}ks-product-card .fav .success{display:-ms-flexbox;display:flex;position:absolute;top:0;left:0;width:100%;height:100%;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;background-color:var(--product-card-secondary);-webkit-animation:fade-in 0.2s 1;animation:fade-in 0.2s 1}ks-product-card .shipping{color:white;position:absolute;top:0;right:0;background-color:#259325;padding:5px 10px;border-radius:0 0 0 10px;font-size:13px}ks-product-card .shipping ks-icon{padding:2px;background-color:white;border-radius:15px;color:#259325}ks-product-card .shipping ks-icon svg{stroke-width:2;-webkit-transform:translateY(0.5px);transform:translateY(0.5px)}ks-product-card .compare button{-webkit-appearance:none;-moz-appearance:none;appearance:none;border:none;background-color:transparent;margin-top:10px;cursor:pointer;-webkit-transition:opacity 0.3s ease;transition:opacity 0.3s ease}ks-product-card .compare button span{margin-right:5px}ks-product-card .compare button ks-icon{line-height:20px}ks-product-card .compare button ks-icon svg{width:20px;height:20px}ks-product-card .compare button:hover{opacity:0.6}ks-product-card .compare button:active{opacity:0.4}ks-product-card[constheight]{display:-ms-flexbox;display:flex;height:400px;-ms-flex-direction:column;flex-direction:column}ks-product-card[constheight] .top{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:distribute;justify-content:space-around}ks-product-card[constheight] .top ks-img3{height:60%}";
@@ -32070,7 +32149,6 @@ class ProductCard$1 {
     this.squashed = false;
   }
   componentWillLoad() {
-    var _a;
     this.productShortData = {
       id: this.product.id,
       traitIDs: "",
@@ -32086,7 +32164,7 @@ class ProductCard$1 {
       breadcrumbs: this.product.breadcrumbs,
       brandName: this.product.brandName
     };
-    if ((_a = this.product) === null || _a === void 0 ? void 0 : _a.shippingMessage)
+    if (this.product?.shippingMessage)
       this.squashed = true;
   }
   cart() {
@@ -32115,13 +32193,12 @@ class ProductCard$1 {
     }
   }
   render() {
-    var _a;
     const translations = common.get('translations');
     const currentPrice = priceFormat(this.product.currentPrice);
     const previousPrice = priceFormat(this.product.previousPrice);
     const lastPrice = priceFormat(this.product.lastPrice);
     return [
-      hAsync("a", { href: this.product.link, "aria-label": this.product.name, class: "top" }, hAsync("ks-img3", { key: this.product.id, fit: 'contain', image: this.product.image, webp: this.product.webp, width: 280, height: 280, alt: this.product.name }), hAsync("span", null, this.product.name), hAsync("div", { class: "price" }, hAsync("span", { class: "current" }, currentPrice), lastPrice && previousPrice && hAsync("div", { class: "lastPrice" }, hAsync("div", null, "Sugerowana cena producenta:"), hAsync("s", null, previousPrice)), lastPrice && hAsync("div", { class: "lastPrice" }, hAsync("div", null, "Najni\u017Csza cena z 30 dni:"), hAsync("s", null, lastPrice))), ((_a = this.product) === null || _a === void 0 ? void 0 : _a.shippingMessage) ?
+      hAsync("a", { href: this.product.link, "aria-label": this.product.name, class: "top" }, hAsync("ks-img3", { key: this.product.id, fit: 'contain', image: this.product.image, webp: this.product.webp, width: 280, height: 280, alt: this.product.name }), hAsync("span", null, this.product.name), hAsync("div", { class: "price" }, hAsync("span", { class: "current" }, currentPrice), lastPrice && previousPrice && hAsync("div", { class: "lastPrice" }, hAsync("div", null, "Sugerowana cena producenta:"), hAsync("s", null, previousPrice)), lastPrice && hAsync("div", { class: "lastPrice" }, hAsync("div", null, "Najni\u017Csza cena z 30 dni:"), hAsync("s", null, lastPrice))), this.product?.shippingMessage ?
         hAsync("div", { class: "shipping" }, hAsync("ks-icon", { name: "check", size: 0.6 }), " ", this.product.shippingMessage)
         : null),
       this.compare ? hAsync("div", { class: "compare" }, hAsync("button", { onClick: () => this.add_to_compare() }, hAsync("span", null, "Por\u00F3wnaj"), hAsync("ks-icon", { name: "columns" }))) : null,
@@ -32326,7 +32403,7 @@ class ProductCount {
     this.traitChange = createEvent(this, "traitChange", 7);
   }
   traitChangeHandler() {
-    if (!(product === null || product === void 0 ? void 0 : product.get("traits")))
+    if (!product?.get("traits"))
       return;
     const selects = this.root.querySelectorAll(".trait select");
     const data = product.get("traits").map((trait, index) => {
@@ -32336,7 +32413,7 @@ class ProductCount {
     this.traitChange.emit(data);
   }
   render() {
-    if (!(product === null || product === void 0 ? void 0 : product.get("traits")))
+    if (!product?.get("traits"))
       return null;
     return product.get("traits").map((trait) => hAsync("div", { class: "trait" }, hAsync("label", null, trait.name, ":"), hAsync("div", { class: "select" }, hAsync("select", { onChange: () => this.traitChangeHandler() }, trait.items.map(item => hAsync("option", { value: item.id }, item.name))), hAsync("ks-icon", { name: "chevron-down" }))));
   }
@@ -32633,8 +32710,7 @@ class ProductMessage {
     registerInstance(this, hostRef);
   }
   render() {
-    var _a;
-    return (_a = product.get("message")) !== null && _a !== void 0 ? _a : null;
+    return product.get("message") ?? null;
   }
   static get style() { return productMessageCss; }
   static get cmpMeta() { return {
@@ -33084,8 +33160,9 @@ class ProductSuggestions {
   }; }
 }
 
-const productTabCss = "ks-product-tab{display:block}@media only screen and (min-width: 960px){ks-product-tab .accordion{display:none}}ks-product-tab>button{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;background-color:transparent;color:#151515;width:100%;border:none;outline:none;padding:10px 0px 20px 0px;margin:0;-webkit-transition:color 0.3s ease;transition:color 0.3s ease}ks-product-tab>button:hover{color:#606060}ks-product-tab:not([open])>button>ks-icon{-webkit-transform:rotate(0deg);transform:rotate(0deg);transition:-webkit-transform 0.3s ease;-webkit-transition:-webkit-transform 0.3s ease;transition:transform 0.3s ease;transition:transform 0.3s ease, -webkit-transform 0.3s ease}ks-product-tab:not([open])>button:hover>ks-icon{-webkit-transform:rotate(90deg);transform:rotate(90deg)}ks-product-tab>.tab-content{display:none;max-width:100%}ks-product-tab .files{margin-top:40px}ks-product-tab .file{max-width:300px}@media only screen and (min-width: 960px){ks-product-tab[main]>.tab-content{display:block}}@media only screen and (max-width: 960px){ks-product-tab[open]>.tab-content{display:block}}";
+const productTabCss = "ks-product-tab{display:block}@media only screen and (min-width: 960px){ks-product-tab .accordion{display:none}}ks-product-tab>button{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;background-color:transparent;color:#151515;width:100%;border:none;outline:none;padding:10px 0px 20px 0px;margin:0;-webkit-transition:color 0.3s ease;transition:color 0.3s ease}ks-product-tab>button:hover{color:#606060}ks-product-tab:not([open])>button>ks-icon{-webkit-transform:rotate(0deg);transform:rotate(0deg);transition:-webkit-transform 0.3s ease;-webkit-transition:-webkit-transform 0.3s ease;transition:transform 0.3s ease;transition:transform 0.3s ease, -webkit-transform 0.3s ease}ks-product-tab:not([open])>button:hover>ks-icon{-webkit-transform:rotate(90deg);transform:rotate(90deg)}ks-product-tab>.tab-content{display:none;max-width:100%}ks-product-tab .files{margin-bottom:40px}ks-product-tab .file{max-width:300px}ks-product-tab .gspr{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;gap:40px}ks-product-tab .gspr>*{-ms-flex:0 1 auto;flex:0 1 auto}ks-product-tab .gspr p{margin-top:0;margin-bottom:5px}@media only screen and (min-width: 960px){ks-product-tab[main]>.tab-content{display:block}}@media only screen and (max-width: 960px){ks-product-tab[open]>.tab-content{display:block}}";
 
+const regionNames = new Intl.DisplayNames(['pl'], { type: 'region' });
 class ProductTab {
   constructor(hostRef) {
     registerInstance(this, hostRef);
@@ -33095,19 +33172,13 @@ class ProductTab {
     this.content = undefined;
     this.gspr = undefined;
   }
+  renderContactInfo(contact) {
+    return hAsync("div", null, contact.name && hAsync("p", null, contact.name), contact.street && hAsync("p", null, contact.street), (contact.city || contact.postal_code) && hAsync("p", null, contact.city, " ", contact.postal_code), contact.country && hAsync("p", null, regionNames.of(contact.country)), hAsync("br", null), contact.email && hAsync("p", null, contact.email), contact.website && hAsync("p", null, contact.website), contact.phone && hAsync("p", null, contact.phone));
+  }
   render() {
-    var _a, _b;
     return [
       hAsync("button", { class: "accordion", onClick: () => this.onOpen() }, this.name, hAsync("ks-icon", { name: this.open ? "minus" : "plus" })),
-      hAsync("div", { class: "tab-content", innerHTML: this.content }, this.gspr && [
-        (this.gspr.name || this.gspr.info) && hAsync("h3", null, "Informacje kontaktowe producenta"),
-        this.gspr.name && hAsync("p", null, (_a = this.gspr) === null || _a === void 0 ? void 0 : _a.name),
-        this.gspr.info && hAsync("p", { innerHTML: this.gspr.info.replace(/(?:\r\n|\r|\n)/g, '<br>') }),
-        ((_b = this.gspr.files) === null || _b === void 0 ? void 0 : _b.length) > 0 && [
-          hAsync("h3", { class: "files" }, "Zasoby dotycz\u0105ce bezpiecze\u0144stwa"),
-          this.gspr.files.map(file => hAsync("ks-button", { class: "file", round: true, newtab: true, nofollow: true, link: file.url, name: file.name }))
-        ]
-      ])
+      hAsync("div", { class: "tab-content", innerHTML: this.content }, this.gspr?.files?.length > 0 && hAsync("div", { class: "files" }, hAsync("h3", null, "Zasoby dotycz\u0105ce bezpiecze\u0144stwa"), this.gspr.files.map(file => hAsync("ks-button", { class: "file", round: true, newtab: true, nofollow: true, link: file.url, name: file.name }))), this.gspr && hAsync("div", { class: "gspr" }, this.gspr.manufacturer && hAsync("div", null, hAsync("h3", null, "Informacje kontaktowe producenta"), this.renderContactInfo(this.gspr.manufacturer)), this.gspr.responsible && hAsync("div", null, hAsync("h3", null, "Informacje kontaktowe podmiotu odpowiedzialnego"), this.renderContactInfo(this.gspr.responsible)), !this.gspr.manufacturer && !this.gspr.responsible && this.gspr.name && this.gspr.info && hAsync("div", null, hAsync("h3", null, "Informacje kontaktowe producenta"), this.gspr.name && hAsync("p", null, this.gspr?.name), this.gspr.info && hAsync("p", { innerHTML: this.gspr.info.replace(/(?:\r\n|\r|\n)/g, '<br>') }))))
     ];
   }
   onOpen() {
@@ -34028,7 +34099,7 @@ class Zaufane {
     else {
       w['_ekomiWidgetTokens'] = new Array(token);
     }
-    if (typeof (window === null || window === void 0 ? void 0 : window.ekomiWidgetJs) == 'undefined') {
+    if (typeof (window?.ekomiWidgetJs) == 'undefined') {
       window.ekomiWidgetJs = true;
       var scr = document.createElement('script');
       scr.src = 'https://sw-assets.ekomiapps.de/static_resources/widget.js';
