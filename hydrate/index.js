@@ -13170,6 +13170,7 @@ const common = createStore({
   address: "",
   address2: "",
   nip: "",
+  regon: "",
   mapAddress: "",
   newsletterPopup: false,
   newsletterApi: "",
@@ -14990,12 +14991,13 @@ class ComparePopup {
   }; }
 }
 
-const containerCss = "ks-container{display:block;padding:0px;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:1200px;width:100%;margin-left:auto;margin-right:auto}ks-container>*{margin:20px 0px}@media only screen and (min-width: 1200px){ks-container~ks-container>*:first-child{margin-top:0px}}@media only screen and (max-width: 1200px){ks-container>*{margin:15px 0px}ks-container>*:first-child,ks-container>*:last-child{margin:0px 0px}ks-container[padding]>*{margin:15px}}";
+const containerCss = "ks-container{display:block;padding:0px;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:1200px;width:100%;margin-left:auto;margin-right:auto}ks-container>*{margin:20px 0px}ks-container[center]{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}@media only screen and (min-width: 1200px){ks-container~ks-container>*:first-child{margin-top:0px}}@media only screen and (max-width: 1200px){ks-container>*{margin:15px 0px}ks-container>*:first-child,ks-container>*:last-child{margin:0px 0px}ks-container[padding]>*{margin:15px}}";
 
 class Container$1 {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.padding = false;
+    this.center = false;
   }
   render() {
     return hAsync("slot", null);
@@ -15005,11 +15007,12 @@ class Container$1 {
     "$flags$": 4,
     "$tagName$": "ks-container",
     "$members$": {
-      "padding": [516]
+      "padding": [516],
+      "center": [516]
     },
     "$listeners$": undefined,
     "$lazyBundleId$": "-",
-    "$attrsToReflect$": [["padding", "padding"]]
+    "$attrsToReflect$": [["padding", "padding"], ["center", "center"]]
   }; }
 }
 
@@ -28592,11 +28595,12 @@ class NavbarContactPanel {
     const address = common.get('address');
     const address2 = common.get('address2');
     const nip = common.get('nip');
+    const regon = common.get('regon');
     const workingHours = common.get('workingHours');
     const mapAddress = encodeURIComponent(common.get('mapAddress'));
     return hAsync(Host, { class: this.visible }, hAsync("div", { class: "navbar", style: { width: `${this.menuWidth}px` } }, hAsync("ks-navbar-button", { icon: "x", onClick: () => this.Toggle() })), hAsync("div", { class: "content" }, this.initialized ?
       hAsync("div", { class: "map" }, hAsync("iframe", { frameborder: "0", height: this.height, width: this.width, src: `https://maps.google.pl/maps?ie=UTF8&q=${mapAddress}&gl=PL&hl=pl&t=m&iwloc=A&output=embed` }))
-      : null, hAsync("div", { class: "info ks-text-decorated" }, hAsync("div", { class: "address" }, common.get('company'), " ", hAsync("br", null), address && [address, hAsync("br", null)], address2 && [address2, hAsync("br", null)], nip && [nip, hAsync("br", null)], workingHours && [hAsync("br", null), workingHours]), hAsync("div", { class: "buttons" }, hAsync("div", { class: "margin" }, hAsync("a", { href: "tel:" + common.get('phone') }, common.get('phone')), hAsync("br", null), hAsync("a", { href: "mailto:" + common.get('email') }, common.get('email')))))));
+      : null, hAsync("div", { class: "info ks-text-decorated" }, hAsync("div", { class: "address" }, common.get('company'), " ", hAsync("br", null), address && [address, hAsync("br", null)], address2 && [address2, hAsync("br", null)], nip && ["NIP: ", nip, hAsync("br", null)], regon && ["REGON: ", regon, hAsync("br", null)], workingHours && [hAsync("br", null), workingHours]), hAsync("div", { class: "buttons" }, hAsync("div", { class: "margin" }, hAsync("a", { href: "tel:" + common.get('phone') }, common.get('phone')), hAsync("br", null), hAsync("a", { href: "mailto:" + common.get('email') }, common.get('email')))))));
   }
   get root() { return getElement(this); }
   static get style() { return navbarContactPanelCss; }
@@ -30923,10 +30927,12 @@ class PageFooter {
     const company = common.get('company');
     const address = common.get('address');
     const address2 = common.get('address2');
+    const nip = common.get('nip');
+    const regon = common.get('regon');
     const softwareLink = common.get('softwareLink');
     const strings = common.get('translations');
     return [
-      hAsync("div", { class: "about" }, hAsync("div", { class: "links" }, common.get('footerLinks').map(section => hAsync("ks-footer-links", { heading: section.name }, section.items.map(item => hAsync("li", null, hAsync("a", { href: item.link }, item.name))))), hAsync("div", { class: "contact" }, hAsync("span", null, strings.footerContact), hAsync("a", { style: { "display": "none" } }), hAsync("a", { href: `tel:${phone}` }, hAsync("ks-icon", { name: "phone" }), hAsync("span", null, phone)), hAsync("a", { href: `mailto:${email}` }, hAsync("ks-icon", { name: "mail" }), hAsync("span", null, Build.isBrowser ? email : "")), hAsync("span", null, hAsync("ks-icon", { name: "clock", size: 0.9 }), " ", time), hAsync("span", null, hAsync("ks-icon", { name: "home", size: 0.9 }), " ", company), hAsync("span", null, hAsync("ks-icon", { name: "map-pin", size: 0.9 }), " ", address), address2 && hAsync("span", null, hAsync("ks-icon", { name: "map-pin", size: 0.9 }), " ", address2))), hAsync("div", { class: "newsletter" }, hAsync("div", null, strings.footerNewsletterSmall), hAsync("div", null, strings.footerNewsletterLarge), hAsync("ks-button", { light: true, border: true, name: strings.footerNewsletterSubmit, onClick: () => document.querySelector('ks-newsletter-popup-edrone')?.Show() }))),
+      hAsync("div", { class: "about" }, hAsync("div", { class: "links" }, common.get('footerLinks').map(section => hAsync("ks-footer-links", { heading: section.name }, section.items.map(item => hAsync("li", null, hAsync("a", { href: item.link }, item.name))))), hAsync("div", { class: "contact" }, hAsync("span", null, strings.footerContact), hAsync("a", { style: { "display": "none" } }), hAsync("a", { href: `tel:${phone}` }, hAsync("ks-icon", { name: "phone" }), hAsync("span", null, phone)), hAsync("a", { href: `mailto:${email}` }, hAsync("ks-icon", { name: "mail" }), hAsync("span", null, Build.isBrowser ? email : "")), hAsync("span", null, hAsync("ks-icon", { name: "clock", size: 0.9 }), " ", time), hAsync("span", null, hAsync("ks-icon", { name: "home", size: 0.9 }), " ", company), hAsync("span", null, hAsync("ks-icon", { name: "map-pin", size: 0.9 }), " ", address), address2 && hAsync("span", null, hAsync("ks-icon", { name: "map-pin", size: 0.9 }), " ", address2), nip && hAsync("span", null, hAsync("ks-icon", { name: "book", size: 0.9 }), "NIP: ", nip), regon && hAsync("span", null, hAsync("ks-icon", { name: "book", size: 0.9 }), "REGON: ", regon))), hAsync("div", { class: "newsletter" }, hAsync("div", null, strings.footerNewsletterSmall), hAsync("div", null, strings.footerNewsletterLarge), hAsync("ks-button", { light: true, border: true, name: strings.footerNewsletterSubmit, onClick: () => document.querySelector('ks-newsletter-popup-edrone')?.Show() }))),
       hAsync("div", { class: "portals" }, hAsync("div", null, common.get('social').map(social => hAsync("ks-footer-button", { width: social.width, height: social.height, href: social.link, image: social.image }))), hAsync("div", null, common.get('reviewers').map(reviewer => hAsync("ks-footer-button", { width: reviewer.width, height: reviewer.height, href: reviewer.link, image: reviewer.image })))),
       hAsync("div", { class: "software" }, hAsync("a", { href: softwareLink, rel: "nofollow" }, strings.footerSoftware))
     ];
@@ -31457,8 +31463,8 @@ class PageProduct {
     const gspr = product.get("gspr");
     const tabs = [
       ...product.get('tabs'),
-      ...(gspr?.name || gspr?.info || gspr?.files?.length > 0 ?
-        [{ name: "Kontakt i bezpieczeństwo", gspr: gspr }] : [])
+      ...(gspr?.name || gspr?.info ?
+        [{ name: "Producent", gspr: gspr }] : [])
     ];
     const youtube = product.get('youtube');
     const similar = product.get('similar');
@@ -31503,6 +31509,8 @@ class PageProduct {
         : null)
       : null, tabs?.length > 0 ?
       hAsync("ks-container", null, hAsync("ks-product-tabs", { names: tabs.map(tab => tab.name).join(", ") }, tabs.map((tab, index) => hAsync("ks-product-tab", { name: tab.name, open: index == 0, main: index == 0, content: tab.content, gspr: tab.gspr }))))
+      : null, gspr.files?.length > 0 ?
+      hAsync("ks-container", { padding: true, center: true }, gspr.files.map(file => hAsync("ks-button", { class: "file", round: true, newtab: true, nofollow: true, link: file.url, name: file.name, style: { width: "100%", maxWidth: "300px" } })))
       : null, product.get('reviewProducts')?.length > 0 ?
       hAsync("ks-container", null, hAsync("ks-review-product", null))
       : null, tags?.length > 0 && variants?.length > 0 ?
@@ -33160,7 +33168,7 @@ class ProductSuggestions {
   }; }
 }
 
-const productTabCss = "ks-product-tab{display:block}@media only screen and (min-width: 960px){ks-product-tab .accordion{display:none}}ks-product-tab>button{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;background-color:transparent;color:#151515;width:100%;border:none;outline:none;padding:10px 0px 20px 0px;margin:0;-webkit-transition:color 0.3s ease;transition:color 0.3s ease}ks-product-tab>button:hover{color:#606060}ks-product-tab:not([open])>button>ks-icon{-webkit-transform:rotate(0deg);transform:rotate(0deg);transition:-webkit-transform 0.3s ease;-webkit-transition:-webkit-transform 0.3s ease;transition:transform 0.3s ease;transition:transform 0.3s ease, -webkit-transform 0.3s ease}ks-product-tab:not([open])>button:hover>ks-icon{-webkit-transform:rotate(90deg);transform:rotate(90deg)}ks-product-tab>.tab-content{display:none;max-width:100%}ks-product-tab .files{margin-bottom:40px}ks-product-tab .file{max-width:300px}ks-product-tab .gspr{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;gap:40px}ks-product-tab .gspr>*{-ms-flex:0 1 auto;flex:0 1 auto}ks-product-tab .gspr p{margin-top:0;margin-bottom:5px}@media only screen and (min-width: 960px){ks-product-tab[main]>.tab-content{display:block}}@media only screen and (max-width: 960px){ks-product-tab[open]>.tab-content{display:block}}";
+const productTabCss = "ks-product-tab{display:block}@media only screen and (min-width: 960px){ks-product-tab .accordion{display:none}}ks-product-tab>button{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;background-color:transparent;color:#151515;width:100%;border:none;outline:none;padding:10px 0px 20px 0px;margin:0;-webkit-transition:color 0.3s ease;transition:color 0.3s ease}ks-product-tab>button:hover{color:#606060}ks-product-tab:not([open])>button>ks-icon{-webkit-transform:rotate(0deg);transform:rotate(0deg);transition:-webkit-transform 0.3s ease;-webkit-transition:-webkit-transform 0.3s ease;transition:transform 0.3s ease;transition:transform 0.3s ease, -webkit-transform 0.3s ease}ks-product-tab:not([open])>button:hover>ks-icon{-webkit-transform:rotate(90deg);transform:rotate(90deg)}ks-product-tab>.tab-content{display:none;max-width:100%}ks-product-tab .file{max-width:300px}ks-product-tab .gspr{display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;gap:40px}ks-product-tab .gspr>*{-ms-flex:0 1 auto;flex:0 1 auto}ks-product-tab .gspr p{margin-top:0;margin-bottom:5px}@media only screen and (min-width: 960px){ks-product-tab[main]>.tab-content{display:block}}@media only screen and (max-width: 960px){ks-product-tab[open]>.tab-content{display:block}}";
 
 const regionNames = new Intl.DisplayNames(['pl'], { type: 'region' });
 class ProductTab {
@@ -33178,7 +33186,7 @@ class ProductTab {
   render() {
     return [
       hAsync("button", { class: "accordion", onClick: () => this.onOpen() }, this.name, hAsync("ks-icon", { name: this.open ? "minus" : "plus" })),
-      hAsync("div", { class: "tab-content", innerHTML: this.content }, this.gspr?.files?.length > 0 && hAsync("div", { class: "files" }, hAsync("h3", null, "Zasoby dotycz\u0105ce bezpiecze\u0144stwa"), this.gspr.files.map(file => hAsync("ks-button", { class: "file", round: true, newtab: true, nofollow: true, link: file.url, name: file.name }))), this.gspr && hAsync("div", { class: "gspr" }, this.gspr.manufacturer && hAsync("div", null, hAsync("h3", null, "Informacje kontaktowe producenta"), this.renderContactInfo(this.gspr.manufacturer)), this.gspr.responsible && hAsync("div", null, hAsync("h3", null, "Informacje kontaktowe podmiotu odpowiedzialnego"), this.renderContactInfo(this.gspr.responsible)), !this.gspr.manufacturer && !this.gspr.responsible && this.gspr.name && this.gspr.info && hAsync("div", null, hAsync("h3", null, "Informacje kontaktowe producenta"), this.gspr.name && hAsync("p", null, this.gspr?.name), this.gspr.info && hAsync("p", { innerHTML: this.gspr.info.replace(/(?:\r\n|\r|\n)/g, '<br>') }))))
+      hAsync("div", { class: "tab-content", innerHTML: this.content }, this.gspr && hAsync("div", { class: "gspr" }, this.gspr.manufacturer && hAsync("div", null, hAsync("h3", null, "Informacje kontaktowe producenta"), this.renderContactInfo(this.gspr.manufacturer)), this.gspr.responsible && hAsync("div", null, hAsync("h3", null, "Informacje kontaktowe podmiotu odpowiedzialnego"), this.renderContactInfo(this.gspr.responsible)), !this.gspr.manufacturer && !this.gspr.responsible && this.gspr.name && this.gspr.info && hAsync("div", null, hAsync("h3", null, "Informacje kontaktowe producenta"), this.gspr.name && hAsync("p", null, this.gspr?.name), this.gspr.info && hAsync("p", { innerHTML: this.gspr.info.replace(/(?:\r\n|\r|\n)/g, '<br>') }))))
     ];
   }
   onOpen() {
@@ -33209,7 +33217,7 @@ class ProductTab {
   }; }
 }
 
-const productTabsCss = "ks-product-tabs{display:block;position:relative;-webkit-box-sizing:border-box;box-sizing:border-box;padding:0;background:var(--card-background);color:var(--card-text-color);-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow)}ks-product-tabs nav{background-color:#f6f6f6;border-bottom:1px solid #e8e8e8;display:-ms-flexbox;display:flex}@media only screen and (max-width: 960px){ks-product-tabs nav{display:none}}ks-product-tabs button{position:relative;padding:20px 40px;margin:0;font-family:inherit;font-size:18px;color:#252525;background-color:#f6f6f6;-webkit-transition:background-color 0.3s ease, color 0.3s ease;transition:background-color 0.3s ease, color 0.3s ease;border:none;outline:none;border-right:1px solid #e8e8e8}ks-product-tabs button.active{color:#252525 !important;background-color:#FFFFFF}ks-product-tabs button:hover{color:#808080}ks-product-tabs>.content{padding:30px}@media only screen and (max-width: 520px){ks-product-tabs>.content{padding:30px 20px}}";
+const productTabsCss = "ks-product-tabs{display:block;position:relative;-webkit-box-sizing:border-box;box-sizing:border-box;padding:0;background:var(--card-background);color:var(--card-text-color);-webkit-box-shadow:var(--card-shadow);box-shadow:var(--card-shadow)}ks-product-tabs nav{background-color:#f6f6f6;border-bottom:1px solid #e8e8e8;display:-ms-flexbox;display:flex}@media only screen and (max-width: 960px){ks-product-tabs nav{display:none}}ks-product-tabs button{position:relative;padding:18px 30px;margin:0;font-family:inherit;font-size:17px;color:#252525;background-color:#f6f6f6;-webkit-transition:background-color 0.3s ease, color 0.3s ease;transition:background-color 0.3s ease, color 0.3s ease;border:none;outline:none;border-right:1px solid #e8e8e8}ks-product-tabs button.active{color:#252525 !important;background-color:#FFFFFF}ks-product-tabs button:hover{color:#808080}ks-product-tabs>.content{padding:30px}@media only screen and (max-width: 520px){ks-product-tabs>.content{padding:30px 20px}}";
 
 class ProductTabs {
   constructor(hostRef) {
