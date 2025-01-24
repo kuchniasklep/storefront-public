@@ -30726,6 +30726,26 @@ function loadCommonData(commonDataId, commonDynamicId, Build) {
   }
 }
 
+const SCROLL_STORAGE_KEY = 'scroll-positions';
+const MAX_STORED_PAGES = 10;
+window.addEventListener('beforeunload', () => {
+  saveScrollPosition(window.location.pathname);
+});
+const saveScrollPosition = (key) => {
+  const data = JSON.parse(sessionStorage.getItem(SCROLL_STORAGE_KEY) || '{"positions": {}, "keys": []}');
+  const { positions, keys } = data;
+  positions[key] = window.scrollY;
+  if (!keys.includes(key))
+    keys.push(key);
+  if (keys.length > MAX_STORED_PAGES)
+    delete positions[keys.shift()];
+  sessionStorage.setItem(SCROLL_STORAGE_KEY, JSON.stringify({ positions, keys }));
+};
+const restoreScrollPosition = (key) => {
+  const data = JSON.parse(sessionStorage.getItem(SCROLL_STORAGE_KEY) || '{"positions": {}}');
+  window.scrollTo(0, data.positions[key] || 0);
+};
+
 const baseCss = "ks-page-base{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;min-height:100vh}";
 
 class PageBase {
@@ -30739,6 +30759,9 @@ class PageBase {
   componentWillLoad() {
     if (this.loadCommon)
       loadCommonData(this.commonData, this.commonDynamicData, Build);
+  }
+  componentDidLoad() {
+    restoreScrollPosition(window.location.pathname);
   }
   render() {
     return hAsync(Host, null, !this.skipbase && hAsync("ks-page-header", null), hAsync("slot", null), !this.skipbase && hAsync("ks-page-footer", null), hAsync("ks-newsletter-popup-edrone", { displayOnLoad: common.get('newsletterPopup') }), common.get('newsletterSideButton') ? hAsync("ks-newsletter-side-button", null) : null, hAsync("ks-product-suggestions", null), hAsync("ks-error-popup", null), hAsync("ks-message-popup", null), hAsync("ks-cookie-popup", null), hAsync("ks-cookie-popup-details", null));
