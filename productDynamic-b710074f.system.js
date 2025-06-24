@@ -1,1 +1,0 @@
-System.register(["./index-0ecc4079.system.js"],(function(e){"use strict";var t;return{setters:[function(e){t=e.c}],execute:function(){var s=e("p",t({loaded:false,adminBar:{}}))}}}));

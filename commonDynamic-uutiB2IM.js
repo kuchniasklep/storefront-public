@@ -1,0 +1,2 @@
+import{c as o}from"./index-CZU_OQRD.js";const t=o({loaded:false,loggedIn:false,customer:{},cartCount:0,heartCount:0,api:{},tracking:{},consent:{},compare:[],testing_group:null});export{t as c};
+//# sourceMappingURL=commonDynamic-uutiB2IM.js.map

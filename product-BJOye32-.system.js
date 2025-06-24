@@ -1,0 +1,2 @@
+System.register(["./index-BljFg8DE.system.js"],(function(t){"use strict";var e;return{setters:[function(t){e=t.c}],execute:function(){var n=t("p",e({}))}}}));
+//# sourceMappingURL=product-BJOye32-.system.js.map

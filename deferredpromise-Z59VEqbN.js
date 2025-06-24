@@ -1,0 +1,2 @@
+function e(){let e={promise:null,resolve:null,reject:null};e.promise=new Promise(((l,n)=>{e.resolve=l;e.reject=n}));return e}var l=e();if(document.readyState==="complete"){l.resolve()}else addEventListener("load",(()=>{l.resolve()}));export{l as w};
+//# sourceMappingURL=deferredpromise-Z59VEqbN.js.map

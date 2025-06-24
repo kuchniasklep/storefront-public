@@ -1,0 +1,2 @@
+import{c as o}from"./index-CZU_OQRD.js";const e=o({logo:"",categoryUrl:"",cartLink:"",heartLink:"",accountLink:"",loginLink:"",logoutLink:"",registerLink:"",softwareLink:"",promo:"",promoLink:"",email:"",phone:"",workingHours:"",company:"",address:"",address2:"",nip:"",regon:"",mapAddress:"",newsletterPopup:false,newsletterApi:"",suggestionApi:"",autocompleteApi:"",cookieMessage:"",cookieButton:"",cookieDelay:1e3,categories:[],social:[],reviewers:[],footerLinks:[],translations:{}});export{e as c};
+//# sourceMappingURL=common-JZ1KLzZ7.js.map

@@ -1,0 +1,2 @@
+System.register([],(function(e){"use strict";return{execute:function(){function n(){var e={promise:null,resolve:null,reject:null};e.promise=new Promise((function(n,t){e.resolve=n;e.reject=t}));return e}var t=e("w",n());if(document.readyState==="complete"){t.resolve()}else addEventListener("load",(function(){t.resolve()}))}}}));
+//# sourceMappingURL=deferredpromise-Df1iFWHf.system.js.map
