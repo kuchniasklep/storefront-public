@@ -1,2 +1,2 @@
-import{r as s,h as r}from"./index-0TTgkKkd.js";import{c as a}from"./cart-C-9zqEUA.js";import"./index-CZU_OQRD.js";const e=class{constructor(r){s(this,r)}render(){return r("ks-cart-message",{key:"938c384110a1a0f2b8b3a498f0c919069da831c6",message:a.get("shippingMessage")})}};export{e as ks_cart_shipping_message};
+import{r as s,h as a}from"./index-0TTgkKkd.js";import{c as e}from"./cart-C-9zqEUA.js";import"./index-CZU_OQRD.js";const r=class{constructor(a){s(this,a)}render(){return a("ks-cart-message",{key:"3808faa13a1733b03ea723adbb51e01ad36d38b1",message:e.get("shippingMessage")})}};export{r as ks_cart_shipping_message};
 //# sourceMappingURL=ks-cart-shipping-message.entry.js.map
