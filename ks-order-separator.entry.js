@@ -1,2 +1,0 @@
-import{r,h as e,a as s}from"./index-0TTgkKkd.js";const o=class{constructor(e){r(this,e);this.dark=false}componentDidLoad(){this.root.style.display="block"}render(){const r=this.dark?"#404040":"#dadada";return e("hr",{key:"4117ee386527412883fe938bf82d2e1b6ee749a5",class:"uk-margin-remove",style:{borderColor:r}})}get root(){return s(this)}};export{o as ks_order_separator};
-//# sourceMappingURL=ks-order-separator.entry.js.map

@@ -1,2 +1,0 @@
-async function t(t){const e=t.querySelectorAll("ks-input-text, ks-input-textarea, ks-input-check, ks-input-number, ks-input-date, ks-input-select");let n=true;for(let t=0;t<e.length;t++){const s=e[t];await s.Validate();if(await s.IsValid()==false){n=false}}return n}export{t as V};
-//# sourceMappingURL=validate-DqcskKvN.js.map
