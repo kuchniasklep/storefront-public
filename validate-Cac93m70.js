@@ -1,0 +1,2 @@
+async function t(t){const a=t.querySelectorAll("ks-input-text, ks-input-textarea, ks-input-check, ks-input-number, ks-input-select");const e=t.querySelectorAll("ks-input-dynamic");let s=true;for(let t=0;t<a.length;t++){const e=a[t];await e.Validate();if(await e.IsValid()==false)s=false}for(let t=0;t<e.length;t++){const a=e[t];await a.Validate();if(await a.IsValid()==false)s=false}return s}export{t as V};
+//# sourceMappingURL=validate-Cac93m70.js.map
