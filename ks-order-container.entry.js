@@ -1,0 +1,2 @@
+import{r,h as a,H as d}from"./index-0TTgkKkd.js";const n="ks-order-container{display:block;padding:0px 30px;margin:30px 0px}@media (min-width: 1200px){ks-order-container{padding:0px 40px;margin:40px 0px}}@media (max-width: 720px){ks-order-container{padding:0px 15px;margin:40px 0px}}";const e=class{constructor(a){r(this,a)}render(){return a(d,{key:"c0d34c56b1690bb47f9cbc8a977d9876a6f70e98"},a("slot",{key:"b27d84322e09b9642887382599df500a21ea1a94"}))}};e.style=n;export{e as ks_order_container};
+//# sourceMappingURL=ks-order-container.entry.js.map

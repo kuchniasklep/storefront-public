@@ -1,1 +1,0 @@
-window.googleConsentListeners=[],window.addConsentListener=w=>{window.googleConsentListeners.push(w)},window.googleConsentListeners.push((w=>console.log(w)));

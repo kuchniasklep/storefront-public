@@ -1,0 +1,2 @@
+System.register(["./index-c1zuSwDW.system.js"],(function(t){"use strict";var e;return{setters:[function(t){e=t.g}],execute:function(){var n=t("g",e)}}}));
+//# sourceMappingURL=app-globals-M-Okiqxm.system.js.map

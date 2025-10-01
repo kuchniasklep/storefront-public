@@ -1,0 +1,2 @@
+System.register(["./index-BljFg8DE.system.js"],(function(e){"use strict";var t;return{setters:[function(e){t=e.c}],execute:function(){var n=e("p",t({loaded:false,adminBar:{}}))}}}));
+//# sourceMappingURL=productDynamic-DYvo5Ahm.system.js.map

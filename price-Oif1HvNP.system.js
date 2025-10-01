@@ -1,0 +1,2 @@
+System.register(["./common-BwSiL-IM.system.js"],(function(n){"use strict";var e;return{setters:[function(n){e=n.c}],execute:function(){n({a:t,p:r});function r(n){if(typeof n==="undefined"||n===null)return"";if(typeof n==="string")n=parseFloat(n);var r=e.get("currency");if(!r)return n.toString();return t(n)+" ".concat(r.symbol)}function t(n){if(typeof n==="undefined"||n===null)return"";if(typeof n==="string")n=parseFloat(n);var r=e.get("currency");if(!r)return n.toString();return n.toFixed(2).replace(".",r.separator)}}}}));
+//# sourceMappingURL=price-Oif1HvNP.system.js.map
